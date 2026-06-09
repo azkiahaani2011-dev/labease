@@ -1382,7 +1382,14 @@ const LabsNearMeSection = ({ T, navTo, setLab, setCatF, setTestQ }) => (
                   </div>
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ fontWeight:800,fontSize:".98rem",color:"#0D1117",lineHeight:1.2,marginBottom:3 }}>{lab.name}</div>
-                    <div style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>📍 {meta.city} · {meta.since}</div>
+                    <div style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600,display:"flex",alignItems:"center",gap:4 }}>
+                      <svg width="11" height="13" viewBox="0 0 12 14" fill="none">
+                        <path d="M6 0C3.24 0 1 2.24 1 5C1 8.75 6 14 6 14C6 14 11 8.75 11 5C11 2.24 8.76 0 6 0Z" fill="#BFDBFE" stroke="#1E293B" strokeWidth="0.8"/>
+                        <circle cx="6" cy="5" r="2" fill="white" stroke="#1E293B" strokeWidth="0.8"/>
+                        <circle cx="6" cy="5" r="1" fill="#1158A6"/>
+                      </svg>
+                      {meta.city} · {meta.since}
+                    </div>
                     <div style={{ marginTop:5,display:"flex",gap:5,flexWrap:"wrap" }}>
                       {lab.nabl && <span style={{ background:"#DCFCE7",color:"#15803D",fontWeight:700,fontSize:".66rem",padding:"2px 8px",borderRadius:50 }}>✓ NABL</span>}
                       {lab.homeCollection && <span style={{ background:"#EFF6FF",color:"#1158A6",fontWeight:700,fontSize:".66rem",padding:"2px 8px",borderRadius:50 }}>🏠 Home</span>}
@@ -2738,6 +2745,9 @@ export default function App() {
         </div>
       </div>
 
+
+      {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
+      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
