@@ -2482,130 +2482,53 @@ export default function App() {
             </div>
           </div>
 
-          {/* ── RIGHT: Vector doctor illustration ── */}
-          <div style={{ flexShrink:0,width:320,display:"flex",justifyContent:"center",alignItems:"center" }}>
-            <svg viewBox="0 0 320 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",maxWidth:320,height:"auto",filter:"drop-shadow(0 20px 40px rgba(17,88,166,.12))"}}>
-              {/* ── background blob ── */}
-              <ellipse cx="162" cy="230" rx="138" ry="168" fill="#DBEAFE" opacity="0.45"/>
-              <ellipse cx="158" cy="235" rx="112" ry="140" fill="#EFF6FF" opacity="0.5"/>
+          {/* ── RIGHT: Doctor photo with premium frame ── */}
+          <div style={{ flexShrink:0,width:320,position:"relative",height:420 }}>
+            {/* decorative blob behind image */}
+            <div style={{ position:"absolute",inset:0,borderRadius:"60% 40% 55% 45% / 50% 50% 50% 50%",background:"linear-gradient(135deg,#DBEAFE 0%,#EFF6FF 100%)",zIndex:0 }}/>
 
-              {/* ── floating dots / molecules ── */}
-              <circle cx="36" cy="90" r="11" fill="#BFDBFE" opacity="0.75"/>
-              <circle cx="288" cy="118" r="7" fill="#DBEAFE" opacity="0.8"/>
-              <circle cx="42" cy="340" r="8" fill="#EFF6FF" opacity="0.9"/>
-              <circle cx="292" cy="348" r="6" fill="#BFDBFE" opacity="0.7"/>
-              <circle cx="58" cy="190" r="5" fill="#93C5FD" opacity="0.5"/>
-              <circle cx="280" cy="260" r="5" fill="#93C5FD" opacity="0.4"/>
-              <line x1="36" y1="90" x2="58" y2="190" stroke="#BFDBFE" strokeWidth="1" opacity="0.4"/>
-              <line x1="280" y1="260" x2="288" y2="118" stroke="#BFDBFE" strokeWidth="1" opacity="0.3"/>
+            {/* main doctor photo */}
+            <div style={{ position:"absolute",left:16,top:16,right:0,bottom:0,borderRadius:28,overflow:"hidden",boxShadow:"0 24px 60px rgba(17,88,166,.18)",zIndex:1 }}>
+              <img
+                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=90&auto=format&fit=crop&crop=top"
+                alt="Trusted doctor"
+                style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }}
+                onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#DBEAFE,#1158A6)"; }}
+              />
+              {/* subtle bottom gradient for readability */}
+              <div style={{ position:"absolute",bottom:0,left:0,right:0,height:80,background:"linear-gradient(to top,rgba(17,88,166,.18),transparent)",pointerEvents:"none" }}/>
+            </div>
 
-              {/* ── legs ── */}
-              <rect x="127" y="336" width="32" height="78" rx="14" fill="#374151"/>
-              <rect x="165" y="336" width="32" height="78" rx="14" fill="#1F2937"/>
-              {/* shoes */}
-              <ellipse cx="143" cy="410" rx="22" ry="10" fill="#111827"/>
-              <ellipse cx="181" cy="410" rx="22" ry="10" fill="#111827"/>
+            {/* NABL badge — top left */}
+            <div style={{ position:"absolute",top:12,left:0,zIndex:3,background:"#fff",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:8 }}>
+              <div style={{ width:28,height:28,borderRadius:"50%",background:"#DCFCE7",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+              </div>
+              <div>
+                <div style={{ fontWeight:800,fontSize:".72rem",color:"#0D1117",lineHeight:1 }}>NABL Certified</div>
+                <div style={{ fontSize:".62rem",color:"#6B7280",marginTop:1 }}>100% accuracy</div>
+              </div>
+            </div>
 
-              {/* ── lab coat body ── */}
-              <path d="M96 198 Q96 175 160 170 Q224 175 224 198 L234 346 H86 Z" fill="white"/>
-              {/* coat side seams */}
-              <path d="M96 198 L90 346" stroke="#E5E7EB" strokeWidth="1"/>
-              <path d="M224 198 L230 346" stroke="#E5E7EB" strokeWidth="1"/>
+            {/* Reports badge — bottom left */}
+            <div style={{ position:"absolute",bottom:24,left:0,zIndex:3,background:"#fff",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:8 }}>
+              <div style={{ width:28,height:28,borderRadius:"50%",background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <div style={{ fontWeight:800,fontSize:".72rem",color:"#0D1117",lineHeight:1 }}>Reports in 6 hrs</div>
+                <div style={{ fontSize:".62rem",color:"#6B7280",marginTop:1 }}>via email & WhatsApp</div>
+              </div>
+            </div>
 
-              {/* coat lapels */}
-              <path d="M147 173 L122 210 L160 222 Z" fill="#EEF4FF"/>
-              <path d="M173 173 L198 210 L160 222 Z" fill="#EEF4FF"/>
-              {/* inner shirt */}
-              <rect x="148" y="195" width="24" height="28" rx="4" fill="#DBEAFE"/>
-
-              {/* stethoscope */}
-              <path d="M142 182 Q124 232 128 264 Q132 290 160 284 Q188 278 192 252 Q196 226 180 198" stroke="#4B5563" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="180" cy="196" r="9" fill="none" stroke="#4B5563" strokeWidth="3"/>
-              <circle cx="160" cy="284" r="10" fill="#4B5563"/>
-              <circle cx="160" cy="284" r="5" fill="#9CA3AF"/>
-
-              {/* breast pocket */}
-              <rect x="174" y="250" width="34" height="42" rx="5" fill="#F8FAFF" stroke="#DBEAFE" strokeWidth="1.5"/>
-              {/* pens */}
-              <rect x="182" y="243" width="5" height="26" rx="2.5" fill="#1158A6"/>
-              <circle cx="184.5" cy="243" r="3" fill="#2563EB"/>
-              <rect x="191" y="243" width="5" height="26" rx="2.5" fill="#EF4444"/>
-              <circle cx="193.5" cy="243" r="3" fill="#F87171"/>
-              <rect x="200" y="243" width="5" height="26" rx="2.5" fill="#374151"/>
-
-              {/* red cross badge on chest */}
-              <circle cx="112" cy="196" r="17" fill="#EF4444"/>
-              <rect x="108.5" y="189" width="7" height="14" rx="1.5" fill="white"/>
-              <rect x="105" y="192.5" width="14" height="7" rx="1.5" fill="white"/>
-
-              {/* RIGHT arm — holding test tube ── */}
-              <path d="M222 210 Q258 228 255 278" stroke="white" strokeWidth="36" strokeLinecap="round" fill="none"/>
-              <path d="M222 210 Q258 228 255 278" stroke="#E5E7EB" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
-              {/* hand */}
-              <ellipse cx="252" cy="290" rx="15" ry="13" fill="#FBBF85"/>
-
-              {/* test tube rack / tube */}
-              <rect x="260" y="258" width="20" height="64" rx="10" fill="white" stroke="#93C5FD" strokeWidth="2"/>
-              {/* liquid */}
-              <path d="M262 292 Q261 316 270 320 Q279 316 278 292 Z" fill="#3B82F6" opacity="0.85"/>
-              {/* bubbles */}
-              <circle cx="265" cy="294" r="2.5" fill="#93C5FD"/>
-              <circle cx="272" cy="302" r="2" fill="#BFDBFE"/>
-              {/* cap */}
-              <rect x="258" y="252" width="24" height="11" rx="4" fill="#1158A6"/>
-
-              {/* glow under test tube */}
-              <ellipse cx="270" cy="328" rx="14" ry="4" fill="#3B82F6" opacity="0.15"/>
-
-              {/* LEFT arm — clipboard ── */}
-              <path d="M98 208 Q74 235 72 265" stroke="white" strokeWidth="32" strokeLinecap="round" fill="none"/>
-              <path d="M98 208 Q74 235 72 265" stroke="#E5E7EB" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
-
-              {/* clipboard */}
-              <rect x="44" y="230" width="58" height="74" rx="9" fill="white" stroke="#DBEAFE" strokeWidth="2"/>
-              <rect x="58" y="222" width="30" height="14" rx="5" fill="#1158A6"/>
-              <line x1="52" y1="255" x2="94" y2="255" stroke="#DBEAFE" strokeWidth="2"/>
-              <line x1="52" y1="265" x2="94" y2="265" stroke="#DBEAFE" strokeWidth="2"/>
-              <line x1="52" y1="275" x2="86" y2="275" stroke="#DBEAFE" strokeWidth="2"/>
-              <rect x="52" y="285" width="14" height="9" rx="3" fill="#22C55E"/>
-              <rect x="70" y="285" width="24" height="9" rx="3" fill="#DBEAFE"/>
-
-              {/* ── HEAD ── */}
-              <circle cx="160" cy="122" r="54" fill="#FBBF85"/>
-
-              {/* hair */}
-              <path d="M106 114 Q106 66 160 63 Q214 66 214 114 L210 100 Q192 72 160 70 Q128 72 110 100 Z" fill="#2C1A0E"/>
-              {/* side hair / ears */}
-              <ellipse cx="106" cy="125" rx="9" ry="13" fill="#FBBF85"/>
-              <ellipse cx="214" cy="125" rx="9" ry="13" fill="#FBBF85"/>
-
-              {/* eyes */}
-              <ellipse cx="142" cy="122" rx="8" ry="9" fill="white"/>
-              <ellipse cx="178" cy="122" rx="8" ry="9" fill="white"/>
-              <circle cx="144" cy="124" r="5.5" fill="#2C1A0E"/>
-              <circle cx="180" cy="124" r="5.5" fill="#2C1A0E"/>
-              <circle cx="146" cy="122" r="2" fill="white"/>
-              <circle cx="182" cy="122" r="2" fill="white"/>
-
-              {/* eyebrows */}
-              <path d="M134 112 Q142 107 150 112" stroke="#2C1A0E" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
-              <path d="M170 112 Q178 107 186 112" stroke="#2C1A0E" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
-
-              {/* smile */}
-              <path d="M149 138 Q160 150 171 138" stroke="#C0856B" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
-
-              {/* glasses */}
-              <circle cx="142" cy="122" r="13" fill="none" stroke="#374151" strokeWidth="1.8"/>
-              <circle cx="178" cy="122" r="13" fill="none" stroke="#374151" strokeWidth="1.8"/>
-              <line x1="155" y1="122" x2="165" y2="122" stroke="#374151" strokeWidth="1.8"/>
-              <line x1="129" y1="118" x2="117" y2="115" stroke="#374151" strokeWidth="1.8"/>
-              <line x1="191" y1="118" x2="203" y2="115" stroke="#374151" strokeWidth="1.8"/>
-
-              {/* doctor head band / mirror */}
-              <path d="M110 105 Q160 82 210 105" stroke="#E5E7EB" strokeWidth="5" fill="none" strokeLinecap="round"/>
-              <circle cx="160" cy="88" r="8" fill="#DBEAFE" stroke="#93C5FD" strokeWidth="2"/>
-              <circle cx="160" cy="88" r="3" fill="#1158A6"/>
-            </svg>
+            {/* Rating badge — bottom right */}
+            <div style={{ position:"absolute",bottom:24,right:-10,zIndex:3,background:"#1158A6",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(17,88,166,.35)",display:"flex",alignItems:"center",gap:6 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FCD34D" stroke="#FCD34D" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <div>
+                <div style={{ fontWeight:800,fontSize:".72rem",color:"#fff",lineHeight:1 }}>4.9 / 5 Rating</div>
+                <div style={{ fontSize:".62rem",color:"rgba(255,255,255,.75)",marginTop:1 }}>50,000+ patients</div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -2624,8 +2547,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
