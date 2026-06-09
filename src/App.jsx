@@ -2341,37 +2341,31 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#EBF3FB 0%,#F0F7FF 60%,#E8F4F8 100%)", minHeight:440, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
-        {/* decorative circles */}
-        <div style={{ position:"absolute",right:-80,top:-80,width:360,height:360,borderRadius:"50%",background:"rgba(17,88,166,.06)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:120,bottom:-60,width:220,height:220,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
+      <section style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
+        {/* background geometric accents */}
+        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:72,paddingBottom:72 }}>
-          <div style={{ maxWidth:640 }}>
+        <div style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:64,paddingBottom:64,display:"grid",gridTemplateColumns:"1fr auto",alignItems:"center",gap:40 }}>
+          {/* ── LEFT: text content ── */}
+          <div style={{ maxWidth:580 }}>
             {/* eyebrow pill */}
-            <div style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#fff",borderRadius:50,padding:"5px 14px 5px 8px",marginBottom:22,boxShadow:"0 2px 10px rgba(17,88,166,.1)",border:"1px solid #DBEAFE" }}>
-              <span style={{ background:"#1158A6",borderRadius:50,padding:"2px 10px",fontSize:".65rem",fontWeight:800,color:"#fff",letterSpacing:".06em" }}>NEW</span>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em" }}>NEW</span>
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700 }}>Home sample collection now available 24/7</span>
             </div>
 
-            {/* inline stats — 50K+, 6 NABL Labs, 4.9★ */}
-            <div style={{ display:"flex",gap:24,marginBottom:18,flexWrap:"wrap" }}>
-              {[["50K+","Happy Patients"],["6","NABL Labs"],["4.9★","Avg Rating"]].map(([n,l])=>(
-                <div key={l} style={{ display:"flex",alignItems:"baseline",gap:5 }}>
-                  <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em" }}>{n}</span>
-                  <span style={{ fontSize:".74rem",color:"#6B7280",fontWeight:600 }}>{l}</span>
-                </div>
-              ))}
-            </div>
-
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.9rem,4vw,3rem)",color:"#0D1117",lineHeight:1.18,marginBottom:16,fontWeight:800,letterSpacing:"-.02em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ color:"#1158A6" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#6B7280",fontSize:".97rem",lineHeight:1.75,marginBottom:36,maxWidth:480 }}>
+            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:32,maxWidth:460 }}>
               Compare prices across 6 NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -2380,17 +2374,152 @@ export default function App() {
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center" }}>
-              <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".75rem",fontWeight:600,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; }}>
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
                 </button>
               ))}
             </div>
 
+            {/* trust stats bar */}
+            <div style={{ display:"flex",gap:0,marginTop:36,background:"#fff",borderRadius:14,padding:"14px 0",boxShadow:"0 2px 16px rgba(17,88,166,.08)",border:"1px solid #EEF4FF",overflow:"hidden" }}>
+              {[["50K+","Happy Patients","#1158A6"],["6","NABL Labs","#059669"],["4.9★","Avg Rating","#F59E0B"],["₹199","Tests from","#8B5CF6"]].map(([n,l,c],i,arr)=>(
+                <div key={l} style={{ flex:1,textAlign:"center",padding:"0 12px",borderRight:i<arr.length-1?"1px solid #EEF2FF":"none" }}>
+                  <div style={{ fontWeight:900,fontSize:"1.1rem",color:c,fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",lineHeight:1 }}>{n}</div>
+                  <div style={{ fontSize:".68rem",color:"#9CA3AF",fontWeight:600,marginTop:4 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── RIGHT: Vector doctor illustration ── */}
+          <div style={{ flexShrink:0,width:320,display:"flex",justifyContent:"center",alignItems:"center" }}>
+            <svg viewBox="0 0 320 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",maxWidth:320,height:"auto",filter:"drop-shadow(0 20px 40px rgba(17,88,166,.12))"}}>
+              {/* ── background blob ── */}
+              <ellipse cx="162" cy="230" rx="138" ry="168" fill="#DBEAFE" opacity="0.45"/>
+              <ellipse cx="158" cy="235" rx="112" ry="140" fill="#EFF6FF" opacity="0.5"/>
+
+              {/* ── floating dots / molecules ── */}
+              <circle cx="36" cy="90" r="11" fill="#BFDBFE" opacity="0.75"/>
+              <circle cx="288" cy="118" r="7" fill="#DBEAFE" opacity="0.8"/>
+              <circle cx="42" cy="340" r="8" fill="#EFF6FF" opacity="0.9"/>
+              <circle cx="292" cy="348" r="6" fill="#BFDBFE" opacity="0.7"/>
+              <circle cx="58" cy="190" r="5" fill="#93C5FD" opacity="0.5"/>
+              <circle cx="280" cy="260" r="5" fill="#93C5FD" opacity="0.4"/>
+              <line x1="36" y1="90" x2="58" y2="190" stroke="#BFDBFE" strokeWidth="1" opacity="0.4"/>
+              <line x1="280" y1="260" x2="288" y2="118" stroke="#BFDBFE" strokeWidth="1" opacity="0.3"/>
+
+              {/* ── legs ── */}
+              <rect x="127" y="336" width="32" height="78" rx="14" fill="#374151"/>
+              <rect x="165" y="336" width="32" height="78" rx="14" fill="#1F2937"/>
+              {/* shoes */}
+              <ellipse cx="143" cy="410" rx="22" ry="10" fill="#111827"/>
+              <ellipse cx="181" cy="410" rx="22" ry="10" fill="#111827"/>
+
+              {/* ── lab coat body ── */}
+              <path d="M96 198 Q96 175 160 170 Q224 175 224 198 L234 346 H86 Z" fill="white"/>
+              {/* coat side seams */}
+              <path d="M96 198 L90 346" stroke="#E5E7EB" strokeWidth="1"/>
+              <path d="M224 198 L230 346" stroke="#E5E7EB" strokeWidth="1"/>
+
+              {/* coat lapels */}
+              <path d="M147 173 L122 210 L160 222 Z" fill="#EEF4FF"/>
+              <path d="M173 173 L198 210 L160 222 Z" fill="#EEF4FF"/>
+              {/* inner shirt */}
+              <rect x="148" y="195" width="24" height="28" rx="4" fill="#DBEAFE"/>
+
+              {/* stethoscope */}
+              <path d="M142 182 Q124 232 128 264 Q132 290 160 284 Q188 278 192 252 Q196 226 180 198" stroke="#4B5563" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="180" cy="196" r="9" fill="none" stroke="#4B5563" strokeWidth="3"/>
+              <circle cx="160" cy="284" r="10" fill="#4B5563"/>
+              <circle cx="160" cy="284" r="5" fill="#9CA3AF"/>
+
+              {/* breast pocket */}
+              <rect x="174" y="250" width="34" height="42" rx="5" fill="#F8FAFF" stroke="#DBEAFE" strokeWidth="1.5"/>
+              {/* pens */}
+              <rect x="182" y="243" width="5" height="26" rx="2.5" fill="#1158A6"/>
+              <circle cx="184.5" cy="243" r="3" fill="#2563EB"/>
+              <rect x="191" y="243" width="5" height="26" rx="2.5" fill="#EF4444"/>
+              <circle cx="193.5" cy="243" r="3" fill="#F87171"/>
+              <rect x="200" y="243" width="5" height="26" rx="2.5" fill="#374151"/>
+
+              {/* red cross badge on chest */}
+              <circle cx="112" cy="196" r="17" fill="#EF4444"/>
+              <rect x="108.5" y="189" width="7" height="14" rx="1.5" fill="white"/>
+              <rect x="105" y="192.5" width="14" height="7" rx="1.5" fill="white"/>
+
+              {/* RIGHT arm — holding test tube ── */}
+              <path d="M222 210 Q258 228 255 278" stroke="white" strokeWidth="36" strokeLinecap="round" fill="none"/>
+              <path d="M222 210 Q258 228 255 278" stroke="#E5E7EB" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
+              {/* hand */}
+              <ellipse cx="252" cy="290" rx="15" ry="13" fill="#FBBF85"/>
+
+              {/* test tube rack / tube */}
+              <rect x="260" y="258" width="20" height="64" rx="10" fill="white" stroke="#93C5FD" strokeWidth="2"/>
+              {/* liquid */}
+              <path d="M262 292 Q261 316 270 320 Q279 316 278 292 Z" fill="#3B82F6" opacity="0.85"/>
+              {/* bubbles */}
+              <circle cx="265" cy="294" r="2.5" fill="#93C5FD"/>
+              <circle cx="272" cy="302" r="2" fill="#BFDBFE"/>
+              {/* cap */}
+              <rect x="258" y="252" width="24" height="11" rx="4" fill="#1158A6"/>
+
+              {/* glow under test tube */}
+              <ellipse cx="270" cy="328" rx="14" ry="4" fill="#3B82F6" opacity="0.15"/>
+
+              {/* LEFT arm — clipboard ── */}
+              <path d="M98 208 Q74 235 72 265" stroke="white" strokeWidth="32" strokeLinecap="round" fill="none"/>
+              <path d="M98 208 Q74 235 72 265" stroke="#E5E7EB" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
+
+              {/* clipboard */}
+              <rect x="44" y="230" width="58" height="74" rx="9" fill="white" stroke="#DBEAFE" strokeWidth="2"/>
+              <rect x="58" y="222" width="30" height="14" rx="5" fill="#1158A6"/>
+              <line x1="52" y1="255" x2="94" y2="255" stroke="#DBEAFE" strokeWidth="2"/>
+              <line x1="52" y1="265" x2="94" y2="265" stroke="#DBEAFE" strokeWidth="2"/>
+              <line x1="52" y1="275" x2="86" y2="275" stroke="#DBEAFE" strokeWidth="2"/>
+              <rect x="52" y="285" width="14" height="9" rx="3" fill="#22C55E"/>
+              <rect x="70" y="285" width="24" height="9" rx="3" fill="#DBEAFE"/>
+
+              {/* ── HEAD ── */}
+              <circle cx="160" cy="122" r="54" fill="#FBBF85"/>
+
+              {/* hair */}
+              <path d="M106 114 Q106 66 160 63 Q214 66 214 114 L210 100 Q192 72 160 70 Q128 72 110 100 Z" fill="#2C1A0E"/>
+              {/* side hair / ears */}
+              <ellipse cx="106" cy="125" rx="9" ry="13" fill="#FBBF85"/>
+              <ellipse cx="214" cy="125" rx="9" ry="13" fill="#FBBF85"/>
+
+              {/* eyes */}
+              <ellipse cx="142" cy="122" rx="8" ry="9" fill="white"/>
+              <ellipse cx="178" cy="122" rx="8" ry="9" fill="white"/>
+              <circle cx="144" cy="124" r="5.5" fill="#2C1A0E"/>
+              <circle cx="180" cy="124" r="5.5" fill="#2C1A0E"/>
+              <circle cx="146" cy="122" r="2" fill="white"/>
+              <circle cx="182" cy="122" r="2" fill="white"/>
+
+              {/* eyebrows */}
+              <path d="M134 112 Q142 107 150 112" stroke="#2C1A0E" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
+              <path d="M170 112 Q178 107 186 112" stroke="#2C1A0E" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
+
+              {/* smile */}
+              <path d="M149 138 Q160 150 171 138" stroke="#C0856B" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
+
+              {/* glasses */}
+              <circle cx="142" cy="122" r="13" fill="none" stroke="#374151" strokeWidth="1.8"/>
+              <circle cx="178" cy="122" r="13" fill="none" stroke="#374151" strokeWidth="1.8"/>
+              <line x1="155" y1="122" x2="165" y2="122" stroke="#374151" strokeWidth="1.8"/>
+              <line x1="129" y1="118" x2="117" y2="115" stroke="#374151" strokeWidth="1.8"/>
+              <line x1="191" y1="118" x2="203" y2="115" stroke="#374151" strokeWidth="1.8"/>
+
+              {/* doctor head band / mirror */}
+              <path d="M110 105 Q160 82 210 105" stroke="#E5E7EB" strokeWidth="5" fill="none" strokeLinecap="round"/>
+              <circle cx="160" cy="88" r="8" fill="#DBEAFE" stroke="#93C5FD" strokeWidth="2"/>
+              <circle cx="160" cy="88" r="3" fill="#1158A6"/>
+            </svg>
           </div>
 
         </div>
@@ -2510,13 +2639,65 @@ export default function App() {
                   BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </button>
               </div>
-              <div style={{ width:160,position:"relative",flexShrink:0,overflow:"hidden" }}>
-                <img
-                  src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&q=85&auto=format&fit=crop"
-                  alt="Phlebotomist home visit"
-                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top" }}
-                  onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#6EE7B7,#34D399)"; }}
-                />
+              {/* Card 1 illustration — phlebotomist at door */}
+              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
+                <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
+                  {/* mint blob bg */}
+                  <ellipse cx="120" cy="130" rx="55" ry="68" fill="#6EE7B7" opacity="0.35"/>
+                  {/* door frame */}
+                  <rect x="82" y="52" width="72" height="140" rx="5" fill="white" stroke="#D1FAE5" strokeWidth="2"/>
+                  {/* door panel details */}
+                  <rect x="88" y="60" width="28" height="38" rx="3" fill="#ECFDF5"/>
+                  <rect x="120" y="60" width="28" height="38" rx="3" fill="#ECFDF5"/>
+                  <rect x="88" y="104" width="60" height="80" rx="3" fill="#ECFDF5"/>
+                  {/* door knob */}
+                  <circle cx="87" cy="138" r="5" fill="#6EE7B7"/>
+                  {/* door step */}
+                  <rect x="74" y="188" width="88" height="8" rx="3" fill="#D1FAE5"/>
+                  {/* plant pot */}
+                  <rect x="56" y="168" width="20" height="24" rx="3" fill="#A7F3D0"/>
+                  <ellipse cx="66" cy="168" rx="12" ry="6" fill="#6EE7B7"/>
+                  <path d="M66 162 Q58 148 52 140" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                  <ellipse cx="52" cy="138" rx="7" ry="5" fill="#34D399" transform="rotate(-20 52 138)"/>
+                  <path d="M66 160 Q72 146 78 138" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                  <ellipse cx="78" cy="136" rx="7" ry="5" fill="#34D399" transform="rotate(20 78 136)"/>
+
+                  {/* person — phlebotomist */}
+                  {/* head */}
+                  <circle cx="50" cy="80" r="22" fill="#FBBF85"/>
+                  {/* hair */}
+                  <path d="M28 74 Q28 54 50 52 Q72 54 72 74 L70 66 Q58 50 50 50 Q42 50 30 66 Z" fill="#2C1A0E"/>
+                  {/* body — white coat */}
+                  <path d="M24 114 Q24 105 50 102 Q76 105 76 114 L80 196 H20 Z" fill="white"/>
+                  {/* coat collar */}
+                  <path d="M44 104 L36 120 L50 126 Z" fill="#ECFDF5"/>
+                  <path d="M56 104 L64 120 L50 126 Z" fill="#ECFDF5"/>
+                  {/* red cross badge */}
+                  <circle cx="33" cy="115" r="10" fill="#EF4444"/>
+                  <rect x="30" y="110" width="6" height="10" rx="1" fill="white"/>
+                  <rect x="28" y="112" width="10" height="6" rx="1" fill="white"/>
+                  {/* arm holding bag */}
+                  <path d="M76 115 Q88 128 85 158" stroke="white" strokeWidth="20" strokeLinecap="round" fill="none"/>
+                  {/* medical bag */}
+                  <rect x="72" y="152" width="30" height="24" rx="5" fill="#FBBF24"/>
+                  <rect x="82" y="148" width="10" height="8" rx="3" fill="#F59E0B"/>
+                  <rect x="81" y="160" width="12" height="2" rx="1" fill="white"/>
+                  <rect x="86" y="155" width="2" height="12" rx="1" fill="white"/>
+                  {/* face */}
+                  <ellipse cx="43" cy="82" rx="5" ry="6" fill="white"/>
+                  <ellipse cx="57" cy="82" rx="5" ry="6" fill="white"/>
+                  <circle cx="44" cy="83" r="3.5" fill="#2C1A0E"/>
+                  <circle cx="58" cy="83" r="3.5" fill="#2C1A0E"/>
+                  <circle cx="45" cy="81.5" r="1.2" fill="white"/>
+                  <circle cx="59" cy="81.5" r="1.2" fill="white"/>
+                  <path d="M44 93 Q50 99 56 93" stroke="#C0856B" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  {/* face mask */}
+                  <path d="M32 85 Q32 100 50 100 Q68 100 68 85" fill="#DBEAFE" stroke="#BFDBFE" strokeWidth="1.5"/>
+                  <path d="M32 85 Q50 78 68 85" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="1"/>
+                  {/* floating dots */}
+                  <circle cx="18" cy="50" r="5" fill="#6EE7B7" opacity="0.6"/>
+                  <circle cx="165" cy="60" r="4" fill="#A7F3D0" opacity="0.6"/>
+                </svg>
               </div>
             </div>
 
@@ -2535,13 +2716,74 @@ export default function App() {
                   VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </button>
               </div>
-              <div style={{ width:160,position:"relative",flexShrink:0,overflow:"hidden" }}>
-                <img
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=85&auto=format&fit=crop"
-                  alt="Report delivery"
-                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top" }}
-                  onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#93C5FD,#60A5FA)"; }}
-                />
+              {/* Card 2 illustration — scooter / report delivery */}
+              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center" }}>
+                <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
+                  {/* blue blob bg */}
+                  <ellipse cx="100" cy="120" rx="72" ry="75" fill="#93C5FD" opacity="0.3"/>
+                  {/* road / ground */}
+                  <rect x="10" y="172" width="165" height="6" rx="3" fill="#BFDBFE" opacity="0.7"/>
+                  {/* motion lines */}
+                  <line x1="8" y1="148" x2="28" y2="148" stroke="#BFDBFE" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="4" y1="160" x2="20" y2="160" stroke="#BFDBFE" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="12" y1="136" x2="26" y2="136" stroke="#BFDBFE" strokeWidth="2" strokeLinecap="round"/>
+
+                  {/* scooter body */}
+                  {/* rear wheel */}
+                  <circle cx="62" cy="168" r="22" fill="#1F2937"/>
+                  <circle cx="62" cy="168" r="14" fill="#374151"/>
+                  <circle cx="62" cy="168" r="6" fill="#9CA3AF"/>
+                  {/* front wheel */}
+                  <circle cx="148" cy="168" r="20" fill="#1F2937"/>
+                  <circle cx="148" cy="168" r="12" fill="#374151"/>
+                  <circle cx="148" cy="168" r="5" fill="#9CA3AF"/>
+                  {/* scooter chassis */}
+                  <path d="M62 148 Q90 135 118 138 L140 148 Q148 158 148 168" stroke="#1E40AF" strokeWidth="14" strokeLinecap="round" fill="none"/>
+                  <path d="M62 148 L56 155" stroke="#1E40AF" strokeWidth="10" strokeLinecap="round"/>
+                  {/* scooter body platform */}
+                  <path d="M74 142 Q100 130 126 136 L130 148 L70 148 Z" fill="#2563EB"/>
+                  {/* handlebar */}
+                  <path d="M138 130 L148 142 L152 138" stroke="#374151" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+                  {/* front fairing */}
+                  <path d="M138 128 Q150 122 155 132 Q158 140 148 142" fill="#3B82F6" stroke="#2563EB" strokeWidth="1"/>
+                  {/* headlight */}
+                  <ellipse cx="153" cy="136" rx="5" ry="4" fill="#FDE68A"/>
+                  {/* mudguard */}
+                  <path d="M50 150 Q55 140 62 148" stroke="#1E40AF" strokeWidth="6" strokeLinecap="round" fill="none"/>
+
+                  {/* delivery box on back */}
+                  <rect x="72" y="106" width="44" height="38" rx="7" fill="white" stroke="#BFDBFE" strokeWidth="2"/>
+                  {/* cross on box */}
+                  <rect x="90" y="112" width="8" height="26" rx="2" fill="#EF4444"/>
+                  <rect x="83" y="119" width="22" height="8" rx="2" fill="#EF4444"/>
+                  {/* box strap */}
+                  <line x1="72" y1="125" x2="116" y2="125" stroke="#DBEAFE" strokeWidth="2" strokeDasharray="4 2"/>
+
+                  {/* rider — person on scooter */}
+                  {/* body */}
+                  <path d="M98 100 Q98 90 118 88 Q138 90 138 100 L136 140 L100 140 Z" fill="#EFF6FF"/>
+                  {/* legs */}
+                  <path d="M100 138 L98 160 L116 160 L120 140" fill="#374151"/>
+                  <path d="M136 138 L140 158 L148 150 L138 135" fill="#374151"/>
+                  {/* arm / handlebar reach */}
+                  <path d="M135 108 Q146 118 148 128" stroke="#EFF6FF" strokeWidth="14" strokeLinecap="round" fill="none"/>
+                  {/* head */}
+                  <circle cx="118" cy="74" r="20" fill="#FBBF85"/>
+                  {/* helmet */}
+                  <path d="M98 72 Q98 52 118 50 Q138 52 138 72 L136 68 Q124 54 118 54 Q112 54 100 68 Z" fill="#2563EB"/>
+                  <rect x="98" y="68" width="40" height="10" rx="4" fill="#1D4ED8"/>
+                  {/* visor */}
+                  <path d="M100 74 Q118 70 136 74" stroke="#93C5FD" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                  {/* face */}
+                  <ellipse cx="111" cy="76" rx="4" ry="5" fill="white"/>
+                  <ellipse cx="125" cy="76" rx="4" ry="5" fill="white"/>
+                  <circle cx="112" cy="77" r="3" fill="#2C1A0E"/>
+                  <circle cx="126" cy="77" r="3" fill="#2C1A0E"/>
+                  <path d="M112 86 Q118 91 124 86" stroke="#C0856B" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  {/* floating dots */}
+                  <circle cx="168" cy="52" r="6" fill="#93C5FD" opacity="0.6"/>
+                  <circle cx="30" cy="100" r="4" fill="#BFDBFE" opacity="0.6"/>
+                </svg>
               </div>
             </div>
           </div>
