@@ -714,97 +714,138 @@ const G = () => (
   `}</style>
 );
 
-/* ─── PRACTO-STYLE FLAT CIRCULAR ICONS ─────────────────────────────────────── */
+/* ─── MEDIBUDDY-STYLE FLAT CIRCULAR ICONS ───────────────────────────────────── */
+/* All icons: thin dark outlines (#1E293B), flat fills, soft pastel circle bg   */
 const IBlood = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#FEE2E2"/>
-    {[13,27,41].map((x,i)=>(<g key={x}>
-      <rect x={x} y={20} width={9} height={26} rx={4.5} fill={["#C7D2FE","#A5B4FC","#818CF8"][i]}/>
-      <rect x={x} y={33} width={9} height={13} rx={4.5} fill={["#EF4444","#F87171","#FCA5A5"][i]} opacity=".9"/>
-      <rect x={x-1} y={17} width={11} height={6} rx={2.5} fill="#4B5563"/>
-    </g>))}
-    <rect x={10} y={46} width={52} height={4} rx={2} fill="#E0E7FF"/>
-    <path d="M60 18C60 18 57 22 57 24C57 26.2 58.3 27 60 27C61.7 27 63 26.2 63 24C63 22 60 18 60 18Z" fill="#EF4444" opacity=".8"/>
+    {/* 3 test tubes in a rack */}
+    <rect x="18" y="38" width="36" height="5" rx="2" fill="#FECACA" stroke="#1E293B" strokeWidth="1.2"/>
+    {[22,32,42].map((x,i)=>(
+      <g key={x}>
+        <rect x={x} y={18} width={9} height={24} rx={4.5} fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+        <rect x={x} y={30} width={9} height={12} rx={4.5} fill={["#FCA5A5","#FB7185","#F87171"][i]}/>
+        <line x1={x+4.5} y1={14} x2={x+4.5} y2={18} stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x={x-1} y={12} width={11} height={5} rx={2} fill="#475569" stroke="#1E293B" strokeWidth="0.8"/>
+      </g>
+    ))}
+    {/* blood drop */}
+    <path d="M58 18C58 18 55 22 55 24C55 26 56.2 27 58 27C59.8 27 61 26 61 24C61 22 58 18 58 18Z" fill="#EF4444" stroke="#1E293B" strokeWidth="1"/>
   </svg>
 );
 const IThyroid = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
-    <circle cx="36" cy="36" r="36" fill="#FEF3C7"/>
-    <rect x="33" y="10" width="6" height="52" rx="3" fill="#FEF9C3" stroke="#FDE68A" strokeWidth="1"/>
-    <ellipse cx="22" cy="36" rx="11" ry="16" fill="#FBBF24" opacity=".9" transform="rotate(-12 22 36)"/>
-    <ellipse cx="22" cy="29" rx="6" ry="9" fill="#FCD34D" opacity=".6" transform="rotate(-12 22 29)"/>
-    <ellipse cx="50" cy="36" rx="11" ry="16" fill="#F59E0B" opacity=".9" transform="rotate(12 50 36)"/>
-    <ellipse cx="50" cy="29" rx="6" ry="9" fill="#FBBF24" opacity=".6" transform="rotate(12 50 29)"/>
-    <rect x="27" y="34" width="18" height="6" rx="3" fill="#D97706" opacity=".85"/>
-    {[[17,28],[17,44],[55,28],[55,44]].map(([cx,cy],i)=>(<circle key={i} cx={cx} cy={cy} r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/>))}
+    <circle cx="36" cy="36" r="36" fill="#FEF9C3"/>
+    {/* neck */}
+    <rect x="33" y="10" width="6" height="52" rx="3" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.2"/>
+    {/* left lobe */}
+    <ellipse cx="22" cy="37" rx="11" ry="15" fill="#FDE68A" stroke="#1E293B" strokeWidth="1.3" transform="rotate(-10 22 37)"/>
+    {/* right lobe */}
+    <ellipse cx="50" cy="37" rx="11" ry="15" fill="#FCD34D" stroke="#1E293B" strokeWidth="1.3" transform="rotate(10 50 37)"/>
+    {/* isthmus */}
+    <rect x="27" y="34" width="18" height="6" rx="3" fill="#F59E0B" stroke="#1E293B" strokeWidth="1"/>
+    {/* T3/T4 labels */}
+    <text x="22" y="39" textAnchor="middle" fontSize="8" fontWeight="800" fill="#1E293B" fontFamily="sans-serif">T3</text>
+    <text x="50" y="39" textAnchor="middle" fontSize="8" fontWeight="800" fill="#1E293B" fontFamily="sans-serif">T4</text>
   </svg>
 );
 const IDiabetes = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#DCFCE7"/>
-    <rect x="12" y="22" width="40" height="30" rx="8" fill="#fff" stroke="#86EFAC" strokeWidth="1.5"/>
-    <rect x="16" y="26" width="24" height="14" rx="3.5" fill="#F0FDF4"/>
-    <text x="18" y="37" fontSize="10" fontWeight="900" fill="#16A34A" fontFamily="monospace">98</text>
-    <text x="33" y="37" fontSize="7" fill="#4ADE80" fontFamily="monospace">mg</text>
-    <circle cx="50" cy="27" r="3" fill="#4ADE80"/>
-    <rect x="50" y="33" width="5" height="10" rx="2.5" fill="#86EFAC"/>
-    <rect x="16" y="43" width="12" height="4" rx="2" fill="#BFDBFE"/>
-    <path d="M58 14C58 14 55 18 55 20C55 22.2 56.3 23 58 23C59.7 23 61 22.2 61 20C61 18 58 14 58 14Z" fill="#EF4444" opacity=".8"/>
+    {/* glucometer body */}
+    <rect x="14" y="22" width="36" height="28" rx="7" fill="white" stroke="#1E293B" strokeWidth="1.3"/>
+    {/* screen */}
+    <rect x="18" y="27" width="22" height="14" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+    <text x="29" y="37" textAnchor="middle" fontSize="9" fontWeight="900" fill="#16A34A" fontFamily="sans-serif">126</text>
+    {/* button */}
+    <circle cx="46" cy="34" r="4" fill="#86EFAC" stroke="#1E293B" strokeWidth="1"/>
+    {/* strip slot */}
+    <rect x="18" y="44" width="12" height="3" rx="1.5" fill="#BBF7D0" stroke="#1E293B" strokeWidth="0.8"/>
+    {/* test strip */}
+    <rect x="30" y="34" width="5" height="16" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
+    {/* blood drop */}
+    <path d="M55 16C55 16 52 20 52 22C52 24 53.3 25 55 25C56.7 25 58 24 58 22C58 20 55 16 55 16Z" fill="#EF4444" stroke="#1E293B" strokeWidth="1"/>
   </svg>
 );
 const ICardiac = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#FFE4E6"/>
-    <path d="M36 60C36 60 14 47 14 32C14 23 20 17 27 17C31 17 35 19.5 36 23C37 19.5 41 17 45 17C52 17 58 23 58 32C58 47 36 60 36 60Z" fill="#FB7185" opacity=".9"/>
-    <polyline points="16,36 22,36 26,28 30,44 33,33 35,37 36,36 56,36" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
-    <circle cx="36" cy="36" r="3" fill="white" opacity=".9"/>
+    {/* heart outline */}
+    <path d="M36 58C36 58 13 45 13 30C13 21 19 16 26 16C30 16 34 18.5 36 22C38 18.5 42 16 46 16C53 16 59 21 59 30C59 45 36 58 36 58Z" fill="#FECDD3" stroke="#1E293B" strokeWidth="1.5"/>
+    {/* ECG wave across heart */}
+    <polyline points="16,33 22,33 26,24 30,42 33,30 35,34 37,34 41,26 45,34 56,34" stroke="#EF4444" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IVitamin = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#FFF7ED"/>
-    <rect x="24" y="24" width="24" height="34" rx="6" fill="#fff" stroke="#FED7AA" strokeWidth="1.5"/>
-    <rect x="21" y="16" width="30" height="11" rx="5" fill="#F97316"/>
-    <rect x="23" y="18" width="26" height="6" rx="3" fill="#FB923C"/>
-    <ellipse cx="36" cy="36" rx="7" ry="3" fill="#FCD34D" opacity=".9"/>
-    <ellipse cx="36" cy="44" rx="7" ry="3" fill="#FDE68A" opacity=".8"/>
-    <line x1="36" y1="18" x2="36" y2="24" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-    <line x1="33" y1="21" x2="39" y2="21" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-    <rect x="52" y="18" width="13" height="6" rx="3" fill="#A3E635" opacity=".9"/>
-    <rect x="52" y="18" width="6.5" height="6" rx="3" fill="#4ADE80" opacity=".9"/>
+    {/* pill bottle */}
+    <rect x="26" y="26" width="20" height="30" rx="5" fill="white" stroke="#1E293B" strokeWidth="1.3"/>
+    {/* cap */}
+    <rect x="23" y="18" width="26" height="11" rx="4" fill="#FB923C" stroke="#1E293B" strokeWidth="1.2"/>
+    {/* label line */}
+    <rect x="30" y="32" width="12" height="2.5" rx="1" fill="#FED7AA"/>
+    <rect x="30" y="37" width="12" height="2.5" rx="1" fill="#FED7AA"/>
+    {/* capsule pills */}
+    <rect x="48" y="20" width="14" height="7" rx="3.5" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
+    <line x1="55" y1="20" x2="55" y2="27" stroke="#1E293B" strokeWidth="0.8"/>
+    <rect x="48" y="20" width="7" height="7" rx="3.5" fill="#4ADE80" stroke="#1E293B" strokeWidth="0.5"/>
+    {/* sun rays (vitamins = sunshine) */}
+    {[0,60,120,180,240,300].map((d,i)=>(
+      <line key={i} x1="36" y1="52" x2={36+Math.cos((d-90)*Math.PI/180)*7} y2={52+Math.sin((d-90)*Math.PI/180)*7} stroke="#FBBF24" strokeWidth="1.5" strokeLinecap="round"/>
+    ))}
+    <circle cx="36" cy="52" r="4" fill="#FBBF24" stroke="#1E293B" strokeWidth="1"/>
   </svg>
 );
 const IKidney = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#EDE9FE"/>
-    <path d="M22 14C14 14 11 24 13 32C15 40 22 46 28 38C31 33 29 23 26 17C25 14.5 23.5 14 22 14Z" fill="#8B5CF6" opacity=".85"/>
-    <path d="M22 14C14 17 13 26 15 33" stroke="rgba(255,255,255,.4)" strokeWidth="1.6" strokeLinecap="round"/>
-    <path d="M50 14C58 14 61 24 59 32C57 40 50 46 44 38C41 33 43 23 46 17C47 14.5 48.5 14 50 14Z" fill="#7C3AED" opacity=".85"/>
-    <path d="M50 14C58 17 59 26 57 33" stroke="rgba(255,255,255,.4)" strokeWidth="1.6" strokeLinecap="round"/>
-    <ellipse cx="36" cy="36" rx="6" ry="4" fill="#DDD6FE" opacity=".9"/>
+    {/* left kidney */}
+    <path d="M20 16C12 16 9 26 11 34C13 42 20 48 26 40C29 35 27 25 24 19C23 16.5 21.5 16 20 16Z" fill="#C4B5FD" stroke="#1E293B" strokeWidth="1.3"/>
+    {/* left kidney highlight */}
+    <path d="M18 18C12 21 11 30 13 37" stroke="rgba(255,255,255,.5)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    {/* right kidney */}
+    <path d="M52 16C60 16 63 26 61 34C59 42 52 48 46 40C43 35 45 25 48 19C49 16.5 50.5 16 52 16Z" fill="#8B5CF6" stroke="#1E293B" strokeWidth="1.3"/>
+    <path d="M54 18C60 21 61 30 59 37" stroke="rgba(255,255,255,.5)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    {/* ureter connector */}
+    <path d="M26 40 Q36 46 46 40" stroke="#7C3AED" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+    <ellipse cx="36" cy="47" rx="5" ry="3.5" fill="#DDD6FE" stroke="#1E293B" strokeWidth="1"/>
   </svg>
 );
 const ILiver = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#FCE7F3"/>
-    <path d="M12 28C10 20 18 11 28 13C32 8 46 10 50 20C56 25 54 38 47 41C42 43 30 46 22 42C14 38 13 32 12 28Z" fill="#EC4899" opacity=".85"/>
-    <path d="M20 19C23 16 32 15 38 19C42 22 44 29 43 36" stroke="rgba(255,255,255,.35)" strokeWidth="2" strokeLinecap="round" fill="none"/>
-    <path d="M38 38 Q41 50 38 58" stroke="#BE185D" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-    <circle cx="38" cy="58" r="3" fill="#BE185D" opacity=".8"/>
+    {/* liver shape */}
+    <path d="M11 29C9 21 17 12 27 14C31 9 45 11 49 21C55 26 53 39 46 42C41 44 29 47 21 43C13 39 12 33 11 29Z" fill="#FBCFE8" stroke="#1E293B" strokeWidth="1.3"/>
+    {/* liver lobes division */}
+    <path d="M30 15C33 22 34 32 33 40" stroke="rgba(30,41,59,.2)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    {/* highlight */}
+    <path d="M19 20C22 17 31 16 37 20C41 23 43 30 42 37" stroke="rgba(255,255,255,.5)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    {/* bile duct */}
+    <path d="M37 39 Q40 51 37 59" stroke="#BE185D" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    <circle cx="37" cy="60" r="3" fill="#BE185D" stroke="#1E293B" strokeWidth="1"/>
   </svg>
 );
 const IPackage = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
     <circle cx="36" cy="36" r="36" fill="#EFF6FF"/>
-    <rect x="16" y="18" width="40" height="44" rx="5" fill="#fff" stroke="#BFDBFE" strokeWidth="1.5"/>
-    <rect x="28" y="12" width="16" height="10" rx="5" fill="#1158A6"/>
-    <rect x="30" y="14" width="12" height="6" rx="3" fill="#93C5FD"/>
-    {[28,36,44].map((y,i)=>(<g key={y}>
-      <rect x={24} y={y} width={24} height={3} rx={1.5} fill={i===2?"#DBEAFE":"#EFF6FF"}/>
-      {i<2&&<polyline points={`24,${y+1.5} 27,${y+4.5} 32,${y-1}`} stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>}
-    </g>))}
-    <path d="M48 44 L56 47.5 L56 55C56 58 48 61 48 61C48 61 40 58 40 55L40 47.5Z" fill="#1158A6" opacity=".9"/>
-    <polyline points="45,54 47.5,56.5 52,51" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    {/* clipboard / report */}
+    <rect x="18" y="16" width="36" height="44" rx="5" fill="white" stroke="#1E293B" strokeWidth="1.3"/>
+    {/* clip */}
+    <rect x="28" y="10" width="16" height="10" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.1"/>
+    <rect x="30" y="12" width="12" height="6" rx="3" fill="#93C5FD"/>
+    {/* checklist lines */}
+    <circle cx="25" cy="30" r="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
+    <polyline points="23.5,30 25,31.5 27,28.5" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <rect x="30" y="29" width="18" height="2.5" rx="1" fill="#DBEAFE"/>
+    <circle cx="25" cy="38" r="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
+    <polyline points="23.5,38 25,39.5 27,36.5" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <rect x="30" y="37" width="14" height="2.5" rx="1" fill="#DBEAFE"/>
+    <circle cx="25" cy="46" r="3" fill="#F0FDF4" stroke="#1E293B" strokeWidth="1"/>
+    <rect x="30" y="45" width="18" height="2.5" rx="1" fill="#E2E8F0"/>
+    {/* shield badge */}
+    <path d="M48 44L56 47.5L56 55C56 58 48 61 48 61C48 61 40 58 40 55L40 47.5Z" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
+    <polyline points="45,54 47.5,56.5 52,51" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IRadiology = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#F1F5F9" stroke="#CBD5E1" strokeWidth=".8"/><rect x="17" y="9" width="14" height="18" rx="7" fill="none" stroke="#475569" strokeWidth="1.8"/><line x1="24" y1="27" x2="24" y2="41" stroke="#475569" strokeWidth="1.8"/><line x1="18" y1="34" x2="30" y2="34" stroke="#475569" strokeWidth="1.4"/>{[32,36,40].map(y=><circle key={y} cx="24" cy={y} r="1.3" fill="#94A3B8"/>)}</svg>);
@@ -2993,10 +3034,68 @@ export default function App() {
           </div>
           <div style={{ maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column" }}>
             {[
-              { n:"01",accent:"#1158A6",bg:"#EFF6FF",border:"#DBEAFE",label:"Search & Compare",desc:"Browse diagnostic tests and health packages by name, category, or condition. View real-time pricing from multiple NABL-accredited laboratories.",icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> },
-              { n:"02",accent:"#0EA5E9",bg:"#F0F9FF",border:"#BAE6FD",label:"Schedule Collection",desc:"Select a preferred date and time slot. Choose between a laboratory visit or a doorstep sample collection at no additional charge.",icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> },
-              { n:"03",accent:"#8B5CF6",bg:"#F5F3FF",border:"#DDD6FE",label:"Sample Collection",desc:"A trained phlebotomist arrives at your location within the confirmed window, equipped with sterile, single-use collection kits compliant with ICMR guidelines.",icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-              { n:"04",accent:"#16A34A",bg:"#F0FDF4",border:"#BBF7D0",label:"Receive Reports",desc:"Authenticated diagnostic reports are delivered directly to your registered email and WhatsApp. Access and download them at any time through your booking reference.",icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></svg> },
+              { n:"01",accent:"#1158A6",bg:"#EFF6FF",border:"#DBEAFE",label:"Search & Compare",desc:"Browse diagnostic tests and health packages by name, category, or condition. View real-time pricing from multiple NABL-accredited laboratories.",icon:
+                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
+                  {/* magnifying glass over a screen/list */}
+                  <rect x="2" y="4" width="22" height="28" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
+                  <line x1="7" y1="12" x2="19" y2="12" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="7" y1="17" x2="19" y2="17" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="7" y1="22" x2="15" y2="22" stroke="#BFDBFE" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="26" cy="26" r="7" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                  <circle cx="24.5" cy="24.5" r="3.5" fill="none" stroke="#1158A6" strokeWidth="1.5"/>
+                  <line x1="27.5" y1="27.5" x2="31" y2="31" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+              },
+              { n:"02",accent:"#0EA5E9",bg:"#F0F9FF",border:"#BAE6FD",label:"Schedule Collection",desc:"Select a preferred date and time slot. Choose between a laboratory visit or a doorstep sample collection at no additional charge.",icon:
+                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
+                  {/* calendar with clock */}
+                  <rect x="3" y="6" width="24" height="24" rx="4" fill="#E0F2FE" stroke="#1E293B" strokeWidth="1.4"/>
+                  <rect x="3" y="6" width="24" height="8" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
+                  <rect x="3" y="10" width="24" height="4" fill="#BAE6FD"/>
+                  <line x1="10" y1="3" x2="10" y2="9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="20" y1="3" x2="20" y2="9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="27" cy="27" r="8" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
+                  <line x1="27" y1="22" x2="27" y2="27" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/>
+                  <line x1="27" y1="27" x2="30" y2="29" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/>
+                  <circle cx="27" cy="27" r="1.5" fill="#0EA5E9"/>
+                  {/* day dots */}
+                  {[9,15,21].map(x=><rect key={x} x={x} y={20} width={3} height={3} rx={1} fill="#BAE6FD"/>)}
+                  {[9,15].map(x=><rect key={x} x={x} y={26} width={3} height={3} rx={1} fill="#BAE6FD"/>)}
+                </svg>
+              },
+              { n:"03",accent:"#8B5CF6",bg:"#F5F3FF",border:"#DDD6FE",label:"Sample Collection",desc:"A trained phlebotomist arrives at your location within the confirmed window, equipped with sterile, single-use collection kits compliant with ICMR guidelines.",icon:
+                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
+                  {/* house with medical cross */}
+                  <path d="M18 4L32 14V32H22V22H14V32H4V14Z" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
+                  <path d="M18 4L32 14" stroke="#1E293B" strokeWidth="1.4" strokeLinecap="round"/>
+                  {/* door */}
+                  <rect x="14" y="22" width="8" height="10" rx="1.5" fill="#C4B5FD" stroke="#1E293B" strokeWidth="1"/>
+                  <circle cx="21" cy="27" r="1" fill="#1E293B"/>
+                  {/* medical cross on house front */}
+                  <rect x="16" y="11" width="4" height="8" rx="1" fill="#8B5CF6"/>
+                  <rect x="14" y="13" width="8" height="4" rx="1" fill="#8B5CF6"/>
+                  {/* phlebotomist figure beside */}
+                  <circle cx="30" cy="19" r="4" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1"/>
+                  <path d="M27 23 Q27 28 30 28 Q33 28 33 23" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1"/>
+                </svg>
+              },
+              { n:"04",accent:"#16A34A",bg:"#F0FDF4",border:"#BBF7D0",label:"Receive Reports",desc:"Authenticated diagnostic reports are delivered directly to your registered email and WhatsApp. Access and download them at any time through your booking reference.",icon:
+                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
+                  {/* phone with report + checkmark */}
+                  <rect x="8" y="2" width="20" height="32" rx="4" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1.4"/>
+                  <rect x="13" y="0" width="10" height="5" rx="2" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
+                  {/* report lines */}
+                  <rect x="12" y="10" width="12" height="2" rx="1" fill="#86EFAC"/>
+                  <rect x="12" y="14" width="9" height="2" rx="1" fill="#BBF7D0"/>
+                  {/* bar chart */}
+                  <rect x="12" y="23" width="3" height="7" rx="1" fill="#4ADE80"/>
+                  <rect x="17" y="26" width="3" height="4" rx="1" fill="#86EFAC"/>
+                  <rect x="22" y="21" width="3" height="9" rx="1" fill="#22C55E"/>
+                  {/* big green checkmark badge */}
+                  <circle cx="30" cy="30" r="6" fill="#16A34A" stroke="#1E293B" strokeWidth="1.2"/>
+                  <polyline points="27,30 29.5,32.5 34,27" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+              },
             ].map((s,i,arr)=>(
               <div key={s.n} style={{ display:"flex",gap:0,alignItems:"stretch" }}>
                 <div style={{ display:"flex",flexDirection:"column",alignItems:"center",marginRight:22,flexShrink:0 }}>
