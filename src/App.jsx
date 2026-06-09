@@ -2548,6 +2548,9 @@ export default function App() {
       </div>
 
 
+      {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
+      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
+
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
