@@ -1335,77 +1335,69 @@ const LAB_META = [
 ];
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"52px 0 48px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+  <section style={{ padding:"64px 0 60px", background:"linear-gradient(160deg,#F0F4FF 0%,#FAF8FF 60%,#F0F9FF 100%)", borderBottom:"1px solid #E0E7FF" }}>
     <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 24px" }}>
 
       {/* heading */}
-      <div style={{ textAlign:"center", marginBottom:32 }}>
-        <div style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#F0FDF4",border:"1px solid #BBF7D0",borderRadius:50,padding:"4px 14px",marginBottom:14 }}>
-          <span style={{ width:6,height:6,borderRadius:"50%",background:"#16A34A",display:"inline-block",flexShrink:0 }}/>
-          <span style={{ fontSize:".68rem",fontWeight:800,color:"#15803D",letterSpacing:".1em",textTransform:"uppercase" }}>Verified Partners</span>
+      <div style={{ textAlign:"center", marginBottom:40 }}>
+        <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.18)",borderRadius:50,padding:"5px 16px",marginBottom:16 }}>
+          <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1158A6"/></svg>
+          <span style={{ fontSize:".68rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase" }}>Verified Lab Partners</span>
         </div>
-        <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.8rem)",fontWeight:800,color:"#0D1117",marginBottom:6,letterSpacing:"-.02em",lineHeight:1.2 }}>Our Trusted Labs</h2>
-        <p style={{ color:"#6B7280",fontSize:".86rem" }}>NABL-accredited diagnostic centres with verified pricing and free home collection.</p>
+        <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2.1rem)",fontWeight:900,color:"#0D1117",marginBottom:8,letterSpacing:"-.03em",lineHeight:1.15 }}>Our Trusted Labs</h2>
+        <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:480,margin:"0 auto",lineHeight:1.7 }}>Partnered with India's top NABL-accredited diagnostic centres for accurate results and hassle-free home collection.</p>
       </div>
 
-      {/* clickable card */}
-      <div onClick={()=>navTo("labs")} style={{ cursor:"pointer" }}
-        onMouseEnter={e=>{ e.currentTarget.querySelector(".labs-banner").style.boxShadow="0 12px 40px rgba(0,0,0,.10)"; e.currentTarget.querySelector(".labs-banner").style.transform="translateY(-3px)"; }}
-        onMouseLeave={e=>{ e.currentTarget.querySelector(".labs-banner").style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; e.currentTarget.querySelector(".labs-banner").style.transform="translateY(0)"; }}>
-
-        <div className="labs-banner" style={{ background:"#F8FAFF", border:"1px solid #E0E7FF", borderRadius:22, padding:"36px 40px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:32, boxShadow:"0 2px 16px rgba(0,0,0,.06)", transition:"all .25s ease", flexWrap:"wrap" }}>
-
-          {/* left — stats + lab chips */}
-          <div style={{ flex:1, minWidth:260 }}>
-            <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.25rem,2.6vw,1.75rem)",color:"#0D1117",lineHeight:1.25,marginBottom:8 }}>
-              Find the Right Lab<br/>
-              <span style={{ color:"#1158A6" }}>Near You</span>
-            </div>
-            <p style={{ color:"#6B7280",fontSize:".85rem",marginBottom:20,lineHeight:1.6 }}>Choose from 6 trusted diagnostic centres with transparent pricing, NABL certification and same-day home collection.</p>
-
-            {/* stats row */}
-            <div style={{ display:"flex",gap:24,flexWrap:"wrap",marginBottom:24 }}>
-              {[["500+","Tests Available"],["Free","Home Collection"],["6 hrs","Report Delivery"],["NABL","Certified Labs"]].map(([v,l])=>(
-                <div key={l} style={{ display:"flex",flexDirection:"column",gap:2 }}>
-                  <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#1158A6",lineHeight:1 }}>{v}</span>
-                  <span style={{ fontSize:".68rem",color:"#6B7280",fontWeight:600 }}>{l}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* lab chips */}
-            <div style={{ display:"flex",gap:8,flexWrap:"wrap",marginBottom:28 }}>
-              {["Apollo","SRL","Metropolis","Dr Lal","Thyrocare","Vijaya"].map(name=>(
-                <span key={name} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:50,padding:"5px 14px",fontSize:".72rem",fontWeight:700,color:"#1158A6" }}>{name}</span>
-              ))}
-            </div>
-
-            <div style={{ display:"inline-flex",alignItems:"center",gap:10,background:"#1158A6",borderRadius:50,padding:"12px 28px",fontWeight:800,fontSize:".88rem",color:"#fff",boxShadow:"0 4px 16px rgba(17,88,166,.25)" }}>
-              View All Labs
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-            </div>
+      {/* stats bar */}
+      <div style={{ display:"flex",justifyContent:"center",gap:0,marginBottom:36,flexWrap:"wrap" }}>
+        {[["500+","Tests Available","#1158A6"],["6 hrs","Report Delivery","#059669"],["Free","Home Collection","#9333EA"],["NABL","Certified All Labs","#EA580C"]].map(([v,l,c],i,arr)=>(
+          <div key={l} style={{ display:"flex",flexDirection:"column",alignItems:"center",padding:"16px 32px",borderRight:i<arr.length-1?"1px solid #E0E7FF":"none",flex:1,minWidth:120 }}>
+            <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.3rem,2.5vw,1.8rem)",color:c,lineHeight:1 }}>{v}</span>
+            <span style={{ fontSize:".72rem",color:"#64748B",fontWeight:600,marginTop:4,textAlign:"center" }}>{l}</span>
           </div>
+        ))}
+      </div>
 
-          {/* right — lab icons grid */}
-          <div style={{ flexShrink:0, display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, maxWidth:280 }}>
-            {[
-              { name:"Apollo",     bg:"#FEF2F2", color:"#DC2626", icon:"🔬" },
-              { name:"SRL",        bg:"#FFF7ED", color:"#EA580C", icon:"🧪" },
-              { name:"Metropolis", bg:"#F0FDF4", color:"#16A34A", icon:"🔭" },
-              { name:"Dr Lal",     bg:"#EFF6FF", color:"#1158A6", icon:"📋" },
-              { name:"Thyrocare",  bg:"#FDF4FF", color:"#9333EA", icon:"🫀" },
-              { name:"Vijaya",     bg:"#F0F9FF", color:"#0369A1", icon:"🩻" },
-            ].map(l=>(
-              <div key={l.name} style={{ background:l.bg, border:`1.5px solid ${l.color}22`, borderRadius:14, padding:"16px 12px", display:"flex", flexDirection:"column", alignItems:"center", gap:8, transition:"transform .2s" }}
-                onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"}
-                onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>
-                <span style={{ fontSize:"1.6rem",lineHeight:1 }}>{l.icon}</span>
-                <span style={{ fontSize:".65rem",fontWeight:800,color:l.color,textAlign:"center",lineHeight:1.2 }}>{l.name}</span>
+      {/* lab cards row — clickable, navigates to labs */}
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:14, marginBottom:32 }}>
+        {[
+          { name:"Apollo\nDiagnostics",  short:"Apollo",     accent:"#1158A6", bg:"#EFF6FF", bar:"#DBEAFE", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#DBEAFE"/><circle cx="24" cy="18" r="8" fill="none" stroke="#1158A6" strokeWidth="1.8"/><path d="M16 18 Q16 10 24 8 Q32 10 32 18" fill="#1158A6" opacity=".15"/><rect x="20" y="15" width="8" height="6" rx="1" fill="none" stroke="#1158A6" strokeWidth="1.5"/><line x1="18" y1="30" x2="30" y2="30" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="34" x2="27" y2="34" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/></svg> },
+          { name:"SRL\nDiagnostics",     short:"SRL",        accent:"#EA580C", bg:"#FFF7ED", bar:"#FED7AA", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#FED7AA"/><rect x="19" y="10" width="6" height="20" rx="3" fill="none" stroke="#EA580C" strokeWidth="1.8"/><path d="M19 22 Q19 34 24 36 Q29 34 29 22 Z" fill="#FDBA74" opacity="0.8"/><line x1="17" y1="10" x2="31" y2="10" stroke="#EA580C" strokeWidth="2" strokeLinecap="round"/><circle cx="32" cy="16" r="5" fill="none" stroke="#EA580C" strokeWidth="1.5"/><circle cx="16" cy="18" r="4" fill="none" stroke="#EA580C" strokeWidth="1.5"/></svg> },
+          { name:"Metropolis\nHealthcare",short:"Metropolis", accent:"#16A34A", bg:"#F0FDF4", bar:"#BBF7D0", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#BBF7D0"/><circle cx="24" cy="24" r="10" fill="none" stroke="#16A34A" strokeWidth="1.8"/><circle cx="24" cy="24" r="4" fill="#16A34A"/><line x1="24" y1="10" x2="24" y2="15" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="24" y1="33" x2="24" y2="38" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="10" y1="24" x2="15" y2="24" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="33" y1="24" x2="38" y2="24" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/></svg> },
+          { name:"Dr Lal\nPathLabs",     short:"Dr Lal",     accent:"#7C3AED", bg:"#F5F3FF", bar:"#DDD6FE", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#DDD6FE"/><rect x="14" y="12" width="20" height="26" rx="4" fill="none" stroke="#7C3AED" strokeWidth="1.8"/><rect x="19" y="8" width="10" height="7" rx="2" fill="none" stroke="#7C3AED" strokeWidth="1.5"/><line x1="18" y1="22" x2="30" y2="22" stroke="#7C3AED" strokeWidth="1.4"/><line x1="18" y1="27" x2="30" y2="27" stroke="#7C3AED" strokeWidth="1.4"/><path d="M18 32 L21 35 L30 26" stroke="#7C3AED" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg> },
+          { name:"Thyrocare\nTech",      short:"Thyrocare",  accent:"#0369A1", bg:"#F0F9FF", bar:"#BAE6FD", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#BAE6FD"/><path d="M24 14 C18 14 14 18 14 23 C14 28 18 30 24 30 C30 30 34 28 34 23 C34 18 30 14 24 14Z" fill="none" stroke="#0369A1" strokeWidth="1.8"/><path d="M20 23 C20 20 22 18 24 18 C26 18 28 20 28 23" fill="none" stroke="#0369A1" strokeWidth="1.5"/><line x1="24" y1="30" x2="24" y2="38" stroke="#0369A1" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="36" x2="28" y2="36" stroke="#0369A1" strokeWidth="1.8" strokeLinecap="round"/></svg> },
+          { name:"Vijaya\nDiagnostics",  short:"Vijaya",     accent:"#9333EA", bg:"#FDF4FF", bar:"#E9D5FF", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#E9D5FF"/><rect x="13" y="14" width="22" height="22" rx="3" fill="none" stroke="#9333EA" strokeWidth="1.8"/><line x1="13" y1="20" x2="35" y2="20" stroke="#9333EA" strokeWidth="1.4"/><circle cx="24" cy="28" r="4" fill="none" stroke="#9333EA" strokeWidth="1.5"/><circle cx="24" cy="28" r="1.5" fill="#9333EA"/></svg> },
+        ].map(l=>(
+          <div key={l.short} onClick={()=>navTo("labs")} className="hover-lift"
+            style={{ background:"#fff", border:"1px solid #E8EEFF", borderRadius:18, overflow:"hidden", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", boxShadow:"0 2px 12px rgba(0,0,0,.05)", transition:"all .22s ease" }}
+            onMouseEnter={e=>{ e.currentTarget.style.boxShadow=`0 8px 32px ${l.accent}25`; e.currentTarget.style.borderColor=`${l.accent}55`; e.currentTarget.style.transform="translateY(-4px)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.05)"; e.currentTarget.style.borderColor="#E8EEFF"; e.currentTarget.style.transform="translateY(0)"; }}>
+            {/* coloured top bar */}
+            <div style={{ width:"100%",height:4,background:`linear-gradient(90deg,${l.accent},${l.accent}99)` }}/>
+            <div style={{ padding:"20px 12px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:10,width:"100%" }}>
+              {/* icon */}
+              <div style={{ width:52,height:52,borderRadius:14,background:l.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                {l.svg}
               </div>
-            ))}
+              <div style={{ textAlign:"center" }}>
+                <div style={{ fontWeight:800,fontSize:".75rem",color:"#0D1117",lineHeight:1.3,whiteSpace:"pre-line" }}>{l.name}</div>
+              </div>
+              {/* NABL badge */}
+              <div style={{ background:l.bg,border:`1px solid ${l.accent}33`,borderRadius:50,padding:"2px 10px",fontSize:".62rem",fontWeight:700,color:l.accent }}>✓ NABL</div>
+            </div>
           </div>
+        ))}
+      </div>
 
-        </div>
+      {/* bottom CTA */}
+      <div style={{ textAlign:"center" }}>
+        <button onClick={()=>navTo("labs")}
+          style={{ display:"inline-flex",alignItems:"center",gap:10,background:"#0D1117",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 6px 24px rgba(0,0,0,.18)",transition:"all .2s" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
+          Explore All Labs & Prices
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
       </div>
 
     </div>
@@ -2731,74 +2723,22 @@ export default function App() {
               { title:"Diabetes Care",         sub:"12 Tests · NABL Certified",     price:399,  mrp:899,  off:56, badge:"55% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=85&auto=format&fit=crop" },
               { title:"Heart Health",          sub:"22 Tests · NABL Certified",     price:1799, mrp:2999, off:40, badge:"Top Doctors",    badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=85&auto=format&fit=crop" },
               { title:"Thyroid Profile",       sub:"T3, T4, TSH · NABL Certified",  price:399,  mrp:799,  off:50, badge:"NABL",           badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=600&q=85&auto=format&fit=crop" },
-              { title:"Women's Wellness",      sub:"40+ Tests · NABL Certified",    price:2299, mrp:3999, off:43, badge:"Women Special",  badgeColor:"#9333EA",  img:"__WOMEN_SVG__" },
+              { title:"Women's Wellness",      sub:"40+ Tests · NABL Certified",    price:2299, mrp:3999, off:43, badge:"Women Special",  badgeColor:"#9333EA",  img:"https://images.unsplash.com/photo-1571772996211-2f02974a8439?w=600&q=85&auto=format&fit=crop" },
               { title:"Senior Citizen",        sub:"55+ Tests · NABL Certified",    price:2499, mrp:4499, off:44, badge:"45% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title} className="hover-lift"
                 style={{ background:"#fff",borderRadius:16,border:"1px solid #EEF2FF",overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column" }}
                 onClick={()=>navTo("labs")}>
                 {/* Image */}
-                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0,background:pkg.img==="__WOMEN_SVG__"?"linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%)":"transparent" }}>
-                  {pkg.img==="__WOMEN_SVG__" ? (
-                    <svg viewBox="0 0 300 160" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"100%"}}>
-                      {/* pastel blobs */}
-                      <ellipse cx="240" cy="80" rx="80" ry="75" fill="#DDD6FE" opacity="0.5"/>
-                      <ellipse cx="60" cy="100" rx="50" ry="45" fill="#C4B5FD" opacity="0.3"/>
-                      {/* heart symbol */}
-                      <path d="M148 48 C148 40 138 34 130 42 C122 34 112 40 112 48 C112 64 130 76 130 76 C130 76 148 64 148 48Z" fill="#F9A8D4" stroke="#9333EA" strokeWidth="1.5"/>
-                      {/* woman figure */}
-                      {/* head */}
-                      <circle cx="200" cy="52" r="22" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.2"/>
-                      {/* hair */}
-                      <path d="M178 46 Q178 24 200 21 Q222 24 222 46 L219 36 Q208 22 200 22 Q192 22 181 36 Z" fill="#7C3AED"/>
-                      <path d="M178 46 Q172 56 174 70" stroke="#7C3AED" strokeWidth="5" strokeLinecap="round" fill="none"/>
-                      <path d="M222 46 Q228 56 226 70" stroke="#7C3AED" strokeWidth="5" strokeLinecap="round" fill="none"/>
-                      {/* eyes */}
-                      <ellipse cx="192" cy="52" rx="4" ry="4.5" fill="white"/>
-                      <ellipse cx="208" cy="52" rx="4" ry="4.5" fill="white"/>
-                      <circle cx="193" cy="53" r="2.5" fill="#1E293B"/>
-                      <circle cx="209" cy="53" r="2.5" fill="#1E293B"/>
-                      <circle cx="194" cy="52" r="1" fill="white"/>
-                      <circle cx="210" cy="52" r="1" fill="white"/>
-                      {/* smile */}
-                      <path d="M194 63 Q200 69 206 63" stroke="#C0856B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                      {/* body — purple top */}
-                      <path d="M178 80 Q178 72 200 70 Q222 72 222 80 L226 160 H174 Z" fill="#7C3AED"/>
-                      {/* collar */}
-                      <path d="M194 72 L188 88 L200 94 L212 88 L206 72 Z" fill="#A78BFA"/>
-                      {/* stethoscope */}
-                      <path d="M193 78 Q183 98 184 112 Q185 124 196 122 Q207 120 208 108 Q209 92 199 80" stroke="#4C1D95" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                      <circle cx="199" cy="79" r="4" fill="none" stroke="#4C1D95" strokeWidth="1.5"/>
-                      <circle cx="196" cy="122" r="5" fill="#4C1D95"/>
-                      {/* arms */}
-                      <path d="M178 82 Q162 96 164 118" stroke="#7C3AED" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                      <path d="M222 82 Q238 96 236 118" stroke="#7C3AED" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                      {/* clipboard in right hand */}
-                      <rect x="228" y="108" width="26" height="32" rx="4" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                      <rect x="234" y="104" width="14" height="8" rx="2" fill="#DDD6FE" stroke="#1E293B" strokeWidth="1"/>
-                      <line x1="232" y1="120" x2="250" y2="120" stroke="#E5E7EB" strokeWidth="1.2"/>
-                      <line x1="232" y1="127" x2="250" y2="127" stroke="#E5E7EB" strokeWidth="1.2"/>
-                      <path d="M232 133 L236 137 L244 129" stroke="#9333EA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      {/* floating health icons */}
-                      <circle cx="44" cy="44" r="16" fill="#EDE9FE" stroke="#7C3AED" strokeWidth="1"/>
-                      <path d="M44 36 Q37 36 37 43 Q37 50 44 50 Q51 50 51 43 Q51 36 44 36" fill="#F9A8D4"/>
-                      <path d="M38 43 C38 38 44 34 44 34 C44 34 50 38 50 43 C50 48 44 52 44 52 C44 52 38 48 38 43Z" fill="#F9A8D4" stroke="#9333EA" strokeWidth="1"/>
-                      <circle cx="82" cy="28" r="12" fill="#F0FDF4" stroke="#16A34A" strokeWidth="1"/>
-                      <rect x="79" y="23" width="6" height="10" rx="1" fill="#22C55E"/>
-                      <rect x="77" y="25.5" width="10" height="5" rx="1" fill="#22C55E"/>
-                      <circle cx="44" cy="128" r="12" fill="#FFF7ED" stroke="#EA580C" strokeWidth="1"/>
-                      <text x="38" y="133" fontSize="11" fill="#EA580C" fontWeight="bold">℃</text>
-                    </svg>
-                  ) : (
-                    <img
-                      src={pkg.img}
-                      alt={pkg.title}
-                      style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .4s ease' }}
-                      onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06)'}
-                      onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
-                      onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}11)`; }}
-                    />
-                  )}
+                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                  <img
+                    src={pkg.img}
+                    alt={pkg.title}
+                    style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .4s ease' }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06)'}
+                    onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+                    onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}11)`; }}
+                  />
                   {/* Top-left badge */}
                   <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"4px 10px",fontSize:".66rem",fontWeight:800,letterSpacing:".02em" }}>
                     {pkg.badge}
