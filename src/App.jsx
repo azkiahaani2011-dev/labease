@@ -1259,12 +1259,78 @@ const UploadPrescription = () => {
 };
 
 /* ─── TRUSTED LABS SECTION ────────────────────────────────────────────────── */
+/* flat SVG icons per lab — MediBuddy style */
+const LabIcon = ({ id, s=44 }) => {
+  const icons = {
+    1: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="12" r="8" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.2"/>
+        <path d="M10 44 Q10 30 22 28 Q34 30 34 44" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/>
+        <path d="M14 28 Q12 34 13 38 Q14 42 22 40 Q30 42 31 38 Q32 34 30 28" fill="white" stroke="#1E293B" strokeWidth="1.1"/>
+        <path d="M16 30 Q13 36 15 38 Q17 40 22 39 Q27 40 29 38 Q31 36 28 30" stroke="#0066CC" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
+        <circle cx="16" cy="32" r="2.5" fill="none" stroke="#0066CC" strokeWidth="1.2"/>
+        <circle cx="28" cy="32" r="2.5" fill="none" stroke="#0066CC" strokeWidth="1.2"/>
+        <circle cx="22" cy="38" r="3" fill="#0066CC" stroke="#1E293B" strokeWidth="0.8"/>
+        <circle cx="22" cy="38" r="1.5" fill="#93C5FD"/>
+      </svg>,
+    2: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <rect x="8" y="30" width="26" height="4" rx="2" fill="#FECACA" stroke="#1E293B" strokeWidth="1"/>
+        {[10,19,28].map((x,i)=>(
+          <g key={x}>
+            <rect x={x} y={10} width={7} height={22} rx={3.5} fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+            <rect x={x} y={22} width={7} height={10} rx={3.5} fill={["#FCA5A5","#FB7185","#F87171"][i]}/>
+            <rect x={x-1} y={7} width={9} height={4} rx={2} fill="#475569" stroke="#1E293B" strokeWidth="0.8"/>
+          </g>
+        ))}
+        <path d="M37 8C37 8 34.5 12 34.5 14C34.5 15.8 35.5 17 37 17C38.5 17 39.5 15.8 39.5 14C39.5 12 37 8 37 8Z" fill="#EF4444" stroke="#1E293B" strokeWidth="1"/>
+      </svg>,
+    3: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <rect x="18" y="6" width="8" height="14" rx="3" fill="#DDD6FE" stroke="#1E293B" strokeWidth="1.2"/>
+        <rect x="15" y="18" width="14" height="5" rx="2" fill="#C4B5FD" stroke="#1E293B" strokeWidth="1.1"/>
+        <path d="M22 23 L22 32" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x="12" y="32" width="20" height="4" rx="2" fill="#8B5CF6" stroke="#1E293B" strokeWidth="1"/>
+        <path d="M26 27 Q34 25 36 29" stroke="#1E293B" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
+        <circle cx="36" cy="29" r="4" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1"/>
+        <circle cx="36" cy="29" r="2" fill="#8B5CF6"/>
+        <line x1="22" y1="6" x2="22" y2="3" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round"/>
+        <circle cx="22" cy="3" r="2.5" fill="#C4B5FD" stroke="#1E293B" strokeWidth="0.8"/>
+      </svg>,
+    4: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <rect x="8" y="6" width="26" height="32" rx="5" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+        <rect x="15" y="2" width="12" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
+        <line x1="12" y1="18" x2="30" y2="18" stroke="#DCFCE7" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="12" y1="23" x2="27" y2="23" stroke="#DCFCE7" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="12" y1="28" x2="24" y2="28" stroke="#DCFCE7" strokeWidth="1.5" strokeLinecap="round"/>
+        <circle cx="30" cy="32" r="8" fill="#16A34A" stroke="#1E293B" strokeWidth="1.2"/>
+        <polyline points="27,32 29.5,34.5 33.5,29" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      </svg>,
+    5: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <rect x="20" y="6" width="4" height="32" rx="2" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1"/>
+        <ellipse cx="13" cy="22" rx="7" ry="11" fill="#FDE68A" stroke="#1E293B" strokeWidth="1.2" transform="rotate(-8 13 22)"/>
+        <ellipse cx="31" cy="22" rx="7" ry="11" fill="#FCD34D" stroke="#1E293B" strokeWidth="1.2" transform="rotate(8 31 22)"/>
+        <rect x="16" y="20" width="12" height="5" rx="2.5" fill="#F59E0B" stroke="#1E293B" strokeWidth="1"/>
+        <text x="13" y="24" textAnchor="middle" fontSize="6" fontWeight="800" fill="#1E293B" fontFamily="sans-serif">T3</text>
+        <text x="31" y="24" textAnchor="middle" fontSize="6" fontWeight="800" fill="#1E293B" fontFamily="sans-serif">T4</text>
+      </svg>,
+    6: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
+        <rect x="6" y="8" width="32" height="24" rx="5" fill="#E0F2FE" stroke="#1E293B" strokeWidth="1.2"/>
+        <rect x="10" y="12" width="24" height="16" rx="3" fill="white" stroke="#1E293B" strokeWidth="1"/>
+        <line x1="10" y1="18" x2="34" y2="18" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="2 2"/>
+        <line x1="10" y1="24" x2="34" y2="24" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="2 2"/>
+        <ellipse cx="22" cy="17" rx="4" ry="5" fill="#BAE6FD"/>
+        <path d="M16 28 Q16 22 22 21 Q28 22 28 28" fill="#BAE6FD"/>
+        <rect x="8" y="32" width="28" height="4" rx="2" fill="#0369A1" stroke="#1E293B" strokeWidth="1"/>
+        <rect x="18" y="36" width="8" height="5" rx="1" fill="#0EA5E9" stroke="#1E293B" strokeWidth="0.8"/>
+      </svg>,
+  };
+  return icons[id] || null;
+};
+
 const LAB_META = [
-  { id:1, short:"Apollo", accent:"#0066CC", bg:"#EBF3FF", icon:"A", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001" },
-  { id:2, short:"SRL",    accent:"#E8380D", bg:"#FEF1EE", icon:"S", city:"Mumbai",    tag:"Pan-India Chain",   since:"Est. 1995" },
-  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", icon:"M", city:"Hyderabad", tag:"Highest Rated",  since:"Est. 1980" },
-  { id:4, short:"Dr Lal", accent:"#047857", bg:"#ECFDF5", icon:"L", city:"Delhi",     tag:"75+ Years Legacy",  since:"Est. 1949" },
-  { id:5, short:"Thyrocare", accent:"#B45309", bg:"#FFFBEB", icon:"T", city:"Chennai", tag:"Specialist Lab",   since:"Est. 1996" },
+  { id:1, short:"Apollo", accent:"#0066CC", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001" },
+  { id:2, short:"SRL",    accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",   since:"Est. 1995" },
+  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",  since:"Est. 1980" },
+  { id:4, short:"Dr Lal", accent:"#047857", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",  since:"Est. 1949" },
+  { id:5, short:"Thyrocare", accent:"#B45309", bg:"#FFFBEB", city:"Chennai", tag:"Specialist Lab",   since:"Est. 1996" },
   { id:6, short:"Vijaya", accent:"#0369A1", bg:"#F0F9FF", icon:"V", city:"Hyderabad", tag:"Radiology Expert",  since:"Est. 1981" },
 ];
 
@@ -1310,9 +1376,9 @@ const LabsNearMeSection = ({ T, navTo, setLab, setCatF, setTestQ }) => (
 
                 {/* row 1: logo + name + city */}
                 <div style={{ display:"flex",alignItems:"flex-start",gap:14,marginBottom:14 }}>
-                  {/* logo avatar */}
-                  <div style={{ width:52,height:52,borderRadius:14,background:meta.bg,border:`1.5px solid ${meta.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                    <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.4rem",color:meta.accent }}>{meta.icon}</span>
+                  {/* lab illustrated icon */}
+                  <div style={{ width:56,height:56,borderRadius:16,background:meta.bg,border:`1.5px solid ${meta.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                    <LabIcon id={lab.id} s={42}/>
                   </div>
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ fontWeight:800,fontSize:".98rem",color:"#0D1117",lineHeight:1.2,marginBottom:3 }}>{lab.name}</div>
@@ -2673,9 +2739,6 @@ export default function App() {
       </div>
 
 
-      {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
-
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
@@ -2700,167 +2763,26 @@ export default function App() {
           {/* 6-card grid */}
           <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20 }}>
             {[
-              { title:"Full Body Checkup",    sub:"65+ Tests · NABL Certified",    price:1999, mrp:3499, off:43, badge:"Most Popular",   badgeColor:"#EF4444",  illBg:"#EBF4FF" },
-              { title:"Diabetes Care",         sub:"12 Tests · NABL Certified",     price:399,  mrp:899,  off:56, badge:"55% OFF",        badgeColor:"#EA580C",  illBg:"#FFF7ED" },
-              { title:"Heart Health",          sub:"22 Tests · NABL Certified",     price:1799, mrp:2999, off:40, badge:"Top Doctors",    badgeColor:"#1158A6",  illBg:"#FFF1F2" },
-              { title:"Thyroid Profile",       sub:"T3, T4, TSH · NABL Certified",  price:399,  mrp:799,  off:50, badge:"NABL",           badgeColor:"#1158A6",  illBg:"#F0FDFA" },
-              { title:"Women's Wellness",      sub:"40+ Tests · NABL Certified",    price:2299, mrp:3999, off:43, badge:"Women Special",  badgeColor:"#9333EA",  illBg:"#FAF5FF" },
-              { title:"Senior Citizen",        sub:"55+ Tests · NABL Certified",    price:2499, mrp:4499, off:44, badge:"45% OFF",        badgeColor:"#EA580C",  illBg:"#F0FDF4" },
+              { title:"Full Body Checkup",    sub:"65+ Tests · NABL Certified",    price:1999, mrp:3499, off:43, badge:"Most Popular",   badgeColor:"#EF4444",  img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=85&auto=format&fit=crop" },
+              { title:"Diabetes Care",         sub:"12 Tests · NABL Certified",     price:399,  mrp:899,  off:56, badge:"55% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=85&auto=format&fit=crop" },
+              { title:"Heart Health",          sub:"22 Tests · NABL Certified",     price:1799, mrp:2999, off:40, badge:"Top Doctors",    badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=85&auto=format&fit=crop" },
+              { title:"Thyroid Profile",       sub:"T3, T4, TSH · NABL Certified",  price:399,  mrp:799,  off:50, badge:"NABL",           badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=600&q=85&auto=format&fit=crop" },
+              { title:"Women's Wellness",      sub:"40+ Tests · NABL Certified",    price:2299, mrp:3999, off:43, badge:"Women Special",  badgeColor:"#9333EA",  img:"https://images.unsplash.com/photo-1571772996211-2f02974a8439?w=600&q=85&auto=format&fit=crop" },
+              { title:"Senior Citizen",        sub:"55+ Tests · NABL Certified",    price:2499, mrp:4499, off:44, badge:"45% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title} className="hover-lift"
                 style={{ background:"#fff",borderRadius:16,border:"1px solid #EEF2FF",overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column" }}
                 onClick={()=>navTo("labs")}>
-                {/* Illustration */}
-                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0,background:pkg.illBg,display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  {[
-                    /* 0: Full Body Checkup */
-                    <svg key={0} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="90" ry="72" fill="#DBEAFE" opacity="0.5"/>
-                      {/* body outline */}
-                      <ellipse cx="160" cy="48" rx="22" ry="26" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      <path d="M130 78 Q130 68 160 65 Q190 68 190 78 L196 140 H124 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* scan rings */}
-                      <ellipse cx="160" cy="98" rx="48" ry="32" fill="none" stroke="#93C5FD" strokeWidth="1" strokeDasharray="4 3" opacity="0.8"/>
-                      <ellipse cx="160" cy="98" rx="36" ry="24" fill="none" stroke="#60A5FA" strokeWidth="1" strokeDasharray="4 3" opacity="0.7"/>
-                      <ellipse cx="160" cy="98" rx="24" ry="16" fill="none" stroke="#3B82F6" strokeWidth="1" strokeDasharray="4 3" opacity="0.6"/>
-                      {/* heart indicator */}
-                      <path d="M155 90 Q155 86 160 90 Q165 86 165 90 Q165 96 160 100 Q155 96 155 90Z" fill="#EF4444" opacity="0.8"/>
-                      {/* arms */}
-                      <path d="M130 82 Q112 96 115 118" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                      <path d="M130 82 Q112 96 115 118" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      <path d="M190 82 Q208 96 205 118" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                      <path d="M190 82 Q208 96 205 118" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      {/* legs */}
-                      <rect x="138" y="138" width="18" height="20" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-                      <rect x="164" y="138" width="18" height="20" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-                      {/* floating dots */}
-                      <circle cx="60" cy="50" r="7" fill="#BFDBFE" opacity="0.7"/>
-                      <circle cx="264" cy="110" r="6" fill="#93C5FD" opacity="0.6"/>
-                    </svg>,
-                    /* 1: Diabetes Care */
-                    <svg key={1} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="85" ry="68" fill="#FED7AA" opacity="0.4"/>
-                      {/* large blood drop */}
-                      <path d="M160 28 Q188 60 188 88 Q188 114 160 114 Q132 114 132 88 Q132 60 160 28Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      <path d="M160 50 Q178 72 178 88 Q178 108 160 108" fill="#FED7AA" stroke="none" opacity="0.5"/>
-                      {/* % reading inside drop */}
-                      <text x="160" y="85" textAnchor="middle" fontSize="18" fontWeight="800" fill="#EA580C" fontFamily="Manrope,sans-serif">6.5</text>
-                      <text x="160" y="98" textAnchor="middle" fontSize="8" fill="#9CA3AF" fontFamily="Manrope,sans-serif">HbA1c %</text>
-                      {/* glucometer device */}
-                      <rect x="210" y="55" width="52" height="72" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      <rect x="218" y="65" width="36" height="22" rx="3" fill="#FFF7ED" stroke="#FED7AA" strokeWidth="1"/>
-                      <text x="236" y="80" textAnchor="middle" fontSize="10" fontWeight="800" fill="#EA580C" fontFamily="Manrope,sans-serif">126</text>
-                      <circle cx="236" cy="106" r="8" fill="#FED7AA" stroke="#1E293B" strokeWidth="1"/>
-                      <line x1="210" y1="96" x2="262" y2="96" stroke="#E2E8F0" strokeWidth="1"/>
-                      {/* strip */}
-                      <rect x="228" y="45" width="6" height="18" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
-                      {/* floating dots */}
-                      <circle cx="60" cy="45" r="7" fill="#FED7AA" opacity="0.6"/>
-                      <circle cx="76" cy="120" r="5" fill="#FDBA74" opacity="0.5"/>
-                    </svg>,
-                    /* 2: Heart Health */
-                    <svg key={2} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="90" ry="70" fill="#FFE4E6" opacity="0.5"/>
-                      {/* large heart */}
-                      <path d="M160 120 Q110 90 110 60 Q110 38 130 36 Q148 36 160 55 Q172 36 190 36 Q210 38 210 60 Q210 90 160 120Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      <path d="M160 110 Q120 85 120 62 Q120 44 136 43 Q150 43 160 58" fill="#FECDD3" stroke="none" opacity="0.5"/>
-                      {/* ECG wave across heart */}
-                      <polyline points="118,75 132,75 138,58 144,92 150,65 156,80 164,80 170,68 176,80 202,80" stroke="#EF4444" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                      {/* floating elements */}
-                      <circle cx="64" cy="44" r="7" fill="#FECDD3" opacity="0.7"/>
-                      <circle cx="62" cy="120" r="5" fill="#FFE4E6" opacity="0.8"/>
-                      <circle cx="264" cy="50" r="6" fill="#FECDD3" opacity="0.6"/>
-                      {/* BPM label */}
-                      <rect x="210" y="95" width="60" height="28" rx="6" fill="#FFF1F2" stroke="#FECDD3" strokeWidth="1"/>
-                      <text x="240" y="108" textAnchor="middle" fontSize="9" fontWeight="800" fill="#EF4444" fontFamily="Manrope,sans-serif">72 BPM</text>
-                      <text x="240" y="118" textAnchor="middle" fontSize="7" fill="#9CA3AF" fontFamily="Manrope,sans-serif">Normal</text>
-                    </svg>,
-                    /* 3: Thyroid Profile */
-                    <svg key={3} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="85" ry="68" fill="#CCFBF1" opacity="0.4"/>
-                      {/* neck */}
-                      <rect x="148" y="28" width="24" height="52" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* thyroid butterfly */}
-                      <path d="M100 88 Q100 64 120 62 Q140 60 148 78 L148 98 Q140 104 120 102 Q100 100 100 88Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      <path d="M220 88 Q220 64 200 62 Q180 60 172 78 L172 98 Q180 104 200 102 Q220 100 220 88Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* isthmus */}
-                      <rect x="148" y="82" width="24" height="12" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-                      {/* T3/T4/TSH labels */}
-                      <text x="120" y="86" textAnchor="middle" fontSize="9" fontWeight="800" fill="#0D9488" fontFamily="Manrope,sans-serif">T3</text>
-                      <text x="120" y="97" textAnchor="middle" fontSize="7" fill="#9CA3AF" fontFamily="Manrope,sans-serif">Normal</text>
-                      <text x="200" y="86" textAnchor="middle" fontSize="9" fontWeight="800" fill="#0D9488" fontFamily="Manrope,sans-serif">T4</text>
-                      <text x="200" y="97" textAnchor="middle" fontSize="7" fill="#9CA3AF" fontFamily="Manrope,sans-serif">Normal</text>
-                      {/* TSH result box */}
-                      <rect x="136" y="112" width="48" height="28" rx="6" fill="#F0FDFA" stroke="#99F6E4" strokeWidth="1"/>
-                      <text x="160" y="124" textAnchor="middle" fontSize="8" fontWeight="800" fill="#0D9488" fontFamily="Manrope,sans-serif">TSH 2.1</text>
-                      <text x="160" y="134" textAnchor="middle" fontSize="7" fill="#6B7280" fontFamily="Manrope,sans-serif">mIU/L · OK</text>
-                      {/* floating dots */}
-                      <circle cx="55" cy="50" r="7" fill="#99F6E4" opacity="0.6"/>
-                      <circle cx="268" cy="120" r="5" fill="#CCFBF1" opacity="0.7"/>
-                    </svg>,
-                    /* 4: Women's Wellness */
-                    <svg key={4} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="90" ry="72" fill="#F3E8FF" opacity="0.5"/>
-                      {/* female figure */}
-                      <circle cx="160" cy="42" r="22" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* hair */}
-                      <path d="M138 36 Q138 18 160 16 Q182 18 182 36 L180 28 Q168 14 160 14 Q152 14 140 28 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
-                      {/* dress/body */}
-                      <path d="M132 68 Q132 60 160 58 Q188 60 188 68 L200 140 H120 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* dress detail - feminine shape */}
-                      <path d="M144 60 L136 90 L160 98 L184 90 L176 60" fill="#F3E8FF" stroke="#DDD6FE" strokeWidth="1"/>
-                      {/* lotus / health symbol */}
-                      <circle cx="220" cy="70" r="24" fill="#FAF5FF" stroke="#E9D5FF" strokeWidth="1.2"/>
-                      <path d="M220 56 Q224 62 220 68 Q216 62 220 56Z" fill="#C084FC" stroke="#1E293B" strokeWidth="0.8"/>
-                      <path d="M208 62 Q214 65 212 72 Q207 67 208 62Z" fill="#DDD6FE" stroke="#1E293B" strokeWidth="0.8"/>
-                      <path d="M232 62 Q226 65 228 72 Q233 67 232 62Z" fill="#DDD6FE" stroke="#1E293B" strokeWidth="0.8"/>
-                      <path d="M205 70 Q211 71 211 78 Q206 76 205 70Z" fill="#E9D5FF" stroke="#1E293B" strokeWidth="0.8"/>
-                      <path d="M235 70 Q229 71 229 78 Q234 76 235 70Z" fill="#E9D5FF" stroke="#1E293B" strokeWidth="0.8"/>
-                      <circle cx="220" cy="78" r="6" fill="#C084FC" stroke="#1E293B" strokeWidth="1"/>
-                      <circle cx="220" cy="78" r="3" fill="white"/>
-                      {/* arms */}
-                      <path d="M132 72 Q114 90 116 110" stroke="white" strokeWidth="16" strokeLinecap="round" fill="none"/>
-                      <path d="M132 72 Q114 90 116 110" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      <path d="M188 72 Q206 90 204 110" stroke="white" strokeWidth="16" strokeLinecap="round" fill="none"/>
-                      <path d="M188 72 Q206 90 204 110" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      {/* floating dots */}
-                      <circle cx="55" cy="48" r="7" fill="#DDD6FE" opacity="0.7"/>
-                      <circle cx="60" cy="120" r="5" fill="#F3E8FF" opacity="0.8"/>
-                    </svg>,
-                    /* 5: Senior Citizen */
-                    <svg key={5} viewBox="0 0 320 160" fill="none" style={{height:"100%",width:"auto",maxWidth:"100%"}}>
-                      <ellipse cx="160" cy="80" rx="90" ry="72" fill="#DCFCE7" opacity="0.5"/>
-                      {/* elderly person */}
-                      <circle cx="148" cy="40" r="20" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* white hair */}
-                      <path d="M128 34 Q128 18 148 16 Q168 18 168 34 L166 26 Q156 12 148 12 Q140 12 130 26 Z" fill="#E5E7EB" stroke="#1E293B" strokeWidth="1"/>
-                      {/* wrinkle lines */}
-                      <path d="M138 40 Q143 38 148 40" stroke="#D1D5DB" strokeWidth="1" fill="none" strokeLinecap="round"/>
-                      {/* body */}
-                      <path d="M122 66 Q122 58 148 56 Q174 58 174 66 L178 138 H118 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                      {/* sweater/elderly clothing */}
-                      <path d="M134 58 L128 84 L148 90 L168 84 L162 58" fill="#D1FAE5" stroke="#BBF7D0" strokeWidth="1"/>
-                      {/* walking cane */}
-                      <path d="M178 72 Q196 72 196 90 L196 148" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                      <ellipse cx="196" cy="72" rx="10" ry="7" fill="none" stroke="#1E293B" strokeWidth="2"/>
-                      {/* arm holding cane */}
-                      <path d="M174 70 Q186 72 196 80" stroke="white" strokeWidth="14" strokeLinecap="round" fill="none"/>
-                      <path d="M174 70 Q186 72 196 80" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      {/* left arm */}
-                      <path d="M122 70 Q105 86 108 108" stroke="white" strokeWidth="16" strokeLinecap="round" fill="none"/>
-                      <path d="M122 70 Q105 86 108 108" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                      {/* medical cross circle */}
-                      <circle cx="230" cy="72" r="28" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1.5"/>
-                      <rect x="226" y="60" width="8" height="24" rx="2" fill="#22C55E"/>
-                      <rect x="219" y="67" width="22" height="8" rx="2" fill="#22C55E"/>
-                      {/* heart rate */}
-                      <rect x="60" y="100" width="70" height="36" rx="7" fill="white" stroke="#BBF7D0" strokeWidth="1.2"/>
-                      <polyline points="66,118 72,118 76,108 80,128 84,112 88,118 100,118 104,110 108,118 122,118" stroke="#22C55E" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                      {/* floating dots */}
-                      <circle cx="56" cy="50" r="6" fill="#BBF7D0" opacity="0.7"/>
-                      <circle cx="268" cy="55" r="5" fill="#DCFCE7" opacity="0.7"/>
-                    </svg>
-                  ][i]}
+                {/* Image */}
+                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                  <img
+                    src={pkg.img}
+                    alt={pkg.title}
+                    style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .4s ease' }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06)'}
+                    onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+                    onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}11)`; }}
+                  />
                   {/* Top-left badge */}
                   <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"4px 10px",fontSize:".66rem",fontWeight:800,letterSpacing:".02em" }}>
                     {pkg.badge}
