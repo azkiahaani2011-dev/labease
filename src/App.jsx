@@ -2393,56 +2393,6 @@ export default function App() {
 
           </div>
 
-          {/* RIGHT: hero images — matching reference design */}
-          <div className="hero-img-col" style={{ position:"absolute",right:0,top:0,bottom:0,width:"42%",pointerEvents:"none",overflow:"hidden" }}>
-            {/* Top image — blood draw */}
-            <div style={{ position:"absolute",top:"8%",right:"4%",width:"62%",borderRadius:18,overflow:"hidden",boxShadow:"0 20px 60px rgba(17,88,166,.18)" }}>
-              <img
-                  src="https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?w=800&q=85&auto=format&fit=crop"
-                  alt="Lab blood draw"
-                  style={{ width:"100%",height:170,objectFit:"cover",display:"block" }}
-                  onError={e=>{ e.target.parentNode.style.background="linear-gradient(135deg,#DBEAFE,#EFF6FF)"; e.target.style.display="none"; }}
-                />
-            </div>
-            {/* Bottom-left image — doctor */}
-            <div style={{ position:"absolute",bottom:"6%",right:"28%",width:"55%",borderRadius:18,overflow:"hidden",boxShadow:"0 20px 60px rgba(17,88,166,.14)" }}>
-              <img
-                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=85&auto=format&fit=crop"
-                  alt="Doctor"
-                  style={{ width:"100%",height:200,objectFit:"cover",display:"block" }}
-                  onError={e=>{ e.target.parentNode.style.background="linear-gradient(135deg,#EFF6FF,#DBEAFE)"; e.target.style.display="none"; }}
-                />
-              {/* NABL Certified badge */}
-              <div style={{ position:"absolute",top:12,right:12,background:"#fff",borderRadius:10,padding:"8px 12px",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:7 }}>
-                <div style={{ width:20,height:20,borderRadius:"50%",background:"#DCFCE7",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:".72rem",color:"#0D1117",lineHeight:1 }}>NABL Certified</div>
-                  <div style={{ fontSize:".62rem",color:"#6B7280",marginTop:1 }}>100% accuracy</div>
-                </div>
-              </div>
-            </div>
-            {/* Middle floating image — lab technician */}
-            <div style={{ position:"absolute",top:"38%",right:"60%",width:"44%",borderRadius:14,overflow:"hidden",boxShadow:"0 16px 48px rgba(17,88,166,.12)" }}>
-              <img
-                  src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=85&auto=format&fit=crop"
-                  alt="Lab technician"
-                  style={{ width:"100%",height:130,objectFit:"cover",display:"block" }}
-                  onError={e=>{ e.target.parentNode.style.background="linear-gradient(135deg,#F0FDF4,#DCFCE7)"; e.target.style.display="none"; }}
-                />
-            </div>
-            {/* 6-hour reports badge */}
-            <div style={{ position:"absolute",bottom:"16%",right:"2%",background:"#fff",borderRadius:10,padding:"8px 12px",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:8,whiteSpace:"nowrap" }}>
-              <div style={{ width:28,height:28,borderRadius:"50%",background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </div>
-              <div>
-                <div style={{ fontWeight:800,fontSize:".72rem",color:"#0D1117",lineHeight:1 }}>6-hour reports</div>
-                <div style={{ fontSize:".62rem",color:"#6B7280",marginTop:1 }}>via email &amp; WhatsApp</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -2543,18 +2493,55 @@ export default function App() {
       {/* ── HOW HOME SAMPLE COLLECTION WORKS ─────────────────────── */}
       <section style={{ padding:"60px 0 56px",background:"#F8FAFF",borderBottom:"1px solid #E0EAFF" }}>
         <div style={T.wrap}>
-          {/* Banner image strip */}
-          <div style={{ borderRadius:20,overflow:"hidden",marginBottom:48,position:"relative",height:160 }}>
-            <img
-              src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1200&q=85&auto=format&fit=crop"
-              alt="Home sample collection"
-              style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }}
-              onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#1158A6,#0F2D6B)"; }}
-            />
-            <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,rgba(17,88,166,.75),rgba(15,45,107,.45))",display:"flex",alignItems:"center",padding:"0 40px" }}>
-              <div>
-                <div style={{ fontSize:".7rem",fontWeight:800,color:"rgba(255,255,255,.7)",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>Simple · Fast · Safe</div>
-                <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"clamp(1.2rem,3vw,1.6rem)",color:"#fff",lineHeight:1.2 }}>Home Sample Collection — How It Works</div>
+          {/* MediBuddy-style illustrated promo cards */}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:48 }}>
+            {/* Card 1 — Home Sample Pickup */}
+            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#D1FAE5 0%,#A7F3D0 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(16,185,129,.15)" }}>
+              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
+                <div>
+                  <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
+                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
+                  <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
+                </div>
+                <button onClick={()=>navTo("labs")}
+                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </button>
+              </div>
+              <div style={{ width:160,position:"relative",flexShrink:0,overflow:"hidden" }}>
+                <img
+                  src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&q=85&auto=format&fit=crop"
+                  alt="Phlebotomist home visit"
+                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top" }}
+                  onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#6EE7B7,#34D399)"; }}
+                />
+              </div>
+            </div>
+
+            {/* Card 2 — Fast Report Delivery */}
+            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(17,88,166,.15)" }}>
+              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
+                <div>
+                  <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
+                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
+                  <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Get authenticated reports on WhatsApp &amp; email. Download anytime, share instantly.</p>
+                </div>
+                <button onClick={()=>navTo("labs")}
+                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </button>
+              </div>
+              <div style={{ width:160,position:"relative",flexShrink:0,overflow:"hidden" }}>
+                <img
+                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=85&auto=format&fit=crop"
+                  alt="Report delivery"
+                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top" }}
+                  onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#93C5FD,#60A5FA)"; }}
+                />
               </div>
             </div>
           </div>
