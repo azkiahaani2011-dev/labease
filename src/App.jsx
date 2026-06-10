@@ -1338,13 +1338,45 @@ const LabsNearMeSection = ({ T, navTo }) => (
   <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
     <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 24px" }}>
 
-      {/* heading row */}
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:36, flexWrap:"wrap", gap:16 }}>
-        <div>
-          <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>VERIFIED PARTNERS</p>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:6 }}>Our Trusted Labs</h2>
-          <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6,maxWidth:460 }}>NABL-accredited diagnostic centres with verified pricing and free home collection across India.</p>
+      {/* heading row: microscope left + text + button right */}
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
+
+        {/* left: small microscope illustration + text */}
+        <div style={{ display:"flex", alignItems:"center", gap:24 }}>
+          {/* MediBuddy-style microscope SVG */}
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EFF6FF", border:"1px solid #BFDBFE", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:72,height:"auto"}}>
+              <ellipse cx="50" cy="112" rx="38" ry="7" fill="#BFDBFE" opacity="0.5"/>
+              <rect x="18" y="100" width="64" height="8" rx="4" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="42" y="72" width="16" height="32" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="28" y="78" width="44" height="8" rx="3" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="70" cy="86" rx="7" ry="9" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.2"/>
+              <ellipse cx="70" cy="86" rx="4" ry="6" fill="#BFDBFE"/>
+              <path d="M50 72 Q50 55 50 40" stroke="#93C5FD" strokeWidth="10" strokeLinecap="round"/>
+              <path d="M50 72 Q50 55 50 40" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
+              <circle cx="50" cy="40" r="9" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
+              <circle cx="50" cy="40" r="4" fill="#7DD3FC"/>
+              <rect x="46" y="46" width="8" height="18" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="50" cy="64" rx="6" ry="3.5" fill="#60A5FA" stroke="#1E293B" strokeWidth="1.1"/>
+              <path d="M50 40 Q44 28 36 22" stroke="#DBEAFE" strokeWidth="9" strokeLinecap="round"/>
+              <path d="M50 40 Q44 28 36 22" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
+              <rect x="27" y="16" width="18" height="10" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="36" cy="16" rx="8" ry="4" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.1"/>
+              <rect x="33" y="74" width="34" height="5" rx="1.5" fill="white" stroke="#1E293B" strokeWidth="1"/>
+              <rect x="37" y="75.5" width="18" height="2" rx="1" fill="#FEF3C7"/>
+              <circle cx="22" cy="28" r="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+              <circle cx="80" cy="20" r="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+            </svg>
+          </div>
+          {/* text */}
+          <div>
+            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>VERIFIED PARTNERS</p>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:6 }}>Our Trusted Labs</h2>
+            <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6,maxWidth:420 }}>NABL-accredited diagnostic centres with verified pricing and free home collection across India.</p>
+          </div>
         </div>
+
+        {/* right: button */}
         <button onClick={()=>navTo("labs")}
           style={{ flexShrink:0,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap",boxShadow:"0 4px 16px rgba(17,88,166,.28)" }}
           onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
@@ -1354,70 +1386,9 @@ const LabsNearMeSection = ({ T, navTo }) => (
         </button>
       </div>
 
-      {/* 2-col: text left + microscope illustration right */}
-      <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:40, alignItems:"center", background:"#EFF6FF", borderRadius:20, padding:"36px 48px", border:"1px solid #BFDBFE" }}>
-        {/* left: feature pills */}
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          {[
-            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"NABL-accredited labs only", color:"#EFF6FF", border:"#BFDBFE", text:"#1158A6" },
-            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Free home sample collection", color:"#F0FDF4", border:"#BBF7D0", text:"#059669" },
-            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Reports in as little as 6 hours", color:"#FFF7ED", border:"#FED7AA", text:"#EA580C" },
-            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>, label:"Transparent pricing, no hidden fees", color:"#F5F3FF", border:"#DDD6FE", text:"#7C3AED" },
-          ].map(f=>(
-            <div key={f.label} style={{ display:"flex", alignItems:"center", gap:12, background:f.color, border:`1px solid ${f.border}`, borderRadius:12, padding:"12px 18px" }}>
-              <div style={{ flexShrink:0 }}>{f.icon}</div>
-              <span style={{ fontWeight:700, fontSize:".86rem", color:f.text }}>{f.label}</span>
-            </div>
-          ))}
-        </div>
-        {/* right: microscope illustration */}
-        <div style={{ flexShrink:0 }}>
-          <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:180,height:"auto"}}>
-            {/* base blob */}
-            <ellipse cx="100" cy="210" rx="80" ry="22" fill="#BFDBFE" opacity="0.5"/>
-            {/* base platform */}
-            <rect x="30" y="196" width="140" height="14" rx="7" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.5"/>
-            {/* arm support column */}
-            <rect x="88" y="140" width="24" height="60" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
-            {/* horizontal stage */}
-            <rect x="55" y="148" width="90" height="12" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
-            {/* coarse focus knob */}
-            <ellipse cx="145" cy="168" rx="10" ry="14" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.4"/>
-            <ellipse cx="145" cy="168" rx="6" ry="9" fill="#BFDBFE"/>
-            {/* fine focus knob */}
-            <ellipse cx="145" cy="148" rx="8" ry="10" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.2"/>
-            {/* arm going up */}
-            <path d="M100 140 Q100 110 100 80" stroke="#93C5FD" strokeWidth="18" strokeLinecap="round"/>
-            <path d="M100 140 Q100 110 100 80" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-            {/* rotating nosepiece */}
-            <circle cx="100" cy="80" r="14" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
-            <circle cx="100" cy="80" r="7" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
-            {/* objective lens tube */}
-            <rect x="94" y="90" width="12" height="32" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
-            <ellipse cx="100" cy="122" rx="8" ry="5" fill="#60A5FA" stroke="#1E293B" strokeWidth="1.3"/>
-            {/* eyepiece tube going up-left */}
-            <path d="M100 80 Q90 56 78 44" stroke="#DBEAFE" strokeWidth="16" strokeLinecap="round"/>
-            <path d="M100 80 Q90 56 78 44" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-            {/* eyepiece top */}
-            <rect x="66" y="32" width="24" height="16" rx="5" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
-            <ellipse cx="78" cy="32" rx="10" ry="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
-            {/* slide on stage */}
-            <rect x="62" y="142" width="56" height="8" rx="2" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-            <rect x="70" y="144" width="28" height="4" rx="1" fill="#FEF3C7"/>
-            {/* light beam from below */}
-            <path d="M100 196 L90 170 L110 170 Z" fill="#FEF9C3" opacity="0.7"/>
-            {/* decorative dots */}
-            <circle cx="38" cy="60" r="6" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-            <circle cx="162" cy="50" r="5" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-            <circle cx="168" cy="100" r="4" fill="#FDE68A" opacity="0.8"/>
-            <circle cx="32" cy="120" r="4" fill="#DDD6FE" opacity="0.8"/>
-          </svg>
-        </div>
-      </div>
-
     </div>
   </section>
-);
+)
 
 
 /* ─── MODULE-LEVEL REPLACEMENTS FOR LabCard, LabsPage, LabDetail ────────────
@@ -2709,6 +2680,9 @@ export default function App() {
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
       <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
+      {/* ── POPULAR TESTS ────────────────────────────────────────── */}
+      <PopularTestsCarousel setCatF={setCatF} navTo={navTo}/>
+
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
@@ -2789,8 +2763,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── POPULAR TESTS carousel ─────────────────────────────── */}
-      <PopularTestsCarousel setCatF={setCatF} navTo={navTo}/>
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
       <section style={{ padding:"60px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
