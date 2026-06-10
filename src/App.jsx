@@ -730,6 +730,35 @@ const G = () => (
     }
 
     /* ════════════════════════════════════════════════════════════════
+       HERO — mobile compact
+    ════════════════════════════════════════════════════════════════ */
+    .hero-section { min-height: 520px; }
+    @media (max-width: 767px) {
+      .hero-section { min-height: 0 !important; }
+      .hero-content {
+        padding-top: 36px !important;
+        padding-bottom: 32px !important;
+        gap: 20px !important;
+      }
+      .hero-content h1 { font-size: 1.55rem !important; margin-bottom: 10px !important; line-height: 1.2 !important; }
+      .hero-content p  { font-size: .84rem !important; margin-bottom: 20px !important; line-height: 1.6 !important; }
+      .hero-content > div > div:first-child { margin-bottom: 16px !important; } /* eyebrow pill */
+      .trust-badges { gap: 12px !important; margin-top: 18px !important; }
+      .trust-badges > div > span { font-size: .75rem !important; }
+    }
+    @media (max-width: 430px) {
+      .hero-content {
+        padding-top: 28px !important;
+        padding-bottom: 24px !important;
+      }
+      .hero-content h1 { font-size: 1.35rem !important; }
+      /* hide eyebrow pill on very small screens */
+      .hero-content > div > div:first-child { display: none !important; }
+      /* quick chips — wrap tighter */
+      .hero-content > div > div:nth-child(5) { gap: 6px !important; margin-top: 12px !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
        HOW IT WORKS — 4-step responsive grid
     ════════════════════════════════════════════════════════════════ */
     .hiw-grid {
@@ -1501,12 +1530,50 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, overflow:"hidden", border:"1px solid #C7D2F6", boxShadow:"0 4px 16px rgba(17,88,166,.12)", background:"#E8E8F6", display:"flex", alignItems:"center", justifyContent:"center" }}>
-            <img
-              src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=300&h=300&fit=crop&crop=center&q=85"
-              alt="Lab test"
-              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", mixBlendMode:"multiply" }}
-            />
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#ECEAF8", border:"1px solid #C7C4EE", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", boxShadow:"0 4px 16px rgba(99,88,196,.13)" }}>
+            <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:78,height:"auto"}}>
+              {/* Background soft circle */}
+              <ellipse cx="52" cy="70" rx="42" ry="38" fill="#DDD8F5" opacity="0.5"/>
+
+              {/* ── GLOVE ── */}
+              {/* Thumb */}
+              <path d="M29 85 Q20 80 18 68 Q16 55 24 50 Q30 46 34 52 L36 65 L33 87Z" fill="#F0EEF8" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
+              <path d="M21 64 Q26 61 31 64" stroke="#C4BDE8" strokeWidth="1" strokeLinecap="round"/>
+
+              {/* Palm + 4 fingers */}
+              <path d="M34 52 L36 65 L38 100 Q38 107 46 108 L62 108 Q69 108 70 101 L73 65 L75 52 Q70 41 62 40 L46 40 Q38 40 34 52Z" fill="#F0EEF8" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
+
+              {/* Finger seam lines */}
+              <line x1="46" y1="65" x2="45" y2="107" stroke="#C4BDE8" strokeWidth="0.9"/>
+              <line x1="54" y1="64" x2="54" y2="108" stroke="#C4BDE8" strokeWidth="0.9"/>
+              <line x1="62" y1="65" x2="63" y2="107" stroke="#C4BDE8" strokeWidth="0.9"/>
+
+              {/* Cuff band */}
+              <rect x="36" y="99" width="37" height="11" rx="5" fill="#D0CAF0" stroke="#1E293B" strokeWidth="1.2"/>
+              <line x1="36" y1="104" x2="73" y2="104" stroke="#B9B1E0" strokeWidth="0.8"/>
+
+              {/* ── TEST TUBE ── */}
+              {/* Glass body */}
+              <rect x="46" y="6" width="16" height="56" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+              {/* Highlight on glass */}
+              <rect x="48.5" y="9" width="4" height="46" rx="2" fill="white" opacity="0.65"/>
+
+              {/* Blood liquid */}
+              <clipPath id="tc2"><rect x="46" y="6" width="16" height="56" rx="8"/></clipPath>
+              <rect x="46" y="36" width="16" height="26" fill="#EF4444" clipPath="url(#tc2)"/>
+              <ellipse cx="54" cy="36" rx="8" ry="3" fill="#DC2626" clipPath="url(#tc2)"/>
+              {/* Bubble */}
+              <circle cx="57" cy="47" r="2.5" fill="#FCA5A5" opacity="0.55" clipPath="url(#tc2)"/>
+
+              {/* Cap */}
+              <rect x="45" y="3" width="18" height="9" rx="4.5" fill="#7C3AED" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="48" y="5" width="12" height="3.5" rx="1.5" fill="#A78BFA" opacity="0.5"/>
+
+              {/* Decorative dots */}
+              <circle cx="18" cy="42" r="3.5" fill="#A5B4FC" opacity="0.65"/>
+              <circle cx="84" cy="32" r="2.5" fill="#FCA5A5" opacity="0.7"/>
+              <circle cx="82" cy="95" r="2" fill="#A7F3D0" opacity="0.75"/>
+            </svg>
           </div>
           {/* text */}
           <div>
@@ -2634,7 +2701,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
         {/* background geometric accents */}
         <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
@@ -2642,7 +2709,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40,maxWidth:720 }}>
+        <div className="hero-content" style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40,maxWidth:720 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580 }}>
             {/* eyebrow pill */}
