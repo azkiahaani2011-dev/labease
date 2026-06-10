@@ -746,14 +746,11 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     .why-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
     }
-    @media (min-width: 541px) {
-      .why-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 768px) {
-      .why-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 540px) {
+      .why-grid { grid-template-columns: 1fr; gap: 14px; }
     }
     /* ════════════════════════════════════════════════════════════════
        FEATURED CHECKUPS GRID — 2→1 col with horizontal cards
@@ -3224,14 +3221,16 @@ export default function App() {
               {Icon:IThyroid,   t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IDiabetes,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
+              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"20px 22px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",display:"flex",alignItems:"flex-start",gap:16 }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                <div style={{ width:60,height:60,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14,margin:"0 auto 14px" }}>
-                  <w.Icon s={36}/>
+                <div style={{ width:52,height:52,borderRadius:14,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <w.Icon s={30}/>
                 </div>
-                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
-                <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
+                <div>
+                  <div style={{ fontWeight:800,color:"#0D1117",marginBottom:5,fontSize:".92rem" }}>{w.t}</div>
+                  <div style={{ color:"#6B7280",fontSize:".82rem",lineHeight:1.6 }}>{w.d}</div>
+                </div>
               </div>
             ))}
           </div>
