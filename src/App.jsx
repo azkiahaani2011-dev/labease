@@ -2709,7 +2709,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ maxWidth:1140,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr 1fr",alignItems:"center",gap:48 }}>
+        <div className="hero-content" style={{ maxWidth:720,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box" }}>
             {/* eyebrow pill */}
@@ -2747,8 +2747,8 @@ export default function App() {
 
           </div>
 
-          {/* ── RIGHT: illustration ── */}
-          <div className="hero-img-col" style={{ display:"flex",alignItems:"center",justifyContent:"center" }}>
+          {/* ── RIGHT: hidden ── */}
+          <div style={{ display:"none" }}>
             <svg viewBox="0 0 340 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto",maxWidth:340}}>
               {/* soft background blob */}
               <ellipse cx="175" cy="240" rx="155" ry="188" fill="#EBF4FF"/>
@@ -3342,11 +3342,13 @@ export default function App() {
             {/* Services */}
             <div>
               <div style={{ fontSize:".72rem",fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",color:"#475569",marginBottom:18 }}>Services</div>
-              {["Book a Lab Test","Home Sample Collection","Upload Prescription","Compare Lab Prices","Track Reports"].map(l=>(
-                <div key={l} style={{ fontSize:".83rem",color:"#64748B",marginBottom:11,cursor:"pointer",transition:"color .14s" }}
-                  onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
-                  onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
-              ))}
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
+                {["Book a Lab Test","Home Sample Collection","Upload Prescription","Compare Lab Prices","Track Reports"].map(l=>(
+                  <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                    onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
+                    onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
+                ))}
+              </div>
             </div>
             {/* Company */}
             <div>
