@@ -672,14 +672,17 @@ const G = () => (
        HERO — mobile compact
     ════════════════════════════════════════════════════════════════ */
     .hero-section { min-height: 520px; }
+    .hero-img-col { display: flex; }
     @media (max-width: 767px) {
       .hero-section { min-height: 0 !important; }
+      .hero-img-col { display: none !important; }
       .hero-content {
         padding-top: 32px !important;
         padding-bottom: 28px !important;
         padding-left: 12px !important;
         padding-right: 12px !important;
         gap: 16px !important;
+        grid-template-columns: 1fr !important;
       }
       .hero-content h1 { font-size: 1.5rem !important; margin-bottom: 8px !important; line-height: 1.2 !important; }
       .hero-content p  { font-size: .82rem !important; margin-bottom: 16px !important; line-height: 1.55 !important; }
@@ -2706,7 +2709,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ maxWidth:720,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
+        <div className="hero-content" style={{ maxWidth:1140,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr 1fr",alignItems:"center",gap:48 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box" }}>
             {/* eyebrow pill */}
@@ -2744,8 +2747,8 @@ export default function App() {
 
           </div>
 
-          {/* ── RIGHT: hidden ── */}
-          <div style={{ display:"none" }}>
+          {/* ── RIGHT: illustration ── */}
+          <div className="hero-img-col" style={{ display:"flex",alignItems:"center",justifyContent:"center" }}>
             <svg viewBox="0 0 340 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto",maxWidth:340}}>
               {/* soft background blob */}
               <ellipse cx="175" cy="240" rx="155" ry="188" fill="#EBF4FF"/>
