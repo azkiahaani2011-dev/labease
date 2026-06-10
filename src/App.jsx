@@ -2713,6 +2713,12 @@ export default function App() {
   const Home = () => {
     const [q,setQ]       = useState("");
     const [faq,setFaq]   = useState(null);
+    const [gridCols, setGridCols] = useState(window.innerWidth <= 600 ? 2 : 3);
+    useEffect(() => {
+      const h = () => setGridCols(window.innerWidth <= 600 ? 2 : 3);
+      window.addEventListener("resize", h);
+      return () => window.removeEventListener("resize", h);
+    }, []);
 
     return (
     <div>
@@ -2927,7 +2933,7 @@ export default function App() {
           </div>
 
           {/* 6-card grid */}
-          <div className="featured-grid" style={{ display:"grid", gap:16 }}>
+          <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:16 }}>
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
@@ -2941,26 +2947,25 @@ export default function App() {
                 onClick={()=>navTo("labs")}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
-                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                <div style={{ position:"relative",height:gridCols===2?95:160,overflow:"hidden",flexShrink:0 }}>
                   <img src={pkg.img} alt={pkg.title}
                     style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s ease" }}
                     onMouseEnter={e=>e.currentTarget.style.transform="scale(1.07)"}
                     onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
                     onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}/>
                   <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%)" }}/>
-                  <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:8,padding:"3px 10px",fontSize:".62rem",fontWeight:800 }}>{pkg.badge}</div>
-                  <div style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",borderRadius:8,padding:"3px 9px",fontSize:".62rem",fontWeight:800 }}>{pkg.off}% OFF</div>
-                  <div style={{ position:"absolute",bottom:12,left:12,right:12,fontWeight:800,fontSize:".95rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
+                  <div style={{ position:"absolute",top:6,left:6,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:gridCols===2?"2px 5px":"3px 10px",fontSize:".55rem",fontWeight:800 }}>{gridCols===2?pkg.off+"% OFF":pkg.badge}</div>
+                  <div style={{ position:"absolute",bottom:gridCols===2?6:12,left:gridCols===2?6:12,right:gridCols===2?6:12,fontWeight:800,fontSize:gridCols===2?".72rem":".95rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
                 </div>
-                <div style={{ padding:"14px 16px 16px",flex:1,display:"flex",flexDirection:"column",gap:8 }}>
-                  <div style={{ fontSize:".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
-                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:6,flexWrap:"wrap",gap:8 }}>
-                    <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
-                      <span style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
-                      <span style={{ fontSize:".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
+                <div style={{ padding:gridCols===2?"8px 8px 10px":"14px 16px 16px",flex:1,display:"flex",flexDirection:"column",gap:gridCols===2?4:8 }}>
+                  <div style={{ fontSize:gridCols===2?".6rem":".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:gridCols===2?3:6,flexWrap:"wrap",gap:gridCols===2?4:8 }}>
+                    <div style={{ display:"flex",alignItems:"baseline",gap:3 }}>
+                      <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"8px 18px",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
                       Book Now
@@ -3226,7 +3231,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
-          <div className="why-grid" style={{ display:"grid", gap:20 }}>
+          <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
               {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
@@ -3235,14 +3240,14 @@ export default function App() {
               {Icon:IThyroid,   t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IDiabetes,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
+              <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                <div style={{ width:60,height:60,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px" }}>
-                  <w.Icon s={36}/>
+                <div style={{ width:gridCols===2?44:60,height:gridCols===2?44:60,borderRadius:gridCols===2?11:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
+                  <w.Icon s={gridCols===2?24:36}/>
                 </div>
-                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
-                <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
+                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
+                <div style={{ color:"#9CA3AF",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
               </div>
             ))}
           </div>
