@@ -746,7 +746,7 @@ Error generating stack: `+e.message+`
       .hiw-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
       .hiw-connector { display: none !important; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 540px) {
       .hiw-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
     }
 
@@ -775,7 +775,7 @@ Error generating stack: `+e.message+`
     @media (max-width: 767px) {
       .why-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 540px) {
       .why-grid { grid-template-columns: 1fr !important; }
     }
 
