@@ -1482,9 +1482,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:0,marginBottom:14,display:"flex",alignItems:"center",gap:5 }}>
+          <button onClick={()=>navTo("home")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
-            Home
+            Back to Home
           </button>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:12 }}>
             <div>
@@ -1498,8 +1498,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
               {/* search */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-                <input value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:34,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111" }}
-                  onFocus={()=>setLabSugOpen(true)}/>
+                <input value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:34,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none" }}
+                  onFocus={e=>{ e.target.style.border="1.5px solid #E5E7EB"; setLabSugOpen(true); }}
+                  onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
                   <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
                     {labSuggestions.map((l,i)=>(
@@ -1623,7 +1624,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 24px" }}>
-        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:10,padding:0,display:"flex",alignItems:"center",gap:6,textAlign:"left" }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button>
+        <button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <div style={{ width:56,height:56,borderRadius:12,background:`${lab.color}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
             <div style={{ width:24,height:24,borderRadius:"50%",background:lab.color }}/>
@@ -1873,7 +1874,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%" }}>
       {/* Search bar */}
-      <div style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.15)",overflow:"hidden",border:"1.5px solid #E5E7EB" }}>
+      <div style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.13)",overflow:"hidden",border:"none",background:"#fff" }}>
         <svg style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
