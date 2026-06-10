@@ -766,6 +766,26 @@ const G = () => (
       .featured-grid { grid-template-columns: 1fr !important; }
     }
 
+    /* ── Why LabEase cards: compact on mobile ── */
+    @media (max-width: 600px) {
+      .why-grid { gap: 8px !important; }
+      .why-grid > div { padding: 12px 6px !important; border-radius: 10px !important; }
+      .why-grid > div > div:first-child { width: 40px !important; height: 40px !important; border-radius: 10px !important; margin-bottom: 8px !important; }
+      .why-grid > div > div:first-child svg { width: 22px !important; height: 22px !important; }
+      .why-grid > div > div:nth-child(2) { font-size: .7rem !important; margin-bottom: 3px !important; }
+      .why-grid > div > div:nth-child(3) { font-size: .62rem !important; line-height: 1.4 !important; }
+    }
+
+    /* ── Featured cards: compact image + tight content on mobile ── */
+    @media (max-width: 600px) {
+      .featured-grid { gap: 8px !important; }
+      .featured-grid > div > div:first-child { height: 90px !important; }
+      .featured-grid > div > div:last-child { padding: 8px !important; gap: 4px !important; }
+      .featured-grid > div > div:last-child > div:first-child { font-size: .6rem !important; }
+      .featured-grid > div > div:last-child > div:last-child { flex-direction: column !important; gap: 4px !important; }
+      .featured-grid > div > div:last-child > div:last-child button { width: 100% !important; padding: 7px 6px !important; font-size: .7rem !important; }
+    }
+
     /* ════════════════════════════════════════════════════════════════
        LABS PAGE HEADER — search + sort row
     ════════════════════════════════════════════════════════════════ */
@@ -2906,7 +2926,7 @@ export default function App() {
           </div>
 
           {/* 6-card grid */}
-          <div className="featured-grid" style={{ display:"grid", gap:16 }}>
+          <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
@@ -3205,7 +3225,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
-          <div className="why-grid" style={{ display:"grid", gap:20 }}>
+          <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:20 }}>
             {[
               {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
