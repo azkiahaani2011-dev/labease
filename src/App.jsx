@@ -790,7 +790,7 @@ const G = () => (
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      margin-bottom: 60px;
+      margin-bottom: 72px;
     }
     @media (max-width: 640px) {
       .promo-grid { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
@@ -820,12 +820,13 @@ const G = () => (
       justify-content: space-between;
       align-items: flex-end;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
+      padding-bottom: 4px;
     }
     .labs-sort-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .labs-search-input {
@@ -1737,7 +1738,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                 )}
               </div>
               {/* sort */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginLeft:4 }}>Sort:</span>
+              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginLeft:8,marginRight:2 }}>Sort:</span>
               {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setSortBy(v)}
                   style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
@@ -3093,7 +3094,7 @@ export default function App() {
           </div>
 
           {/* heading */}
-          <div style={{ textAlign:"center", marginBottom:56 }}>
+          <div style={{ textAlign:"center", marginBottom:56, paddingTop:8 }}>
             <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
