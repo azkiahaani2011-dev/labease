@@ -2532,13 +2532,38 @@ export default function App() {
               ))}
             </div>
 
-            {/* trust badges row */}
-            <div style={{ display:"flex",gap:16,marginTop:32,flexWrap:"wrap" }}>
-              {[["✓ NABL Certified","#059669","#F0FDF4"],["🏠 Free Home Collection","#1158A6","#EFF6FF"],["⚡ Reports in 6 hrs","#EA580C","#FFF7ED"]].map(([l,c,bg])=>(
-                <div key={l} style={{ display:"flex",alignItems:"center",gap:7,background:bg,borderRadius:50,padding:"8px 16px",fontSize:".78rem",fontWeight:700,color:c }}>
-                  {l}
+            {/* trust badges row — premium style */}
+            <div style={{ display:"flex",gap:12,marginTop:36,flexWrap:"wrap" }}>
+              {/* NABL Certified */}
+              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #D1FAE5",boxShadow:"0 2px 10px rgba(5,150,105,.08)" }}>
+                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#059669,#047857)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(5,150,105,.35)" }}>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><polyline points="3,10 8,15 17,5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
-              ))}
+                <div>
+                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#064E3B",lineHeight:1.1 }}>NABL Certified</div>
+                  <div style={{ fontSize:".67rem",color:"#6EE7B7",fontWeight:600,marginTop:1 }}>Govt. Accredited</div>
+                </div>
+              </div>
+              {/* Free Home Collection */}
+              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #BFDBFE",boxShadow:"0 2px 10px rgba(17,88,166,.08)" }}>
+                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#1158A6,#0F2D6B)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(17,88,166,.35)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="9,22 9,12 15,12 15,22" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#1E3A5F",lineHeight:1.1 }}>Free Home Collection</div>
+                  <div style={{ fontSize:".67rem",color:"#93C5FD",fontWeight:600,marginTop:1 }}>At your doorstep</div>
+                </div>
+              </div>
+              {/* Reports in 6 hrs */}
+              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #FED7AA",boxShadow:"0 2px 10px rgba(234,88,12,.08)" }}>
+                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#EA580C,#C2410C)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(234,88,12,.35)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" strokeWidth="2"/><polyline points="12,7 12,12 15,14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#7C2D12",lineHeight:1.1 }}>Reports in 6 hrs</div>
+                  <div style={{ fontSize:".67rem",color:"#FDBA74",fontWeight:600,marginTop:1 }}>WhatsApp &amp; Email</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -2678,18 +2703,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── ACCREDITATION STRIP ──────────────────────────────────── */}
-      <div style={{ background:"#F9FAFB",borderBottom:"1px solid #EEF2FF",padding:"14px 0" }}>
-        <div style={{ maxWidth:1140,margin:"0 auto",padding:"0 24px",display:"flex",alignItems:"center",gap:32,flexWrap:"wrap",justifyContent:"center" }}>
-          <span style={{ fontSize:".68rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".1em",textTransform:"uppercase",whiteSpace:"nowrap" }}>Accredited &amp; Trusted by</span>
-          {["NABL","ISO 15189","CAP","ICMR","WHO-GMP","DPDP Compliant"].map(b=>(
-            <div key={b} style={{ display:"flex",alignItems:"center",gap:5 }}>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-              <span style={{ fontSize:".78rem",fontWeight:700,color:"#374151",whiteSpace:"nowrap" }}>{b}</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
