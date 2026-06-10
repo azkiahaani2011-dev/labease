@@ -1498,31 +1498,54 @@ const LabsNearMeSection = ({ T, navTo }) => (
       {/* heading row: microscope left + text + button right */}
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
 
-        {/* left: small microscope illustration + text */}
+        {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
-          {/* MediBuddy-style microscope SVG */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#F0FDF4", border:"1px solid #A7F3D0", display:"flex", alignItems:"center", justifyContent:"center" }}>
-            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:72,height:"auto"}}>
-              <ellipse cx="50" cy="112" rx="38" ry="7" fill="#BBF7D0" opacity="0.5"/>
-              <rect x="18" y="100" width="64" height="8" rx="4" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="42" y="72" width="16" height="32" rx="3" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="28" y="78" width="44" height="8" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="70" cy="86" rx="7" ry="9" fill="#ECFDF5" stroke="#1E293B" strokeWidth="1.2"/>
-              <ellipse cx="70" cy="86" rx="4" ry="6" fill="#6EE7B7"/>
-              <path d="M50 72 Q50 55 50 40" stroke="#6EE7B7" strokeWidth="10" strokeLinecap="round"/>
-              <path d="M50 72 Q50 55 50 40" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
-              <circle cx="50" cy="40" r="9" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
-              <circle cx="50" cy="40" r="4" fill="#34D399"/>
-              <rect x="46" y="46" width="8" height="18" rx="3" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="50" cy="64" rx="6" ry="3.5" fill="#34D399" stroke="#1E293B" strokeWidth="1.1"/>
-              <path d="M50 40 Q44 28 36 22" stroke="#D1FAE5" strokeWidth="9" strokeLinecap="round"/>
-              <path d="M50 40 Q44 28 36 22" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
-              <rect x="27" y="16" width="18" height="10" rx="4" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="36" cy="16" rx="8" ry="4" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1.1"/>
-              <rect x="33" y="74" width="34" height="5" rx="1.5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-              <rect x="37" y="75.5" width="18" height="2" rx="1" fill="#FEF3C7"/>
-              <circle cx="22" cy="28" r="4" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-              <circle cx="80" cy="20" r="3" fill="#FCA5A5" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+          {/* Premium hand + test tube illustration */}
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF0FB", border:"1px solid #C7D2F6", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+            <svg viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:80,height:"auto"}}>
+              {/* soft background blob */}
+              <ellipse cx="50" cy="80" rx="40" ry="34" fill="#DDE3F8" opacity="0.6"/>
+
+              {/* GLOVE — thumb */}
+              <path d="M28 72 Q22 68 20 60 Q18 50 24 46 Q28 43 32 47 L34 58 Z" fill="#E8EAF6" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
+              {/* Glove knuckle line on thumb */}
+              <path d="M23 56 Q27 54 31 56" stroke="#B0BCD4" strokeWidth="0.9" strokeLinecap="round"/>
+
+              {/* GLOVE — palm + fingers base */}
+              <path d="M32 47 L34 58 L36 92 Q36 98 42 100 L58 100 Q64 100 65 94 L68 58 L70 47 Q66 38 60 38 L40 38 Q34 38 32 47 Z" fill="#E8EAF6" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
+
+              {/* Finger divider lines on glove */}
+              <line x1="44" y1="58" x2="43" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
+              <line x1="52" y1="57" x2="52" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
+              <line x1="60" y1="58" x2="61" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
+
+              {/* Glove cuff */}
+              <rect x="34" y="92" width="34" height="12" rx="4" fill="#CDD3EE" stroke="#1E293B" strokeWidth="1.2"/>
+              <line x1="34" y1="97" x2="68" y2="97" stroke="#B0BCD4" strokeWidth="0.8"/>
+
+              {/* TEST TUBE — glass body */}
+              <rect x="44" y="8" width="14" height="52" rx="7" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
+              {/* Tube highlight */}
+              <rect x="46" y="10" width="3" height="44" rx="1.5" fill="white" opacity="0.6"/>
+
+              {/* Blood / red liquid inside tube */}
+              <clipPath id="tubeClip">
+                <rect x="44" y="8" width="14" height="52" rx="7"/>
+              </clipPath>
+              <rect x="44" y="36" width="14" height="24" rx="0" fill="#EF4444" clipPath="url(#tubeClip)"/>
+              {/* Liquid meniscus */}
+              <ellipse cx="51" cy="36" rx="7" ry="2.5" fill="#DC2626" clipPath="url(#tubeClip)"/>
+              {/* Bubble in liquid */}
+              <circle cx="54" cy="44" r="2" fill="#FCA5A5" opacity="0.6" clipPath="url(#tubeClip)"/>
+
+              {/* Tube cap */}
+              <rect x="43" y="5" width="16" height="8" rx="4" fill="#1158A6" stroke="#1E293B" strokeWidth="1.2"/>
+              <rect x="45" y="6.5" width="12" height="3" rx="1.5" fill="#3B82F6" opacity="0.5"/>
+
+              {/* Decorative dots */}
+              <circle cx="20" cy="38" r="3" fill="#A5B4FC" opacity="0.7"/>
+              <circle cx="82" cy="30" r="2.5" fill="#FCA5A5" opacity="0.7"/>
+              <circle cx="78" cy="90" r="2" fill="#BBF7D0" opacity="0.8"/>
             </svg>
           </div>
           {/* text */}
