@@ -709,6 +709,164 @@ const G = () => (
     @media print {
       nav, footer, .btn-anim, section:last-of-type { display: none !important; }
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       UTILITY RESPONSIVE CLASSES
+    ════════════════════════════════════════════════════════════════ */
+    @media (max-width: 767px) {
+      .hide-mobile  { display: none !important; }
+      .stack-mobile { flex-direction: column !important; }
+      .full-mobile  { width: 100% !important; min-width: 0 !important; }
+      .wrap-mobile  { flex-wrap: wrap !important; }
+      .center-mobile { text-align: center !important; justify-content: center !important; }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .hide-tablet  { display: none !important; }
+    }
+    @media (min-width: 1024px) {
+      .hide-desktop { display: none !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       HOW IT WORKS — 4-step responsive grid
+    ════════════════════════════════════════════════════════════════ */
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    @media (max-width: 900px) {
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .hiw-connector { display: none !important; }
+    }
+    @media (max-width: 540px) {
+      .hiw-grid { grid-template-columns: 1fr; gap: 20px; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       PROMO CARDS (HOW IT WORKS intro) — 2-col → 1-col
+    ════════════════════════════════════════════════════════════════ */
+    .promo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    @media (max-width: 640px) {
+      .promo-grid { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
+      .promo-img-col { display: none !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       WHY LABEASE — grid responsive
+    ════════════════════════════════════════════════════════════════ */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .why-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       LABS PAGE HEADER — search + sort row
+    ════════════════════════════════════════════════════════════════ */
+    .labs-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .labs-sort-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .labs-search-input {
+      width: 200px;
+    }
+    @media (max-width: 640px) {
+      .labs-header-row { flex-direction: column; align-items: stretch; }
+      .labs-sort-row { width: 100%; justify-content: flex-start; }
+      .labs-search-input { width: 100% !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       LAB DETAIL — 3-col layout stacks on mobile
+    ════════════════════════════════════════════════════════════════ */
+    .lab-detail-layout {
+      display: flex;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .lab-detail-layout { flex-direction: column; }
+      .lab-detail-sidebar { display: none !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       HERO TRUST BADGES — wrap on mobile
+    ════════════════════════════════════════════════════════════════ */
+    .trust-badges {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 640px) {
+      .trust-badges { gap: 10px; }
+      .trust-badges > * { flex: 1 1 auto; min-width: 120px; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       HERO SECTION — 2-col → 1-col
+    ════════════════════════════════════════════════════════════════ */
+    .hero-img-col {
+      display: flex;
+    }
+    @media (max-width: 768px) {
+      .hero-img-col { display: none !important; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       FEATURED CHECKUPS GRID — 3→2→1
+    ════════════════════════════════════════════════════════════════ */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .featured-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       TESTIMONIALS GRID
+    ════════════════════════════════════════════════════════════════ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 540px) {
+      .testimonials-grid { grid-template-columns: 1fr; gap: 14px; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       GENERAL NAV RESPONSIVENESS
+    ════════════════════════════════════════════════════════════════ */
+    @media (max-width: 1023px) {
+      .nav-right-btns { gap: 6px !important; }
+      .nav-right-btns .hide-tablet { display: none !important; }
+    }
   `}</style>
 );
 
@@ -1484,7 +1642,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button>
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:12 }}>
+          <div className="labs-header-row">
             <div>
               <h1 style={{ ...T.serif, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.01em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
@@ -1492,7 +1650,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                 <span style={{ color:"#1158A6", fontWeight:700 }}> {enriched.filter(l=>l.open).length} open now</span>
               </p>
             </div>
-            <div style={{ display:"flex",alignItems:"center",gap:6 }}>
+            <div className="labs-sort-row">
               {/* search */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
@@ -2798,7 +2956,7 @@ export default function App() {
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:60 }}>
+          <div className="promo-grid">
             {/* Card 1 — Home Sample Pickup */}
             <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
@@ -2814,7 +2972,7 @@ export default function App() {
                   BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </button>
               </div>
-              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
+              <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
                 <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
                   <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
                   <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
@@ -2870,7 +3028,7 @@ export default function App() {
                   VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </button>
               </div>
-              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
+              <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
                 <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
                   <ellipse cx="100" cy="110" rx="72" ry="80" fill="#DBEAFE" opacity="0.6"/>
                   <rect x="52" y="30" width="92" height="130" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
@@ -2908,9 +3066,9 @@ export default function App() {
           </div>
 
           {/* 4-step row */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:0, position:"relative" }}>
+          <div className="hiw-grid">
             {/* connector line */}
-            <div style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
+            <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
 
             {[
               {
@@ -3046,7 +3204,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16 }}>
+          <div className="why-grid">
             {[
               {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
