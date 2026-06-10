@@ -750,13 +750,13 @@ const G = () => (
       gap: 20px;
     }
     @media (max-width: 900px) {
-      .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .why-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
     }
     @media (max-width: 480px) {
-      .why-grid { grid-template-columns: 1fr; gap: 12px; }
+      .why-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
     }
     /* ════════════════════════════════════════════════════════════════
-       FEATURED CHECKUPS GRID — 2→1 col with horizontal cards
+       FEATURED CHECKUPS GRID
     ════════════════════════════════════════════════════════════════ */
     .featured-grid {
       display: grid;
@@ -764,10 +764,10 @@ const G = () => (
       gap: 16px;
     }
     @media (max-width: 900px) {
-      .featured-grid { grid-template-columns: repeat(2, 1fr); }
+      .featured-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
     @media (max-width: 480px) {
-      .featured-grid { grid-template-columns: 1fr; }
+      .featured-grid { grid-template-columns: 1fr !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2910,7 +2910,7 @@ export default function App() {
           </div>
 
           {/* 6-card grid */}
-          <div className="featured-grid">
+          <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
@@ -3204,7 +3204,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
-          <div className="why-grid">
+          <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:20 }}>
             {[
               {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
