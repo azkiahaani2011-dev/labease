@@ -755,6 +755,17 @@ const G = () => (
     @media (min-width: 768px) {
       .why-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
     }
+    /* ════════════════════════════════════════════════════════════════
+       FEATURED CHECKUPS GRID — 2→1 col with horizontal cards
+    ════════════════════════════════════════════════════════════════ */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 640px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
 
     /* ════════════════════════════════════════════════════════════════
        LABS PAGE HEADER — search + sort row
@@ -816,20 +827,6 @@ const G = () => (
       .hero-img-col { display: none !important; }
     }
 
-    /* ════════════════════════════════════════════════════════════════
-       FEATURED CHECKUPS GRID — 3→2→1
-    ════════════════════════════════════════════════════════════════ */
-    .featured-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    @media (max-width: 900px) {
-      .featured-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 540px) {
-      .featured-grid { grid-template-columns: 1fr; }
-    }
 
     /* ════════════════════════════════════════════════════════════════
        FOOTER GRID — 4-col desktop → 2-col tablet → 1-col mobile
@@ -2920,47 +2917,41 @@ export default function App() {
               { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title}
-                style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
+                style={{ background:"#fff",borderRadius:16,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"row",boxShadow:"0 2px 12px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9",minHeight:120 }}
                 onClick={()=>navTo("labs")}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
-                {/* Image */}
-                <div style={{ position:"relative",height:180,overflow:"hidden",flexShrink:0 }}>
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 10px 32px rgba(0,0,0,.11)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.06)"; }}>
+                {/* Image — left side, fixed width */}
+                <div style={{ position:"relative",width:110,flexShrink:0,overflow:"hidden" }}>
                   <img
                     src={pkg.img}
                     alt={pkg.title}
-                    style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .5s ease' }}
-                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.07)'}
-                    onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
-                    onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}
+                    style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s ease" }}
+                    onMouseEnter={e=>e.currentTarget.style.transform="scale(1.07)"}
+                    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+                    onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}
                   />
-                  {/* dark gradient overlay for text readability */}
-                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%)" }}/>
-                  {/* badge */}
-                  <div style={{ position:"absolute",top:14,left:14,background:pkg.badgeColor,color:"#fff",borderRadius:8,padding:"4px 11px",fontSize:".64rem",fontWeight:800,letterSpacing:".03em" }}>
+                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,transparent 60%,rgba(0,0,0,.08))" }}/>
+                  <div style={{ position:"absolute",top:8,left:8,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"2px 7px",fontSize:".56rem",fontWeight:800,letterSpacing:".02em",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>
                     {pkg.badge}
                   </div>
-                  {/* discount pill */}
-                  <div style={{ position:"absolute",top:14,right:14,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",color:"#fff",borderRadius:8,padding:"4px 9px",fontSize:".64rem",fontWeight:800 }}>
-                    {pkg.off}% OFF
-                  </div>
-                  {/* title over image */}
-                  <div style={{ position:"absolute",bottom:14,left:14,right:14 }}>
-                    <div style={{ fontWeight:800,fontSize:"1rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
-                  </div>
                 </div>
-                {/* Content */}
-                <div style={{ padding:"16px 18px 18px",flex:1,display:"flex",flexDirection:"column",gap:8 }}>
-                  <div style={{ fontSize:".76rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
-                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:8 }}>
-                    <div style={{ display:"flex",alignItems:"baseline",gap:6 }}>
-                      <span style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
-                      <span style={{ fontSize:".78rem",color:"#CBD5E1",textDecoration:"line-through",fontWeight:500 }}>₹{pkg.mrp.toLocaleString()}</span>
+                {/* Content — right side */}
+                <div style={{ padding:"14px 16px",flex:1,display:"flex",flexDirection:"column",justifyContent:"space-between",gap:6,minWidth:0 }}>
+                  <div>
+                    <div style={{ fontWeight:800,fontSize:".92rem",color:"#0D1117",lineHeight:1.2,marginBottom:3 }}>{pkg.title}</div>
+                    <div style={{ fontSize:".71rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
+                  </div>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:6 }}>
+                    <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
+                      <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontSize:".72rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
+                      <span style={{ fontSize:".62rem",fontWeight:800,color:"#16A34A" }}>{pkg.off}% off</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"9px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",boxShadow:"0 4px 12px rgba(17,88,166,.3)" }}
-                      onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="scale(1.03)"; }}
-                      onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"7px 14px",fontWeight:700,fontSize:".76rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",flexShrink:0 }}
+                      onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                      onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
                       Book Now
                     </button>
                   </div>
