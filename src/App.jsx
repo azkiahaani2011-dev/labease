@@ -1501,52 +1501,12 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF0FB", border:"1px solid #C7D2F6", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
-            <svg viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:80,height:"auto"}}>
-              {/* soft background blob */}
-              <ellipse cx="50" cy="80" rx="40" ry="34" fill="#DDE3F8" opacity="0.6"/>
-
-              {/* GLOVE — thumb */}
-              <path d="M28 72 Q22 68 20 60 Q18 50 24 46 Q28 43 32 47 L34 58 Z" fill="#E8EAF6" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-              {/* Glove knuckle line on thumb */}
-              <path d="M23 56 Q27 54 31 56" stroke="#B0BCD4" strokeWidth="0.9" strokeLinecap="round"/>
-
-              {/* GLOVE — palm + fingers base */}
-              <path d="M32 47 L34 58 L36 92 Q36 98 42 100 L58 100 Q64 100 65 94 L68 58 L70 47 Q66 38 60 38 L40 38 Q34 38 32 47 Z" fill="#E8EAF6" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-
-              {/* Finger divider lines on glove */}
-              <line x1="44" y1="58" x2="43" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
-              <line x1="52" y1="57" x2="52" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
-              <line x1="60" y1="58" x2="61" y2="100" stroke="#B0BCD4" strokeWidth="0.8"/>
-
-              {/* Glove cuff */}
-              <rect x="34" y="92" width="34" height="12" rx="4" fill="#CDD3EE" stroke="#1E293B" strokeWidth="1.2"/>
-              <line x1="34" y1="97" x2="68" y2="97" stroke="#B0BCD4" strokeWidth="0.8"/>
-
-              {/* TEST TUBE — glass body */}
-              <rect x="44" y="8" width="14" height="52" rx="7" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
-              {/* Tube highlight */}
-              <rect x="46" y="10" width="3" height="44" rx="1.5" fill="white" opacity="0.6"/>
-
-              {/* Blood / red liquid inside tube */}
-              <clipPath id="tubeClip">
-                <rect x="44" y="8" width="14" height="52" rx="7"/>
-              </clipPath>
-              <rect x="44" y="36" width="14" height="24" rx="0" fill="#EF4444" clipPath="url(#tubeClip)"/>
-              {/* Liquid meniscus */}
-              <ellipse cx="51" cy="36" rx="7" ry="2.5" fill="#DC2626" clipPath="url(#tubeClip)"/>
-              {/* Bubble in liquid */}
-              <circle cx="54" cy="44" r="2" fill="#FCA5A5" opacity="0.6" clipPath="url(#tubeClip)"/>
-
-              {/* Tube cap */}
-              <rect x="43" y="5" width="16" height="8" rx="4" fill="#1158A6" stroke="#1E293B" strokeWidth="1.2"/>
-              <rect x="45" y="6.5" width="12" height="3" rx="1.5" fill="#3B82F6" opacity="0.5"/>
-
-              {/* Decorative dots */}
-              <circle cx="20" cy="38" r="3" fill="#A5B4FC" opacity="0.7"/>
-              <circle cx="82" cy="30" r="2.5" fill="#FCA5A5" opacity="0.7"/>
-              <circle cx="78" cy="90" r="2" fill="#BBF7D0" opacity="0.8"/>
-            </svg>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, overflow:"hidden", border:"1px solid #C7D2F6", boxShadow:"0 4px 16px rgba(17,88,166,.12)" }}>
+            <img
+              src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=300&fit=crop&crop=center&q=85"
+              alt="Lab test tube"
+              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+            />
           </div>
           {/* text */}
           <div>
