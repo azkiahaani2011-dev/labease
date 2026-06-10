@@ -2474,7 +2474,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:64,paddingBottom:64,display:"grid",gridTemplateColumns:"1fr auto",alignItems:"center",gap:40 }}>
+        <div style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40,maxWidth:720 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580 }}>
             {/* eyebrow pill */}
@@ -2520,8 +2520,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* ── RIGHT: MediBuddy-style flat vector illustration ── */}
-          <div style={{ flexShrink:0,width:340,position:"relative",height:440,display:"flex",alignItems:"center",justifyContent:"center" }}>
+          {/* ── RIGHT: hidden ── */}
+          <div style={{ display:"none" }}>
             <svg viewBox="0 0 340 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto",maxWidth:340}}>
               {/* soft background blob */}
               <ellipse cx="175" cy="240" rx="155" ry="188" fill="#EBF4FF"/>
@@ -2755,240 +2755,70 @@ export default function App() {
 
       {/* ── POPULAR TESTS carousel ─────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo}/>
-      {/* ── HOW HOME SAMPLE COLLECTION WORKS ─────────────────────── */}
-      <section style={{ padding:"60px 0 56px",background:"#F8FAFF",borderBottom:"1px solid #E0EAFF" }}>
+      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      <section style={{ padding:"72px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
-          {/* MediBuddy-style illustrated promo cards */}
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:48 }}>
-            {/* Card 1 — Home Sample Pickup */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#D1FAE5 0%,#A7F3D0 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(16,185,129,.15)" }}>
-              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
-                <div>
-                  <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
-                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
-                  <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
-                </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
-              </div>
-              {/* Card 1 illustration — phlebotomist at door */}
-              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
-                <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                  {/* pastel mint blob */}
-                  <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
-                  {/* door */}
-                  <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  <rect x="88" y="58" width="30" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <rect x="122" y="58" width="26" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <rect x="88" y="104" width="60" height="90" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <circle cx="84" cy="142" r="5" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                  {/* doorstep */}
-                  <rect x="72" y="198" width="92" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
-                  {/* plant */}
-                  <rect x="52" y="170" width="22" height="28" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.2"/>
-                  <ellipse cx="63" cy="170" rx="13" ry="6" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                  <path d="M63 164 Q55 150 48 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                  <ellipse cx="48" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(-20 48 138)"/>
-                  <path d="M63 162 Q70 148 76 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                  <ellipse cx="76" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(20 76 138)"/>
-                  {/* phlebotomist */}
-                  {/* head */}
-                  <circle cx="46" cy="74" r="20" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
-                  {/* hair */}
-                  <path d="M26 68 Q26 50 46 48 Q66 50 66 68 L64 60 Q54 46 46 46 Q38 46 28 60 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
-                  {/* white coat body */}
-                  <path d="M22 108 Q22 98 46 96 Q70 98 70 108 L74 198 H18 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  {/* coat collar */}
-                  <path d="M40 98 L32 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M52 98 L60 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  {/* red cross badge */}
-                  <circle cx="30" cy="112" r="10" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.2"/>
-                  <rect x="27" y="107" width="6" height="10" rx="1" fill="#EF4444"/>
-                  <rect x="24.5" y="109.5" width="11" height="5" rx="1" fill="#EF4444"/>
-                  {/* arm holding bag */}
-                  <path d="M70 112 Q84 126 80 156" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                  <path d="M70 112 Q84 126 80 156" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                  {/* medical bag */}
-                  <rect x="67" y="150" width="28" height="22" rx="4" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.5"/>
-                  <rect x="77" y="146" width="8" height="8" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
-                  <line x1="78" y1="158" x2="88" y2="158" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="83" y1="153" x2="83" y2="163" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  {/* face - simple eyes */}
-                  <ellipse cx="39" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                  <ellipse cx="53" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                  <circle cx="40" cy="77" r="3" fill="#1E293B"/>
-                  <circle cx="54" cy="77" r="3" fill="#1E293B"/>
-                  <circle cx="41" cy="75.5" r="1.2" fill="white"/>
-                  <circle cx="55" cy="75.5" r="1.2" fill="white"/>
-                  <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                  {/* face mask */}
-                  <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-                </svg>
-              </div>
-            </div>
+          {/* heading */}
+          <div style={{ textAlign:"center", marginBottom:56 }}>
+            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+            <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
+          </div>
 
-            {/* Card 2 — Fast Report Delivery */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(17,88,166,.15)" }}>
-              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
-                <div>
-                  <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
-                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
-                  <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Get authenticated reports on WhatsApp &amp; email. Download anytime, share instantly.</p>
-                </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
-              </div>
-              {/* Card 2 illustration — digital report delivery */}
-              <div style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
-                <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                  {/* pastel blue blob */}
-                  <ellipse cx="100" cy="110" rx="72" ry="80" fill="#DBEAFE" opacity="0.6"/>
-                  {/* main report / phone */}
-                  <rect x="52" y="30" width="92" height="130" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  {/* phone top notch */}
-                  <rect x="76" y="26" width="44" height="10" rx="5" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1"/>
-                  {/* report lines on phone */}
-                  <rect x="62" y="54" width="72" height="6" rx="3" fill="#DBEAFE"/>
-                  <rect x="62" y="66" width="56" height="5" rx="2.5" fill="#E2E8F0"/>
-                  <rect x="62" y="78" width="64" height="5" rx="2.5" fill="#E2E8F0"/>
-                  {/* result bar chart */}
-                  <rect x="62" y="94" width="14" height="36" rx="3" fill="#93C5FD"/>
-                  <rect x="80" y="106" width="14" height="24" rx="3" fill="#BFDBFE"/>
-                  <rect x="98" y="100" width="14" height="30" rx="3" fill="#60A5FA"/>
-                  <rect x="116" y="110" width="14" height="20" rx="3" fill="#BFDBFE"/>
-                  {/* checkmark area */}
-                  <rect x="62" y="136" width="72" height="14" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
-                  <path d="M70 143 L74 147 L82 140" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="88" y1="143" x2="126" y2="143" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
-                  {/* notification bubble */}
-                  <rect x="100" y="148" width="60" height="36" rx="8" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="100" y="156" width="60" height="14" rx="0" fill="#1158A6"/>
-                  <polygon points="108,184 116,184 112,192" fill="#1158A6" stroke="#1E293B" strokeWidth="0.5"/>
-                  <circle cx="112" cy="158" r="5" fill="#DBEAFE"/>
-                  <path d="M110 158 L112 160 L116 155" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="120" y1="156" x2="152" y2="156" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="120" y1="162" x2="146" y2="162" stroke="#93C5FD" strokeWidth="1.2" strokeLinecap="round"/>
-                  {/* floating dots */}
-                  <circle cx="24" cy="80" r="7" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-                  <circle cx="162" cy="55" r="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
-                  <circle cx="22" cy="148" r="5" fill="#DBEAFE" opacity="0.8"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div style={{ textAlign:"center",marginBottom:48 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
-              <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
-              <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Simple Process</span>
-            </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.45rem,3vw,1.85rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>How Home Sample Collection Works</h2>
-            <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:460,margin:"0 auto",lineHeight:1.8 }}>A seamless, four-step process designed for your convenience — from test selection to report delivery.</p>
-          </div>
-          <div style={{ maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column" }}>
+          {/* 4-step row */}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:0, position:"relative" }}>
+            {/* connector line */}
+            <div style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
+
             {[
-              { n:"01",accent:"#1158A6",bg:"#EFF6FF",border:"#DBEAFE",label:"Search & Compare",desc:"Browse diagnostic tests and health packages by name, category, or condition. View real-time pricing from multiple NABL-accredited laboratories.",icon:
-                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
-                  {/* magnifying glass over a screen/list */}
-                  <rect x="2" y="4" width="22" height="28" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
-                  <line x1="7" y1="12" x2="19" y2="12" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="7" y1="17" x2="19" y2="17" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="7" y1="22" x2="15" y2="22" stroke="#BFDBFE" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="26" cy="26" r="7" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  <circle cx="24.5" cy="24.5" r="3.5" fill="none" stroke="#1158A6" strokeWidth="1.5"/>
-                  <line x1="27.5" y1="27.5" x2="31" y2="31" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
+              {
+                n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
+                desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
+                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="4" y="6" width="26" height="32" rx="5" fill="#DBEAFE" stroke="#1158A6" strokeWidth="1.6"/><line x1="10" y1="15" x2="24" y2="15" stroke="#1158A6" strokeWidth="1.6" strokeLinecap="round"/><line x1="10" y1="20" x2="24" y2="20" stroke="#93C5FD" strokeWidth="1.4" strokeLinecap="round"/><line x1="10" y1="25" x2="18" y2="25" stroke="#BFDBFE" strokeWidth="1.4" strokeLinecap="round"/><circle cx="34" cy="34" r="9" fill="white" stroke="#1158A6" strokeWidth="1.6"/><circle cx="32" cy="32" r="4" fill="none" stroke="#1158A6" strokeWidth="1.5"/><line x1="35" y1="35" x2="39" y2="39" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"/></svg>
               },
-              { n:"02",accent:"#0EA5E9",bg:"#F0F9FF",border:"#BAE6FD",label:"Schedule Collection",desc:"Select a preferred date and time slot. Choose between a laboratory visit or a doorstep sample collection at no additional charge.",icon:
-                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
-                  {/* calendar with clock */}
-                  <rect x="3" y="6" width="24" height="24" rx="4" fill="#E0F2FE" stroke="#1E293B" strokeWidth="1.4"/>
-                  <rect x="3" y="6" width="24" height="8" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
-                  <rect x="3" y="10" width="24" height="4" fill="#BAE6FD"/>
-                  <line x1="10" y1="3" x2="10" y2="9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="20" y1="3" x2="20" y2="9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="27" cy="27" r="8" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
-                  <line x1="27" y1="22" x2="27" y2="27" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/>
-                  <line x1="27" y1="27" x2="30" y2="29" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/>
-                  <circle cx="27" cy="27" r="1.5" fill="#0EA5E9"/>
-                  {/* day dots */}
-                  {[9,15,21].map(x=><rect key={x} x={x} y={20} width={3} height={3} rx={1} fill="#BAE6FD"/>)}
-                  {[9,15].map(x=><rect key={x} x={x} y={26} width={3} height={3} rx={1} fill="#BAE6FD"/>)}
-                </svg>
+              {
+                n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
+                desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
+                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="4" y="8" width="28" height="28" rx="5" fill="#E0F2FE" stroke="#0EA5E9" strokeWidth="1.6"/><rect x="4" y="8" width="28" height="9" rx="5" fill="#BAE6FD" stroke="#0EA5E9" strokeWidth="1.6"/><rect x="4" y="14" width="28" height="3" fill="#BAE6FD"/><line x1="12" y1="5" x2="12" y2="12" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/><line x1="24" y1="5" x2="24" y2="12" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/><circle cx="34" cy="34" r="9" fill="white" stroke="#0EA5E9" strokeWidth="1.6"/><line x1="34" y1="29" x2="34" y2="34" stroke="#0EA5E9" strokeWidth="1.8" strokeLinecap="round"/><line x1="34" y1="34" x2="38" y2="36" stroke="#0EA5E9" strokeWidth="1.8" strokeLinecap="round"/><circle cx="34" cy="34" r="2" fill="#0EA5E9"/></svg>
               },
-              { n:"03",accent:"#8B5CF6",bg:"#F5F3FF",border:"#DDD6FE",label:"Sample Collection",desc:"A trained phlebotomist arrives at your location within the confirmed window, equipped with sterile, single-use collection kits compliant with ICMR guidelines.",icon:
-                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
-                  {/* house with medical cross */}
-                  <path d="M18 4L32 14V32H22V22H14V32H4V14Z" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
-                  <path d="M18 4L32 14" stroke="#1E293B" strokeWidth="1.4" strokeLinecap="round"/>
-                  {/* door */}
-                  <rect x="14" y="22" width="8" height="10" rx="1.5" fill="#C4B5FD" stroke="#1E293B" strokeWidth="1"/>
-                  <circle cx="21" cy="27" r="1" fill="#1E293B"/>
-                  {/* medical cross on house front */}
-                  <rect x="16" y="11" width="4" height="8" rx="1" fill="#8B5CF6"/>
-                  <rect x="14" y="13" width="8" height="4" rx="1" fill="#8B5CF6"/>
-                  {/* phlebotomist figure beside */}
-                  <circle cx="30" cy="19" r="4" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1"/>
-                  <path d="M27 23 Q27 28 30 28 Q33 28 33 23" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1"/>
-                </svg>
+              {
+                n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
+                desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
+                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="13" r="7" fill="#EDE9FE" stroke="#8B5CF6" strokeWidth="1.6"/><path d="M10 38 Q10 27 22 27 Q34 27 34 38" fill="#EDE9FE" stroke="#8B5CF6" strokeWidth="1.6" strokeLinecap="round"/><rect x="29" y="20" width="13" height="16" rx="3" fill="#F5F3FF" stroke="#8B5CF6" strokeWidth="1.4"/><rect x="32" y="24" width="7" height="2" rx="1" fill="#C4B5FD"/><rect x="32" y="28" width="7" height="2" rx="1" fill="#DDD6FE"/><rect x="32" y="32" width="4" height="2" rx="1" fill="#DDD6FE"/><rect x="6" y="10" width="4" height="14" rx="2" fill="none" stroke="#8B5CF6" strokeWidth="1.4"/><path d="M6 20 Q6 26 8 27 Q10 26 10 20 Z" fill="#C4B5FD" opacity="0.7"/><line x1="4" y1="10" x2="12" y2="10" stroke="#8B5CF6" strokeWidth="1.6" strokeLinecap="round"/></svg>
               },
-              { n:"04",accent:"#16A34A",bg:"#F0FDF4",border:"#BBF7D0",label:"Receive Reports",desc:"Authenticated diagnostic reports are delivered directly to your registered email and WhatsApp. Access and download them at any time through your booking reference.",icon:
-                <svg width="30" height="30" viewBox="0 0 36 36" fill="none">
-                  {/* phone with report + checkmark */}
-                  <rect x="8" y="2" width="20" height="32" rx="4" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1.4"/>
-                  <rect x="13" y="0" width="10" height="5" rx="2" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
-                  {/* report lines */}
-                  <rect x="12" y="10" width="12" height="2" rx="1" fill="#86EFAC"/>
-                  <rect x="12" y="14" width="9" height="2" rx="1" fill="#BBF7D0"/>
-                  {/* bar chart */}
-                  <rect x="12" y="23" width="3" height="7" rx="1" fill="#4ADE80"/>
-                  <rect x="17" y="26" width="3" height="4" rx="1" fill="#86EFAC"/>
-                  <rect x="22" y="21" width="3" height="9" rx="1" fill="#22C55E"/>
-                  {/* big green checkmark badge */}
-                  <circle cx="30" cy="30" r="6" fill="#16A34A" stroke="#1E293B" strokeWidth="1.2"/>
-                  <polyline points="27,30 29.5,32.5 34,27" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </svg>
+              {
+                n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
+                desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
+                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="10" y="4" width="24" height="36" rx="5" fill="#DCFCE7" stroke="#16A34A" strokeWidth="1.6"/><rect x="15" y="4" width="14" height="6" rx="2" fill="#BBF7D0" stroke="#16A34A" strokeWidth="1.2"/><line x1="15" y1="17" x2="29" y2="17" stroke="#4ADE80" strokeWidth="1.5" strokeLinecap="round"/><line x1="15" y1="21" x2="25" y2="21" stroke="#BBF7D0" strokeWidth="1.4" strokeLinecap="round"/><rect x="15" y="27" width="4" height="9" rx="1.5" fill="#4ADE80"/><rect x="21" y="30" width="4" height="6" rx="1.5" fill="#86EFAC"/><rect x="27" y="25" width="4" height="11" rx="1.5" fill="#22C55E"/><circle cx="36" cy="36" r="7" fill="#16A34A"/><polyline points="33,36 35.5,38.5 40,33" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
               },
-            ].map((s,i,arr)=>(
-              <div key={s.n} style={{ display:"flex",gap:0,alignItems:"stretch" }}>
-                <div style={{ display:"flex",flexDirection:"column",alignItems:"center",marginRight:22,flexShrink:0 }}>
-                  <div style={{ width:54,height:54,borderRadius:"50%",background:s.bg,border:`2px solid ${s.border}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,zIndex:1 }}>{s.icon}</div>
-                  {i<arr.length-1&&<div style={{ width:2,flex:1,minHeight:28,background:`linear-gradient(to bottom,${s.border},${arr[i+1].border})`,borderRadius:99,margin:"5px 0" }}/>}
+            ].map((s,i)=>(
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
+                <div style={{ width:108,height:108,borderRadius:"50%",background:s.bg,border:`1.5px solid ${s.accent}25`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}18`,transition:"transform .2s,box-shadow .2s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}30`; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}18`; }}>
+                  {s.icon}
                 </div>
-                <div style={{ flex:1,paddingBottom:i<arr.length-1?26:0 }}>
-                  <div style={{ background:"#fff",border:`1.5px solid ${s.border}`,borderRadius:16,padding:"18px 20px",boxShadow:"0 2px 12px rgba(0,0,0,.05)",transition:"box-shadow .2s,border-color .2s,transform .2s" }}
-                    onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(0,0,0,.1)"; e.currentTarget.style.transform="translateX(4px)"; e.currentTarget.style.borderColor=s.accent; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.05)"; e.currentTarget.style.transform="translateX(0)"; e.currentTarget.style.borderColor=s.border; }}>
-                    <span style={{ fontSize:".62rem",fontWeight:900,letterSpacing:".1em",color:s.accent,background:s.bg,border:`1px solid ${s.border}`,borderRadius:50,padding:"2px 10px",textTransform:"uppercase",display:"inline-block",marginBottom:8 }}>Step {s.n}</span>
-                    <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:7,lineHeight:1.3 }}>{s.label}</h3>
-                    <p style={{ color:"#6B7280",fontSize:".83rem",lineHeight:1.72,margin:0 }}>{s.desc}</p>
-                  </div>
-                </div>
+                <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase" }}>Step {s.n}</div>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:10,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
+                <p style={{ color:"#64748B",fontSize:".82rem",textAlign:"center",lineHeight:1.7,maxWidth:180,margin:0 }}>{s.desc}</p>
               </div>
             ))}
           </div>
-          <div style={{ textAlign:"center",marginTop:44 }}>
+
+          <div style={{ textAlign:"center",marginTop:52 }}>
             <button onClick={()=>navTo("labs")}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 6px 24px rgba(17,88,166,.3)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:10,minHeight:48 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 10px 30px rgba(17,88,166,.42)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.3)"; }}>
-              Explore All Labs & Tests
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 6px 24px rgba(17,88,166,.28)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:10 }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-2px)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+              Book a Test Now
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
-            <p style={{ color:"#9CA3AF",fontSize:".74rem",marginTop:14 }}>6 NABL-certified labs · Free home collection · Reports delivered in hours</p>
           </div>
         </div>
       </section>
 
 
-      {/* ── WHY LABEASE ───────────────────────────────────────────── */}
+            {/* ── WHY LABEASE ───────────────────────────────────────────── */}
       <section style={{ padding:"56px 0",background:"#F8FAFF" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:48 }}>
