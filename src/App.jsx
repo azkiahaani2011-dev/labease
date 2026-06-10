@@ -1535,8 +1535,38 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#E8E5F5", border:"1px solid #C7C4EE", overflow:"hidden", boxShadow:"0 4px 16px rgba(99,88,196,.13)" }}>
-            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=300&h=300&fit=crop&crop=center&q=85" alt="Lab test" style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",mixBlendMode:"multiply" }}/>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF6FB", border:"1px solid #C7E6F5", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(17,88,166,.1)" }}>
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:90,height:90}}>
+              {/* cloud bg */}
+              <ellipse cx="60" cy="72" rx="46" ry="34" fill="#DAEEF8" opacity="0.7"/>
+              <ellipse cx="38" cy="62" rx="22" ry="18" fill="#DAEEF8" opacity="0.5"/>
+              <ellipse cx="82" cy="58" rx="18" ry="14" fill="#DAEEF8" opacity="0.5"/>
+              {/* BASE */}
+              <rect x="28" y="96" width="56" height="11" rx="5.5" fill="#F87171" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
+              <rect x="36" y="92" width="12" height="7" rx="2" fill="#FECACA" stroke="#1E293B" strokeWidth="2" strokeLinejoin="round"/>
+              {/* PILLAR */}
+              <rect x="44" y="56" width="14" height="40" rx="5" fill="#FC9D9D" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
+              {/* STAGE */}
+              <rect x="22" y="72" width="52" height="10" rx="5" fill="#F87171" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
+              <rect x="30" y="74" width="28" height="6" rx="3" fill="#FECACA" stroke="#1E293B" strokeWidth="1.6"/>
+              <rect x="26" y="75" width="8" height="4" rx="2" fill="#F87171" stroke="#1E293B" strokeWidth="1.5"/>
+              {/* HORIZONTAL ARM */}
+              <path d="M54 60 Q72 52 78 44" stroke="#F87171" strokeWidth="10" strokeLinecap="round"/>
+              <path d="M54 60 Q72 52 78 44" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
+              {/* BLUE TUBE */}
+              <rect x="72" y="28" width="14" height="28" rx="5" fill="#38BDF8" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
+              <rect x="72" y="36" width="14" height="6" rx="1" fill="#0EA5E9" stroke="#1E293B" strokeWidth="1.5"/>
+              <ellipse cx="79" cy="56" rx="7" ry="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="2"/>
+              {/* EYEPIECE */}
+              <rect x="74" y="22" width="10" height="12" rx="4" fill="#475569" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
+              <rect x="76" y="18" width="6" height="7" rx="2.5" fill="#334155" stroke="#1E293B" strokeWidth="2"/>
+              {/* KNOB */}
+              <circle cx="45" cy="66" r="5" fill="#FECACA" stroke="#1E293B" strokeWidth="2"/>
+              <circle cx="45" cy="66" r="2" fill="#F87171"/>
+              {/* shine */}
+              <circle cx="76" cy="32" r="1.5" fill="white" opacity="0.7"/>
+              <circle cx="80" cy="28" r="1" fill="white" opacity="0.5"/>
+            </svg>
           </div>
           {/* text */}
           <div>
