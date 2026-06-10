@@ -750,21 +750,27 @@ Error generating stack: `+e.message+`
     ════════════════════════════════════════════════════════════════ */
     .why-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
-    @media (max-width: 540px) {
-      .why-grid { grid-template-columns: 1fr; gap: 14px; }
+    @media (max-width: 900px) {
+      .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    }
+    @media (max-width: 480px) {
+      .why-grid { grid-template-columns: 1fr; gap: 12px; }
     }
     /* ════════════════════════════════════════════════════════════════
        FEATURED CHECKUPS GRID — 2→1 col with horizontal cards
     ════════════════════════════════════════════════════════════════ */
     .featured-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
-    @media (max-width: 640px) {
+    @media (max-width: 900px) {
+      .featured-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
       .featured-grid { grid-template-columns: 1fr; }
     }
 
