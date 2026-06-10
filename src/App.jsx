@@ -1354,13 +1354,112 @@ const LabsNearMeSection = ({ T, navTo }) => (
         </button>
       </div>
 
-      {/* Lab photo — MediBuddy style */}
-      <div style={{ borderRadius:20, overflow:"hidden", boxShadow:"0 12px 48px rgba(17,88,166,.14)", lineHeight:0 }}>
-        <img
-          src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1400&q=85&auto=format&fit=crop"
-          alt="Modern diagnostic laboratory"
-          style={{ width:"100%", height:320, objectFit:"cover", display:"block" }}
-        />
+      {/* MediBuddy-style flat illustration */}
+      <div style={{ borderRadius:20, background:"linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%)", padding:"32px 48px", display:"flex", alignItems:"center", justifyContent:"center", minHeight:280, boxShadow:"0 8px 32px rgba(17,88,166,.10)" }}>
+        <svg viewBox="0 0 780 260" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",maxWidth:780,height:"auto"}}>
+          {/* background blobs */}
+          <ellipse cx="390" cy="130" rx="360" ry="120" fill="#DBEAFE" opacity="0.35"/>
+          <ellipse cx="120" cy="200" rx="80" ry="50" fill="#BFDBFE" opacity="0.4"/>
+          <ellipse cx="660" cy="180" rx="90" ry="55" fill="#BAE6FD" opacity="0.35"/>
+
+          {/* --- BUILDING / LAB EXTERIOR left --- */}
+          <rect x="20" y="60" width="160" height="180" rx="6" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+          <rect x="20" y="60" width="160" height="36" rx="6" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.5"/>
+          <rect x="20" y="88" width="160" height="8" fill="#BFDBFE"/>
+          {/* windows */}
+          <rect x="36" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          <rect x="84" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          <rect x="132" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          <rect x="36" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          <rect x="84" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          <rect x="132" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
+          {/* door */}
+          <rect x="80" y="200" width="40" height="40" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/>
+          <circle cx="116" cy="221" r="3" fill="#1158A6"/>
+          {/* sign */}
+          <rect x="48" y="70" width="84" height="14" rx="3" fill="white" stroke="#1E293B" strokeWidth="1"/>
+          <line x1="54" y1="77" x2="126" y2="77" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/>
+
+          {/* --- MICROSCOPE centre-left --- */}
+          <g transform="translate(215,40)">
+            <rect x="20" y="140" width="70" height="10" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.4"/>
+            <rect x="40" y="110" width="30" height="35" rx="3" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.4"/>
+            <rect x="47" y="70" width="16" height="44" rx="2" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
+            <ellipse cx="55" cy="70" rx="14" ry="8" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
+            <rect x="51" y="48" width="8" height="24" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.2"/>
+            <circle cx="55" cy="46" r="8" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
+            <circle cx="55" cy="46" r="4" fill="#93C5FD"/>
+            <rect x="36" y="128" width="10" height="16" rx="2" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1"/>
+            <path d="M46 120 Q32 100 30 128" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
+          </g>
+
+          {/* --- TEST TUBES rack centre --- */}
+          <g transform="translate(340,60)">
+            <rect x="0" y="110" width="100" height="10" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2"/>
+            <rect x="0" y="60" width="100" height="8" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2"/>
+            {[
+              {x:12, fill:"#FCA5A5", liquid:"#EF4444"},
+              {x:30, fill:"#A7F3D0", liquid:"#10B981"},
+              {x:48, fill:"#FDE68A", liquid:"#F59E0B"},
+              {x:66, fill:"#BAE6FD", liquid:"#0EA5E9"},
+              {x:84, fill:"#DDD6FE", liquid:"#8B5CF6"},
+            ].map((t,i)=>(
+              <g key={i}>
+                <rect x={t.x} y="62" width="16" height="60" rx="8" fill={t.fill} stroke="#1E293B" strokeWidth="1.2"/>
+                <rect x={t.x+1} y={100} width="14" height="22" rx="0 0 7 7" fill={t.liquid} opacity="0.7"/>
+              </g>
+            ))}
+          </g>
+
+          {/* --- CENTRIFUGE right-centre --- */}
+          <g transform="translate(475,70)">
+            <rect x="0" y="90" width="100" height="70" rx="8" fill="#F0F9FF" stroke="#1E293B" strokeWidth="1.4"/>
+            <ellipse cx="50" cy="90" rx="45" ry="18" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
+            <ellipse cx="50" cy="90" rx="30" ry="12" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
+            <ellipse cx="50" cy="90" rx="12" ry="5" fill="#0EA5E9" stroke="#1E293B" strokeWidth="1"/>
+            {[0,60,120,180,240,300].map((deg,i)=>(
+              <line key={i} x1="50" y1="90"
+                x2={50+26*Math.cos(deg*Math.PI/180)}
+                y2={90+10*Math.sin(deg*Math.PI/180)}
+                stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round"/>
+            ))}
+            <rect x="20" y="116" width="16" height="10" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
+            <rect x="44" y="120" width="24" height="6" rx="3" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1"/>
+            <circle cx="78" cy="120" r="5" fill="#38BDF8" stroke="#1E293B" strokeWidth="1"/>
+          </g>
+
+          {/* --- REPORT clipboard far right --- */}
+          <g transform="translate(600,50)">
+            <rect x="0" y="10" width="110" height="150" rx="6" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
+            <rect x="30" y="4" width="50" height="14" rx="5" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/>
+            <rect x="10" y="34" width="90" height="6" rx="3" fill="#DBEAFE"/>
+            <rect x="10" y="46" width="70" height="5" rx="2.5" fill="#E2E8F0"/>
+            <rect x="10" y="57" width="80" height="5" rx="2.5" fill="#E2E8F0"/>
+            {/* bar chart */}
+            <rect x="12" y="90" width="14" height="40" rx="2" fill="#93C5FD"/>
+            <rect x="30" y="102" width="14" height="28" rx="2" fill="#BFDBFE"/>
+            <rect x="48" y="82" width="14" height="48" rx="2" fill="#60A5FA"/>
+            <rect x="66" y="96" width="14" height="34" rx="2" fill="#BFDBFE"/>
+            <rect x="84" y="74" width="14" height="56" rx="2" fill="#3B82F6"/>
+            {/* green tick */}
+            <rect x="10" y="140" width="90" height="12" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
+            <path d="M18 146 L22 150 L30 143" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <line x1="36" y1="146" x2="90" y2="146" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round"/>
+          </g>
+
+          {/* NABL badge */}
+          <rect x="28" y="28" width="60" height="22" rx="11" fill="#DCFCE7" stroke="#6EE7B7" strokeWidth="1"/>
+          <text x="58" y="43" textAnchor="middle" fontSize="9" fontWeight="700" fill="#059669" fontFamily="Manrope,sans-serif">✓ NABL</text>
+
+          {/* bottom floor line */}
+          <line x1="10" y1="242" x2="770" y2="242" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="6 4"/>
+
+          {/* floating dots decoration */}
+          <circle cx="195" cy="38" r="6" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
+          <circle cx="590" cy="30" r="5" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
+          <circle cx="750" cy="80" r="8" fill="#FDE68A" stroke="#1E293B" strokeWidth="1" opacity="0.6"/>
+          <circle cx="160" cy="26" r="4" fill="#DDD6FE" opacity="0.8"/>
+        </svg>
       </div>
 
     </div>
@@ -2740,13 +2839,13 @@ export default function App() {
       {/* ── POPULAR TESTS carousel ─────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo}/>
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 68px", background:"#F8FAFF", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"60px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:60 }}>
             {/* Card 1 — Home Sample Pickup */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#D1FAE5 0%,#A7F3D0 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(16,185,129,.15)" }}>
+            <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
@@ -2802,7 +2901,7 @@ export default function App() {
             </div>
 
             {/* Card 2 — Fast Report Delivery */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%)",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 8px 32px rgba(17,88,166,.15)" }}>
+            <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
