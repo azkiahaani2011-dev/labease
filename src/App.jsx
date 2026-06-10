@@ -759,42 +759,8 @@ const G = () => (
       margin-bottom: 60px;
     }
     @media (max-width: 640px) {
-      .promo-grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 36px; }
+      .promo-grid { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
       .promo-img-col { display: none !important; }
-      .promo-card { min-height: 0 !important; border-radius: 16px !important; }
-      .promo-card > div:first-child {
-        padding: 22px 20px 20px !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 16px !important;
-        flex-wrap: wrap !important;
-      }
-      .promo-card > div:first-child > div:first-child {
-        flex: 1 1 auto;
-        min-width: 0;
-      }
-      .promo-card > div:first-child > button {
-        align-self: center !important;
-        margin-top: 0 !important;
-        flex-shrink: 0;
-        white-space: nowrap;
-        padding: 10px 18px !important;
-        font-size: .76rem !important;
-      }
-      .promo-card h3 {
-        font-size: 1rem !important;
-        margin-bottom: 4px !important;
-      }
-      .promo-card p {
-        font-size: .75rem !important;
-        max-width: 100% !important;
-        line-height: 1.5 !important;
-        margin-bottom: 0 !important;
-      }
-      .promo-card .promo-badge {
-        margin-bottom: 6px !important;
-        font-size: .6rem !important;
-      }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2997,7 +2963,7 @@ export default function App() {
           {/* MediBuddy-style illustrated promo cards */}
           <div className="promo-grid">
             {/* Card 1 — Home Sample Pickup */}
-            <div className="promo-card" style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0" }}>
+            <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
@@ -3053,7 +3019,7 @@ export default function App() {
             </div>
 
             {/* Card 2 — Fast Report Delivery */}
-            <div className="promo-card" style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE" }}>
+            <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
