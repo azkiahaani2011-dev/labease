@@ -1719,10 +1719,22 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
               </p>
             </div>
             <div className="labs-sort-row">
+              {/* sort — leftmost */}
+              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
+              <div style={{ display:"flex", gap:"8px" }}>
+                {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
+                  <button key={v} onClick={()=>setSortBy(v)}
+                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+              {/* divider */}
+              <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {/* search */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
-                <svg style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:34,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none" }}
+                <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
+                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none" }}
                   onFocus={e=>{ e.target.style.border="1.5px solid #E5E7EB"; setLabSugOpen(true); }}
                   onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
@@ -1736,18 +1748,6 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                   </div>
                 )}
               </div>
-              {/* divider */}
-              <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
-              {/* sort */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginRight:2 }}>Sort:</span>
-              <div style={{ display:"flex", gap:"8px" }}>
-              {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
-                <button key={v} onClick={()=>setSortBy(v)}
-                  style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
-                  {l}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </div>
