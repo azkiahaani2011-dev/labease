@@ -1338,28 +1338,28 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: small microscope illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* MediBuddy-style microscope SVG */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EFF6FF", border:"1px solid #BFDBFE", display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#F0FDF4", border:"1px solid #A7F3D0", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:72,height:"auto"}}>
-              <ellipse cx="50" cy="112" rx="38" ry="7" fill="#BFDBFE" opacity="0.5"/>
-              <rect x="18" y="100" width="64" height="8" rx="4" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="42" y="72" width="16" height="32" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="28" y="78" width="44" height="8" rx="3" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="70" cy="86" rx="7" ry="9" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.2"/>
-              <ellipse cx="70" cy="86" rx="4" ry="6" fill="#BFDBFE"/>
-              <path d="M50 72 Q50 55 50 40" stroke="#93C5FD" strokeWidth="10" strokeLinecap="round"/>
+              <ellipse cx="50" cy="112" rx="38" ry="7" fill="#BBF7D0" opacity="0.5"/>
+              <rect x="18" y="100" width="64" height="8" rx="4" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="42" y="72" width="16" height="32" rx="3" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="28" y="78" width="44" height="8" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="70" cy="86" rx="7" ry="9" fill="#ECFDF5" stroke="#1E293B" strokeWidth="1.2"/>
+              <ellipse cx="70" cy="86" rx="4" ry="6" fill="#6EE7B7"/>
+              <path d="M50 72 Q50 55 50 40" stroke="#6EE7B7" strokeWidth="10" strokeLinecap="round"/>
               <path d="M50 72 Q50 55 50 40" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
-              <circle cx="50" cy="40" r="9" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
-              <circle cx="50" cy="40" r="4" fill="#7DD3FC"/>
-              <rect x="46" y="46" width="8" height="18" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="50" cy="64" rx="6" ry="3.5" fill="#60A5FA" stroke="#1E293B" strokeWidth="1.1"/>
-              <path d="M50 40 Q44 28 36 22" stroke="#DBEAFE" strokeWidth="9" strokeLinecap="round"/>
+              <circle cx="50" cy="40" r="9" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
+              <circle cx="50" cy="40" r="4" fill="#34D399"/>
+              <rect x="46" y="46" width="8" height="18" rx="3" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="50" cy="64" rx="6" ry="3.5" fill="#34D399" stroke="#1E293B" strokeWidth="1.1"/>
+              <path d="M50 40 Q44 28 36 22" stroke="#D1FAE5" strokeWidth="9" strokeLinecap="round"/>
               <path d="M50 40 Q44 28 36 22" stroke="#1E293B" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
-              <rect x="27" y="16" width="18" height="10" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.3"/>
-              <ellipse cx="36" cy="16" rx="8" ry="4" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.1"/>
+              <rect x="27" y="16" width="18" height="10" rx="4" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.3"/>
+              <ellipse cx="36" cy="16" rx="8" ry="4" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1.1"/>
               <rect x="33" y="74" width="34" height="5" rx="1.5" fill="white" stroke="#1E293B" strokeWidth="1"/>
               <rect x="37" y="75.5" width="18" height="2" rx="1" fill="#FEF3C7"/>
-              <circle cx="22" cy="28" r="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-              <circle cx="80" cy="20" r="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+              <circle cx="22" cy="28" r="4" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+              <circle cx="80" cy="20" r="3" fill="#FCA5A5" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
             </svg>
           </div>
           {/* text */}
@@ -2532,37 +2532,39 @@ export default function App() {
               ))}
             </div>
 
-            {/* trust badges row — premium style */}
-            <div style={{ display:"flex",gap:12,marginTop:36,flexWrap:"wrap" }}>
+            {/* trust badges — compact MediBuddy-style */}
+            <div style={{ display:"flex",gap:20,marginTop:28,flexWrap:"wrap",alignItems:"center" }}>
               {/* NABL Certified */}
-              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #D1FAE5",boxShadow:"0 2px 10px rgba(5,150,105,.08)" }}>
-                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#059669,#047857)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(5,150,105,.35)" }}>
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><polyline points="3,10 8,15 17,5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+                <div style={{ width:36,height:36,borderRadius:10,background:"#ECFDF5",border:"1px solid #A7F3D0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.5"/>
+                    <polyline points="7.5,12 10.5,15 16.5,9" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
-                <div>
-                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#064E3B",lineHeight:1.1 }}>NABL Certified</div>
-                  <div style={{ fontSize:".67rem",color:"#6EE7B7",fontWeight:600,marginTop:1 }}>Govt. Accredited</div>
-                </div>
+                <span style={{ fontSize:".82rem",fontWeight:700,color:"#064E3B" }}>NABL Certified</span>
               </div>
+              <div style={{ width:1,height:20,background:"#E2E8F0" }}/>
               {/* Free Home Collection */}
-              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #BFDBFE",boxShadow:"0 2px 10px rgba(17,88,166,.08)" }}>
-                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#1158A6,#0F2D6B)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(17,88,166,.35)" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="9,22 9,12 15,12 15,22" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+                <div style={{ width:36,height:36,borderRadius:10,background:"#EFF6FF",border:"1px solid #BFDBFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5" strokeLinejoin="round"/>
+                    <rect x="9" y="13" width="6" height="8" rx="1" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
+                  </svg>
                 </div>
-                <div>
-                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#1E3A5F",lineHeight:1.1 }}>Free Home Collection</div>
-                  <div style={{ fontSize:".67rem",color:"#93C5FD",fontWeight:600,marginTop:1 }}>At your doorstep</div>
-                </div>
+                <span style={{ fontSize:".82rem",fontWeight:700,color:"#1E3A5F" }}>Free Home Collection</span>
               </div>
+              <div style={{ width:1,height:20,background:"#E2E8F0" }}/>
               {/* Reports in 6 hrs */}
-              <div style={{ display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:14,padding:"11px 18px",border:"1.5px solid #FED7AA",boxShadow:"0 2px 10px rgba(234,88,12,.08)" }}>
-                <div style={{ width:32,height:32,borderRadius:9,background:"linear-gradient(135deg,#EA580C,#C2410C)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(234,88,12,.35)" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" strokeWidth="2"/><polyline points="12,7 12,12 15,14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+                <div style={{ width:36,height:36,borderRadius:10,background:"#FFF7ED",border:"1px solid #FED7AA",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" fill="#FFEDD5" stroke="#1E293B" strokeWidth="1.5"/>
+                    <polyline points="12,7.5 12,12 14.5,14" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
-                <div>
-                  <div style={{ fontSize:".8rem",fontWeight:800,color:"#7C2D12",lineHeight:1.1 }}>Reports in 6 hrs</div>
-                  <div style={{ fontSize:".67rem",color:"#FDBA74",fontWeight:600,marginTop:1 }}>WhatsApp &amp; Email</div>
-                </div>
+                <span style={{ fontSize:".82rem",fontWeight:700,color:"#7C2D12" }}>Reports in 6 hrs</span>
               </div>
             </div>
           </div>
