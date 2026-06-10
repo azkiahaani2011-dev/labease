@@ -1755,7 +1755,7 @@ function PopularTestsCarousel({ setCatF, navTo }) {
   });
 
   return (
-    <section style={{ padding:"52px 0 48px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+    <section style={{ padding:"52px 0 48px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 20px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
           <div>
