@@ -2880,31 +2880,106 @@ export default function App() {
 
             {[
               {
-                n:"01", label:"Search & Book", accent:"#1158A6",
+                n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
                 desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
-                img:"https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=400&q=80&auto=format&fit=crop"
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BFDBFE" opacity="0.5"/>
+                    <rect x="18" y="18" width="64" height="80" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="18" y="18" width="64" height="20" rx="8" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="18" y="30" width="64" height="8" fill="#DBEAFE"/>
+                    <rect x="28" y="50" width="44" height="5" rx="2" fill="#BFDBFE"/>
+                    <rect x="28" y="61" width="36" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="28" y="71" width="40" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="28" y="81" width="28" height="4" rx="2" fill="#E2E8F0"/>
+                    <circle cx="86" cy="96" r="22" fill="white" stroke="#1158A6" strokeWidth="2"/>
+                    <circle cx="83" cy="93" r="11" fill="#DBEAFE" stroke="#1158A6" strokeWidth="1.6"/>
+                    <line x1="91" y1="101" x2="103" y2="113" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"/>
+                    <circle cx="83" cy="93" r="5" fill="#93C5FD"/>
+                  </svg>
+                )
               },
               {
-                n:"02", label:"Schedule Pickup", accent:"#0EA5E9",
+                n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
-                img:"https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&q=80&auto=format&fit=crop"
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BAE6FD" opacity="0.5"/>
+                    <rect x="14" y="22" width="80" height="80" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="14" y="22" width="80" height="26" rx="10" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="14" y="40" width="80" height="8" fill="#BAE6FD"/>
+                    <line x1="36" y1="14" x2="36" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="84" y1="14" x2="84" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
+                    {[0,1,2].map(col=>[0,1,2].map(row=>(
+                      <rect key={col*3+row} x={28+col*24} y={60+row*16} width="14" height="10" rx="3"
+                        fill={col===1&&row===0?"#0EA5E9":col===2&&row===1?"#BAE6FD":"#E0F2FE"} stroke="#BAE6FD" strokeWidth="1"/>
+                    )))}
+                    <circle cx="94" cy="26" r="7" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
+                    <line x1="94" y1="22" x2="94" y2="26" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="94" y1="26" x2="97" y2="28" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                )
               },
               {
-                n:"03", label:"Sample Collection", accent:"#8B5CF6",
+                n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
                 desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                img:"https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400&q=80&auto=format&fit=crop"
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#DDD6FE" opacity="0.5"/>
+                    <circle cx="60" cy="34" r="20" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5"/>
+                    <path d="M28 105 Q28 78 60 78 Q92 78 92 105" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M34 82 L26 98 H94 L86 82" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="18" y="94" width="84" height="14" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="26" y="97" width="20" height="8" rx="2" fill="#EDE9FE"/>
+                    <rect x="50" y="97" width="20" height="8" rx="2" fill="#DDD6FE"/>
+                    <rect x="74" y="97" width="14" height="8" rx="2" fill="#C4B5FD"/>
+                    <rect x="76" y="56" width="10" height="30" rx="5" fill="#F5F3FF" stroke="#8B5CF6" strokeWidth="1.4"/>
+                    <path d="M76 78 Q76 88 81 90 Q86 88 86 78 Z" fill="#C4B5FD" opacity="0.8"/>
+                    <line x1="72" y1="56" x2="90" y2="56" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round"/>
+                    <ellipse cx="46" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                    <ellipse cx="74" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                    <circle cx="47" cy="29" r="3.5" fill="#1E293B"/>
+                    <circle cx="75" cy="29" r="3.5" fill="#1E293B"/>
+                    <circle cx="48" cy="27.5" r="1.2" fill="white"/>
+                    <circle cx="76" cy="27.5" r="1.2" fill="white"/>
+                    <path d="M52 44 Q60 50 68 44" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                    <path d="M38 44 Q38 54 60 54 Q82 54 82 44 Q60 38 38 44Z" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
+                  </svg>
+                )
               },
               {
-                n:"04", label:"Get Your Reports", accent:"#16A34A",
+                n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                img:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=400&q=80&auto=format&fit=crop"
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BBF7D0" opacity="0.5"/>
+                    <rect x="22" y="10" width="66" height="90" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="40" y="6" width="30" height="12" rx="5" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="32" y="28" width="46" height="5" rx="2" fill="#DCFCE7"/>
+                    <rect x="32" y="38" width="36" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="32" y="48" width="42" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="32" y="62" width="8" height="24" rx="2" fill="#4ADE80"/>
+                    <rect x="44" y="70" width="8" height="16" rx="2" fill="#86EFAC"/>
+                    <rect x="56" y="56" width="8" height="30" rx="2" fill="#22C55E"/>
+                    <rect x="68" y="66" width="8" height="20" rx="2" fill="#BBF7D0"/>
+                    <rect x="22" y="90" width="66" height="10" rx="0 0 8 8" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1"/>
+                    <path d="M34 95 L38 99 L46 92" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <line x1="52" y1="95" x2="78" y2="95" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
+                    <rect x="62" y="96" width="48" height="28" rx="7" fill="#16A34A" stroke="#1E293B" strokeWidth="1"/>
+                    <circle cx="74" cy="108" r="5" fill="#BBF7D0"/>
+                    <path d="M72 108 L74 110 L78 105" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <line x1="84" y1="104" x2="102" y2="104" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="84" y1="110" x2="98" y2="110" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round"/>
+                    <polygon points="70,124 78,124 74,132" fill="#16A34A" stroke="#1E293B" strokeWidth="0.5"/>
+                  </svg>
+                )
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
-                <div style={{ width:130,height:130,borderRadius:24,overflow:"hidden",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}22`,transition:"transform .2s,box-shadow .2s",border:`2px solid ${s.accent}18` }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}36`; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}22`; }}>
-                  <img src={s.img} alt={s.label} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }}/>
+                <div style={{ width:130,height:130,borderRadius:24,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
+                  {s.icon}
                 </div>
                 <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase" }}>Step {s.n}</div>
                 <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:10,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
