@@ -817,16 +817,15 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     .labs-header-row {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
       padding-bottom: 4px;
     }
     .labs-sort-row {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .labs-search-input {
