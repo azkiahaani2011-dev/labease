@@ -2882,7 +2882,7 @@ export default function App() {
               {
                 n:"01", label:"Search & Book", accent:"#1158A6",
                 desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
-                img:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80&auto=format&fit=crop"
+                img:"https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=400&q=80&auto=format&fit=crop"
               },
               {
                 n:"02", label:"Schedule Pickup", accent:"#0EA5E9",
@@ -2892,12 +2892,12 @@ export default function App() {
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6",
                 desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                img:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80&auto=format&fit=crop"
+                img:"https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400&q=80&auto=format&fit=crop"
               },
               {
                 n:"04", label:"Get Your Reports", accent:"#16A34A",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&q=80&auto=format&fit=crop"
+                img:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=400&q=80&auto=format&fit=crop"
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
@@ -3490,34 +3490,6 @@ export default function App() {
           </div>
         </div>
       </nav>
-      <div style={{ position:"fixed",inset:0,zIndex:299,background:"rgba(0,0,0,.4)",backdropFilter:"blur(4px)",opacity:sideMenu?1:0,pointerEvents:sideMenu?"all":"none",transition:"opacity .28s ease" }} onClick={()=>setSideMenu(false)}/>
-      <div style={{ position:"fixed",top:0,left:0,bottom:0,zIndex:400,width:"min(82vw,300px)",background:"#fff",boxShadow:"6px 0 32px rgba(0,0,0,.16)",display:"flex",flexDirection:"column",transform:sideMenu?"translateX(0)":"translateX(-100%)",transition:"transform .3s cubic-bezier(.22,1,.36,1)",overflowY:"auto" }}>
-        <div style={{ padding:"18px 20px 14px",background:"linear-gradient(135deg,#1158A6,#0F2D6B)",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0 }}>
-          <div style={{ display:"flex",alignItems:"baseline",gap:2 }}><span style={{ ...T.serif,fontSize:"1.3rem",color:"#93C5FD",lineHeight:1 }}>Lab</span><span style={{ ...T.serif,fontSize:"1.3rem",color:"#fff",lineHeight:1 }}>Ease</span></div>
-          <button onClick={()=>setSideMenu(false)} style={{ background:"rgba(255,255,255,.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center" }}>✕</button>
-        </div>
-        <div style={{ padding:"8px 0",flex:1 }}>
-          {[["Home",()=>{ navTo("home"); setSideMenu(false); }],["Browse Labs",()=>{ navTo("labs"); setSideMenu(false); }],["Labs Near Me",()=>{ navTo("nearme"); setSideMenu(false); }],["Home Collection",()=>{ navTo("labs"); setSideMenu(false); }]].map(([lbl,fn])=>(
-            <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"transparent",border:"none",borderLeft:"3px solid transparent",fontWeight:600,fontSize:".9rem",color:"#1F2937",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"all .12s",minHeight:48 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.borderLeftColor="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderLeftColor="transparent"; }}>{lbl}</button>
-          ))}
-          <div style={{ margin:"8px 16px",height:1,background:"#F1F5F9" }}/>
-          {["Partner With Us","Contact Us","Help & Support","About Us"].map(lbl=>(
-            <button key={lbl} onClick={()=>setSideMenu(false)} style={{ display:"block",width:"100%",padding:"11px 20px",background:"transparent",border:"none",fontWeight:500,fontSize:".84rem",color:"#6B7280",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"all .12s",minHeight:44 }} onMouseEnter={e=>{ e.currentTarget.style.color="#1158A6"; e.currentTarget.style.background="#F8FAFF"; }} onMouseLeave={e=>{ e.currentTarget.style.color="#6B7280"; e.currentTarget.style.background="transparent"; }}>{lbl}</button>
-          ))}
-        </div>
-        <div style={{ padding:"14px 18px",borderTop:"1px solid #F1F5F9",flexShrink:0,display:"flex",flexDirection:"column",gap:10 }}>
-          {user ? (<>
-            <div style={{ display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:"#EFF6FF",borderRadius:12,border:"1px solid #DBEAFE" }}>
-              <div style={{ width:34,height:34,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><span style={{ color:"#fff",fontWeight:800,fontSize:".8rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
-              <div><div style={{ fontWeight:700,color:"#1158A6",fontSize:".83rem" }}>{user.name}</div><div style={{ fontSize:".71rem",color:"#64748B" }}>{user.email}</div></div>
-            </div>
-            <button onClick={()=>{ handleLogout(); setSideMenu(false); }} style={{ width:"100%",background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".88rem",color:"#DC2626",cursor:"pointer",fontFamily:"'Manrope',sans-serif",minHeight:46 }}>Sign Out</button>
-          </>) : (<>
-            <button onClick={()=>{ openAuth("login"); setSideMenu(false); }} style={{ width:"100%",background:"transparent",border:"1.5px solid #1158A6",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".9rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",minHeight:46 }}>Log In</button>
-            <button onClick={()=>{ openAuth("signup"); setSideMenu(false); }} style={{ width:"100%",background:"#1158A6",border:"none",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".9rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.28)",minHeight:46 }}>Sign Up — Free</button>
-          </>)}
-        </div>
-      </div>
 
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
