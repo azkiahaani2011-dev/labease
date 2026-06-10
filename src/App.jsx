@@ -734,16 +734,19 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     .hiw-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
+      grid-template-columns: 1fr;
+      gap: 20px;
       position: relative;
     }
-    @media (max-width: 767px) {
-      .hiw-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
-      .hiw-connector { display: none !important; }
+    @media (min-width: 541px) {
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
     }
-    @media (max-width: 540px) {
-      .hiw-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+    @media (min-width: 768px) {
+      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
+      .hiw-connector { display: block; }
+    }
+    @media (max-width: 767px) {
+      .hiw-connector { display: none !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -765,14 +768,14 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     .why-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
       gap: 16px;
     }
-    @media (max-width: 767px) {
-      .why-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    @media (min-width: 541px) {
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 540px) {
-      .why-grid { grid-template-columns: 1fr !important; }
+    @media (min-width: 768px) {
+      .why-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -3068,7 +3071,7 @@ export default function App() {
           </div>
 
           {/* 4-step row */}
-          <div className="hiw-grid" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:0, position:"relative" }}>
+          <div className="hiw-grid">
             {/* connector line */}
             <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
 
@@ -3206,7 +3209,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
-          <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:20 }}>
+          <div className="why-grid">
             {[
               {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
