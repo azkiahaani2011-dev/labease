@@ -1737,8 +1737,11 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                   </div>
                 )}
               </div>
+              {/* divider */}
+              <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {/* sort */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginLeft:8,marginRight:2 }}>Sort:</span>
+              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
+              <div style={{ display:"flex", gap:6 }}>
               {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setSortBy(v)}
                   style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
@@ -1748,6 +1751,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* ── BODY: FULL WIDTH LAB LIST ── */}
@@ -1844,6 +1848,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
 function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen }) {
   if (!lab) return null;
   const cats = ["All",...new Set(lab.tests.map(t=>t.cat))];
+  const [showAllTests, setShowAllTests] = React.useState(false);
+  const TESTS_LIMIT = 6;
+  React.useEffect(()=>{ setShowAllTests(false); }, [catF, testQ]);
+  const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
   <div style={{ minHeight:"80vh" }}>
     {/* sticky header */}
@@ -1910,7 +1918,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           <div style={{ padding:48,textAlign:"center",color:"#94A3B8" }}>
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
-        ) : filtTests.map(t=>{
+        ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp); const Icon=ICONS[t.cat];
           return (
             <div key={t.id} className="test-row" style={{ display:"grid",gridTemplateColumns:"1fr auto auto auto",padding:"12px 16px",borderBottom:"1px solid #F9FAFB",alignItems:"center",gap:12,transition:"background .14s" }}>
@@ -1943,6 +1951,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             </div>
           );
         })}
+        {filtTests.length > TESTS_LIMIT && (
+          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
+            {showAllTests ? "Show Less ↑" : `Show ${filtTests.length - TESTS_LIMIT} More Tests ↓`}
+          </button>
+        )}
       </div>
     </div>
 
