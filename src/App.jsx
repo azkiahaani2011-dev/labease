@@ -1432,6 +1432,17 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
   const [filterHome, setFilterHome] = useState(false);
   const [filterNabl, setFilterNabl] = useState(false);
   const [searchQ,    setSearchQ]    = useState("");
+  const [labSugOpen, setLabSugOpen] = useState(false);
+  const labSearchRef = React.useRef(null);
+
+  const labSuggestions = searchQ.trim().length < 1 ? [] :
+    enriched.filter(l => l.name.toLowerCase().includes(searchQ.toLowerCase()) || (l.area||"").toLowerCase().includes(searchQ.toLowerCase())).slice(0,5);
+
+  React.useEffect(() => {
+    const h = e => { if(labSearchRef.current && !labSearchRef.current.contains(e.target)) setLabSugOpen(false); };
+    document.addEventListener("mousedown",h);
+    return ()=>document.removeEventListener("mousedown",h);
+  },[]);
 
   const specialties = [
     ["Blood Tests","Blood"],["Thyroid","Thyroid"],["Diabetes","Diabetes"],
@@ -1485,11 +1496,20 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
             </div>
             <div style={{ display:"flex",alignItems:"center",gap:6 }}>
               {/* search */}
-              <div style={{ position:"relative" }}>
+              <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-                <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} placeholder="Search labs…" style={{ paddingLeft:34,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:180,background:"#FAFAFA",color:"#111" }}
-                  onFocus={e=>e.target.style.borderColor="#1158A6"}
-                  onBlur={e=>e.target.style.borderColor="#E5E7EB"}/>
+                <input value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:34,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111" }}
+                  onFocus={()=>setLabSugOpen(true)}/>
+                {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
+                  <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
+                    {labSuggestions.map((l,i)=>(
+                      <button key={l.id} onClick={()=>{ setSearchQ(l.name); setLabSugOpen(false); }} style={{ display:"block",width:"100%",padding:"9px 14px",background:"none",border:"none",borderBottom:i<labSuggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".84rem",fontWeight:600,color:"#111",transition:"background .1s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                        {l.name}
+                        <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:400,marginLeft:6 }}>{l.area}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               {/* sort */}
               <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginLeft:4 }}>Sort:</span>
@@ -1603,7 +1623,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 24px" }}>
-        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:10,padding:0 }}>← All Labs</button>
+        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:10,padding:0,display:"flex",alignItems:"center",gap:6,textAlign:"left" }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <div style={{ width:56,height:56,borderRadius:12,background:`${lab.color}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
             <div style={{ width:24,height:24,borderRadius:"50%",background:lab.color }}/>
@@ -1847,13 +1867,13 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const go = (text) => { setQ(text); setLabQ(text); setOpen(false); navTo("labs"); };
+  const go = (text) => { if(!text.trim()) return; setQ(text); setLabQ(text); setOpen(false); navTo("labs"); };
 
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%" }}>
       {/* Search bar */}
-      <div style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.15)",overflow:"hidden",border:`1.5px solid ${open && suggestions.length ? "#1158A6" : "#DBEAFE"}`,transition:"border-color .15s" }}>
+      <div style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.15)",overflow:"hidden",border:"1.5px solid #E5E7EB" }}>
         <svg style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
