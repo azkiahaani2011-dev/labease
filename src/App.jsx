@@ -239,7 +239,7 @@ const G = () => (
       }
 
       /* ── Section headers: tighter on mobile ── */
-      div[style*="maxWidth:1140"] {
+      div[style*="maxWidth:1400"] {
         padding-left: 16px !important;
         padding-right: 16px !important;
       }
@@ -279,7 +279,7 @@ const G = () => (
        TABLET — 430px–900px
     ════════════════════════════════════════════════════════════════ */
     @media (min-width: 431px) and (max-width: 900px) {
-      div[style*="maxWidth:1140"] {
+      div[style*="maxWidth:1400"] {
         padding-left: 20px !important;
         padding-right: 20px !important;
       }
@@ -310,7 +310,7 @@ const G = () => (
        WIDE DESKTOP — ≥1280px
     ════════════════════════════════════════════════════════════════ */
     @media (min-width: 1280px) {
-      div[style*="maxWidth:1140"] {
+      div[style*="maxWidth:1400"] {
         max-width: 1200px !important;
       }
     }
@@ -532,7 +532,7 @@ const G = () => (
 
       /* Compress all T.wrap padding to 16px on mobile */
       @media (max-width: 767px) {
-        div[style*="maxWidth:1140"] {
+        div[style*="maxWidth:1400"] {
           padding-left: 16px !important;
           padding-right: 16px !important;
         }
@@ -622,7 +622,7 @@ const G = () => (
        WIDE DESKTOP — ≥1280px
     ════════════════════════════════════════════════════════════════ */
     @media (min-width: 1280px) {
-      div[style*="maxWidth:1140"] {
+      div[style*="maxWidth:1400"] {
         max-width: 1200px !important;
       }
       div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px)"] {
@@ -1497,7 +1497,7 @@ const LAB_META = [
 
 const LabsNearMeSection = ({ T, navTo }) => (
   <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
-    <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 24px" }}>
+    <div style={{ maxWidth:1400, margin:"0 auto", padding:"0 16px" }}>
 
       {/* heading row: microscope left + text + button right */}
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
@@ -1980,7 +1980,7 @@ function PopularTestsCarousel({ setCatF, navTo }) {
 
   return (
     <section style={{ padding:"52px 0 48px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
-      <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 20px" }}>
+      <div style={{ maxWidth:1400, margin:"0 auto", padding:"0 16px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
           <div>
             <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
@@ -2682,7 +2682,7 @@ export default function App() {
     btn:(bg="var(--teal)",fg="#fff")=>({ background:bg,color:fg,border:"none",borderRadius:10,padding:"12px 26px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",display:"inline-flex",alignItems:"center",gap:8 }),
     out:{ background:"transparent",color:"var(--teal)",border:"1.5px solid var(--teal)",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" },
     inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block" },
-    wrap:{ maxWidth:1140,margin:"0 auto",padding:"0 24px" },
+    wrap:{ maxWidth:1400,margin:"0 auto",padding:"0 16px" },
     card:{ background:"#fff",borderRadius:18,boxShadow:"var(--card-shadow)" },
     serif:{ fontFamily:"'DM Serif Display',serif" },
   };
@@ -3310,7 +3310,7 @@ export default function App() {
       <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
         {/* Top band */}
         <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"56px 0 48px" }}>
-          <div className="footer-grid" style={{ maxWidth:1140,margin:"0 auto",padding:"0 24px" }}>
+          <div className="footer-grid" style={{ maxWidth:1400,margin:"0 auto",padding:"0 16px" }}>
             {/* Brand column */}
             <div>
               <div style={{ display:"flex",alignItems:"baseline",gap:2,marginBottom:16 }}>
@@ -3371,7 +3371,7 @@ export default function App() {
           </div>
         </div>
         {/* Bottom band */}
-        <div style={{ maxWidth:1140,margin:"0 auto",padding:"18px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12 }}>
+        <div style={{ maxWidth:1400,margin:"0 auto",padding:"18px 16px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12 }}>
           <div style={{ fontSize:".73rem",color:"#334155" }}>© 2026 LabEase Diagnostics Pvt. Ltd. All rights reserved. · CIN: U85110KA2024PTC123456</div>
           <div style={{ display:"flex",gap:16,alignItems:"center" }}>
             {["Privacy","Terms","Cookies"].map(l=>(
