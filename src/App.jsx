@@ -1374,11 +1374,11 @@ const LabsNearMeSection = ({ T, navTo }) => (
 
         {/* right: button */}
         <button onClick={()=>navTo("labs")}
-          style={{ flexShrink:0,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap",boxShadow:"0 4px 16px rgba(17,88,166,.28)" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+          style={{ flexShrink:0,background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.transform="translateY(-1px)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.transform="translateY(0)"; }}>
           View All Labs
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </button>
       </div>
 
@@ -1653,7 +1653,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
 
       {/* test table */}
       <div style={{ ...T.card,borderRadius:16,border:"1px solid var(--line)" }}>
-        <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr auto auto auto",padding:"10px 16px",background:"#F8FAFC",borderBottom:"1px solid var(--line)",fontSize:".68rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:12,alignItems:"center" }}>
+        <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr 100px 100px 110px",padding:"12px 20px",background:"#F8FAFC",borderBottom:"1px solid var(--line)",fontSize:".74rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:16,alignItems:"center" }}>
           <span>Test Name</span>
           <span style={{ textAlign:"center" }}>Price</span>
           <span style={{ textAlign:"center" }}>MRP</span>
@@ -1672,7 +1672,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               <div style={{ display:"flex",alignItems:"center",gap:8,minWidth:0 }}>
                 {Icon && <Icon s={26}/>}
                 <div style={{ minWidth:0 }}>
-                  <div style={{ fontWeight:700,color:"var(--ink)",fontSize:".84rem",marginBottom:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{t.name}</div>
+                  <div style={{ fontWeight:700,color:"var(--ink)",fontSize:".92rem",marginBottom:3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{t.name}</div>
                   <div style={{ display:"flex",alignItems:"center",gap:6,flexWrap:"wrap" }}>
                     <span style={{ background:`${lab.color}18`,color:lab.color,borderRadius:20,padding:"1px 7px",fontSize:".62rem",fontWeight:700,whiteSpace:"nowrap" }}>{t.cat}</span>
                     <span style={{ fontSize:".62rem",color:"var(--muted)",whiteSpace:"nowrap" }}>{t.time}</span>
@@ -1680,7 +1680,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 </div>
               </div>
               {/* Price */}
-              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:".95rem",fontFamily:"'DM Serif Display',serif",whiteSpace:"nowrap" }}>₹{t.price}</div>
+              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'DM Serif Display',serif",whiteSpace:"nowrap" }}>₹{t.price}</div>
               {/* MRP + discount stacked */}
               <div style={{ textAlign:"center",whiteSpace:"nowrap" }}>
                 <div style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".76rem" }}>₹{t.mrp}</div>
@@ -2690,7 +2690,7 @@ export default function App() {
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <button onClick={()=>navTo("labs")}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8,boxShadow:"0 4px 16px rgba(17,88,166,.28)" }}
+              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
               onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-1px)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
               View All Packages →
@@ -3501,7 +3501,7 @@ export default function App() {
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
-      <nav style={{ background:"#fff",borderBottom:"1px solid var(--line)",height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",position:"sticky",top:0,zIndex:200,boxShadow:"0 1px 8px rgba(0,0,0,.05)" }}>
+      <nav style={{ background:"#fff",borderBottom:"1px solid var(--line)",height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",position:"fixed",top:0,left:0,right:0,zIndex:200,boxShadow:"0 1px 8px rgba(0,0,0,.05)" }}>
         {/* Left zone: hamburger (mobile only) + logo */}
         <div style={{ display:"flex",alignItems:"center",gap:4,flexShrink:0 }}>
           {/* ☰ hamburger — only visible on mobile via CSS */}
