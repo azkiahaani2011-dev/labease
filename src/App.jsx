@@ -188,12 +188,10 @@ const G = () => (
     /* ── INPUT FOCUS ─────────────────────────────────────────────── */
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: #1158A6 !important;
-      box-shadow: 0 0 0 3px rgba(17,88,166,.12) !important;
     }
     button:focus-visible {
-      outline: 2px solid #1158A6 !important;
-      outline-offset: 3px !important;
+      outline: 2px solid #1158A6;
+      outline-offset: 3px;
     }
 
     /* ── TEXT SELECTION ──────────────────────────────────────────── */
@@ -1472,8 +1470,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
     .filter(l => !searchQ || l.name.toLowerCase().includes(searchQ.toLowerCase()) || l.address.toLowerCase().includes(searchQ.toLowerCase()))
     .sort((a,b) =>
       sortBy === "rating" ? b.rating - a.rating :
-      sortBy === "price"  ? Math.min(...a.tests.map(t=>t.price)) - Math.min(...b.tests.map(t=>t.price)) :
-      parseFloat(a.dist) - parseFloat(b.dist)
+      sortBy === "price"  ? (a.tests?.length ? Math.min(...a.tests.map(t=>t.price)) : 9999) - (b.tests?.length ? Math.min(...b.tests.map(t=>t.price)) : 9999) :
+      (parseFloat(a.dist) || 9999) - (parseFloat(b.dist) || 9999)
     );
 
   return (
@@ -3586,6 +3584,7 @@ export default function App() {
           </div>
         </div>
       </nav>
+      <div style={{height:64}}/>{/* spacer for fixed navbar */}
 
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
