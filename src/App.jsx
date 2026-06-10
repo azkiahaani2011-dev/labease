@@ -2920,29 +2920,34 @@ export default function App() {
               { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title}
-                style={{ background:"#fff",borderRadius:20,cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 10px rgba(0,0,0,.05)",transition:"all .25s ease",border:"1px solid #EAECF0",minHeight:190,overflow:"hidden",padding:"24px 22px 0",position:"relative" }}
+                style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
                 onClick={()=>navTo("labs")}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.11)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 10px rgba(0,0,0,.05)"; }}>
-                {/* title row */}
-                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8 }}>
-                  <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1rem",lineHeight:1.3,flex:1,marginRight:8 }}>{pkg.title}</div>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:2 }}><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
+                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                  <img src={pkg.img} alt={pkg.title}
+                    style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s ease" }}
+                    onMouseEnter={e=>e.currentTarget.style.transform="scale(1.07)"}
+                    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+                    onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}/>
+                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%)" }}/>
+                  <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:8,padding:"3px 10px",fontSize:".62rem",fontWeight:800 }}>{pkg.badge}</div>
+                  <div style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",borderRadius:8,padding:"3px 9px",fontSize:".62rem",fontWeight:800 }}>{pkg.off}% OFF</div>
+                  <div style={{ position:"absolute",bottom:12,left:12,right:12,fontWeight:800,fontSize:".95rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
                 </div>
-                {/* sub + price */}
-                <div style={{ fontSize:".78rem",color:pkg.badgeColor,fontWeight:600,marginBottom:4 }}>{pkg.sub}</div>
-                <div style={{ display:"flex",alignItems:"baseline",gap:6 }}>
-                  <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
-                  <span style={{ fontSize:".74rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
-                  <span style={{ fontSize:".65rem",fontWeight:800,color:"#16A34A" }}>{pkg.off}% off</span>
-                </div>
-                {/* image — bottom right */}
-                <div style={{ display:"flex",justifyContent:"flex-end",alignItems:"flex-end",flex:1,marginTop:10,marginRight:-4,marginBottom:-2 }}>
-                  <div style={{ position:"relative",width:100,height:80,borderRadius:"12px 12px 0 0",overflow:"hidden",flexShrink:0 }}>
-                    <img src={pkg.img} alt={pkg.title}
-                      style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }}
-                      onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}/>
-                    <div style={{ position:"absolute",top:6,left:6,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"2px 7px",fontSize:".55rem",fontWeight:800 }}>{pkg.badge}</div>
+                <div style={{ padding:"14px 16px 16px",flex:1,display:"flex",flexDirection:"column",gap:8 }}>
+                  <div style={{ fontSize:".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:6,flexWrap:"wrap",gap:8 }}>
+                    <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
+                      <span style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontSize:".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
+                    </div>
+                    <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"8px 18px",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
+                      onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                      onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                      Book Now
+                    </button>
                   </div>
                 </div>
               </div>
@@ -3213,22 +3218,14 @@ export default function App() {
               {Icon:IThyroid,   t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IDiabetes,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"#fff",borderRadius:20,padding:"24px 22px 0",border:"1px solid #EAECF0",boxShadow:"0 2px 10px rgba(0,0,0,.05)",transition:"all .18s",display:"flex",flexDirection:"column",minHeight:190,overflow:"hidden",position:"relative" }}
-                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.11)"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 10px rgba(0,0,0,.05)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                {/* title row */}
-                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10 }}>
-                  <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1rem",lineHeight:1.3,flex:1,marginRight:8 }}>{w.t}</div>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:2 }}><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
+                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
+                <div style={{ width:60,height:60,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px" }}>
+                  <w.Icon s={36}/>
                 </div>
-                {/* description */}
-                <div style={{ color:"#6B7280",fontSize:".82rem",lineHeight:1.65,flex:1 }}>{w.d}</div>
-                {/* icon — bottom right */}
-                <div style={{ display:"flex",justifyContent:"flex-end",marginTop:12,marginBottom:-2,marginRight:-4 }}>
-                  <div style={{ width:72,height:72,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",opacity:.9 }}>
-                    <w.Icon s={44}/>
-                  </div>
-                </div>
+                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
+                <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
               </div>
             ))}
           </div>
