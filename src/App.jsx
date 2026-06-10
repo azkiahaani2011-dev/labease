@@ -1335,69 +1335,48 @@ const LAB_META = [
 ];
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"64px 0 60px", background:"linear-gradient(160deg,#F0F4FF 0%,#FAF8FF 60%,#F0F9FF 100%)", borderBottom:"1px solid #E0E7FF" }}>
+  <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
     <div style={{ maxWidth:1140, margin:"0 auto", padding:"0 24px" }}>
 
-      {/* heading */}
-      <div style={{ textAlign:"center", marginBottom:40 }}>
-        <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.18)",borderRadius:50,padding:"5px 16px",marginBottom:16 }}>
-          <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1158A6"/></svg>
-          <span style={{ fontSize:".68rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase" }}>Verified Lab Partners</span>
+      {/* heading row */}
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:36, flexWrap:"wrap", gap:16 }}>
+        <div>
+          <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>VERIFIED PARTNERS</p>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:6 }}>Our Trusted Labs</h2>
+          <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6,maxWidth:460 }}>NABL-accredited diagnostic centres with verified pricing and free home collection across India.</p>
         </div>
-        <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2.1rem)",fontWeight:900,color:"#0D1117",marginBottom:8,letterSpacing:"-.03em",lineHeight:1.15 }}>Our Trusted Labs</h2>
-        <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:480,margin:"0 auto",lineHeight:1.7 }}>Partnered with India's top NABL-accredited diagnostic centres for accurate results and hassle-free home collection.</p>
+        <button onClick={()=>navTo("labs")}
+          style={{ flexShrink:0,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap",boxShadow:"0 4px 16px rgba(17,88,166,.28)" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+          View All Labs
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
       </div>
 
-      {/* stats bar */}
-      <div style={{ display:"flex",justifyContent:"center",gap:0,marginBottom:36,flexWrap:"wrap" }}>
-        {[["500+","Tests Available","#1158A6"],["6 hrs","Report Delivery","#059669"],["Free","Home Collection","#9333EA"],["NABL","Certified All Labs","#EA580C"]].map(([v,l,c],i,arr)=>(
-          <div key={l} style={{ display:"flex",flexDirection:"column",alignItems:"center",padding:"16px 32px",borderRight:i<arr.length-1?"1px solid #E0E7FF":"none",flex:1,minWidth:120 }}>
-            <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.3rem,2.5vw,1.8rem)",color:c,lineHeight:1 }}>{v}</span>
-            <span style={{ fontSize:".72rem",color:"#64748B",fontWeight:600,marginTop:4,textAlign:"center" }}>{l}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* lab cards row — clickable, navigates to labs */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:14, marginBottom:32 }}>
+      {/* 6 lab cards */}
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:14 }}>
         {[
-          { name:"Apollo\nDiagnostics",  short:"Apollo",     accent:"#1158A6", bg:"#EFF6FF", bar:"#DBEAFE", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#DBEAFE"/><circle cx="24" cy="18" r="8" fill="none" stroke="#1158A6" strokeWidth="1.8"/><path d="M16 18 Q16 10 24 8 Q32 10 32 18" fill="#1158A6" opacity=".15"/><rect x="20" y="15" width="8" height="6" rx="1" fill="none" stroke="#1158A6" strokeWidth="1.5"/><line x1="18" y1="30" x2="30" y2="30" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="34" x2="27" y2="34" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/></svg> },
-          { name:"SRL\nDiagnostics",     short:"SRL",        accent:"#EA580C", bg:"#FFF7ED", bar:"#FED7AA", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#FED7AA"/><rect x="19" y="10" width="6" height="20" rx="3" fill="none" stroke="#EA580C" strokeWidth="1.8"/><path d="M19 22 Q19 34 24 36 Q29 34 29 22 Z" fill="#FDBA74" opacity="0.8"/><line x1="17" y1="10" x2="31" y2="10" stroke="#EA580C" strokeWidth="2" strokeLinecap="round"/><circle cx="32" cy="16" r="5" fill="none" stroke="#EA580C" strokeWidth="1.5"/><circle cx="16" cy="18" r="4" fill="none" stroke="#EA580C" strokeWidth="1.5"/></svg> },
-          { name:"Metropolis\nHealthcare",short:"Metropolis", accent:"#16A34A", bg:"#F0FDF4", bar:"#BBF7D0", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#BBF7D0"/><circle cx="24" cy="24" r="10" fill="none" stroke="#16A34A" strokeWidth="1.8"/><circle cx="24" cy="24" r="4" fill="#16A34A"/><line x1="24" y1="10" x2="24" y2="15" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="24" y1="33" x2="24" y2="38" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="10" y1="24" x2="15" y2="24" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><line x1="33" y1="24" x2="38" y2="24" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/></svg> },
-          { name:"Dr Lal\nPathLabs",     short:"Dr Lal",     accent:"#7C3AED", bg:"#F5F3FF", bar:"#DDD6FE", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#DDD6FE"/><rect x="14" y="12" width="20" height="26" rx="4" fill="none" stroke="#7C3AED" strokeWidth="1.8"/><rect x="19" y="8" width="10" height="7" rx="2" fill="none" stroke="#7C3AED" strokeWidth="1.5"/><line x1="18" y1="22" x2="30" y2="22" stroke="#7C3AED" strokeWidth="1.4"/><line x1="18" y1="27" x2="30" y2="27" stroke="#7C3AED" strokeWidth="1.4"/><path d="M18 32 L21 35 L30 26" stroke="#7C3AED" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg> },
-          { name:"Thyrocare\nTech",      short:"Thyrocare",  accent:"#0369A1", bg:"#F0F9FF", bar:"#BAE6FD", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#BAE6FD"/><path d="M24 14 C18 14 14 18 14 23 C14 28 18 30 24 30 C30 30 34 28 34 23 C34 18 30 14 24 14Z" fill="none" stroke="#0369A1" strokeWidth="1.8"/><path d="M20 23 C20 20 22 18 24 18 C26 18 28 20 28 23" fill="none" stroke="#0369A1" strokeWidth="1.5"/><line x1="24" y1="30" x2="24" y2="38" stroke="#0369A1" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="36" x2="28" y2="36" stroke="#0369A1" strokeWidth="1.8" strokeLinecap="round"/></svg> },
-          { name:"Vijaya\nDiagnostics",  short:"Vijaya",     accent:"#9333EA", bg:"#FDF4FF", bar:"#E9D5FF", svg:<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#E9D5FF"/><rect x="13" y="14" width="22" height="22" rx="3" fill="none" stroke="#9333EA" strokeWidth="1.8"/><line x1="13" y1="20" x2="35" y2="20" stroke="#9333EA" strokeWidth="1.4"/><circle cx="24" cy="28" r="4" fill="none" stroke="#9333EA" strokeWidth="1.5"/><circle cx="24" cy="28" r="1.5" fill="#9333EA"/></svg> },
+          { name:"Apollo Diagnostics",   short:"Apollo",     accent:"#1158A6", bg:"#EFF6FF"  },
+          { name:"SRL Diagnostics",       short:"SRL",        accent:"#EA580C", bg:"#FFF7ED"  },
+          { name:"Metropolis Healthcare", short:"Metropolis", accent:"#16A34A", bg:"#F0FDF4"  },
+          { name:"Dr Lal PathLabs",       short:"Dr Lal",     accent:"#7C3AED", bg:"#F5F3FF"  },
+          { name:"Thyrocare",             short:"Thyrocare",  accent:"#0369A1", bg:"#F0F9FF"  },
+          { name:"Vijaya Diagnostics",    short:"Vijaya",     accent:"#9333EA", bg:"#FDF4FF"  },
         ].map(l=>(
-          <div key={l.short} onClick={()=>navTo("labs")} className="hover-lift"
-            style={{ background:"#fff", border:"1px solid #E8EEFF", borderRadius:18, overflow:"hidden", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", boxShadow:"0 2px 12px rgba(0,0,0,.05)", transition:"all .22s ease" }}
-            onMouseEnter={e=>{ e.currentTarget.style.boxShadow=`0 8px 32px ${l.accent}25`; e.currentTarget.style.borderColor=`${l.accent}55`; e.currentTarget.style.transform="translateY(-4px)"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.05)"; e.currentTarget.style.borderColor="#E8EEFF"; e.currentTarget.style.transform="translateY(0)"; }}>
-            {/* coloured top bar */}
-            <div style={{ width:"100%",height:4,background:`linear-gradient(90deg,${l.accent},${l.accent}99)` }}/>
-            <div style={{ padding:"20px 12px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:10,width:"100%" }}>
-              {/* icon */}
-              <div style={{ width:52,height:52,borderRadius:14,background:l.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                {l.svg}
+          <div key={l.short} onClick={()=>navTo("labs")}
+            style={{ background:"#fff", border:"1px solid #F1F5F9", borderRadius:16, overflow:"hidden", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", transition:"all .2s ease", borderTop:`3px solid ${l.accent}` }}
+            onMouseEnter={e=>{ e.currentTarget.style.boxShadow=`0 8px 28px ${l.accent}20`; e.currentTarget.style.transform="translateY(-3px)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="translateY(0)"; }}>
+            <div style={{ padding:"22px 12px 18px", display:"flex", flexDirection:"column", alignItems:"center", gap:10, width:"100%" }}>
+              <div style={{ width:48,height:48,borderRadius:12,background:l.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.1rem",color:l.accent }}>{l.short.slice(0,2).toUpperCase()}</span>
               </div>
-              <div style={{ textAlign:"center" }}>
-                <div style={{ fontWeight:800,fontSize:".75rem",color:"#0D1117",lineHeight:1.3,whiteSpace:"pre-line" }}>{l.name}</div>
-              </div>
-              {/* NABL badge */}
-              <div style={{ background:l.bg,border:`1px solid ${l.accent}33`,borderRadius:50,padding:"2px 10px",fontSize:".62rem",fontWeight:700,color:l.accent }}>✓ NABL</div>
+              <div style={{ textAlign:"center",fontWeight:800,fontSize:".74rem",color:"#0D1117",lineHeight:1.3 }}>{l.name}</div>
+              <div style={{ background:l.bg,borderRadius:50,padding:"2px 10px",fontSize:".6rem",fontWeight:700,color:l.accent }}>✓ NABL</div>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* bottom CTA */}
-      <div style={{ textAlign:"center" }}>
-        <button onClick={()=>navTo("labs")}
-          style={{ display:"inline-flex",alignItems:"center",gap:10,background:"#0D1117",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 6px 24px rgba(0,0,0,.18)",transition:"all .2s" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
-          Explore All Labs & Prices
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </button>
       </div>
 
     </div>
@@ -2531,12 +2510,11 @@ export default function App() {
               ))}
             </div>
 
-            {/* trust stats bar */}
-            <div style={{ display:"flex",gap:0,marginTop:36,background:"#fff",borderRadius:14,padding:"14px 0",boxShadow:"0 2px 16px rgba(17,88,166,.08)",border:"1px solid #EEF4FF",overflow:"hidden" }}>
-              {[["50K+","Happy Patients","#1158A6"],["6","NABL Labs","#059669"],["4.9★","Avg Rating","#F59E0B"],["₹199","Tests from","#8B5CF6"]].map(([n,l,c],i,arr)=>(
-                <div key={l} style={{ flex:1,textAlign:"center",padding:"0 12px",borderRight:i<arr.length-1?"1px solid #EEF2FF":"none" }}>
-                  <div style={{ fontWeight:900,fontSize:"1.1rem",color:c,fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",lineHeight:1 }}>{n}</div>
-                  <div style={{ fontSize:".68rem",color:"#9CA3AF",fontWeight:600,marginTop:4 }}>{l}</div>
+            {/* trust badges row */}
+            <div style={{ display:"flex",gap:16,marginTop:32,flexWrap:"wrap" }}>
+              {[["✓ NABL Certified","#059669","#F0FDF4"],["🏠 Free Home Collection","#1158A6","#EFF6FF"],["⚡ Reports in 6 hrs","#EA580C","#FFF7ED"]].map(([l,c,bg])=>(
+                <div key={l} style={{ display:"flex",alignItems:"center",gap:7,background:bg,borderRadius:50,padding:"8px 16px",fontSize:".78rem",fontWeight:700,color:c }}>
+                  {l}
                 </div>
               ))}
             </div>
@@ -2696,22 +2674,19 @@ export default function App() {
       <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32,flexWrap:"wrap",gap:12 }}>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
             <div>
-              <div style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"4px 14px",marginBottom:12 }}>
-                <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",display:"inline-block",flexShrink:0 }}/>
-                <span style={{ fontSize:".68rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Best Sellers</span>
-              </div>
-              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:800,color:"#0D1117",marginBottom:6,letterSpacing:"-.02em",lineHeight:1.2 }}>Featured Health Checkups</h2>
-              <p style={{ color:"#6B7280",fontSize:".86rem" }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
+              <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
+              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <button onClick={()=>navTo("labs")}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"11px 26px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",boxShadow:"0 4px 16px rgba(17,88,166,.28)",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+              style={{ background:"#0D1117",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
               View All Packages →
             </button>
           </div>
@@ -2719,49 +2694,56 @@ export default function App() {
           {/* 6-card grid */}
           <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20 }}>
             {[
-              { title:"Full Body Checkup",    sub:"65+ Tests · NABL Certified",    price:1999, mrp:3499, off:43, badge:"Most Popular",   badgeColor:"#EF4444",  img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=85&auto=format&fit=crop" },
-              { title:"Diabetes Care",         sub:"12 Tests · NABL Certified",     price:399,  mrp:899,  off:56, badge:"55% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=85&auto=format&fit=crop" },
-              { title:"Heart Health",          sub:"22 Tests · NABL Certified",     price:1799, mrp:2999, off:40, badge:"Top Doctors",    badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=85&auto=format&fit=crop" },
-              { title:"Thyroid Profile",       sub:"T3, T4, TSH · NABL Certified",  price:399,  mrp:799,  off:50, badge:"NABL",           badgeColor:"#1158A6",  img:"https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=600&q=85&auto=format&fit=crop" },
-              { title:"Women's Wellness",      sub:"40+ Tests · NABL Certified",    price:2299, mrp:3999, off:43, badge:"Women Special",  badgeColor:"#9333EA",  img:"https://images.unsplash.com/photo-1571772996211-2f02974a8439?w=600&q=85&auto=format&fit=crop" },
-              { title:"Senior Citizen",        sub:"55+ Tests · NABL Certified",    price:2499, mrp:4499, off:44, badge:"45% OFF",        badgeColor:"#EA580C",  img:"https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=85&auto=format&fit=crop" },
+              { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
+              { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
+              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=700&q=85&auto=format&fit=crop" },
+              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1579154204601-01588f351e67?w=700&q=85&auto=format&fit=crop" },
+              { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=700&q=85&auto=format&fit=crop" },
+              { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
-              <div key={pkg.title} className="hover-lift"
-                style={{ background:"#fff",borderRadius:16,border:"1px solid #EEF2FF",overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column" }}
-                onClick={()=>navTo("labs")}>
+              <div key={pkg.title}
+                style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
+                onClick={()=>navTo("labs")}
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
                 {/* Image */}
-                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                <div style={{ position:"relative",height:180,overflow:"hidden",flexShrink:0 }}>
                   <img
                     src={pkg.img}
                     alt={pkg.title}
-                    style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .4s ease' }}
-                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06)'}
+                    style={{ width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform .5s ease' }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.07)'}
                     onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
-                    onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}11)`; }}
+                    onError={e=>{ e.target.style.display='none'; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}
                   />
-                  {/* Top-left badge */}
-                  <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"4px 10px",fontSize:".66rem",fontWeight:800,letterSpacing:".02em" }}>
+                  {/* dark gradient overlay for text readability */}
+                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%)" }}/>
+                  {/* badge */}
+                  <div style={{ position:"absolute",top:14,left:14,background:pkg.badgeColor,color:"#fff",borderRadius:8,padding:"4px 11px",fontSize:".64rem",fontWeight:800,letterSpacing:".03em" }}>
                     {pkg.badge}
                   </div>
-                  {/* Bottom-right discount */}
-                  <div style={{ position:"absolute",bottom:10,right:10,background:"rgba(0,0,0,.72)",color:"#fff",borderRadius:6,padding:"3px 8px",fontSize:".66rem",fontWeight:800 }}>
+                  {/* discount pill */}
+                  <div style={{ position:"absolute",top:14,right:14,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",color:"#fff",borderRadius:8,padding:"4px 9px",fontSize:".64rem",fontWeight:800 }}>
                     {pkg.off}% OFF
+                  </div>
+                  {/* title over image */}
+                  <div style={{ position:"absolute",bottom:14,left:14,right:14 }}>
+                    <div style={{ fontWeight:800,fontSize:"1rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
                   </div>
                 </div>
                 {/* Content */}
-                <div style={{ padding:"16px 16px 14px",flex:1,display:"flex",flexDirection:"column",gap:6 }}>
-                  <div style={{ fontWeight:800,fontSize:".95rem",color:"#0D1117",lineHeight:1.2 }}>{pkg.title}</div>
-                  <div style={{ fontSize:".76rem",color:"#9CA3AF",fontWeight:600 }}>{pkg.sub}</div>
-                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:12 }}>
-                    <div style={{ display:"flex",alignItems:"baseline",gap:7 }}>
-                      <span style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
-                      <span style={{ fontSize:".8rem",color:"#9CA3AF",textDecoration:"line-through",fontWeight:500 }}>₹{pkg.mrp.toLocaleString()}</span>
+                <div style={{ padding:"16px 18px 18px",flex:1,display:"flex",flexDirection:"column",gap:8 }}>
+                  <div style={{ fontSize:".76rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:8 }}>
+                    <div style={{ display:"flex",alignItems:"baseline",gap:6 }}>
+                      <span style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontSize:".78rem",color:"#CBD5E1",textDecoration:"line-through",fontWeight:500 }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"filter .15s",minHeight:36 }}
-                      onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.12)"}
-                      onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                      Book
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"9px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",boxShadow:"0 4px 12px rgba(17,88,166,.3)" }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="scale(1.03)"; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
+                      Book Now
                     </button>
                   </div>
                 </div>
@@ -3034,103 +3016,6 @@ export default function App() {
                 </div>
                 <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
                 <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ──────────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 56px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
-        <div style={T.wrap}>
-          <div style={{ textAlign:"center",marginBottom:44 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
-              <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
-              <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Patient Stories</span>
-            </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.85rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>What Our Patients Say</h2>
-            <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto",lineHeight:1.75 }}>Real experiences from 50,000+ patients who trust LabEase for their health diagnostics.</p>
-          </div>
-
-          {/* Featured large testimonial */}
-          <div style={{ background:"linear-gradient(135deg,#EBF3FB 0%,#F0F7FF 100%)",borderRadius:20,padding:"0",overflow:"hidden",marginBottom:28,display:"flex",minHeight:220,border:"1px solid #DBEAFE" }}>
-            <div style={{ width:260,flexShrink:0,position:"relative",overflow:"hidden" }}>
-              <img
-                src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=600&q=85&auto=format&fit=crop"
-                alt="Happy patient"
-                style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",minHeight:220 }}
-                onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="#DBEAFE"; }}
-              />
-              <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,transparent 60%,#EBF3FB)" }}/>
-            </div>
-            <div style={{ flex:1,padding:"32px 36px",display:"flex",flexDirection:"column",justifyContent:"center" }}>
-              <div style={{ display:"flex",gap:2,marginBottom:14 }}>
-                {[1,2,3,4,5].map(i=><span key={i} style={{ color:"#F59E0B",fontSize:"1rem" }}>★</span>)}
-              </div>
-              <p style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.05rem,2vw,1.25rem)",color:"#0D1117",lineHeight:1.65,marginBottom:20,fontStyle:"italic" }}>
-                "LabEase completely changed how I manage my health. I booked a full body checkup at midnight, a phlebotomist arrived the next morning, and my reports were in my inbox by 2 PM. The prices were 40% cheaper than my usual lab!"
-              </p>
-              <div style={{ display:"flex",alignItems:"center",gap:12 }}>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:".92rem",color:"#0D1117" }}>Priya Sharma</div>
-                  <div style={{ fontSize:".76rem",color:"#6B7280",fontWeight:500 }}>Marketing Manager · Bangalore · Full Body Checkup</div>
-                </div>
-                <div style={{ marginLeft:"auto",background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:8,padding:"4px 12px",fontSize:".7rem",fontWeight:700,color:"#1158A6" }}>Verified Booking</div>
-              </div>
-            </div>
-          </div>
-
-          {/* 3-column testimonial cards */}
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px),1fr)",gap:18 }}>
-            {[
-              {
-                name:"Rahul Mehta", city:"Mumbai", test:"Diabetes Care Package",
-                text:"Booked at 10 PM and the technician was at my door by 7 AM. Reports in 4 hours. Truly impressed!",
-                rating:5, img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80&auto=format&fit=crop&face"
-              },
-              {
-                name:"Ananya Krishnan", city:"Hyderabad", test:"Thyroid Profile",
-                text:"As someone with thyroid issues I get tested often. LabEase saves me so much time and about 50% on costs.",
-                rating:5, img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&auto=format&fit=crop"
-              },
-              {
-                name:"Dr. Suresh Iyer", city:"Chennai", test:"Heart Health Package",
-                text:"I recommend LabEase to my patients regularly. NABL certification, fast reports, and transparent billing.",
-                rating:5, img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&q=80&auto=format&fit=crop"
-              },
-              {
-                name:"Meera Joshi", city:"Delhi", test:"Women's Wellness",
-                text:"The home collection service is a game changer for working women. Reports were detailed and on time.",
-                rating:5, img:"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80&auto=format&fit=crop"
-              },
-              {
-                name:"Arjun Nair", city:"Kochi", test:"Kidney Function Test",
-                text:"Price comparison feature is amazing. Got the same test for ₹299 that was quoted ₹700 at a walk-in lab.",
-                rating:5, img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&auto=format&fit=crop"
-              },
-              {
-                name:"Sunita Agarwal", city:"Pune", test:"Senior Citizen Package",
-                text:"Booked for my 70-year-old mother. The phlebotomist was professional and gentle. Highly recommended.",
-                rating:5, img:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80&auto=format&fit=crop"
-              },
-            ].map((t,i)=>(
-              <div key={i} className="hover-lift" style={{ background:"#fff",borderRadius:16,border:"1px solid #EEF2FF",padding:"22px 20px",display:"flex",flexDirection:"column",gap:14 }}>
-                <div style={{ display:"flex",gap:2 }}>
-                  {[1,2,3,4,5].map(j=><span key={j} style={{ color:"#F59E0B",fontSize:".85rem" }}>★</span>)}
-                </div>
-                <p style={{ color:"#374151",fontSize:".84rem",lineHeight:1.72,flex:1,margin:0 }}>"{t.text}"</p>
-                <div style={{ display:"flex",alignItems:"center",gap:10,paddingTop:12,borderTop:"1px solid #F1F5F9" }}>
-                  <img
-                    src={t.img}
-                    alt={t.name}
-                    style={{ width:40,height:40,borderRadius:"50%",objectFit:"cover",flexShrink:0,border:"2px solid #DBEAFE" }}
-                    onError={e=>{ e.target.style.display="none"; e.target.parentNode.insertAdjacentHTML("afterbegin",`<div style="width:40px;height:40px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#1158A6;flex-shrink:0">${t.name[0]}</div>`); }}
-                  />
-                  <div>
-                    <div style={{ fontWeight:700,fontSize:".83rem",color:"#0D1117",lineHeight:1.2 }}>{t.name}</div>
-                    <div style={{ fontSize:".7rem",color:"#9CA3AF",fontWeight:500 }}>{t.city} · {t.test}</div>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
