@@ -1435,9 +1435,6 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
   const [labSugOpen, setLabSugOpen] = useState(false);
   const labSearchRef = React.useRef(null);
 
-  const labSuggestions = searchQ.trim().length < 1 ? [] :
-    enriched.filter(l => l.name.toLowerCase().includes(searchQ.toLowerCase()) || (l.area||"").toLowerCase().includes(searchQ.toLowerCase())).slice(0,5);
-
   React.useEffect(() => {
     const h = e => { if(labSearchRef.current && !labSearchRef.current.contains(e.target)) setLabSugOpen(false); };
     document.addEventListener("mousedown",h);
@@ -1464,6 +1461,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
     const nm = NEAR_ME.find(x => l.name.startsWith(x.name.split(" ")[0]));
     return { ...l, open: nm?.open ?? true, dist: nm?.dist ?? "—", area: nm?.area ?? l.city, homecoll: nm?.homecoll ?? l.homeCollection, tags: tagMap[l.id] || ["Blood Tests","Packages"] };
   });
+
+  const labSuggestions = searchQ.trim().length < 1 ? [] :
+    enriched.filter(l => l.name.toLowerCase().includes(searchQ.toLowerCase()) || (l.area||"").toLowerCase().includes(searchQ.toLowerCase())).slice(0,5);
 
   const filtered = enriched
     .filter(l => !filterOpen || l.open)
