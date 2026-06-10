@@ -964,13 +964,9 @@ const NEAR_ME = [
 
 const FAQS = [
   { q:"How do I book a lab test on LabEase?", a:"Browse our partner labs, choose your tests, add them to cart, and complete the 4-step booking: patient info, date & slot, collection mode, and confirmation. You'll receive a booking ID instantly via email." },
-  { q:"Is home sample collection really free?", a:"Yes. Home collection is completely free for eligible tests at participating labs. A certified phlebotomist arrives at your doorstep at your chosen time slot. Look for the 'Home Collection' indicator on each lab." },
-  { q:"How soon will I receive my reports?", a:"Routine blood tests are typically ready the same day or within 2–6 hours. Specialised tests may take 24–72 hours. Exact turnaround times are listed for every test on our platform so you always know what to expect." },
-  { q:"Are the labs NABL accredited?", a:"Most of our partner labs hold NABL (National Accreditation Board for Testing and Calibration Laboratories) certification — the gold standard for lab quality in India. You can filter exclusively for NABL-certified labs using our search filters." },
-  { q:"How are reports delivered?", a:"Reports are delivered digitally to your registered email. You can also download them directly from your booking confirmation at any time using your unique booking reference ID." },
-  { q:"Can I cancel or reschedule a booking?", a:"Yes. Cancellations and reschedules are accepted up to 2 hours before your appointment, free of charge. Reach our 24/7 support team via chat or phone for immediate assistance." },
+  { q:"Is home sample collection really free?", a:"Yes. Home collection is completely free for eligible tests at participating labs. A certified phlebotomist arrives at your doorstep at your chosen time slot." },
+  { q:"How soon will I receive my reports?", a:"Routine blood tests are typically ready the same day or within 2–6 hours. Specialised tests may take 24–72 hours. Exact turnaround times are listed for every test on our platform." },
   { q:"Are there hidden charges?", a:"Never. The price shown on LabEase is the final price you pay — inclusive of all taxes. No convenience fees, no surprises." },
-  { q:"What if the collection professional is late?", a:"We guarantee on-time service. If our phlebotomist is more than 30 minutes late, you are entitled to a full refund or complimentary rescheduling — no questions asked." },
 ];
 
 const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM"];
@@ -2694,7 +2690,7 @@ export default function App() {
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <button onClick={()=>navTo("labs")}
-              style={{ background:"#0D1117",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8,boxShadow:"0 4px 16px rgba(17,88,166,.28)" }}
               onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-1px)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
               View All Packages →
@@ -3025,11 +3021,11 @@ export default function App() {
               {Icon:IThyroid,   t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IDiabetes,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"24px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s" }}
+              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                <div style={{ width:46,height:46,borderRadius:12,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14 }}>
-                  <w.Icon s={28}/>
+                <div style={{ width:60,height:60,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14,margin:"0 auto 14px" }}>
+                  <w.Icon s={36}/>
                 </div>
                 <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
                 <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
@@ -3520,39 +3516,53 @@ export default function App() {
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
         </div>
-        <div className="nav-desk" style={{ display:"flex",gap:4,alignItems:"center" }}>
-          {[["home","Home"],["labs","Labs"]].map(([p,l])=>(<button key={p} className="nav-a" onClick={()=>navTo(p)} style={{ background:page===p?"var(--teal-pale)":"transparent",border:"none",cursor:"pointer",color:page===p?"var(--teal)":"var(--muted)",fontWeight:700,fontSize:".86rem",padding:"7px 15px",borderRadius:8,fontFamily:"'Manrope',sans-serif",transition:"color .15s,background .15s" }}>{l}</button>))}
-          <UploadPrescription T={T}/>
-          {user ? (<div style={{ display:"flex",alignItems:"center",gap:8 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:7,background:"#EFF6FF",borderRadius:50,padding:"5px 12px 5px 7px",border:"1.5px solid #BFDBFE" }}>
-              <div style={{ width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><span style={{ color:"#fff",fontWeight:800,fontSize:".72rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
-              <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{user.name.split(" ")[0]}</span>
-            </div>
-            <button onClick={handleLogout} className="btn-anim" style={{ background:"transparent",border:"1.5px solid #E5E7EB",borderRadius:50,padding:"6px 14px",fontWeight:700,fontSize:".78rem",color:"#6B7280",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",whiteSpace:"nowrap" }} onMouseEnter={e=>{ e.currentTarget.style.background="#FEE2E2"; e.currentTarget.style.borderColor="#FCA5A5"; e.currentTarget.style.color="#DC2626"; }} onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#E5E7EB"; e.currentTarget.style.color="#6B7280"; }}>Sign Out</button>
-          </div>) : (<div style={{ display:"flex",gap:6,alignItems:"center" }}>
-            <button onClick={()=>openAuth("login")} className="btn-anim" style={{ background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"7px 16px",fontWeight:700,fontSize:".82rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",whiteSpace:"nowrap" }} onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#BFDBFE"; }}>Log In</button>
-            <button onClick={()=>openAuth("signup")} className="btn-anim" style={{ background:"#1158A6",border:"none",borderRadius:50,padding:"8px 18px",fontWeight:700,fontSize:".82rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.25)" }}>Sign Up</button>
-          </div>)}
-          {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",marginLeft:4 }}>Cart ({cart.length}) · ₹{total.toLocaleString()}</button>}
-        </div>
-        <div className="nav-mob" style={{ display:"none",alignItems:"center",gap:4 }}>
+        {/* Right: person icon + menu button */}
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem" }}>Cart ({cart.length}) · ₹{total.toLocaleString()}</button>}
+          {/* Person icon */}
           <div style={{ position:"relative" }}>
-            <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:profileDrop?"#EFF6FF":"none",border:profileDrop?"1.5px solid #DBEAFE":"none",borderRadius:10,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s" }}>
-              {user ? <div style={{ width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontWeight:800,fontSize:".74rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
-                : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
+            <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:40,height:40,background:profileDrop?"#EFF6FF":"#F8FAFC",border:profileDrop?"1.5px solid #BFDBFE":"1.5px solid #E5E7EB",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#BFDBFE"; }}
+              onMouseLeave={e=>{ if(!profileDrop){ e.currentTarget.style.background="#F8FAFC"; e.currentTarget.style.borderColor="#E5E7EB"; } }}>
+              {user
+                ? <div style={{ width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontWeight:800,fontSize:".74rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
+                : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
             </button>
-            {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:190,zIndex:300,overflow:"hidden" }}>
-              {user&&<div style={{ padding:"13px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".87rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".73rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
+            {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:180,zIndex:300,overflow:"hidden" }}>
+              {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
               {!user&&[["🔑","Log In",()=>{ setProfileDrop(false); openAuth("login"); }],["✨","Sign Up",()=>{ setProfileDrop(false); openAuth("signup"); }]].map(([ic,lbl,fn])=>(
-                <button key={lbl} onClick={fn} style={{ display:"flex",alignItems:"center",gap:12,width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:lbl==="Sign Up"?"#1158A6":"#374151",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}><span>{ic}</span>{lbl}</button>
+                <button key={lbl} onClick={fn} style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:lbl==="Sign Up"?"#1158A6":"#374151",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}><span>{ic}</span>{lbl}</button>
               ))}
-              {[["📋","My Bookings"],["📄","My Reports"],["👤","Profile"]].map(([ic,lbl])=>(
-                <button key={lbl} onClick={()=>setProfileDrop(false)} style={{ display:"flex",alignItems:"center",gap:12,width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:600,color:"#374151",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}><span>{ic}</span>{lbl}</button>
-              ))}
-              {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"flex",alignItems:"center",gap:12,width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}><span>🚪</span>Sign Out</button></div>}
+              {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}><span>🚪</span>Sign Out</button></div>}
             </div>}
           </div>
-
+          {/* Menu (hamburger) button */}
+          <div style={{ position:"relative" }}>
+            <button onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }} style={{ width:40,height:40,background:sideMenu?"#EFF6FF":"#F8FAFC",border:sideMenu?"1.5px solid #BFDBFE":"1.5px solid #E5E7EB",borderRadius:50,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:4.5,transition:"all .15s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#BFDBFE"; }}
+              onMouseLeave={e=>{ if(!sideMenu){ e.currentTarget.style.background="#F8FAFC"; e.currentTarget.style.borderColor="#E5E7EB"; } }}>
+              {[0,1,2].map(i=><span key={i} style={{ display:"block",width:16,height:2,borderRadius:99,background:"#374151",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(4px,6px)":sideMenu&&i===2?"rotate(-45deg) translate(4px,-6px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
+            </button>
+            {sideMenu&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:200,zIndex:300,overflow:"hidden",animation:"slideUp .18s" }}>
+              {[
+                ["🏠","Home",()=>{ navTo("home"); setSideMenu(false); }],
+                ["🧪","Tests",()=>{ navTo("labs"); setSideMenu(false); }],
+                ["🏥","Labs",()=>{ navTo("labs"); setSideMenu(false); }],
+                ["📦","Health Packages",()=>{ navTo("labs"); setSideMenu(false); }],
+                ["📄","Reports",()=>{ setSideMenu(false); }],
+                ["ℹ️","About Us",()=>{ setSideMenu(false); }],
+                ["📞","Contact Us",()=>{ setSideMenu(false); }],
+              ].map(([ic,lbl,fn])=>(
+                <button key={lbl} onClick={fn} style={{ display:"flex",alignItems:"center",gap:12,width:"100%",padding:"12px 18px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.color="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
+                  <span style={{fontSize:"1rem"}}>{ic}</span>{lbl}
+                </button>
+              ))}
+              <div style={{ padding:"10px 18px",borderTop:"1px solid #E5E7EB",display:"flex",gap:8 }}>
+                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
+                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#1158A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Sign Up</button>
+              </div>
+            </div>}
+          </div>
         </div>
       </nav>
       <div style={{ position:"fixed",inset:0,zIndex:299,background:"rgba(0,0,0,.4)",backdropFilter:"blur(4px)",opacity:sideMenu?1:0,pointerEvents:sideMenu?"all":"none",transition:"opacity .28s ease" }} onClick={()=>setSideMenu(false)}/>
