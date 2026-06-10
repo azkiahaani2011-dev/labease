@@ -738,6 +738,8 @@ const G = () => (
       .hero-content {
         padding-top: 32px !important;
         padding-bottom: 28px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
         gap: 16px !important;
       }
       .hero-content h1 { font-size: 1.5rem !important; margin-bottom: 8px !important; line-height: 1.2 !important; }
@@ -1855,7 +1857,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   <div style={{ minHeight:"80vh" }}>
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
-      <div style={{ ...T.wrap,padding:"18px 24px" }}>
+      <div style={{ ...T.wrap,padding:"18px 12px" }}>
         <button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <div style={{ width:56,height:56,borderRadius:12,background:`${lab.color}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
@@ -1883,7 +1885,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    <div style={{ ...T.wrap,padding:"26px 24px" }}>
+    <div style={{ ...T.wrap,padding:"26px 12px" }}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:400 }}>
         <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
