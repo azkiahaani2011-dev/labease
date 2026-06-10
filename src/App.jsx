@@ -1501,11 +1501,11 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, overflow:"hidden", border:"1px solid #C7D2F6", boxShadow:"0 4px 16px rgba(17,88,166,.12)" }}>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, overflow:"hidden", border:"1px solid #C7D2F6", boxShadow:"0 4px 16px rgba(17,88,166,.12)", background:"#E8E8F6", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <img
-              src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=300&fit=crop&crop=center&q=85"
-              alt="Lab test tube"
-              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+              src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=300&h=300&fit=crop&crop=center&q=85"
+              alt="Lab test"
+              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", mixBlendMode:"multiply" }}
             />
           </div>
           {/* text */}
