@@ -1535,37 +1535,57 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF6FB", border:"1px solid #C7E6F5", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(17,88,166,.1)" }}>
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:90,height:90}}>
-              {/* cloud bg */}
-              <ellipse cx="60" cy="72" rx="46" ry="34" fill="#DAEEF8" opacity="0.7"/>
-              <ellipse cx="38" cy="62" rx="22" ry="18" fill="#DAEEF8" opacity="0.5"/>
-              <ellipse cx="82" cy="58" rx="18" ry="14" fill="#DAEEF8" opacity="0.5"/>
-              {/* BASE */}
-              <rect x="28" y="96" width="56" height="11" rx="5.5" fill="#F87171" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
-              <rect x="36" y="92" width="12" height="7" rx="2" fill="#FECACA" stroke="#1E293B" strokeWidth="2" strokeLinejoin="round"/>
-              {/* PILLAR */}
-              <rect x="44" y="56" width="14" height="40" rx="5" fill="#FC9D9D" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
-              {/* STAGE */}
-              <rect x="22" y="72" width="52" height="10" rx="5" fill="#F87171" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
-              <rect x="30" y="74" width="28" height="6" rx="3" fill="#FECACA" stroke="#1E293B" strokeWidth="1.6"/>
-              <rect x="26" y="75" width="8" height="4" rx="2" fill="#F87171" stroke="#1E293B" strokeWidth="1.5"/>
-              {/* HORIZONTAL ARM */}
-              <path d="M54 60 Q72 52 78 44" stroke="#F87171" strokeWidth="10" strokeLinecap="round"/>
-              <path d="M54 60 Q72 52 78 44" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
-              {/* BLUE TUBE */}
-              <rect x="72" y="28" width="14" height="28" rx="5" fill="#38BDF8" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
-              <rect x="72" y="36" width="14" height="6" rx="1" fill="#0EA5E9" stroke="#1E293B" strokeWidth="1.5"/>
-              <ellipse cx="79" cy="56" rx="7" ry="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="2"/>
-              {/* EYEPIECE */}
-              <rect x="74" y="22" width="10" height="12" rx="4" fill="#475569" stroke="#1E293B" strokeWidth="2.2" strokeLinejoin="round"/>
-              <rect x="76" y="18" width="6" height="7" rx="2.5" fill="#334155" stroke="#1E293B" strokeWidth="2"/>
-              {/* KNOB */}
-              <circle cx="45" cy="66" r="5" fill="#FECACA" stroke="#1E293B" strokeWidth="2"/>
-              <circle cx="45" cy="66" r="2" fill="#F87171"/>
-              {/* shine */}
-              <circle cx="76" cy="32" r="1.5" fill="white" opacity="0.7"/>
-              <circle cx="80" cy="28" r="1" fill="white" opacity="0.5"/>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF4FB", border:"1px solid #C7DFF5", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(17,88,166,.1)" }}>
+            <svg viewBox="0 0 110 115" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:88}}>
+              {/* soft cloud blobs */}
+              <ellipse cx="55" cy="75" rx="44" ry="32" fill="#D6EAF8" opacity="0.65"/>
+              <ellipse cx="32" cy="65" rx="20" ry="16" fill="#D6EAF8" opacity="0.5"/>
+              <ellipse cx="80" cy="60" rx="17" ry="13" fill="#D6EAF8" opacity="0.45"/>
+
+              {/* ── BASE ── */}
+              <rect x="22" y="97" width="58" height="12" rx="6" fill="#F87171" stroke="#1C2333" strokeWidth="2.4"/>
+              {/* base highlight */}
+              <rect x="28" y="99" width="42" height="4" rx="2" fill="#FECACA" opacity="0.6"/>
+
+              {/* ── STEM (vertical pillar, slightly tapered) ── */}
+              <path d="M46 95 L46 72 Q46 68 50 68 L54 68 Q58 68 58 72 L58 95Z" fill="#FC9D9D" stroke="#1C2333" strokeWidth="2.2" strokeLinejoin="round"/>
+
+              {/* ── CURVED ARM (the iconic arch of a microscope) ── */}
+              {/* filled arch shape */}
+              <path d="M50 68 Q50 40 72 28 L80 28 Q80 26 78 24 Q54 34 46 68Z" fill="#F87171" stroke="#1C2333" strokeWidth="2.2" strokeLinejoin="round"/>
+              {/* inner arch highlight */}
+              <path d="M54 66 Q54 44 74 33" stroke="#FECACA" strokeWidth="4" strokeLinecap="round" opacity="0.55"/>
+
+              {/* ── STAGE / SPECIMEN PLATFORM ── */}
+              <rect x="18" y="72" width="50" height="9" rx="4.5" fill="#F87171" stroke="#1C2333" strokeWidth="2.2"/>
+              {/* glass slide */}
+              <rect x="24" y="74" width="32" height="5" rx="2.5" fill="#DBEAFE" stroke="#1C2333" strokeWidth="1.5"/>
+              {/* stage clip */}
+              <rect x="20" y="74.5" width="8" height="4" rx="2" fill="#FC9D9D" stroke="#1C2333" strokeWidth="1.5"/>
+
+              {/* ── OBJECTIVE LENS TUBE (blue, angled down from arm) ── */}
+              <rect x="72" y="20" width="13" height="30" rx="5" fill="#38BDF8" stroke="#1C2333" strokeWidth="2.2"/>
+              {/* band on tube */}
+              <rect x="72" y="30" width="13" height="7" rx="1" fill="#0EA5E9" stroke="#1C2333" strokeWidth="1.5"/>
+              {/* lens tip */}
+              <ellipse cx="78.5" cy="50" rx="6.5" ry="3.5" fill="#BAE6FD" stroke="#1C2333" strokeWidth="2"/>
+              {/* lens shine */}
+              <ellipse cx="76" cy="48" rx="2" ry="1.2" fill="white" opacity="0.6"/>
+
+              {/* ── EYEPIECE (top, dark) ── */}
+              <rect x="74" y="8" width="9" height="15" rx="4" fill="#475569" stroke="#1C2333" strokeWidth="2.2"/>
+              <rect x="76" y="5" width="5" height="7" rx="2.5" fill="#334155" stroke="#1C2333" strokeWidth="2"/>
+              {/* eyepiece shine */}
+              <circle cx="76" cy="11" r="1.2" fill="white" opacity="0.55"/>
+
+              {/* ── FOCUS KNOB ── */}
+              <circle cx="47" cy="76" r="5.5" fill="#FECACA" stroke="#1C2333" strokeWidth="2"/>
+              <circle cx="47" cy="76" r="2.2" fill="#F87171"/>
+
+              {/* ── DECORATIVE DOTS ── */}
+              <circle cx="18" cy="40" r="3" fill="#A5B4FC" opacity="0.6"/>
+              <circle cx="96" cy="30" r="2.5" fill="#FCA5A5" opacity="0.55"/>
+              <circle cx="92" cy="92" r="2" fill="#6EE7B7" opacity="0.6"/>
             </svg>
           </div>
           {/* text */}
@@ -3033,7 +3053,7 @@ export default function App() {
                 <div>
                   <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
                   <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
-                  <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Get authenticated reports on WhatsApp &amp; email. Download anytime, share instantly.</p>
+                  <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
                 </div>
                 <button onClick={()=>navTo("labs")}
                   style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
@@ -3305,15 +3325,6 @@ export default function App() {
               onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.25)"; }}>
               View Lab Packages
             </button>
-          </div>
-          {/* Trust indicators */}
-          <div style={{ display:"flex",gap:24,justifyContent:"center",flexWrap:"wrap",marginTop:36,paddingTop:32,borderTop:"1px solid rgba(255,255,255,.08)" }}>
-            {[["50,000+","Patients Served"],["6","NABL Labs"],["4.9★","Avg. Rating"],["2 hrs","Fastest Reports"]].map(([n,l])=>(
-              <div key={l} style={{ textAlign:"center" }}>
-                <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.3rem",color:"#fff",lineHeight:1 }}>{n}</div>
-                <div style={{ fontSize:".68rem",color:"rgba(255,255,255,.45)",fontWeight:600,marginTop:4,textTransform:"uppercase",letterSpacing:".06em" }}>{l}</div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
