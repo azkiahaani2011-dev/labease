@@ -3353,20 +3353,24 @@ export default function App() {
             {/* Company */}
             <div>
               <div style={{ fontSize:".72rem",fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",color:"#475569",marginBottom:18 }}>Company</div>
-              {["About Us","Partner With Us","Careers","Blog","Press"].map(l=>(
-                <div key={l} style={{ fontSize:".83rem",color:"#64748B",marginBottom:11,cursor:"pointer",transition:"color .14s" }}
-                  onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
-                  onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
-              ))}
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
+                {["About Us","Partner With Us","Careers","Blog","Press"].map(l=>(
+                  <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                    onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
+                    onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
+                ))}
+              </div>
             </div>
             {/* Support */}
             <div>
               <div style={{ fontSize:".72rem",fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",color:"#475569",marginBottom:18 }}>Support</div>
-              {["Help & Support","Contact Us","Privacy Policy","Terms of Service","Refund Policy"].map(l=>(
-                <div key={l} style={{ fontSize:".83rem",color:"#64748B",marginBottom:11,cursor:"pointer",transition:"color .14s" }}
-                  onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
-                  onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
-              ))}
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
+                {["Help & Support","Contact Us","Privacy Policy","Terms of Service","Refund Policy"].map(l=>(
+                  <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                    onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
+                    onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
+                ))}
+              </div>
               {/* Contact info */}
               <div style={{ marginTop:20,paddingTop:20,borderTop:"1px solid rgba(255,255,255,.06)" }}>
                 <div style={{ fontSize:".76rem",color:"#4B5563",marginBottom:7 }}>📞 1800-103-0001</div>
