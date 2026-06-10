@@ -531,15 +531,16 @@ const G = () => (
       }
 
       /* ── Featured Health Checkups: 3-col → 2-col → 1-col ── */
+      .pkg-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
       @media (max-width: 900px) {
-        div[style*="gridTemplateColumns:"repeat(3,1fr)",gap:20"] {
-          grid-template-columns: repeat(2,1fr) !important;
-        }
+        .pkg-grid { grid-template-columns: repeat(2, 1fr); }
       }
       @media (max-width: 540px) {
-        div[style*="gridTemplateColumns:"repeat(3,1fr)",gap:20"] {
-          grid-template-columns: 1fr !important;
-        }
+        .pkg-grid { grid-template-columns: 1fr; }
       }
 
       /* Compress all T.wrap padding to 16px on mobile */
@@ -588,65 +589,26 @@ const G = () => (
         padding: 0 20px !important;
       }
 
-      /* Testimonial cards: full bleed on mobile */
-      div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px)"] {
-        grid-template-columns: 1fr !important;
-        gap: 14px !important;
-      }
-
-      /* Why section cards */
-      div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(200px"] {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 12px !important;
-      }
-      div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(200px"] > div {
-        padding: 18px 14px !important;
-      }
-
       /* Test table: 3-col (hide MRP) */
       .test-header > span:nth-child(3),
       .test-row    > div:nth-child(3) { display: none !important; }
-      div[style*="gridTemplateColumns:"1fr auto auto auto""] {
-        grid-template-columns: 1fr auto auto !important;
-        padding: 10px 14px !important;
-        gap: 8px !important;
-      }
+      .test-header { grid-template-columns: 1fr auto auto !important; padding: 10px 14px !important; gap: 8px !important; }
+      .test-row    { grid-template-columns: 1fr auto auto !important; padding: 10px 12px !important; gap: 8px !important; }
 
-      /* Lab list right price column */
-      div[style*="minWidth:110,flexShrink:0"] {
-        min-width: 92px !important;
-      }
-      div[style*="minWidth:110,flexShrink:0"] > button {
-        padding: 8px 10px !important;
-        font-size: .76rem !important;
-      }
+      /* Footer columns */
+      .footer-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+
+      /* Booking layout: sidebar stacks below content on mobile */
+      .booking-grid { grid-template-columns: 1fr !important; }
+      .booking-sidebar { position: static !important; }
+
+      /* CTA section padding */
+      .cta-section { padding: 48px 20px !important; }
 
       /* Booking form */
       div[style*="maxWidth:680"] {
         padding-left: 14px !important;
         padding-right: 14px !important;
-      }
-
-      /* HIW steps full width */
-      div[style*="maxWidth:560,margin:"0 auto""] {
-        max-width: 100% !important;
-        padding: 0 4px !important;
-      }
-
-      /* Trusted labs banner card content */
-      div[style*="borderRadius:18,border:"1.5px solid #DBEAFE""][style*="flexWrap:"wrap""] > div[style*="flex-end"] {
-        display: none !important; /* hide "Explore Labs" arrow on very small screens */
-      }
-
-      /* Footer columns */
-      footer div[style*="gridTemplateColumns"] {
-        grid-template-columns: 1fr !important;
-        gap: 28px !important;
-      }
-
-      /* CTA section */
-      section[style*="padding:"80px 24px""] {
-        padding: 48px 20px !important;
       }
 
       /* Floating book now bar */
@@ -666,17 +628,7 @@ const G = () => (
        TABLET — 431px–900px
     ════════════════════════════════════════════════════════════════ */
     @media (min-width: 431px) and (max-width: 900px) {
-      div[style*="maxWidth:1140"] {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-      }
-      div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px)"] {
-        grid-template-columns: repeat(2,1fr) !important;
-      }
-      footer div[style*="gridTemplateColumns"] {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 32px !important;
-      }
+      .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -778,7 +730,7 @@ const G = () => (
       .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
     }
     @media (min-width: 768px) {
-      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
+      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
       .hiw-connector { display: block; }
     }
     @media (max-width: 767px) {
@@ -887,6 +839,35 @@ const G = () => (
     }
     @media (max-width: 540px) {
       .featured-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       FOOTER GRID — 4-col desktop → 2-col tablet → 1-col mobile
+    ════════════════════════════════════════════════════════════════ */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+    }
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 540px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       BOOKING PAGE — sidebar + form stacks on mobile
+    ════════════════════════════════════════════════════════════════ */
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .booking-grid { grid-template-columns: 1fr; }
+      .booking-sidebar { position: static !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2939,7 +2920,7 @@ export default function App() {
           </div>
 
           {/* 6-card grid */}
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20 }}>
+          <div className="pkg-grid">
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
@@ -3348,7 +3329,7 @@ export default function App() {
       <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
         {/* Top band */}
         <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"56px 0 48px" }}>
-          <div style={{ maxWidth:1140,margin:"0 auto",padding:"0 24px",display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr",gap:40,flexWrap:"wrap" }}>
+          <div className="footer-grid" style={{ maxWidth:1140,margin:"0 auto",padding:"0 24px" }}>
             {/* Brand column */}
             <div>
               <div style={{ display:"flex",alignItems:"baseline",gap:2,marginBottom:16 }}>
@@ -3555,10 +3536,10 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ ...T.wrap,padding:"24px 24px",display:"grid",gridTemplateColumns:"220px 1fr",gap:24,alignItems:"start" }}>
+        <div className="booking-grid" style={{ ...T.wrap,padding:"24px 16px" }}>
 
           {/* ── LEFT FILTER SIDEBAR ── */}
-          <div style={{ position:"sticky",top:80,display:"flex",flexDirection:"column",gap:14 }}>
+          <div className="booking-sidebar" style={{ position:"sticky",top:80,display:"flex",flexDirection:"column",gap:14 }}>
 
             {/* Availability */}
             <div style={{ background:"#fff",borderRadius:14,border:"1px solid var(--line)",padding:"18px 16px" }}>
