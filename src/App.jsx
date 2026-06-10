@@ -763,27 +763,28 @@ const G = () => (
       .featured-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
     @media (max-width: 480px) {
-      .featured-grid { grid-template-columns: 1fr !important; }
+      .featured-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
 
-    /* ── Why LabEase cards: compact on mobile ── */
+    /* ── Why LabEase cards: 2-col compact on mobile ── */
     @media (max-width: 600px) {
-      .why-grid { gap: 8px !important; }
-      .why-grid > div { padding: 12px 6px !important; border-radius: 10px !important; }
-      .why-grid > div > div:first-child { width: 40px !important; height: 40px !important; border-radius: 10px !important; margin-bottom: 8px !important; }
-      .why-grid > div > div:first-child svg { width: 22px !important; height: 22px !important; }
-      .why-grid > div > div:nth-child(2) { font-size: .7rem !important; margin-bottom: 3px !important; }
-      .why-grid > div > div:nth-child(3) { font-size: .62rem !important; line-height: 1.4 !important; }
+      .why-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+      .why-grid > div { padding: 14px 10px !important; border-radius: 12px !important; }
+      .why-grid > div > div:first-child { width: 44px !important; height: 44px !important; border-radius: 11px !important; margin-bottom: 10px !important; }
+      .why-grid > div > div:first-child svg { width: 24px !important; height: 24px !important; }
+      .why-grid > div > div:nth-child(2) { font-size: .73rem !important; margin-bottom: 4px !important; }
+      .why-grid > div > div:nth-child(3) { font-size: .65rem !important; line-height: 1.45 !important; }
     }
 
-    /* ── Featured cards: compact image + tight content on mobile ── */
+    /* ── Featured cards: 2-col compact on mobile ── */
     @media (max-width: 600px) {
-      .featured-grid { gap: 8px !important; }
-      .featured-grid > div > div:first-child { height: 90px !important; }
-      .featured-grid > div > div:last-child { padding: 8px !important; gap: 4px !important; }
-      .featured-grid > div > div:last-child > div:first-child { font-size: .6rem !important; }
-      .featured-grid > div > div:last-child > div:last-child { flex-direction: column !important; gap: 4px !important; }
-      .featured-grid > div > div:last-child > div:last-child button { width: 100% !important; padding: 7px 6px !important; font-size: .7rem !important; }
+      .featured-grid { gap: 10px !important; }
+      .featured-grid > div > div:first-child { height: 100px !important; }
+      .featured-grid > div > div:last-child { padding: 9px 8px 10px !important; gap: 5px !important; }
+      .featured-grid > div > div:last-child > div:first-child { font-size: .62rem !important; }
+      .featured-grid > div > div:last-child > div:last-child { flex-direction: column !important; align-items: flex-start !important; gap: 5px !important; }
+      .featured-grid > div > div:last-child > div:last-child > div { font-size: .75rem !important; }
+      .featured-grid > div > div:last-child > div:last-child button { width: 100% !important; padding: 6px 8px !important; font-size: .68rem !important; border-radius: 7px !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
