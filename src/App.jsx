@@ -620,15 +620,10 @@ const G = () => (
     }
 
     /* ════════════════════════════════════════════════════════════════
-       WIDE DESKTOP — ≥1280px
+       WIDE DESKTOP — ≥1600px: extra padding
     ════════════════════════════════════════════════════════════════ */
-    @media (min-width: 1280px) {
-      div[style*="maxWidth:1400"] {
-        max-width: 1200px !important;
-      }
-      div[style*="gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px)"] {
-        grid-template-columns: repeat(3,1fr) !important;
-      }
+    @media (min-width: 1600px) {
+      .featured-grid { grid-template-columns: repeat(3,1fr) !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2710,7 +2705,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ maxWidth:1100,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
+        <div className="hero-content" style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box" }}>
             {/* eyebrow pill */}
