@@ -826,7 +826,7 @@ const G = () => (
     .labs-sort-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 16px;
       flex-wrap: wrap;
     }
     .labs-search-input {
@@ -1740,8 +1740,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
               {/* divider */}
               <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {/* sort */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
-              <div style={{ display:"flex", gap:6 }}>
+              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600,marginRight:2 }}>Sort:</span>
+              <div style={{ display:"flex", gap:"8px" }}>
               {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setSortBy(v)}
                   style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
