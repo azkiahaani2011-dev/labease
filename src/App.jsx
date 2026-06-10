@@ -1535,57 +1535,8 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {/* left: illustration + text */}
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#ECEAF8", border:"1px solid #C7C4EE", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", boxShadow:"0 4px 16px rgba(99,88,196,.13)" }}>
-            <svg viewBox="0 0 110 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:"auto"}}>
-              {/* bg blob */}
-              <ellipse cx="55" cy="78" rx="46" ry="40" fill="#DDD8F5" opacity="0.45"/>
-
-              {/* ── HAND (front-facing, fingers gripping tube from below) ── */}
-              {/* Palm body */}
-              <path d="M33 72 Q30 60 31 50 Q32 40 42 37 L68 37 Q78 40 79 50 Q80 60 77 72 Q74 82 74 92 Q74 102 64 104 L46 104 Q36 102 36 92 Q36 82 33 72Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.5" strokeLinejoin="round"/>
-
-              {/* Thumb (left side) */}
-              <path d="M33 72 Q24 70 20 62 Q17 53 22 47 Q27 42 33 46 Q36 49 35 57 Q34 64 33 72Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
-              {/* thumb knuckle crease */}
-              <path d="M22 57 Q27 55 32 57" stroke="#C4BDE8" strokeWidth="1.1" strokeLinecap="round"/>
-
-              {/* Finger 1 (index) */}
-              <path d="M40 37 Q39 27 40 20 Q41 14 46 14 Q51 14 51 20 L51 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-              {/* Finger 2 (middle) */}
-              <path d="M51 37 Q51 26 52 18 Q53 12 57 12 Q61 12 62 18 Q63 26 63 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-              {/* Finger 3 (ring) */}
-              <path d="M63 37 Q63 27 64 20 Q65 14 69 14 Q73 14 74 20 Q75 28 74 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-              {/* Finger 4 (little) - shorter */}
-              <path d="M74 37 Q74 28 75 23 Q76 18 79 18 Q83 18 83 23 Q83 30 82 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
-
-              {/* Knuckle lines on palm */}
-              <path d="M42 43 Q57 41 72 43" stroke="#C4BDE8" strokeWidth="1" strokeLinecap="round"/>
-
-              {/* Glove cuff */}
-              <rect x="34" y="100" width="42" height="12" rx="5" fill="#D0CAF0" stroke="#1E293B" strokeWidth="1.3"/>
-              <line x1="34" y1="106" x2="76" y2="106" stroke="#B9B1E0" strokeWidth="0.9"/>
-
-              {/* ── TEST TUBE (held between thumb and fingers) ── */}
-              {/* Glass body */}
-              <rect x="48" y="8" width="14" height="60" rx="7" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-              {/* Glass highlight */}
-              <rect x="50" y="11" width="3.5" height="50" rx="1.5" fill="white" opacity="0.7"/>
-
-              {/* Blood fill */}
-              <clipPath id="tc3"><rect x="48" y="8" width="14" height="60" rx="7"/></clipPath>
-              <rect x="48" y="38" width="14" height="30" fill="#EF4444" clipPath="url(#tc3)"/>
-              <ellipse cx="55" cy="38" rx="7" ry="2.8" fill="#B91C1C" clipPath="url(#tc3)"/>
-              <circle cx="58" cy="50" r="2" fill="#FCA5A5" opacity="0.5" clipPath="url(#tc3)"/>
-
-              {/* Red cap */}
-              <rect x="47" y="5" width="16" height="9" rx="4.5" fill="#DC2626" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="50" y="6.5" width="10" height="3" rx="1.5" fill="#FCA5A5" opacity="0.4"/>
-
-              {/* floating dots */}
-              <circle cx="18" cy="35" r="3" fill="#A5B4FC" opacity="0.6"/>
-              <circle cx="92" cy="28" r="2.5" fill="#FCA5A5" opacity="0.65"/>
-              <circle cx="88" cy="100" r="2" fill="#A7F3D0" opacity="0.7"/>
-            </svg>
+          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#E8E5F5", border:"1px solid #C7C4EE", overflow:"hidden", boxShadow:"0 4px 16px rgba(99,88,196,.13)" }}>
+            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=300&h=300&fit=crop&crop=center&q=85" alt="Lab test" style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",mixBlendMode:"multiply" }}/>
           </div>
           {/* text */}
           <div>
@@ -2758,41 +2709,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* trust badges — compact MediBuddy-style */}
-            <div className="trust-badges" style={{ display:"flex",gap:20,marginTop:28,flexWrap:"wrap",alignItems:"center" }}>
-              {/* NABL Certified */}
-              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                <div style={{ width:36,height:36,borderRadius:10,background:"#ECFDF5",border:"1px solid #A7F3D0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" fill="#D1FAE5" stroke="#1E293B" strokeWidth="1.5"/>
-                    <polyline points="7.5,12 10.5,15 16.5,9" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <span style={{ fontSize:".82rem",fontWeight:700,color:"#064E3B" }}>NABL Certified</span>
-              </div>
-              <div style={{ width:1,height:20,background:"#E2E8F0" }}/>
-              {/* Free Home Collection */}
-              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                <div style={{ width:36,height:36,borderRadius:10,background:"#EFF6FF",border:"1px solid #BFDBFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5" strokeLinejoin="round"/>
-                    <rect x="9" y="13" width="6" height="8" rx="1" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
-                  </svg>
-                </div>
-                <span style={{ fontSize:".82rem",fontWeight:700,color:"#1E3A5F" }}>Free Home Collection</span>
-              </div>
-              <div style={{ width:1,height:20,background:"#E2E8F0" }}/>
-              {/* Reports in 6 hrs */}
-              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                <div style={{ width:36,height:36,borderRadius:10,background:"#FFF7ED",border:"1px solid #FED7AA",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" fill="#FFEDD5" stroke="#1E293B" strokeWidth="1.5"/>
-                    <polyline points="12,7.5 12,12 14.5,14" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <span style={{ fontSize:".82rem",fontWeight:700,color:"#7C2D12" }}>Reports in 6 hrs</span>
-              </div>
-            </div>
           </div>
 
           {/* ── RIGHT: hidden ── */}
