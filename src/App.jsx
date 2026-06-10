@@ -2738,7 +2738,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ ...T.wrap,position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40,maxWidth:720 }}>
+        <div className="hero-content" style={{ maxWidth:720,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580 }}>
             {/* eyebrow pill */}
