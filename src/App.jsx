@@ -2920,39 +2920,32 @@ export default function App() {
               { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title}
-                style={{ background:"#fff",borderRadius:16,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"row",boxShadow:"0 2px 12px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9",minHeight:120 }}
+                style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
                 onClick={()=>navTo("labs")}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 10px 32px rgba(0,0,0,.11)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.06)"; }}>
-                {/* Image — left side, fixed width */}
-                <div style={{ position:"relative",width:110,flexShrink:0,overflow:"hidden" }}>
-                  <img
-                    src={pkg.img}
-                    alt={pkg.title}
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
+                {/* Image */}
+                <div style={{ position:"relative",height:160,overflow:"hidden",flexShrink:0 }}>
+                  <img src={pkg.img} alt={pkg.title}
                     style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s ease" }}
                     onMouseEnter={e=>e.currentTarget.style.transform="scale(1.07)"}
                     onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
-                    onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}
-                  />
-                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,transparent 60%,rgba(0,0,0,.08))" }}/>
-                  <div style={{ position:"absolute",top:8,left:8,background:pkg.badgeColor,color:"#fff",borderRadius:6,padding:"2px 7px",fontSize:".56rem",fontWeight:800,letterSpacing:".02em",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>
-                    {pkg.badge}
-                  </div>
+                    onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background=`linear-gradient(135deg,${pkg.badgeColor}22,${pkg.badgeColor}08)`; }}/>
+                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%)" }}/>
+                  <div style={{ position:"absolute",top:12,left:12,background:pkg.badgeColor,color:"#fff",borderRadius:8,padding:"3px 10px",fontSize:".62rem",fontWeight:800 }}>{pkg.badge}</div>
+                  <div style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",borderRadius:8,padding:"3px 9px",fontSize:".62rem",fontWeight:800 }}>{pkg.off}% OFF</div>
+                  <div style={{ position:"absolute",bottom:12,left:12,right:12,fontWeight:800,fontSize:".95rem",color:"#fff",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)" }}>{pkg.title}</div>
                 </div>
-                {/* Content — right side */}
-                <div style={{ padding:"14px 16px",flex:1,display:"flex",flexDirection:"column",justifyContent:"space-between",gap:6,minWidth:0 }}>
-                  <div>
-                    <div style={{ fontWeight:800,fontSize:".92rem",color:"#0D1117",lineHeight:1.2,marginBottom:3 }}>{pkg.title}</div>
-                    <div style={{ fontSize:".71rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
-                  </div>
-                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:6 }}>
+                {/* Content */}
+                <div style={{ padding:"14px 16px 16px",flex:1,display:"flex",flexDirection:"column",gap:8 }}>
+                  <div style={{ fontSize:".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:6,flexWrap:"wrap",gap:8 }}>
                     <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
-                      <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
-                      <span style={{ fontSize:".72rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
-                      <span style={{ fontSize:".62rem",fontWeight:800,color:"#16A34A" }}>{pkg.off}% off</span>
+                      <span style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontSize:".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"7px 14px",fontWeight:700,fontSize:".76rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",flexShrink:0 }}
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"8px 18px",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
                       Book Now
@@ -3227,16 +3220,14 @@ export default function App() {
               {Icon:IThyroid,   t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IDiabetes,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"20px 22px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",display:"flex",alignItems:"flex-start",gap:16 }}
+              <div key={w.t} style={{ background:"#fff",borderRadius:16,padding:"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                <div style={{ width:52,height:52,borderRadius:14,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <w.Icon s={30}/>
+                <div style={{ width:60,height:60,borderRadius:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px" }}>
+                  <w.Icon s={36}/>
                 </div>
-                <div>
-                  <div style={{ fontWeight:800,color:"#0D1117",marginBottom:5,fontSize:".92rem" }}>{w.t}</div>
-                  <div style={{ color:"#6B7280",fontSize:".82rem",lineHeight:1.6 }}>{w.d}</div>
-                </div>
+                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:6,fontSize:".88rem" }}>{w.t}</div>
+                <div style={{ color:"#9CA3AF",fontSize:".79rem",lineHeight:1.65 }}>{w.d}</div>
               </div>
             ))}
           </div>
