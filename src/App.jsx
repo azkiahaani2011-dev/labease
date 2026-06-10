@@ -736,26 +736,31 @@ const G = () => (
     @media (max-width: 767px) {
       .hero-section { min-height: 0 !important; }
       .hero-content {
-        padding-top: 36px !important;
-        padding-bottom: 32px !important;
-        gap: 20px !important;
+        padding-top: 32px !important;
+        padding-bottom: 28px !important;
+        gap: 16px !important;
       }
-      .hero-content h1 { font-size: 1.55rem !important; margin-bottom: 10px !important; line-height: 1.2 !important; }
-      .hero-content p  { font-size: .84rem !important; margin-bottom: 20px !important; line-height: 1.6 !important; }
-      .hero-content > div > div:first-child { margin-bottom: 16px !important; } /* eyebrow pill */
-      .trust-badges { gap: 12px !important; margin-top: 18px !important; }
-      .trust-badges > div > span { font-size: .75rem !important; }
+      .hero-content h1 { font-size: 1.5rem !important; margin-bottom: 8px !important; line-height: 1.2 !important; }
+      .hero-content p  { font-size: .82rem !important; margin-bottom: 16px !important; line-height: 1.55 !important; }
+      .trust-badges { gap: 10px !important; margin-top: 14px !important; }
+      .trust-badges > div:nth-child(2) { display: none !important; } /* hide dividers */
+      .trust-badges > div:nth-child(4) { display: none !important; }
+      /* search bar compact */
+      .hero-search-bar { border-radius: 14px !important; }
+      .hero-search-input-field { padding: 11px 6px 11px 0 !important; font-size: .85rem !important; }
+      .hero-search-icon { margin: 0 12px !important; }
+      .hero-search-btn { padding: 9px 16px !important; font-size: .78rem !important; margin: 5px !important; border-radius: 10px !important; }
     }
     @media (max-width: 430px) {
-      .hero-content {
-        padding-top: 28px !important;
-        padding-bottom: 24px !important;
-      }
-      .hero-content h1 { font-size: 1.35rem !important; }
-      /* hide eyebrow pill on very small screens */
+      .hero-content { padding-top: 24px !important; padding-bottom: 20px !important; }
+      .hero-content h1 { font-size: 1.3rem !important; }
+      /* hide eyebrow pill */
       .hero-content > div > div:first-child { display: none !important; }
-      /* quick chips — wrap tighter */
-      .hero-content > div > div:nth-child(5) { gap: 6px !important; margin-top: 12px !important; }
+      /* hide sub-description to save space */
+      .hero-content > div > p { display: none !important; }
+      /* quick chips tighter */
+      .hero-content > div > div:nth-child(5) { gap: 5px !important; margin-top: 10px !important; }
+      .trust-badges { margin-top: 10px !important; }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -1531,48 +1536,55 @@ const LabsNearMeSection = ({ T, navTo }) => (
         <div style={{ display:"flex", alignItems:"center", gap:24 }}>
           {/* Premium hand + test tube illustration */}
           <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#ECEAF8", border:"1px solid #C7C4EE", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", boxShadow:"0 4px 16px rgba(99,88,196,.13)" }}>
-            <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:78,height:"auto"}}>
-              {/* Background soft circle */}
-              <ellipse cx="52" cy="70" rx="42" ry="38" fill="#DDD8F5" opacity="0.5"/>
+            <svg viewBox="0 0 110 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:"auto"}}>
+              {/* bg blob */}
+              <ellipse cx="55" cy="78" rx="46" ry="40" fill="#DDD8F5" opacity="0.45"/>
 
-              {/* ── GLOVE ── */}
-              {/* Thumb */}
-              <path d="M29 85 Q20 80 18 68 Q16 55 24 50 Q30 46 34 52 L36 65 L33 87Z" fill="#F0EEF8" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
-              <path d="M21 64 Q26 61 31 64" stroke="#C4BDE8" strokeWidth="1" strokeLinecap="round"/>
+              {/* ── HAND (front-facing, fingers gripping tube from below) ── */}
+              {/* Palm body */}
+              <path d="M33 72 Q30 60 31 50 Q32 40 42 37 L68 37 Q78 40 79 50 Q80 60 77 72 Q74 82 74 92 Q74 102 64 104 L46 104 Q36 102 36 92 Q36 82 33 72Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.5" strokeLinejoin="round"/>
 
-              {/* Palm + 4 fingers */}
-              <path d="M34 52 L36 65 L38 100 Q38 107 46 108 L62 108 Q69 108 70 101 L73 65 L75 52 Q70 41 62 40 L46 40 Q38 40 34 52Z" fill="#F0EEF8" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
+              {/* Thumb (left side) */}
+              <path d="M33 72 Q24 70 20 62 Q17 53 22 47 Q27 42 33 46 Q36 49 35 57 Q34 64 33 72Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.4" strokeLinejoin="round"/>
+              {/* thumb knuckle crease */}
+              <path d="M22 57 Q27 55 32 57" stroke="#C4BDE8" strokeWidth="1.1" strokeLinecap="round"/>
 
-              {/* Finger seam lines */}
-              <line x1="46" y1="65" x2="45" y2="107" stroke="#C4BDE8" strokeWidth="0.9"/>
-              <line x1="54" y1="64" x2="54" y2="108" stroke="#C4BDE8" strokeWidth="0.9"/>
-              <line x1="62" y1="65" x2="63" y2="107" stroke="#C4BDE8" strokeWidth="0.9"/>
+              {/* Finger 1 (index) */}
+              <path d="M40 37 Q39 27 40 20 Q41 14 46 14 Q51 14 51 20 L51 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
+              {/* Finger 2 (middle) */}
+              <path d="M51 37 Q51 26 52 18 Q53 12 57 12 Q61 12 62 18 Q63 26 63 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
+              {/* Finger 3 (ring) */}
+              <path d="M63 37 Q63 27 64 20 Q65 14 69 14 Q73 14 74 20 Q75 28 74 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
+              {/* Finger 4 (little) - shorter */}
+              <path d="M74 37 Q74 28 75 23 Q76 18 79 18 Q83 18 83 23 Q83 30 82 37Z" fill="#F5F3FF" stroke="#1E293B" strokeWidth="1.3" strokeLinejoin="round"/>
 
-              {/* Cuff band */}
-              <rect x="36" y="99" width="37" height="11" rx="5" fill="#D0CAF0" stroke="#1E293B" strokeWidth="1.2"/>
-              <line x1="36" y1="104" x2="73" y2="104" stroke="#B9B1E0" strokeWidth="0.8"/>
+              {/* Knuckle lines on palm */}
+              <path d="M42 43 Q57 41 72 43" stroke="#C4BDE8" strokeWidth="1" strokeLinecap="round"/>
 
-              {/* ── TEST TUBE ── */}
+              {/* Glove cuff */}
+              <rect x="34" y="100" width="42" height="12" rx="5" fill="#D0CAF0" stroke="#1E293B" strokeWidth="1.3"/>
+              <line x1="34" y1="106" x2="76" y2="106" stroke="#B9B1E0" strokeWidth="0.9"/>
+
+              {/* ── TEST TUBE (held between thumb and fingers) ── */}
               {/* Glass body */}
-              <rect x="46" y="6" width="16" height="56" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-              {/* Highlight on glass */}
-              <rect x="48.5" y="9" width="4" height="46" rx="2" fill="white" opacity="0.65"/>
+              <rect x="48" y="8" width="14" height="60" rx="7" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+              {/* Glass highlight */}
+              <rect x="50" y="11" width="3.5" height="50" rx="1.5" fill="white" opacity="0.7"/>
 
-              {/* Blood liquid */}
-              <clipPath id="tc2"><rect x="46" y="6" width="16" height="56" rx="8"/></clipPath>
-              <rect x="46" y="36" width="16" height="26" fill="#EF4444" clipPath="url(#tc2)"/>
-              <ellipse cx="54" cy="36" rx="8" ry="3" fill="#DC2626" clipPath="url(#tc2)"/>
-              {/* Bubble */}
-              <circle cx="57" cy="47" r="2.5" fill="#FCA5A5" opacity="0.55" clipPath="url(#tc2)"/>
+              {/* Blood fill */}
+              <clipPath id="tc3"><rect x="48" y="8" width="14" height="60" rx="7"/></clipPath>
+              <rect x="48" y="38" width="14" height="30" fill="#EF4444" clipPath="url(#tc3)"/>
+              <ellipse cx="55" cy="38" rx="7" ry="2.8" fill="#B91C1C" clipPath="url(#tc3)"/>
+              <circle cx="58" cy="50" r="2" fill="#FCA5A5" opacity="0.5" clipPath="url(#tc3)"/>
 
-              {/* Cap */}
-              <rect x="45" y="3" width="18" height="9" rx="4.5" fill="#7C3AED" stroke="#1E293B" strokeWidth="1.3"/>
-              <rect x="48" y="5" width="12" height="3.5" rx="1.5" fill="#A78BFA" opacity="0.5"/>
+              {/* Red cap */}
+              <rect x="47" y="5" width="16" height="9" rx="4.5" fill="#DC2626" stroke="#1E293B" strokeWidth="1.3"/>
+              <rect x="50" y="6.5" width="10" height="3" rx="1.5" fill="#FCA5A5" opacity="0.4"/>
 
-              {/* Decorative dots */}
-              <circle cx="18" cy="42" r="3.5" fill="#A5B4FC" opacity="0.65"/>
-              <circle cx="84" cy="32" r="2.5" fill="#FCA5A5" opacity="0.7"/>
-              <circle cx="82" cy="95" r="2" fill="#A7F3D0" opacity="0.75"/>
+              {/* floating dots */}
+              <circle cx="18" cy="35" r="3" fill="#A5B4FC" opacity="0.6"/>
+              <circle cx="92" cy="28" r="2.5" fill="#FCA5A5" opacity="0.65"/>
+              <circle cx="88" cy="100" r="2" fill="#A7F3D0" opacity="0.7"/>
             </svg>
           </div>
           {/* text */}
@@ -2085,8 +2097,8 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%" }}>
       {/* Search bar */}
-      <div style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.13)",overflow:"hidden",border:"none",background:"#fff" }}>
-        <svg style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.13)",overflow:"hidden" }}>
+        <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
         </svg>
@@ -2096,6 +2108,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           onFocus={()=>setOpen(true)}
           onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
           placeholder="Search tests, packages or labs…"
+          className="hero-search-input-field"
           style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
           autoComplete="off"
         />
@@ -2105,7 +2118,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
             ✕
           </button>
         )}
-        <button onClick={()=>go(q)} className="btn-anim"
+        <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
           style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
