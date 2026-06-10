@@ -530,19 +530,6 @@ const G = () => (
         .hero-img-col { display: none !important; }
       }
 
-      /* ── Featured Health Checkups: 3-col → 2-col → 1-col ── */
-      .pkg-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      @media (max-width: 900px) {
-        .pkg-grid { grid-template-columns: repeat(2, 1fr); }
-      }
-      @media (max-width: 540px) {
-        .pkg-grid { grid-template-columns: 1fr; }
-      }
-
       /* Compress all T.wrap padding to 16px on mobile */
       @media (max-width: 767px) {
         div[style*="maxWidth:1140"] {
@@ -2920,7 +2907,7 @@ export default function App() {
           </div>
 
           {/* 6-card grid */}
-          <div className="pkg-grid">
+          <div className="featured-grid">
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
