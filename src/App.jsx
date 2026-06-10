@@ -1354,112 +1354,65 @@ const LabsNearMeSection = ({ T, navTo }) => (
         </button>
       </div>
 
-      {/* MediBuddy-style flat illustration */}
-      <div style={{ borderRadius:20, background:"linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%)", padding:"32px 48px", display:"flex", alignItems:"center", justifyContent:"center", minHeight:280, boxShadow:"0 8px 32px rgba(17,88,166,.10)" }}>
-        <svg viewBox="0 0 780 260" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",maxWidth:780,height:"auto"}}>
-          {/* background blobs */}
-          <ellipse cx="390" cy="130" rx="360" ry="120" fill="#DBEAFE" opacity="0.35"/>
-          <ellipse cx="120" cy="200" rx="80" ry="50" fill="#BFDBFE" opacity="0.4"/>
-          <ellipse cx="660" cy="180" rx="90" ry="55" fill="#BAE6FD" opacity="0.35"/>
-
-          {/* --- BUILDING / LAB EXTERIOR left --- */}
-          <rect x="20" y="60" width="160" height="180" rx="6" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-          <rect x="20" y="60" width="160" height="36" rx="6" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.5"/>
-          <rect x="20" y="88" width="160" height="8" fill="#BFDBFE"/>
-          {/* windows */}
-          <rect x="36" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          <rect x="84" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          <rect x="132" y="112" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          <rect x="36" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          <rect x="84" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          <rect x="132" y="154" width="36" height="30" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1.2"/>
-          {/* door */}
-          <rect x="80" y="200" width="40" height="40" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/>
-          <circle cx="116" cy="221" r="3" fill="#1158A6"/>
-          {/* sign */}
-          <rect x="48" y="70" width="84" height="14" rx="3" fill="white" stroke="#1E293B" strokeWidth="1"/>
-          <line x1="54" y1="77" x2="126" y2="77" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round"/>
-
-          {/* --- MICROSCOPE centre-left --- */}
-          <g transform="translate(215,40)">
-            <rect x="20" y="140" width="70" height="10" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.4"/>
-            <rect x="40" y="110" width="30" height="35" rx="3" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.4"/>
-            <rect x="47" y="70" width="16" height="44" rx="2" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
-            <ellipse cx="55" cy="70" rx="14" ry="8" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
-            <rect x="51" y="48" width="8" height="24" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.2"/>
-            <circle cx="55" cy="46" r="8" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.4"/>
-            <circle cx="55" cy="46" r="4" fill="#93C5FD"/>
-            <rect x="36" y="128" width="10" height="16" rx="2" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1"/>
-            <path d="M46 120 Q32 100 30 128" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
-          </g>
-
-          {/* --- TEST TUBES rack centre --- */}
-          <g transform="translate(340,60)">
-            <rect x="0" y="110" width="100" height="10" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2"/>
-            <rect x="0" y="60" width="100" height="8" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2"/>
-            {[
-              {x:12, fill:"#FCA5A5", liquid:"#EF4444"},
-              {x:30, fill:"#A7F3D0", liquid:"#10B981"},
-              {x:48, fill:"#FDE68A", liquid:"#F59E0B"},
-              {x:66, fill:"#BAE6FD", liquid:"#0EA5E9"},
-              {x:84, fill:"#DDD6FE", liquid:"#8B5CF6"},
-            ].map((t,i)=>(
-              <g key={i}>
-                <rect x={t.x} y="62" width="16" height="60" rx="8" fill={t.fill} stroke="#1E293B" strokeWidth="1.2"/>
-                <rect x={t.x+1} y={100} width="14" height="22" rx="0 0 7 7" fill={t.liquid} opacity="0.7"/>
-              </g>
-            ))}
-          </g>
-
-          {/* --- CENTRIFUGE right-centre --- */}
-          <g transform="translate(475,70)">
-            <rect x="0" y="90" width="100" height="70" rx="8" fill="#F0F9FF" stroke="#1E293B" strokeWidth="1.4"/>
-            <ellipse cx="50" cy="90" rx="45" ry="18" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.4"/>
-            <ellipse cx="50" cy="90" rx="30" ry="12" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
-            <ellipse cx="50" cy="90" rx="12" ry="5" fill="#0EA5E9" stroke="#1E293B" strokeWidth="1"/>
-            {[0,60,120,180,240,300].map((deg,i)=>(
-              <line key={i} x1="50" y1="90"
-                x2={50+26*Math.cos(deg*Math.PI/180)}
-                y2={90+10*Math.sin(deg*Math.PI/180)}
-                stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round"/>
-            ))}
-            <rect x="20" y="116" width="16" height="10" rx="3" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-            <rect x="44" y="120" width="24" height="6" rx="3" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1"/>
-            <circle cx="78" cy="120" r="5" fill="#38BDF8" stroke="#1E293B" strokeWidth="1"/>
-          </g>
-
-          {/* --- REPORT clipboard far right --- */}
-          <g transform="translate(600,50)">
-            <rect x="0" y="10" width="110" height="150" rx="6" fill="white" stroke="#1E293B" strokeWidth="1.4"/>
-            <rect x="30" y="4" width="50" height="14" rx="5" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/>
-            <rect x="10" y="34" width="90" height="6" rx="3" fill="#DBEAFE"/>
-            <rect x="10" y="46" width="70" height="5" rx="2.5" fill="#E2E8F0"/>
-            <rect x="10" y="57" width="80" height="5" rx="2.5" fill="#E2E8F0"/>
-            {/* bar chart */}
-            <rect x="12" y="90" width="14" height="40" rx="2" fill="#93C5FD"/>
-            <rect x="30" y="102" width="14" height="28" rx="2" fill="#BFDBFE"/>
-            <rect x="48" y="82" width="14" height="48" rx="2" fill="#60A5FA"/>
-            <rect x="66" y="96" width="14" height="34" rx="2" fill="#BFDBFE"/>
-            <rect x="84" y="74" width="14" height="56" rx="2" fill="#3B82F6"/>
-            {/* green tick */}
-            <rect x="10" y="140" width="90" height="12" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
-            <path d="M18 146 L22 150 L30 143" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <line x1="36" y1="146" x2="90" y2="146" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round"/>
-          </g>
-
-          {/* NABL badge */}
-          <rect x="28" y="28" width="60" height="22" rx="11" fill="#DCFCE7" stroke="#6EE7B7" strokeWidth="1"/>
-          <text x="58" y="43" textAnchor="middle" fontSize="9" fontWeight="700" fill="#059669" fontFamily="Manrope,sans-serif">✓ NABL</text>
-
-          {/* bottom floor line */}
-          <line x1="10" y1="242" x2="770" y2="242" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="6 4"/>
-
-          {/* floating dots decoration */}
-          <circle cx="195" cy="38" r="6" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
-          <circle cx="590" cy="30" r="5" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
-          <circle cx="750" cy="80" r="8" fill="#FDE68A" stroke="#1E293B" strokeWidth="1" opacity="0.6"/>
-          <circle cx="160" cy="26" r="4" fill="#DDD6FE" opacity="0.8"/>
-        </svg>
+      {/* 2-col: text left + microscope illustration right */}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:40, alignItems:"center", background:"#EFF6FF", borderRadius:20, padding:"36px 48px", border:"1px solid #BFDBFE" }}>
+        {/* left: feature pills */}
+        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+          {[
+            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"NABL-accredited labs only", color:"#EFF6FF", border:"#BFDBFE", text:"#1158A6" },
+            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Free home sample collection", color:"#F0FDF4", border:"#BBF7D0", text:"#059669" },
+            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Reports in as little as 6 hours", color:"#FFF7ED", border:"#FED7AA", text:"#EA580C" },
+            { icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>, label:"Transparent pricing, no hidden fees", color:"#F5F3FF", border:"#DDD6FE", text:"#7C3AED" },
+          ].map(f=>(
+            <div key={f.label} style={{ display:"flex", alignItems:"center", gap:12, background:f.color, border:`1px solid ${f.border}`, borderRadius:12, padding:"12px 18px" }}>
+              <div style={{ flexShrink:0 }}>{f.icon}</div>
+              <span style={{ fontWeight:700, fontSize:".86rem", color:f.text }}>{f.label}</span>
+            </div>
+          ))}
+        </div>
+        {/* right: microscope illustration */}
+        <div style={{ flexShrink:0 }}>
+          <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:180,height:"auto"}}>
+            {/* base blob */}
+            <ellipse cx="100" cy="210" rx="80" ry="22" fill="#BFDBFE" opacity="0.5"/>
+            {/* base platform */}
+            <rect x="30" y="196" width="140" height="14" rx="7" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.5"/>
+            {/* arm support column */}
+            <rect x="88" y="140" width="24" height="60" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
+            {/* horizontal stage */}
+            <rect x="55" y="148" width="90" height="12" rx="4" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
+            {/* coarse focus knob */}
+            <ellipse cx="145" cy="168" rx="10" ry="14" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.4"/>
+            <ellipse cx="145" cy="168" rx="6" ry="9" fill="#BFDBFE"/>
+            {/* fine focus knob */}
+            <ellipse cx="145" cy="148" rx="8" ry="10" fill="#EFF6FF" stroke="#1E293B" strokeWidth="1.2"/>
+            {/* arm going up */}
+            <path d="M100 140 Q100 110 100 80" stroke="#93C5FD" strokeWidth="18" strokeLinecap="round"/>
+            <path d="M100 140 Q100 110 100 80" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+            {/* rotating nosepiece */}
+            <circle cx="100" cy="80" r="14" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
+            <circle cx="100" cy="80" r="7" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
+            {/* objective lens tube */}
+            <rect x="94" y="90" width="12" height="32" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
+            <ellipse cx="100" cy="122" rx="8" ry="5" fill="#60A5FA" stroke="#1E293B" strokeWidth="1.3"/>
+            {/* eyepiece tube going up-left */}
+            <path d="M100 80 Q90 56 78 44" stroke="#DBEAFE" strokeWidth="16" strokeLinecap="round"/>
+            <path d="M100 80 Q90 56 78 44" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+            {/* eyepiece top */}
+            <rect x="66" y="32" width="24" height="16" rx="5" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
+            <ellipse cx="78" cy="32" rx="10" ry="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1.3"/>
+            {/* slide on stage */}
+            <rect x="62" y="142" width="56" height="8" rx="2" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+            <rect x="70" y="144" width="28" height="4" rx="1" fill="#FEF3C7"/>
+            {/* light beam from below */}
+            <path d="M100 196 L90 170 L110 170 Z" fill="#FEF9C3" opacity="0.7"/>
+            {/* decorative dots */}
+            <circle cx="38" cy="60" r="6" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+            <circle cx="162" cy="50" r="5" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+            <circle cx="168" cy="100" r="4" fill="#FDE68A" opacity="0.8"/>
+            <circle cx="32" cy="120" r="4" fill="#DDD6FE" opacity="0.8"/>
+          </svg>
+        </div>
       </div>
 
     </div>
@@ -2961,28 +2914,103 @@ export default function App() {
               {
                 n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
                 desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
-                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="4" y="6" width="26" height="32" rx="5" fill="#DBEAFE" stroke="#1158A6" strokeWidth="1.6"/><line x1="10" y1="15" x2="24" y2="15" stroke="#1158A6" strokeWidth="1.6" strokeLinecap="round"/><line x1="10" y1="20" x2="24" y2="20" stroke="#93C5FD" strokeWidth="1.4" strokeLinecap="round"/><line x1="10" y1="25" x2="18" y2="25" stroke="#BFDBFE" strokeWidth="1.4" strokeLinecap="round"/><circle cx="34" cy="34" r="9" fill="white" stroke="#1158A6" strokeWidth="1.6"/><circle cx="32" cy="32" r="4" fill="none" stroke="#1158A6" strokeWidth="1.5"/><line x1="35" y1="35" x2="39" y2="39" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"/></svg>
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BFDBFE" opacity="0.5"/>
+                    <rect x="18" y="18" width="64" height="80" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="18" y="18" width="64" height="20" rx="8" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="18" y="30" width="64" height="8" fill="#DBEAFE"/>
+                    <rect x="28" y="50" width="44" height="5" rx="2" fill="#BFDBFE"/>
+                    <rect x="28" y="61" width="36" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="28" y="71" width="40" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="28" y="81" width="28" height="4" rx="2" fill="#E2E8F0"/>
+                    <circle cx="86" cy="96" r="22" fill="white" stroke="#1158A6" strokeWidth="2"/>
+                    <circle cx="83" cy="93" r="11" fill="#DBEAFE" stroke="#1158A6" strokeWidth="1.6"/>
+                    <line x1="91" y1="101" x2="103" y2="113" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"/>
+                    <circle cx="83" cy="93" r="5" fill="#93C5FD"/>
+                  </svg>
+                )
               },
               {
                 n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
-                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="4" y="8" width="28" height="28" rx="5" fill="#E0F2FE" stroke="#0EA5E9" strokeWidth="1.6"/><rect x="4" y="8" width="28" height="9" rx="5" fill="#BAE6FD" stroke="#0EA5E9" strokeWidth="1.6"/><rect x="4" y="14" width="28" height="3" fill="#BAE6FD"/><line x1="12" y1="5" x2="12" y2="12" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/><line x1="24" y1="5" x2="24" y2="12" stroke="#0EA5E9" strokeWidth="1.6" strokeLinecap="round"/><circle cx="34" cy="34" r="9" fill="white" stroke="#0EA5E9" strokeWidth="1.6"/><line x1="34" y1="29" x2="34" y2="34" stroke="#0EA5E9" strokeWidth="1.8" strokeLinecap="round"/><line x1="34" y1="34" x2="38" y2="36" stroke="#0EA5E9" strokeWidth="1.8" strokeLinecap="round"/><circle cx="34" cy="34" r="2" fill="#0EA5E9"/></svg>
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BAE6FD" opacity="0.5"/>
+                    <rect x="14" y="22" width="80" height="80" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="14" y="22" width="80" height="26" rx="10" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="14" y="40" width="80" height="8" fill="#BAE6FD"/>
+                    <line x1="36" y1="14" x2="36" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="84" y1="14" x2="84" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
+                    {[0,1,2].map(col=>[0,1,2].map(row=>(
+                      <rect key={col*3+row} x={28+col*24} y={60+row*16} width="14" height="10" rx="3"
+                        fill={col===1&&row===0?"#0EA5E9":col===2&&row===1?"#BAE6FD":"#E0F2FE"} stroke="#BAE6FD" strokeWidth="1"/>
+                    )))}
+                    <circle cx="94" cy="26" r="7" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
+                    <line x1="94" y1="22" x2="94" y2="26" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="94" y1="26" x2="97" y2="28" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                )
               },
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
                 desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="13" r="7" fill="#EDE9FE" stroke="#8B5CF6" strokeWidth="1.6"/><path d="M10 38 Q10 27 22 27 Q34 27 34 38" fill="#EDE9FE" stroke="#8B5CF6" strokeWidth="1.6" strokeLinecap="round"/><rect x="29" y="20" width="13" height="16" rx="3" fill="#F5F3FF" stroke="#8B5CF6" strokeWidth="1.4"/><rect x="32" y="24" width="7" height="2" rx="1" fill="#C4B5FD"/><rect x="32" y="28" width="7" height="2" rx="1" fill="#DDD6FE"/><rect x="32" y="32" width="4" height="2" rx="1" fill="#DDD6FE"/><rect x="6" y="10" width="4" height="14" rx="2" fill="none" stroke="#8B5CF6" strokeWidth="1.4"/><path d="M6 20 Q6 26 8 27 Q10 26 10 20 Z" fill="#C4B5FD" opacity="0.7"/><line x1="4" y1="10" x2="12" y2="10" stroke="#8B5CF6" strokeWidth="1.6" strokeLinecap="round"/></svg>
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#DDD6FE" opacity="0.5"/>
+                    <circle cx="60" cy="34" r="20" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5"/>
+                    <path d="M28 105 Q28 78 60 78 Q92 78 92 105" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M34 82 L26 98 H94 L86 82" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="18" y="94" width="84" height="14" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="26" y="97" width="20" height="8" rx="2" fill="#EDE9FE"/>
+                    <rect x="50" y="97" width="20" height="8" rx="2" fill="#DDD6FE"/>
+                    <rect x="74" y="97" width="14" height="8" rx="2" fill="#C4B5FD"/>
+                    <rect x="76" y="56" width="10" height="30" rx="5" fill="#F5F3FF" stroke="#8B5CF6" strokeWidth="1.4"/>
+                    <path d="M76 78 Q76 88 81 90 Q86 88 86 78 Z" fill="#C4B5FD" opacity="0.8"/>
+                    <line x1="72" y1="56" x2="90" y2="56" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round"/>
+                    <ellipse cx="46" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                    <ellipse cx="74" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                    <circle cx="47" cy="29" r="3.5" fill="#1E293B"/>
+                    <circle cx="75" cy="29" r="3.5" fill="#1E293B"/>
+                    <circle cx="48" cy="27.5" r="1.2" fill="white"/>
+                    <circle cx="76" cy="27.5" r="1.2" fill="white"/>
+                    <path d="M52 44 Q60 50 68 44" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                    <path d="M38 44 Q38 54 60 54 Q82 54 82 44 Q60 38 38 44Z" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
+                  </svg>
+                )
               },
               {
                 n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                icon:<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><rect x="10" y="4" width="24" height="36" rx="5" fill="#DCFCE7" stroke="#16A34A" strokeWidth="1.6"/><rect x="15" y="4" width="14" height="6" rx="2" fill="#BBF7D0" stroke="#16A34A" strokeWidth="1.2"/><line x1="15" y1="17" x2="29" y2="17" stroke="#4ADE80" strokeWidth="1.5" strokeLinecap="round"/><line x1="15" y1="21" x2="25" y2="21" stroke="#BBF7D0" strokeWidth="1.4" strokeLinecap="round"/><rect x="15" y="27" width="4" height="9" rx="1.5" fill="#4ADE80"/><rect x="21" y="30" width="4" height="6" rx="1.5" fill="#86EFAC"/><rect x="27" y="25" width="4" height="11" rx="1.5" fill="#22C55E"/><circle cx="36" cy="36" r="7" fill="#16A34A"/><polyline points="33,36 35.5,38.5 40,33" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+                icon:(
+                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
+                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BBF7D0" opacity="0.5"/>
+                    <rect x="22" y="10" width="66" height="90" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                    <rect x="40" y="6" width="30" height="12" rx="5" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1.2"/>
+                    <rect x="32" y="28" width="46" height="5" rx="2" fill="#DCFCE7"/>
+                    <rect x="32" y="38" width="36" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="32" y="48" width="42" height="4" rx="2" fill="#E2E8F0"/>
+                    <rect x="32" y="62" width="8" height="24" rx="2" fill="#4ADE80"/>
+                    <rect x="44" y="70" width="8" height="16" rx="2" fill="#86EFAC"/>
+                    <rect x="56" y="56" width="8" height="30" rx="2" fill="#22C55E"/>
+                    <rect x="68" y="66" width="8" height="20" rx="2" fill="#BBF7D0"/>
+                    <rect x="22" y="90" width="66" height="10" rx="0 0 8 8" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1"/>
+                    <path d="M34 95 L38 99 L46 92" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <line x1="52" y1="95" x2="78" y2="95" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
+                    <rect x="62" y="96" width="48" height="28" rx="7" fill="#16A34A" stroke="#1E293B" strokeWidth="1"/>
+                    <circle cx="74" cy="108" r="5" fill="#BBF7D0"/>
+                    <path d="M72 108 L74 110 L78 105" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <line x1="84" y1="104" x2="102" y2="104" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="84" y1="110" x2="98" y2="110" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round"/>
+                    <polygon points="70,124 78,124 74,132" fill="#16A34A" stroke="#1E293B" strokeWidth="0.5"/>
+                  </svg>
+                )
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
-                <div style={{ width:108,height:108,borderRadius:"50%",background:s.bg,border:`1.5px solid ${s.accent}25`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}18`,transition:"transform .2s,box-shadow .2s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}30`; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}18`; }}>
+                <div style={{ width:130,height:130,borderRadius:24,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
                   {s.icon}
                 </div>
                 <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase" }}>Step {s.n}</div>
