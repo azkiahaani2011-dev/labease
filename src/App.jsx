@@ -542,10 +542,12 @@ const G = () => (
         }
       }
 
-      /* Compress all T.wrap padding to 16px */
-      div[style*="maxWidth:1140"] {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+      /* Compress all T.wrap padding to 16px on mobile */
+      @media (max-width: 767px) {
+        div[style*="maxWidth:1140"] {
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
       }
 
       /* Hero text */
@@ -2630,7 +2632,7 @@ export default function App() {
     btn:(bg="var(--teal)",fg="#fff")=>({ background:bg,color:fg,border:"none",borderRadius:10,padding:"12px 26px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",display:"inline-flex",alignItems:"center",gap:8 }),
     out:{ background:"transparent",color:"var(--teal)",border:"1.5px solid var(--teal)",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" },
     inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block" },
-    wrap:{ maxWidth:1140,margin:"0 auto",padding:"0 16px" },
+    wrap:{ maxWidth:1140,margin:"0 auto",padding:"0 24px" },
     card:{ background:"#fff",borderRadius:18,boxShadow:"var(--card-shadow)" },
     serif:{ fontFamily:"'DM Serif Display',serif" },
   };
