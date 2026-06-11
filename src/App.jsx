@@ -2136,7 +2136,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
 
   return (
-    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto" }}>
+    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
       {/* Search bar */}
       <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 24px rgba(17,88,166,.13)",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -2793,9 +2793,9 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?32:72,paddingBottom:isMobile?28:72,paddingLeft:isMobile?20:24,paddingRight:isMobile?20:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40,overflowX:"hidden" }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?12:24,paddingRight:isMobile?12:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40,overflowX:"hidden" }}>
           {/* ── LEFT: text content ── */}
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",overflowX:"hidden" }}>
+          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",overflowX:"hidden",paddingLeft:0,paddingRight:0 }}>
             {/* eyebrow pill */}
             <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
