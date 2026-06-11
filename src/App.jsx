@@ -2795,7 +2795,15 @@ export default function App() {
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",alignItems:"center",gap:isMobile?16:40 }}>
           {/* ── LEFT: text content ── */}
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+          <div style={{ width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:isMobile?"left":"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0,position:"relative" }}>
+            {/* mobile person image — top right corner */}
+            {isMobile && (
+              <img
+                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&fit=crop&crop=top"
+                alt="Doctor"
+                style={{ position:"absolute", top:-28, right:0, width:130, height:170, objectFit:"cover", objectPosition:"top center", borderRadius:"50% 50% 48% 48% / 40% 40% 60% 60%", zIndex:1, pointerEvents:"none" }}
+              />
+            )}
             {/* eyebrow pill */}
             <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
@@ -2831,7 +2839,7 @@ export default function App() {
 
           </div>
 
-          {/* ── RIGHT: hero image ── */}
+          {/* ── RIGHT: hero image (desktop only) ── */}
           {!isMobile && (
             <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", position:"relative" }}>
               <div style={{ position:"relative", width:340, height:400 }}>
