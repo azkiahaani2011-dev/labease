@@ -769,6 +769,10 @@ const G = () => (
       .featured-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
 
+    /* ── Navbar right icons: tighter gap on mobile ── */
+    @media (max-width: 768px) {
+      .nav-right { gap: 8px !important; }
+    }
     /* ── Cart button: full on desktop, icon-only on mobile ── */
     @media (max-width: 768px) {
       .cart-desktop { display: none !important; }
@@ -1529,11 +1533,11 @@ const LabsNearMeSection = ({ T, navTo }) => (
   <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
 
-      {/* heading row: microscope left + text + button right */}
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
+      {/* heading row */}
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:20, marginBottom:0 }}>
 
-        {/* left: illustration + text */}
-        <div style={{ display:"flex", alignItems:"center", gap:24 }}>
+        {/* illustration + text centered */}
+        <div style={{ display:"flex", alignItems:"center", gap:24, flexWrap:"wrap", justifyContent:"center" }}>
           {/* Premium hand + test tube illustration */}
           <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF4FB", border:"1px solid #C7DFF5", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(17,88,166,.1)" }}>
             <svg viewBox="0 0 110 115" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:88}}>
@@ -1596,9 +1600,9 @@ const LabsNearMeSection = ({ T, navTo }) => (
           </div>
         </div>
 
-        {/* right: button */}
+        {/* centered button */}
         <button onClick={()=>navTo("labs")}
-          style={{ flexShrink:0,background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
+          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
           onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.transform="translateY(-1px)"; }}
           onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.transform="translateY(0)"; }}>
           View All Labs
@@ -1733,10 +1737,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
               <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {/* search */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
-                <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#059669" strokeWidth="1.9"/><path d="M13.5 13.5L17 17" stroke="#059669" strokeWidth="1.9" strokeLinecap="round"/></svg>
-                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:36,paddingRight:16,paddingTop:10,paddingBottom:10,border:"1.5px solid #A7F3D0",borderRadius:50,fontSize:".84rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:220,background:"#ECFDF5",color:"#064E3B",boxShadow:"0 2px 8px rgba(5,150,105,.08)",transition:"border .18s,box-shadow .18s",fontWeight:600 }}
-                  onFocus={e=>{ e.target.style.border="1.5px solid #059669"; e.target.style.boxShadow="0 0 0 3px rgba(5,150,105,.13)"; setLabSugOpen(true); }}
-                  onBlur={e=>{ e.target.style.border="1.5px solid #A7F3D0"; e.target.style.boxShadow="0 2px 8px rgba(5,150,105,.08)"; }}/>
+                <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
+                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
+                  onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; setLabSugOpen(true); }}
+                  onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
                   <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
                     {labSuggestions.map((l,i)=>(
@@ -1881,11 +1885,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     <div style={{ ...T.wrap,padding:"26px 12px" }}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440 }}>
-        <svg style={{ position:"absolute",left:15,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="17" height="17" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#7C3AED" strokeWidth="1.9"/><path d="M13.5 13.5L17 17" stroke="#7C3AED" strokeWidth="1.9" strokeLinecap="round"/></svg>
-        <input style={{ ...T.inp,paddingLeft:44,background:"#FAF5FF",border:"1.5px solid #DDD6FE",borderRadius:14,fontSize:".9rem",fontWeight:600,color:"#3B1E6B",boxShadow:"0 2px 10px rgba(124,58,237,.07)",transition:"border .18s,box-shadow .18s" }}
+        <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
+        <input style={{ ...T.inp,paddingLeft:36,background:"#FAFAFA",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:".9rem",transition:"border .18s,box-shadow .18s" }}
           placeholder="Search tests…" value={testQ} onChange={e=>setTestQ(e.target.value)}
-          onFocus={e=>{ e.target.style.border="1.5px solid #7C3AED"; e.target.style.boxShadow="0 0 0 3px rgba(124,58,237,.13)"; }}
-          onBlur={e=>{ e.target.style.border="1.5px solid #DDD6FE"; e.target.style.boxShadow="0 2px 10px rgba(124,58,237,.07)"; }}/>
+          onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; }}
+          onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
       </div>
 
       {/* category chips */}
@@ -3756,10 +3760,10 @@ export default function App() {
           </div>
         </div>
         {/* Right: person icon + menu button */}
-        <div style={{ display:"flex",alignItems:"center",gap:18 }}>
+        <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
           {cart.length>0&&(isMobile
             ? <button onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
               </button>
             : <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
