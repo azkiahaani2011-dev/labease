@@ -1654,7 +1654,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
 }
   
 
-function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
+function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHome, setFilterHome] = useState(false);
@@ -1706,6 +1706,19 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
 
   return (
     <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
+
+      {/* ── SELECTED TEST BANNER ── */}
+      {selectedTest && (
+        <div style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",color:"#fff",padding:"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap" }}>
+          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            <span style={{ fontWeight:700,fontSize:".86rem" }}>Booking: <strong>{selectedTest.name}</strong> — select a lab and click Book Now</span>
+          </div>
+          <button onClick={()=>setSelectedTest(null)} style={{ background:"rgba(255,255,255,.18)",border:"none",color:"#fff",borderRadius:50,padding:"4px 14px",fontWeight:700,fontSize:".78rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
+            Clear ✕
+          </button>
+        </div>
+      )}
 
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
@@ -1767,7 +1780,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
             </div>
           )}
           {filtered.map(l => {
-            const minPrice = Math.min(...l.tests.map(t=>t.price));
+            const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
+            const displayPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
+            const minPrice = displayPrice;
             const initials = l.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
             return (
               <div key={l.id} className="hover-lift"
@@ -1807,21 +1822,34 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                       </div>
                       <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,flexShrink:0 }}>
                         <div style={{ textAlign:"right",whiteSpace:"nowrap" }}>
-                          <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>Tests starting from</div>
-                          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
+                          <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>{selectedTest ? selectedTest.name : "Tests starting from"}</div>
+                          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
                         </div>
-                        <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
-                          onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
-                          onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                          Book Now
-                        </button>
-                        <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                          style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
-                          onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
-                          onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                          View Tests & Prices
-                        </button>
+                        {selectedTest && matchTest ? (
+                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); navTo("booking"); }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
+                            onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
+                            onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
+                            Book Now →
+                          </button>
+                        ) : selectedTest ? (
+                          <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
+                        ) : (
+                          <>
+                            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
+                              onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
+                              onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
+                              Book Now
+                            </button>
+                            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                              style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
+                              onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
+                              onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
+                              View Tests & Prices
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                     <div style={{ display:"flex",gap:20,marginTop:14,paddingTop:12,borderTop:"1px solid #F1F5F9",flexWrap:"wrap" }}>
@@ -1978,7 +2006,7 @@ const POPULAR_CATS = [
   { cat:"Packages", label:"Full Body",    Icon:IPackage  },
 ];
 
-function PopularTestsCarousel({ setCatF, navTo }) {
+function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   const trackRef = React.useRef(null);
   const [canLeft,  setCanLeft]  = React.useState(false);
   const [canRight, setCanRight] = React.useState(true);
@@ -2023,7 +2051,7 @@ function PopularTestsCarousel({ setCatF, navTo }) {
             style={{ display:"flex", gap:8, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4, paddingTop:4 }}>
             {POPULAR_CATS.map(({ cat, label, Icon }) => (
               <div key={cat} className="pt-tile"
-                onClick={()=>{ setCatF(cat); navTo("labs"); }}
+                onClick={()=>{ setCatF(cat); setSelectedTest({name:label, cat}); navTo("labs"); }}
                 style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"18px 10px 16px", minWidth:110, maxWidth:130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="transparent"; }}>
@@ -2647,6 +2675,7 @@ export default function App() {
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
   const [sideMenu,    setSideMenu]   = useState(false);
+  const [selectedTest, setSelectedTest] = useState(null); // {name, cat} when user clicks a specific test
   const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
   useEffect(() => {
     const h = () => setIsMobile(window.innerWidth <= 768);
@@ -2673,7 +2702,7 @@ export default function App() {
   };
   const delCart = tid => setCart(c=>c.filter(x=>x.tid!==tid));
   const has     = tid => !!cart.find(x=>x.tid===tid);
-  const navTo   = p  => { setPage(p); window.scrollTo(0,0); };
+  const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
@@ -2939,7 +2968,7 @@ export default function App() {
       <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
-      <PopularTestsCarousel setCatF={setCatF} navTo={navTo}/>
+      <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
       <section style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
@@ -2991,7 +3020,7 @@ export default function App() {
                       <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
-                    <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
+                    <button onClick={e=>{ e.stopPropagation(); setSelectedTest({name:pkg.title, cat:pkg.badge}); navTo("labs"); }}
                       style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
@@ -3439,7 +3468,9 @@ export default function App() {
   ═══════════════════════════════════════════════════════════════ */
   const LabsPage = () => (
     <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={setLab}
-      setTestQ={setTestQ} navTo={navTo} cart={cart}/>
+      setTestQ={setTestQ} navTo={navTo} cart={cart}
+      selectedTest={selectedTest} setSelectedTest={setSelectedTest}
+      addCart={addCart}/>
   );
 
   /* ═══════════════════════════════════════════════════════════════
