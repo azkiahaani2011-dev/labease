@@ -2136,7 +2136,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
 
   return (
-    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:12, paddingRight:20 }}>
+    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:12, paddingRight:28 }}>
       {/* Search bar */}
       <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -2817,7 +2817,7 @@ export default function App() {
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
             {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
+            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",paddingLeft:12,paddingRight:28,boxSizing:"border-box" }}>
               <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
