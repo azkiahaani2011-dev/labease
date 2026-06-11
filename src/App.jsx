@@ -771,7 +771,7 @@ const G = () => (
 
     /* ── Navbar right icons: tighter gap on mobile ── */
     @media (max-width: 768px) {
-      .nav-right { gap: 8px !important; }
+      .nav-right { gap: 4px !important; }
     }
     /* ── Cart button: full on desktop, icon-only on mobile ── */
     @media (max-width: 768px) {
@@ -1805,8 +1805,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                           </span>
                         </div>
                       </div>
-                      <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,minWidth:140,flexShrink:0 }}>
-                        <div style={{ textAlign:"right" }}>
+                      <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,flexShrink:0 }}>
+                        <div style={{ textAlign:"right",whiteSpace:"nowrap" }}>
                           <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>Tests starting from</div>
                           <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                         </div>
