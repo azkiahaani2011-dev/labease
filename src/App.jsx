@@ -1602,9 +1602,11 @@ const LabsNearMeSection = ({ T, navTo }) => (
 
         {/* centered button */}
         <button onClick={()=>navTo("labs")}
-          style={{ background:"#1158A6",color:"#fff",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
+          onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+          onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
           View All Labs
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </button>
@@ -2026,9 +2028,11 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
           <button onClick={()=>navTo("labs")}
-            style={{ background:"#1158A6", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#fff", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.borderColor="#0F2D6B"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.borderColor="#1158A6"; }}>
+            style={{ background:"transparent", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#1158A6", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
+            onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+            onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
             View All Specialities →
           </button>
         </div>
@@ -2968,9 +2972,11 @@ export default function App() {
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <button onClick={()=>{ const el=document.getElementById("packages-section"); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); }}
-              style={{ background:"#1158A6",color:"#fff",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
+              onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+              onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
               View All Packages →
             </button>
           </div>
