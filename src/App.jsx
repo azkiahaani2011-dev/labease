@@ -673,21 +673,27 @@ const G = () => (
     .hero-section { min-height: 520px; }
     .hero-img-col { display: flex; }
     @media (max-width: 767px) {
-      .hero-section { min-height: 0 !important; overflow: hidden !important; }
+      .hero-section { min-height: 0 !important; overflow: hidden !important; max-width: 100vw !important; }
       .hero-img-col { display: none !important; }
       .hero-content {
         padding-top: 32px !important;
         padding-bottom: 28px !important;
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
         gap: 16px !important;
         grid-template-columns: 1fr !important;
         width: 100% !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
+        overflow: hidden !important;
       }
       .hero-content > div {
         width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      .hero-content > div > div {
         max-width: 100% !important;
         box-sizing: border-box !important;
       }
@@ -2791,9 +2797,9 @@ export default function App() {
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center" }}>
             {/* eyebrow pill */}
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",flexWrap:"wrap" }}>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700 }}>Home sample collection now available 24/7</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
