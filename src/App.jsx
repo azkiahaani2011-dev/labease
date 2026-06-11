@@ -2816,17 +2816,21 @@ export default function App() {
                   ))}
                 </div>
               </div>
-              {/* right image — no border, blends into hero */}
-              <div style={{ flexShrink:0, width:"42%", maxWidth:170, alignSelf:"stretch", position:"relative", minHeight:200, overflow:"hidden" }}>
+              {/* right image — masked edges so person floats naturally */}
+              <div style={{ flexShrink:0, width:"44%", maxWidth:180, alignSelf:"stretch", position:"relative", minHeight:220 }}>
                 <img
-                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&fit=crop&crop=top"
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80&fit=crop&crop=top"
                   alt="Doctor"
-                  style={{ position:"absolute", bottom:0, right:0, width:"100%", height:"115%", objectFit:"cover", objectPosition:"top center" }}
+                  style={{
+                    position:"absolute", bottom:0, right:0,
+                    width:"100%", height:"110%",
+                    objectFit:"cover", objectPosition:"top center",
+                    WebkitMaskImage:"linear-gradient(to right, transparent 0%, black 30%), linear-gradient(to top, transparent 0%, black 15%)",
+                    WebkitMaskComposite:"source-in",
+                    maskImage:"linear-gradient(to right, transparent 0%, black 30%), linear-gradient(to top, transparent 0%, black 15%)",
+                    maskComposite:"intersect",
+                  }}
                 />
-                {/* soft left fade to blend with hero */}
-                <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,#EBF3FB 0%,transparent 45%)",zIndex:1,pointerEvents:"none" }}/>
-                {/* soft bottom fade */}
-                <div style={{ position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,#EBF3FB,transparent)",zIndex:1,pointerEvents:"none" }}/>
               </div>
             </div>
             {/* full-width search bar below */}
