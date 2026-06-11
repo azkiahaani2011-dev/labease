@@ -1872,7 +1872,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           </div>
           {cart.length>0 && (
             <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"9px 18px",flexShrink:0,fontSize:".84rem" }}>
-              Cart ({cart.length}) · ₹{total.toLocaleString()}
+              🛒 Cart ({cart.length})
             </button>
           )}
         </div>
@@ -2330,14 +2330,14 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
         {/* STEP BAR */}
         <div style={{ background:"#fff",borderRadius:16,padding:"18px 24px",marginBottom:20,border:"1.5px solid #EEF2FF",boxShadow:"0 2px 10px rgba(17,88,166,.06)",display:"flex",alignItems:"center" }}>
           {steps.map((l,i)=>(
-            <div key={l} style={{ display:"flex",alignItems:"center",flex:i<3?1:"none" }}>
+            <div key={l} style={{ display:"flex",alignItems:"center",flex:i<4?1:"none" }}>
               <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:5 }}>
                 <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#1158A6":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 3px 10px rgba(17,88,166,.3)":"none" }}>
                   {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
                 </div>
                 <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#1158A6":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
               </div>
-              {i<3&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
+              {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
             </div>
           ))}
         </div>
@@ -2387,8 +2387,24 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 </div>
               </div>
               <div style={{ marginBottom:18 }}>
-                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:6,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
-                <input type="date" min={TODAY} style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 14px",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",boxSizing:"border-box" }} value={loc.date} onChange={e=>sl("date",e.target.value)}/>
+                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
+                <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8 }}>
+                  {Array.from({length:14},(_,i)=>{
+                    const d=new Date(); d.setDate(d.getDate()+i);
+                    const val=d.toISOString().split("T")[0];
+                    const day=d.toLocaleDateString("en-IN",{weekday:"short"});
+                    const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+                    const isToday=i===0;
+                    const sel=loc.date===val;
+                    return (
+                      <button key={val} onClick={()=>sl("date",val)}
+                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
+                        <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
+                        <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <div>
                 <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Time Slot <span style={{color:"#EF4444"}}>*</span></label>
@@ -2944,7 +2960,7 @@ export default function App() {
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700" },
-              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.pexels.com/photos/5867701/pexels-photo-5867701.jpeg?auto=compress&cs=tinysrgb&w=700" },
+              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.pexels.com/photos/5215016/pexels-photo-5215016.jpeg?auto=compress&cs=tinysrgb&w=700" },
               { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop" },
               { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop" },
               { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop" },
@@ -3741,7 +3757,7 @@ export default function App() {
         </div>
         {/* Right: person icon + menu button */}
         <div style={{ display:"flex",alignItems:"center",gap:18 }}>
-          {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem" }}>Cart ({cart.length}) · ₹{total.toLocaleString()}</button>}
+          {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem" }}>🛒 Cart ({cart.length})</button>}
           {/* Person icon */}
           <div style={{ position:"relative" }}>
             <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
