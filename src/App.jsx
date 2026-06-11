@@ -770,6 +770,11 @@ const G = () => (
       .featured-grid { grid-template-columns: repeat(2, 1fr) !important; }
     }
 
+    /* ── Cart button: full on desktop, icon-only on mobile ── */
+    @media (max-width: 600px) {
+      .cart-desktop { display: none !important; }
+      .cart-mobile  { display: flex !important; }
+    }
     /* ── Why LabEase cards: 2-col compact on mobile ── */
     @media (max-width: 600px) {
       .why-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
@@ -3744,10 +3749,18 @@ export default function App() {
         </div>
         {/* Right: person icon + menu button */}
         <div style={{ display:"flex",alignItems:"center",gap:18 }}>
-          {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-            Cart ({cart.length})
-          </button>}
+          {cart.length>0&&<>
+            {/* Desktop: full button */}
+            <button onClick={()=>setCartOpen(true)} className="btn-anim cart-desktop" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+              Cart ({cart.length})
+            </button>
+            {/* Mobile: icon only */}
+            <button onClick={()=>setCartOpen(true)} className="cart-mobile" style={{ position:"relative",width:40,height:40,background:"#FEF3C7",border:"none",borderRadius:"50%",cursor:"pointer",display:"none",alignItems:"center",justifyContent:"center" }}>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+              <span style={{ position:"absolute",top:2,right:2,width:16,height:16,background:"#F59E0B",borderRadius:"50%",fontSize:".58rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center" }}>{cart.length}</span>
+            </button>
+          </>}
           {/* Person icon */}
           <div style={{ position:"relative" }}>
             <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
