@@ -2136,7 +2136,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
 
   return (
-    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
+    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:12, paddingRight:12 }}>
       {/* Search bar */}
       <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
