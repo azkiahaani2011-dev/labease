@@ -1870,11 +1870,6 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             </div>
             <div style={{ color:"var(--muted)",fontSize:".79rem" }}>📍 {lab.address} · {lab.distance} &nbsp;|&nbsp; 🕐 {lab.timing}</div>
           </div>
-          {cart.length>0 && (
-            <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"9px 18px",flexShrink:0,fontSize:".84rem" }}>
-              🛒 Cart ({cart.length})
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -1954,14 +1949,6 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    {cart.length>0 && (
-      <div style={{ position:"fixed",bottom:28,left:"50%",transform:"translateX(-50%)",zIndex:200 }}>
-        <button onClick={()=>navTo("booking")} className="btn-anim"
-          style={{ ...T.btn(),borderRadius:50,padding:"13px 32px",fontSize:".95rem",boxShadow:"0 12px 40px rgba(17,88,166,.42)",animation:"slideUp .28s" }}>
-          {cart.length} test{cart.length>1?"s":""} · ₹{total.toLocaleString()} → Book Now
-        </button>
-      </div>
-    )}
   </div>
   );
 };
@@ -3758,7 +3745,7 @@ export default function App() {
         {/* Right: person icon + menu button */}
         <div style={{ display:"flex",alignItems:"center",gap:18 }}>
           {cart.length>0&&<button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
             Cart ({cart.length})
           </button>}
           {/* Person icon */}
