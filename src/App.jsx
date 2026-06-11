@@ -2728,54 +2728,31 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(135deg,#0A1628 0%,#0F2D6B 40%,#1158A6 75%,#1d6fa8 100%)", minHeight:560, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
-
-        {/* animated mesh blobs */}
-        <div style={{ position:"absolute",right:-160,top:-160,width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(37,99,235,.35) 0%,transparent 70%)",pointerEvents:"none",animation:"blobPulse 7s ease-in-out infinite" }}/>
-        <div style={{ position:"absolute",left:-100,bottom:-120,width:480,height:480,borderRadius:"50%",background:"radial-gradient(circle,rgba(6,182,212,.2) 0%,transparent 70%)",pointerEvents:"none",animation:"blobPulse 9s ease-in-out infinite reverse" }}/>
-        <div style={{ position:"absolute",right:"30%",top:"10%",width:280,height:280,borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 70%)",pointerEvents:"none",animation:"blobPulse 11s ease-in-out infinite" }}/>
-
-        {/* subtle grid overlay */}
-        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
-
-        {/* floating stat cards */}
-        <div className="hero-stat-card" style={{ position:"absolute",top:"14%",right:"4%",background:"rgba(255,255,255,.1)",backdropFilter:"blur(16px)",border:"1px solid rgba(255,255,255,.2)",borderRadius:16,padding:"14px 18px",zIndex:3,animation:"floatY 4s ease-in-out infinite" }}>
-          <div style={{ fontSize:"1.4rem",fontWeight:900,color:"#fff",lineHeight:1 }}>50K+</div>
-          <div style={{ fontSize:".68rem",color:"rgba(255,255,255,.7)",fontWeight:600,marginTop:3 }}>Tests Booked</div>
-        </div>
-        <div className="hero-stat-card" style={{ position:"absolute",top:"48%",right:"2%",background:"rgba(255,255,255,.1)",backdropFilter:"blur(16px)",border:"1px solid rgba(255,255,255,.2)",borderRadius:16,padding:"14px 18px",zIndex:3,animation:"floatY 5s ease-in-out infinite 1s" }}>
-          <div style={{ fontSize:"1.4rem",fontWeight:900,color:"#34D399",lineHeight:1 }}>4.9 ★</div>
-          <div style={{ fontSize:".68rem",color:"rgba(255,255,255,.7)",fontWeight:600,marginTop:3 }}>Avg Rating</div>
-        </div>
-        <div className="hero-stat-card" style={{ position:"absolute",bottom:"18%",right:"6%",background:"rgba(255,255,255,.1)",backdropFilter:"blur(16px)",border:"1px solid rgba(255,255,255,.2)",borderRadius:16,padding:"14px 18px",zIndex:3,animation:"floatY 6s ease-in-out infinite .5s" }}>
-          <div style={{ fontSize:"1.4rem",fontWeight:900,color:"#60A5FA",lineHeight:1 }}>6 Labs</div>
-          <div style={{ fontSize:".68rem",color:"rgba(255,255,255,.7)",fontWeight:600,marginTop:3 }}>NABL Certified</div>
-        </div>
-
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center" }}>
         {/* background geometric accents */}
-        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#fff",opacity:.12,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#fff",opacity:.1,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#34D399",opacity:.3,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:140,bottom:80,width:6,height:6,borderRadius:"50%",background:"#60A5FA",opacity:.4,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:320,bottom:60,width:10,height:10,borderRadius:"50%",background:"#fff",opacity:.08,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:80,paddingBottom:80,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
+        <div className="hero-content" style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
           {/* ── LEFT: text content ── */}
-          <div style={{ maxWidth:640,width:"100%",boxSizing:"border-box" }}>
+          <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box" }}>
             {/* eyebrow pill */}
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.12)",backdropFilter:"blur(8px)",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(0,0,0,.2)",border:"1px solid rgba(255,255,255,.25)",maxWidth:"100%",flexWrap:"wrap" }}>
-              <span style={{ background:"linear-gradient(90deg,#34D399,#059669)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"rgba(255,255,255,.9)",fontSize:".73rem",fontWeight:700 }}>Home sample collection now available 24/7</span>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",flexWrap:"wrap" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700 }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#fff",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#60A5FA 0%,#34D399 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"rgba(255,255,255,.72)",fontSize:".96rem",lineHeight:1.78,marginBottom:32,maxWidth:460 }}>
+            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:32,maxWidth:460 }}>
               Compare prices across 6 NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -2784,30 +2761,15 @@ export default function App() {
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center" }}>
-              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.5)",fontWeight:600 }}>Popular:</span>
+              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.85)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",backdropFilter:"blur(6px)" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.25)"; e.currentTarget.style.color="#fff"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.color="rgba(255,255,255,.85)"; }}>
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
                 </button>
               ))}
-            </div>
-
-            {/* trust strip */}
-            <div style={{ display:"flex",alignItems:"center",gap:14,marginTop:28,flexWrap:"wrap" }}>
-              <div style={{ display:"flex" }}>
-                {["#F59E0B","#10B981","#3B82F6","#EF4444","#8B5CF6"].map((c,i)=>(
-                  <div key={i} style={{ width:30,height:30,borderRadius:"50%",background:`linear-gradient(135deg,${c},${c}99)`,border:"2px solid rgba(255,255,255,.4)",marginLeft:i>0?-8:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".6rem",fontWeight:800,color:"#fff" }}>
-                    {["A","R","S","P","M"][i]}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div style={{ color:"#fff",fontWeight:800,fontSize:".8rem" }}>50,000+ patients trust LabEase</div>
-                <div style={{ color:"rgba(255,255,255,.55)",fontSize:".68rem",marginTop:1 }}>★★★★★ Rated 4.9 across all labs</div>
-              </div>
             </div>
 
           </div>
@@ -2947,12 +2909,6 @@ export default function App() {
 
         </div>
 
-        {/* wave divider */}
-        <div style={{ position:"absolute",bottom:-1,left:0,right:0,lineHeight:0,pointerEvents:"none" }}>
-          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width:"100%",display:"block" }}>
-            <path d="M0,40 C240,70 480,10 720,38 C960,66 1200,12 1440,36 L1440,60 L0,60 Z" fill="#fff"/>
-          </svg>
-        </div>
       </section>
 
 
@@ -2985,11 +2941,11 @@ export default function App() {
           <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:16 }}>
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
-              { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1666214280391-8ff5bd3d0bf0?w=700&q=85&auto=format&fit=crop" },
+              { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=700&q=85&auto=format&fit=crop" },
               { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=700&q=85&auto=format&fit=crop" },
-              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1579154204601-01588f351e67?w=700&q=85&auto=format&fit=crop" },
-              { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=700&q=85&auto=format&fit=crop" },
-              { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=85&auto=format&fit=crop" },
+              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop" },
+              { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1516841273335-e39b37888115?w=700&q=85&auto=format&fit=crop" },
+              { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
               <div key={pkg.title}
                 style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
