@@ -2793,17 +2793,51 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          {/* ── LEFT: text content ── */}
-          <div style={{ width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:isMobile?"left":"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0,position:"relative" }}>
-            {/* mobile person image — top right corner */}
-            {isMobile && (
+        {/* mobile: two-col flex row — text left, image right */}
+        {isMobile ? (
+          <div style={{ display:"flex", alignItems:"flex-end", width:"100%", minHeight:320, position:"relative", zIndex:2 }}>
+            {/* left text */}
+            <div style={{ flex:"1 1 0", paddingLeft:16, paddingTop:28, paddingBottom:24, boxSizing:"border-box", zIndex:2 }}>
+              <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#fff",borderRadius:50,padding:"4px 12px 4px 6px",marginBottom:16,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+                <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"2px 10px",fontSize:".6rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+                <span style={{ color:"#1158A6",fontSize:".65rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home collection 24/7</span>
+              </div>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.45rem",color:"#0A1628",lineHeight:1.2,marginBottom:10,fontWeight:900,letterSpacing:"-.03em" }}>
+                Book Lab Tests<br/>
+                <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Near You</span>
+              </h1>
+              <p style={{ color:"#5A6478",fontSize:".78rem",lineHeight:1.6,marginBottom:16 }}>
+                Free home collection · NABL-certified · Reports in hours
+              </p>
+              <div style={{ display:"flex",gap:8,flexWrap:"wrap",marginBottom:16 }}>
+                {["✓ Free pickup","✓ NABL labs","✓ 6hr reports"].map(t=>(
+                  <span key={t} style={{ background:"#EFF6FF",color:"#1158A6",fontSize:".65rem",fontWeight:700,borderRadius:50,padding:"3px 10px" }}>{t}</span>
+                ))}
+              </div>
+              <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
+              <div style={{ display:"flex",gap:6,marginTop:12,flexWrap:"wrap",alignItems:"center" }}>
+                <span style={{ fontSize:".65rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+                {["CBC","Thyroid","Vitamin D","Diabetes"].map(t=>(
+                  <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
+                    style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"3px 10px",fontSize:".65rem",fontWeight:700,color:"#1158A6",cursor:"pointer" }}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* right person image — flush to right & bottom edge */}
+            <div style={{ flexShrink:0, width:140, alignSelf:"stretch", position:"relative", overflow:"hidden" }}>
               <img
                 src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&fit=crop&crop=top"
                 alt="Doctor"
-                style={{ position:"absolute", top:-28, right:0, width:130, height:170, objectFit:"cover", objectPosition:"top center", borderRadius:"50% 50% 48% 48% / 40% 40% 60% 60%", zIndex:1, pointerEvents:"none" }}
+                style={{ position:"absolute", bottom:0, right:0, width:160, height:"110%", objectFit:"cover", objectPosition:"top center", mixBlendMode:"multiply" }}
               />
-            )}
+            </div>
+          </div>
+        ) : (
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr 1fr",alignItems:"center",gap:40 }}>
+          {/* ── LEFT: text content ── */}
+          <div style={{ width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center" }}>
             {/* eyebrow pill */}
             <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
@@ -2839,42 +2873,38 @@ export default function App() {
 
           </div>
 
-          {/* ── RIGHT: hero image (desktop only) ── */}
-          {!isMobile && (
-            <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", position:"relative" }}>
-              <div style={{ position:"relative", width:340, height:400 }}>
-                {/* decorative blob behind image */}
-                <div style={{ position:"absolute", bottom:0, left:"50%", transform:"translateX(-50%)", width:300, height:340, borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%", background:"linear-gradient(160deg,#DBEAFE 0%,#EEF4FF 100%)", zIndex:0 }}/>
-                {/* floating stat cards */}
-                <div style={{ position:"absolute", top:20, left:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
-                  <div style={{ width:36, height:36, borderRadius:10, background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                  </div>
-                  <div>
-                    <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>NABL Certified</div>
-                    <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>6 Partner Labs</div>
-                  </div>
+          {/* ── RIGHT: hero image ── */}
+          <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", position:"relative" }}>
+            <div style={{ position:"relative", width:340, height:400 }}>
+              <div style={{ position:"absolute", bottom:0, left:"50%", transform:"translateX(-50%)", width:300, height:340, borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%", background:"linear-gradient(160deg,#DBEAFE 0%,#EEF4FF 100%)", zIndex:0 }}/>
+              <div style={{ position:"absolute", top:20, left:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
+                <div style={{ width:36, height:36, borderRadius:10, background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 </div>
-                <div style={{ position:"absolute", bottom:60, right:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
-                  <div style={{ width:36, height:36, borderRadius:10, background:"#F0FDF4", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  </div>
-                  <div>
-                    <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>Reports Ready</div>
-                    <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>Within 6 Hours</div>
-                  </div>
+                <div>
+                  <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>NABL Certified</div>
+                  <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>6 Partner Labs</div>
                 </div>
-                {/* person image */}
-                <img
-                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80&fit=crop&crop=top"
-                  alt="Doctor"
-                  style={{ position:"relative", zIndex:2, width:300, height:380, objectFit:"cover", objectPosition:"top center", borderRadius:"50% 50% 48% 48% / 40% 40% 60% 60%", display:"block", margin:"0 auto" }}
-                />
               </div>
+              <div style={{ position:"absolute", bottom:60, right:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
+                <div style={{ width:36, height:36, borderRadius:10, background:"#F0FDF4", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>Reports Ready</div>
+                  <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>Within 6 Hours</div>
+                </div>
+              </div>
+              <img
+                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80&fit=crop&crop=top"
+                alt="Doctor"
+                style={{ position:"relative", zIndex:2, width:300, height:380, objectFit:"cover", objectPosition:"top center", borderRadius:"50% 50% 48% 48% / 40% 40% 60% 60%", display:"block", margin:"0 auto" }}
+              />
             </div>
-          )}
+          </div>
 
         </div>
+        )}
 
       </section>
 
