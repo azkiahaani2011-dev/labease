@@ -2023,7 +2023,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
     <section style={{ padding:"52px 0 48px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
-          <div>
+          <div style={{ textAlign:"left" }}>
             <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
@@ -2759,6 +2759,7 @@ export default function App() {
   const Home = () => {
     const [q,setQ]       = useState("");
     const [faq,setFaq]   = useState(null);
+    const [pkgMsg, setPkgMsg] = useState(false);
     const [gridCols, setGridCols] = useState(window.innerWidth <= 600 ? 2 : 3);
     useEffect(() => {
       const h = () => setGridCols(window.innerWidth <= 600 ? 2 : 3);
@@ -2966,19 +2967,22 @@ export default function App() {
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
-            <div>
+            <div style={{ textAlign:"left" }}>
               <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
               <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
-            <button onClick={()=>{ const el=document.getElementById("packages-section"); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); }}
-              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
-              onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
-              onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
-              View All Packages →
-            </button>
+            <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
+              <button onClick={()=>setPkgMsg(v=>!v)}
+                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
+                onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+                onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
+                View All Packages →
+              </button>
+              {pkgMsg && <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600,background:"#F1F5F9",borderRadius:8,padding:"4px 12px",whiteSpace:"nowrap" }}>Only 6 packages available</span>}
+            </div>
           </div>
 
           {/* 6-card grid */}
