@@ -2793,27 +2793,44 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        {/* mobile: two-col flex row — text left, image right */}
+        {/* mobile hero */}
         {isMobile ? (
-          <div style={{ display:"flex", alignItems:"flex-end", width:"100%", minHeight:320, position:"relative", zIndex:2 }}>
-            {/* left text */}
-            <div style={{ flex:"1 1 0", paddingLeft:16, paddingTop:28, paddingBottom:24, boxSizing:"border-box", zIndex:2 }}>
-              <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#fff",borderRadius:50,padding:"4px 12px 4px 6px",marginBottom:16,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-                <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"2px 10px",fontSize:".6rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-                <span style={{ color:"#1158A6",fontSize:".65rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home collection 24/7</span>
+          <div style={{ width:"100%", position:"relative", zIndex:2, paddingTop:28, paddingBottom:24, boxSizing:"border-box" }}>
+            {/* top row: text left + image right */}
+            <div style={{ display:"flex", alignItems:"flex-end", width:"100%", marginBottom:20 }}>
+              {/* left text */}
+              <div style={{ flex:"1 1 0", paddingLeft:16, paddingRight:8, boxSizing:"border-box" }}>
+                <div style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#fff",borderRadius:50,padding:"4px 12px 4px 6px",marginBottom:14,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE" }}>
+                  <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"2px 10px",fontSize:".6rem",fontWeight:800,color:"#fff",letterSpacing:".07em" }}>NEW</span>
+                  <span style={{ color:"#1158A6",fontSize:".63rem",fontWeight:700 }}>Home collection 24/7</span>
+                </div>
+                <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.5rem",color:"#0A1628",lineHeight:1.18,marginBottom:10,fontWeight:900,letterSpacing:"-.03em" }}>
+                  Book Lab Tests<br/>
+                  <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Near You</span>
+                </h1>
+                <div style={{ display:"flex",flexDirection:"column",gap:6,marginBottom:4 }}>
+                  {[["🏥","200+ NABL-certified labs"],["🚗","Free home collection"],["⚡","Reports in 6 hours"]].map(([icon,txt])=>(
+                    <div key={txt} style={{ display:"flex",alignItems:"center",gap:6,fontSize:".72rem",color:"#374151",fontWeight:600 }}>
+                      <span style={{ fontSize:".8rem" }}>{icon}</span>{txt}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.45rem",color:"#0A1628",lineHeight:1.2,marginBottom:10,fontWeight:900,letterSpacing:"-.03em" }}>
-                Book Lab Tests<br/>
-                <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Near You</span>
-              </h1>
-              <p style={{ color:"#5A6478",fontSize:".78rem",lineHeight:1.6,marginBottom:16 }}>
-                Free home collection · NABL-certified · Reports in hours
-              </p>
-              <div style={{ display:"flex",gap:8,flexWrap:"wrap",marginBottom:16 }}>
-                {["✓ Free pickup","✓ NABL labs","✓ 6hr reports"].map(t=>(
-                  <span key={t} style={{ background:"#EFF6FF",color:"#1158A6",fontSize:".65rem",fontWeight:700,borderRadius:50,padding:"3px 10px" }}>{t}</span>
-                ))}
+              {/* right image — no border, blends into hero */}
+              <div style={{ flexShrink:0, width:"42%", maxWidth:170, alignSelf:"stretch", position:"relative", minHeight:200, overflow:"hidden" }}>
+                <img
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&fit=crop&crop=top"
+                  alt="Doctor"
+                  style={{ position:"absolute", bottom:0, right:0, width:"100%", height:"115%", objectFit:"cover", objectPosition:"top center" }}
+                />
+                {/* soft left fade to blend with hero */}
+                <div style={{ position:"absolute",inset:0,background:"linear-gradient(to right,#EBF3FB 0%,transparent 45%)",zIndex:1,pointerEvents:"none" }}/>
+                {/* soft bottom fade */}
+                <div style={{ position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,#EBF3FB,transparent)",zIndex:1,pointerEvents:"none" }}/>
               </div>
+            </div>
+            {/* full-width search bar below */}
+            <div style={{ paddingLeft:16, paddingRight:16, boxSizing:"border-box" }}>
               <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
               <div style={{ display:"flex",gap:6,marginTop:12,flexWrap:"wrap",alignItems:"center" }}>
                 <span style={{ fontSize:".65rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
@@ -2824,16 +2841,6 @@ export default function App() {
                   </button>
                 ))}
               </div>
-            </div>
-            {/* right person image */}
-            <div style={{ flexShrink:0, width:145, alignSelf:"stretch", position:"relative" }}>
-              <img
-                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80&fit=crop&crop=top"
-                alt="Doctor"
-                style={{ position:"absolute", bottom:0, right:0, width:145, height:"100%", objectFit:"cover", objectPosition:"top center" }}
-              />
-              {/* fade left edge to blend with hero */}
-              <div style={{ position:"absolute", top:0, left:0, width:40, height:"100%", background:"linear-gradient(to right, #EBF3FB, transparent)", zIndex:1 }}/>
             </div>
           </div>
         ) : (
