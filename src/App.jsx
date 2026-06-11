@@ -1733,10 +1733,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
               <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {/* search */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
-                <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#1158A6" strokeWidth="1.8"/><path d="M13.5 13.5L17 17" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round"/></svg>
-                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:36,paddingRight:16,paddingTop:10,paddingBottom:10,border:"1.5px solid #DBEAFE",borderRadius:50,fontSize:".84rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:220,background:"#F0F6FF",color:"#0D1117",boxShadow:"0 2px 8px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s",fontWeight:600 }}
-                  onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.12)"; setLabSugOpen(true); }}
-                  onBlur={e=>{ e.target.style.border="1.5px solid #DBEAFE"; e.target.style.boxShadow="0 2px 8px rgba(17,88,166,.08)"; }}/>
+                <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#059669" strokeWidth="1.9"/><path d="M13.5 13.5L17 17" stroke="#059669" strokeWidth="1.9" strokeLinecap="round"/></svg>
+                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:36,paddingRight:16,paddingTop:10,paddingBottom:10,border:"1.5px solid #A7F3D0",borderRadius:50,fontSize:".84rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:220,background:"#ECFDF5",color:"#064E3B",boxShadow:"0 2px 8px rgba(5,150,105,.08)",transition:"border .18s,box-shadow .18s",fontWeight:600 }}
+                  onFocus={e=>{ e.target.style.border="1.5px solid #059669"; e.target.style.boxShadow="0 0 0 3px rgba(5,150,105,.13)"; setLabSugOpen(true); }}
+                  onBlur={e=>{ e.target.style.border="1.5px solid #A7F3D0"; e.target.style.boxShadow="0 2px 8px rgba(5,150,105,.08)"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
                   <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
                     {labSuggestions.map((l,i)=>(
@@ -1881,11 +1881,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     <div style={{ ...T.wrap,padding:"26px 12px" }}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440 }}>
-        <svg style={{ position:"absolute",left:15,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="17" height="17" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#1158A6" strokeWidth="1.8"/><path d="M13.5 13.5L17 17" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round"/></svg>
-        <input style={{ ...T.inp,paddingLeft:42,background:"#F0F6FF",border:"1.5px solid #DBEAFE",borderRadius:14,fontSize:".9rem",fontWeight:600,boxShadow:"0 2px 10px rgba(17,88,166,.07)",transition:"border .18s,box-shadow .18s" }}
+        <svg style={{ position:"absolute",left:15,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="17" height="17" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#7C3AED" strokeWidth="1.9"/><path d="M13.5 13.5L17 17" stroke="#7C3AED" strokeWidth="1.9" strokeLinecap="round"/></svg>
+        <input style={{ ...T.inp,paddingLeft:44,background:"#FAF5FF",border:"1.5px solid #DDD6FE",borderRadius:14,fontSize:".9rem",fontWeight:600,color:"#3B1E6B",boxShadow:"0 2px 10px rgba(124,58,237,.07)",transition:"border .18s,box-shadow .18s" }}
           placeholder="Search tests…" value={testQ} onChange={e=>setTestQ(e.target.value)}
-          onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.12)"; }}
-          onBlur={e=>{ e.target.style.border="1.5px solid #DBEAFE"; e.target.style.boxShadow="0 2px 10px rgba(17,88,166,.07)"; }}/>
+          onFocus={e=>{ e.target.style.border="1.5px solid #7C3AED"; e.target.style.boxShadow="0 0 0 3px rgba(124,58,237,.13)"; }}
+          onBlur={e=>{ e.target.style.border="1.5px solid #DDD6FE"; e.target.style.boxShadow="0 2px 10px rgba(124,58,237,.07)"; }}/>
       </div>
 
       {/* category chips */}
@@ -2643,6 +2643,12 @@ export default function App() {
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
   const [sideMenu,    setSideMenu]   = useState(false);
+  const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const h = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
@@ -3751,18 +3757,16 @@ export default function App() {
         </div>
         {/* Right: person icon + menu button */}
         <div style={{ display:"flex",alignItems:"center",gap:18 }}>
-          {cart.length>0&&<>
-            {/* Desktop: full button */}
-            <button onClick={()=>setCartOpen(true)} className="btn-anim cart-desktop" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              Cart ({cart.length})
-            </button>
-            {/* Mobile: basket icon only, no text */}
-            <button onClick={()=>setCartOpen(true)} className="cart-mobile" style={{ position:"relative",width:38,height:38,background:"none",border:"none",borderRadius:"50%",cursor:"pointer",display:"none",alignItems:"center",justifyContent:"center",padding:0 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <span style={{ position:"absolute",top:0,right:0,minWidth:16,height:16,background:"#F59E0B",borderRadius:99,fontSize:".55rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px",lineHeight:1 }}>{cart.length}</span>
-            </button>
-          </>}
+          {cart.length>0&&(isMobile
+            ? <button onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
+              </button>
+            : <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                Cart ({cart.length})
+              </button>
+          )}
           {/* Person icon */}
           <div style={{ position:"relative" }}>
             <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
