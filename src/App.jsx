@@ -2785,7 +2785,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflowX:"clip", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
         {/* background geometric accents */}
         <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
@@ -2825,12 +2825,12 @@ export default function App() {
                 ))}
               </div>
             </div>
-            {/* right person image — flush to right & bottom edge */}
-            <div style={{ flexShrink:0, width:140, alignSelf:"stretch", position:"relative", overflow:"hidden" }}>
+            {/* right person image — flush to right & bottom, blends into hero */}
+            <div style={{ flexShrink:0, width:145, alignSelf:"stretch", position:"relative", overflow:"hidden" }}>
               <img
-                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&fit=crop&crop=top"
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80&fit=crop&crop=top"
                 alt="Doctor"
-                style={{ position:"absolute", bottom:0, right:0, width:160, height:"110%", objectFit:"cover", objectPosition:"top center", mixBlendMode:"multiply" }}
+                style={{ position:"absolute", bottom:0, right:0, width:145, height:"100%", objectFit:"cover", objectPosition:"top center", mixBlendMode:"multiply" }}
               />
             </div>
           </div>
