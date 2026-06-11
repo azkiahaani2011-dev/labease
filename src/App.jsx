@@ -2793,7 +2793,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",alignItems:"center",gap:isMobile?16:40 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
@@ -2831,138 +2831,40 @@ export default function App() {
 
           </div>
 
-          {/* ── RIGHT: hidden ── */}
-          <div style={{ display:"none" }}>
-            <svg viewBox="0 0 340 440" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto",maxWidth:340}}>
-              {/* soft background blob */}
-              <ellipse cx="175" cy="240" rx="155" ry="188" fill="#EBF4FF"/>
-              <ellipse cx="170" cy="250" rx="128" ry="158" fill="#F0F7FF" opacity="0.7"/>
-
-              {/* floating icon circles */}
-              {/* stethoscope */}
-              <circle cx="298" cy="82" r="30" fill="#fff" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <path d="M290 72 Q285 83 288 90 Q291 97 298 95 Q305 93 307 86 Q310 76 303 73" stroke="#1E293B" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-              <circle cx="303" cy="73" r="5" fill="none" stroke="#1E293B" strokeWidth="1.8"/>
-              <circle cx="298" cy="95" r="6" fill="#1E293B"/>
-              <circle cx="298" cy="95" r="2.5" fill="#94A3B8"/>
-              {/* clipboard */}
-              <circle cx="44" cy="105" r="28" fill="#fff" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <rect x="34" y="93" width="20" height="26" rx="3" fill="none" stroke="#1E293B" strokeWidth="1.5"/>
-              <rect x="39" y="89" width="10" height="7" rx="2" fill="#fff" stroke="#1E293B" strokeWidth="1"/>
-              <line x1="38" y1="104" x2="50" y2="104" stroke="#CBD5E1" strokeWidth="1.5"/>
-              <line x1="38" y1="110" x2="50" y2="110" stroke="#CBD5E1" strokeWidth="1.5"/>
-              <line x1="38" y1="116" x2="46" y2="116" stroke="#CBD5E1" strokeWidth="1.5"/>
-              {/* test tube */}
-              <circle cx="302" cy="348" r="26" fill="#fff" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <rect x="294" y="333" width="16" height="36" rx="8" fill="none" stroke="#1E293B" strokeWidth="1.5"/>
-              <path d="M294 355 Q294 368 302 370 Q310 368 310 355 Z" fill="#93C5FD"/>
-              <line x1="292" y1="333" x2="314" y2="333" stroke="#1E293B" strokeWidth="2" strokeLinecap="round"/>
-              {/* DNA */}
-              <circle cx="40" cy="348" r="24" fill="#fff" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <path d="M31 338 Q40 344 49 338" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              <path d="M31 348 Q40 354 49 348" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              <path d="M31 358 Q40 364 49 358" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              <line x1="36" y1="338" x2="36" y2="358" stroke="#CBD5E1" strokeWidth="1"/>
-              <line x1="44" y1="338" x2="44" y2="358" stroke="#CBD5E1" strokeWidth="1"/>
-
-              {/* PERSON */}
-              {/* legs */}
-              <rect x="138" y="360" width="28" height="62" rx="12" fill="#475569" stroke="#1E293B" strokeWidth="1.2"/>
-              <rect x="172" y="360" width="28" height="62" rx="12" fill="#374151" stroke="#1E293B" strokeWidth="1.2"/>
-              <ellipse cx="152" cy="420" rx="22" ry="9" fill="#1E293B"/>
-              <ellipse cx="186" cy="420" rx="22" ry="9" fill="#1E293B"/>
-
-              {/* lab coat body */}
-              <path d="M106 205 Q106 182 170 178 Q234 182 234 205 L242 368 H98 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-              {/* coat inner - blue shirt */}
-              <path d="M158 181 L140 212 L170 224 L200 212 L182 181 Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-              {/* lapels */}
-              <path d="M158 181 L138 208 L170 218" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M182 181 L202 208 L170 218" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-
-              {/* stethoscope on coat */}
-              <path d="M152 196 Q133 248 137 272 Q141 294 170 288 Q199 282 203 258 Q207 230 190 208" stroke="#475569" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              <circle cx="190" cy="206" r="9" fill="none" stroke="#475569" strokeWidth="2"/>
-              <circle cx="170" cy="288" r="10" fill="#475569"/>
-              <circle cx="170" cy="288" r="4.5" fill="#94A3B8"/>
-
-              {/* pocket */}
-              <rect x="186" y="264" width="34" height="40" rx="4" fill="white" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <rect x="194" y="256" width="5" height="26" rx="2.5" fill="#1158A6" stroke="#1E293B" strokeWidth="0.5"/>
-              <rect x="203" y="256" width="5" height="26" rx="2.5" fill="#EF4444" stroke="#1E293B" strokeWidth="0.5"/>
-
-              {/* red cross badge */}
-              <circle cx="122" cy="204" r="17" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.5"/>
-              <rect x="119" y="197" width="6" height="14" rx="1" fill="#EF4444"/>
-              <rect x="115" y="201" width="14" height="6" rx="1" fill="#EF4444"/>
-
-              {/* right arm — test tube */}
-              <path d="M232 216 Q266 235 262 282" stroke="white" strokeWidth="32" strokeLinecap="round" fill="none"/>
-              <path d="M232 216 Q266 235 262 282" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-              <ellipse cx="260" cy="293" rx="15" ry="13" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1"/>
-              {/* test tube */}
-              <rect x="267" y="268" width="16" height="48" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-              <path d="M269 295 Q268 314 275 317 Q282 314 281 295 Z" fill="#93C5FD"/>
-              <line x1="265" y1="268" x2="285" y2="268" stroke="#1E293B" strokeWidth="2" strokeLinecap="round"/>
-
-              {/* left arm — clipboard */}
-              <path d="M108 216 Q78 246 76 280" stroke="white" strokeWidth="30" strokeLinecap="round" fill="none"/>
-              <path d="M108 216 Q78 246 76 280" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-              {/* clipboard */}
-              <rect x="46" y="248" width="56" height="70" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-              <rect x="60" y="240" width="28" height="14" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-              <line x1="54" y1="270" x2="94" y2="270" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <line x1="54" y1="280" x2="94" y2="280" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <line x1="54" y1="290" x2="80" y2="290" stroke="#E2E8F0" strokeWidth="1.5"/>
-              <rect x="54" y="298" width="12" height="9" rx="2" fill="#22C55E"/>
-
-              {/* HEAD */}
-              <circle cx="170" cy="130" r="55" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
-              {/* ears */}
-              <ellipse cx="115" cy="132" rx="9" ry="13" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.2"/>
-              <ellipse cx="225" cy="132" rx="9" ry="13" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.2"/>
-              {/* hair */}
-              <path d="M115 120 Q115 74 170 71 Q225 74 225 120 L221 106 Q204 78 170 76 Q136 78 119 106 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
-              {/* eyes */}
-              <ellipse cx="152" cy="130" rx="8" ry="9" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-              <ellipse cx="188" cy="130" rx="8" ry="9" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-              <circle cx="154" cy="132" r="5" fill="#1E293B"/>
-              <circle cx="190" cy="132" r="5" fill="#1E293B"/>
-              <circle cx="156" cy="130" r="2" fill="white"/>
-              <circle cx="192" cy="130" r="2" fill="white"/>
-              {/* eyebrows */}
-              <path d="M143 119 Q152 114 161 119" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-              <path d="M179 119 Q188 114 197 119" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-              {/* smile */}
-              <path d="M158 147 Q170 157 182 147" stroke="#1E293B" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-              {/* glasses */}
-              <circle cx="152" cy="130" r="13" fill="none" stroke="#475569" strokeWidth="1.8"/>
-              <circle cx="188" cy="130" r="13" fill="none" stroke="#475569" strokeWidth="1.8"/>
-              <line x1="165" y1="130" x2="175" y2="130" stroke="#475569" strokeWidth="1.8"/>
-              <line x1="139" y1="126" x2="128" y2="123" stroke="#475569" strokeWidth="1.8"/>
-              <line x1="201" y1="126" x2="212" y2="123" stroke="#475569" strokeWidth="1.8"/>
-            </svg>
-
-            {/* floating badge: NABL */}
-            <div style={{ position:"absolute",top:28,left:0,background:"#fff",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(0,0,0,.1)",display:"flex",alignItems:"center",gap:8,border:"1px solid #DCFCE7" }}>
-              <div style={{ width:26,height:26,borderRadius:"50%",background:"#DCFCE7",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+          {/* ── RIGHT: hero image ── */}
+          {!isMobile && (
+            <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", position:"relative" }}>
+              <div style={{ position:"relative", width:340, height:400 }}>
+                {/* decorative blob behind image */}
+                <div style={{ position:"absolute", bottom:0, left:"50%", transform:"translateX(-50%)", width:300, height:340, borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%", background:"linear-gradient(160deg,#DBEAFE 0%,#EEF4FF 100%)", zIndex:0 }}/>
+                {/* floating stat cards */}
+                <div style={{ position:"absolute", top:20, left:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ width:36, height:36, borderRadius:10, background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>NABL Certified</div>
+                    <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>6 Partner Labs</div>
+                  </div>
+                </div>
+                <div style={{ position:"absolute", bottom:60, right:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ width:36, height:36, borderRadius:10, background:"#F0FDF4", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>Reports Ready</div>
+                    <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>Within 6 Hours</div>
+                  </div>
+                </div>
+                {/* person image */}
+                <img
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80&fit=crop&crop=top"
+                  alt="Doctor"
+                  style={{ position:"relative", zIndex:2, width:300, height:380, objectFit:"cover", objectPosition:"top center", borderRadius:"50% 50% 48% 48% / 40% 40% 60% 60%", display:"block", margin:"0 auto" }}
+                />
               </div>
-              <div><div style={{ fontWeight:800,fontSize:".7rem",color:"#0D1117",lineHeight:1 }}>NABL Certified</div><div style={{ fontSize:".6rem",color:"#6B7280",marginTop:1 }}>100% accuracy</div></div>
             </div>
-            {/* floating badge: reports */}
-            <div style={{ position:"absolute",bottom:36,left:0,background:"#fff",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(0,0,0,.1)",display:"flex",alignItems:"center",gap:8,border:"1px solid #DBEAFE" }}>
-              <div style={{ width:26,height:26,borderRadius:"50%",background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </div>
-              <div><div style={{ fontWeight:800,fontSize:".7rem",color:"#0D1117",lineHeight:1 }}>Reports in 6 hrs</div><div style={{ fontSize:".6rem",color:"#6B7280",marginTop:1 }}>via WhatsApp & email</div></div>
-            </div>
-            {/* floating badge: rating */}
-            <div style={{ position:"absolute",bottom:36,right:0,background:"#1158A6",borderRadius:12,padding:"9px 14px",boxShadow:"0 6px 20px rgba(17,88,166,.3)",display:"flex",alignItems:"center",gap:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="#FCD34D" stroke="#FCD34D" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <div><div style={{ fontWeight:800,fontSize:".7rem",color:"#fff",lineHeight:1 }}>4.9 / 5 Rating</div><div style={{ fontSize:".6rem",color:"rgba(255,255,255,.75)",marginTop:1 }}>50,000+ patients</div></div>
-            </div>
-          </div>
+          )}
 
         </div>
 
@@ -3168,97 +3070,22 @@ export default function App() {
               {
                 n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
                 desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
-                icon:(
-                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
-                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BFDBFE" opacity="0.5"/>
-                    <rect x="18" y="18" width="64" height="80" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                    <rect x="18" y="18" width="64" height="20" rx="8" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.5"/>
-                    <rect x="18" y="30" width="64" height="8" fill="#DBEAFE"/>
-                    <rect x="28" y="50" width="44" height="5" rx="2" fill="#BFDBFE"/>
-                    <rect x="28" y="61" width="36" height="4" rx="2" fill="#E2E8F0"/>
-                    <rect x="28" y="71" width="40" height="4" rx="2" fill="#E2E8F0"/>
-                    <rect x="28" y="81" width="28" height="4" rx="2" fill="#E2E8F0"/>
-                    <circle cx="86" cy="96" r="22" fill="white" stroke="#1158A6" strokeWidth="2"/>
-                    <circle cx="83" cy="93" r="11" fill="#DBEAFE" stroke="#1158A6" strokeWidth="1.6"/>
-                    <line x1="91" y1="101" x2="103" y2="113" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"/>
-                    <circle cx="83" cy="93" r="5" fill="#93C5FD"/>
-                  </svg>
-                )
+                icon:( <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
-                icon:(
-                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
-                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BAE6FD" opacity="0.5"/>
-                    <rect x="14" y="22" width="80" height="80" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                    <rect x="14" y="22" width="80" height="26" rx="10" fill="#BAE6FD" stroke="#1E293B" strokeWidth="1.5"/>
-                    <rect x="14" y="40" width="80" height="8" fill="#BAE6FD"/>
-                    <line x1="36" y1="14" x2="36" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
-                    <line x1="84" y1="14" x2="84" y2="30" stroke="#0EA5E9" strokeWidth="2" strokeLinecap="round"/>
-                    {[0,1,2].map(col=>[0,1,2].map(row=>(
-                      <rect key={col*3+row} x={28+col*24} y={60+row*16} width="14" height="10" rx="3"
-                        fill={col===1&&row===0?"#0EA5E9":col===2&&row===1?"#BAE6FD":"#E0F2FE"} stroke="#BAE6FD" strokeWidth="1"/>
-                    )))}
-                    <circle cx="94" cy="26" r="7" fill="#7DD3FC" stroke="#1E293B" strokeWidth="1.2"/>
-                    <line x1="94" y1="22" x2="94" y2="26" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="94" y1="26" x2="97" y2="28" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                )
+                icon:( <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
                 desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                icon:(
-                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
-                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#DDD6FE" opacity="0.5"/>
-                    <circle cx="60" cy="34" r="20" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5"/>
-                    <path d="M28 105 Q28 78 60 78 Q92 78 92 105" fill="#EDE9FE" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                    <path d="M34 82 L26 98 H94 L86 82" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-                    <rect x="18" y="94" width="84" height="14" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.2"/>
-                    <rect x="26" y="97" width="20" height="8" rx="2" fill="#EDE9FE"/>
-                    <rect x="50" y="97" width="20" height="8" rx="2" fill="#DDD6FE"/>
-                    <rect x="74" y="97" width="14" height="8" rx="2" fill="#C4B5FD"/>
-                    <rect x="76" y="56" width="10" height="30" rx="5" fill="#F5F3FF" stroke="#8B5CF6" strokeWidth="1.4"/>
-                    <path d="M76 78 Q76 88 81 90 Q86 88 86 78 Z" fill="#C4B5FD" opacity="0.8"/>
-                    <line x1="72" y1="56" x2="90" y2="56" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round"/>
-                    <ellipse cx="46" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                    <ellipse cx="74" cy="28" rx="5" ry="6" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                    <circle cx="47" cy="29" r="3.5" fill="#1E293B"/>
-                    <circle cx="75" cy="29" r="3.5" fill="#1E293B"/>
-                    <circle cx="48" cy="27.5" r="1.2" fill="white"/>
-                    <circle cx="76" cy="27.5" r="1.2" fill="white"/>
-                    <path d="M52 44 Q60 50 68 44" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                    <path d="M38 44 Q38 54 60 54 Q82 54 82 44 Q60 38 38 44Z" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
-                  </svg>
-                )
+                icon:( <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                icon:(
-                  <svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:96}}>
-                    <ellipse cx="60" cy="118" rx="48" ry="10" fill="#BBF7D0" opacity="0.5"/>
-                    <rect x="22" y="10" width="66" height="90" rx="8" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                    <rect x="40" y="6" width="30" height="12" rx="5" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1.2"/>
-                    <rect x="32" y="28" width="46" height="5" rx="2" fill="#DCFCE7"/>
-                    <rect x="32" y="38" width="36" height="4" rx="2" fill="#E2E8F0"/>
-                    <rect x="32" y="48" width="42" height="4" rx="2" fill="#E2E8F0"/>
-                    <rect x="32" y="62" width="8" height="24" rx="2" fill="#4ADE80"/>
-                    <rect x="44" y="70" width="8" height="16" rx="2" fill="#86EFAC"/>
-                    <rect x="56" y="56" width="8" height="30" rx="2" fill="#22C55E"/>
-                    <rect x="68" y="66" width="8" height="20" rx="2" fill="#BBF7D0"/>
-                    <rect x="22" y="90" width="66" height="10" rx="0 0 8 8" fill="#DCFCE7" stroke="#1E293B" strokeWidth="1"/>
-                    <path d="M34 95 L38 99 L46 92" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    <line x1="52" y1="95" x2="78" y2="95" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
-                    <rect x="62" y="96" width="48" height="28" rx="7" fill="#16A34A" stroke="#1E293B" strokeWidth="1"/>
-                    <circle cx="74" cy="108" r="5" fill="#BBF7D0"/>
-                    <path d="M72 108 L74 110 L78 105" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    <line x1="84" y1="104" x2="102" y2="104" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="84" y1="110" x2="98" y2="110" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round"/>
-                    <polygon points="70,124 78,124 74,132" fill="#16A34A" stroke="#1E293B" strokeWidth="0.5"/>
-                  </svg>
-                )
+                icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
