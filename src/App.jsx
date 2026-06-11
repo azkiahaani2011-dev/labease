@@ -3248,15 +3248,6 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{ textAlign:"center",marginTop:52 }}>
-            <button onClick={()=>navTo("labs")}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 6px 24px rgba(17,88,166,.28)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:10 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-2px)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-              Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-            </button>
-          </div>
         </div>
       </section>
 
