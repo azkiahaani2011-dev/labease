@@ -1707,19 +1707,6 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   return (
     <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
 
-      {/* ── SELECTED TEST BANNER ── */}
-      {selectedTest && (
-        <div style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",color:"#fff",padding:"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap" }}>
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            <span style={{ fontWeight:700,fontSize:".86rem" }}>Booking: <strong>{selectedTest.name}</strong> — select a lab and click Book Now</span>
-          </div>
-          <button onClick={()=>setSelectedTest(null)} style={{ background:"rgba(255,255,255,.18)",border:"none",color:"#fff",borderRadius:50,padding:"4px 14px",fontWeight:700,fontSize:".78rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
-            Clear ✕
-          </button>
-        </div>
-      )}
-
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
