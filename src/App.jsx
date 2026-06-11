@@ -80,7 +80,6 @@ const G = () => (
     .nav-mob  { display: none  !important; }
     @media (max-width: 768px) {
       .nav-desk { display: none  !important; }
-      .ham-btn  { display: flex  !important; }
       .nav-mob  { display: flex  !important; }
     }
     div[style*="scrollSnapType"]::-webkit-scrollbar { display: none; }
@@ -771,7 +770,7 @@ const G = () => (
     }
 
     /* ── Cart button: full on desktop, icon-only on mobile ── */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .cart-desktop { display: none !important; }
       .cart-mobile  { display: flex !important; }
     }
