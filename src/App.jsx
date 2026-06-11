@@ -1632,7 +1632,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
             </div>
           </div>
           <div style={{ textAlign:"right" }}>
-            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'DM Serif Display',serif" }}>₹{Math.min(...l.tests.map(t=>t.price))}</div>
+            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{Math.min(...l.tests.map(t=>t.price))}</div>
             <div style={{ fontSize:".67rem",color:"var(--muted)",fontWeight:500 }}>tests from</div>
           </div>
         </div>
@@ -1712,7 +1712,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
           </button>
           <div className="labs-header-row">
             <div>
-              <h1 style={{ ...T.serif, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.01em" }}>All Labs</h1>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
                 <span style={{ color:"#1158A6", fontWeight:700 }}> {enriched.filter(l=>l.open).length} open now</span>
@@ -1774,11 +1774,11 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                   <div style={{ flex:1,padding:"16px 16px 14px" }}>
                     <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
                       <div style={{ width:52,height:52,borderRadius:12,background:"#EEF4FF",border:"1.5px solid #DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                        <span style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.3rem",color:"#1158A6" }}>{initials}</span>
+                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#1158A6",letterSpacing:"-.02em" }}>{initials}</span>
                       </div>
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
-                          <span style={{ fontWeight:800,fontSize:"1.05rem",color:"var(--ink)" }}>{l.name}</span>
+                          <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
                           {l.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
                         </div>
                         <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8 }}>
@@ -1804,7 +1804,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart }) {
                       <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,minWidth:140,flexShrink:0 }}>
                         <div style={{ textAlign:"right" }}>
                           <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>Tests starting from</div>
-                          <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.4rem",color:"var(--ink)",lineHeight:1.1 }}>₹ {minPrice}</div>
+                          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                         </div>
                         <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
                           style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
@@ -1863,7 +1863,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           </div>
           <div style={{ flex:1 }}>
             <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4 }}>
-              <h1 style={{ ...T.serif,fontSize:"1.35rem",color:"var(--ink)" }}>{lab.name}</h1>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
               {lab.nabl && <Pill>✓ NABL</Pill>}
               {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
             </div>
@@ -1931,7 +1931,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 </div>
               </div>
               {/* Price */}
-              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'DM Serif Display',serif",whiteSpace:"nowrap" }}>₹{t.price}</div>
+              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{t.price}</div>
               {/* MRP + discount stacked */}
               <div style={{ textAlign:"center",whiteSpace:"nowrap" }}>
                 <div style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".76rem" }}>₹{t.mrp}</div>
@@ -3642,7 +3642,7 @@ export default function App() {
 
                         {/* avatar */}
                         <div style={{ width:68,height:68,borderRadius:16,background:"#F1F5F9",border:"2px solid #E2E8F0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                          <span style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.3rem",color:"#374151" }}>{initials}</span>
+                          <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
                         </div>
 
                         {/* main info */}
@@ -3687,7 +3687,7 @@ export default function App() {
                           {minPrice && (
                             <div style={{ textAlign:"right" }}>
                               <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>Tests starting from</div>
-                              <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1 }}>₹ {minPrice}</div>
+                              <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                             </div>
                           )}
                           <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
