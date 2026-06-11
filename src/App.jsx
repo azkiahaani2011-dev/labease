@@ -1602,9 +1602,9 @@ const LabsNearMeSection = ({ T, navTo }) => (
 
         {/* centered button */}
         <button onClick={()=>navTo("labs")}
-          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.transform="translateY(-1px)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.transform="translateY(0)"; }}>
+          style={{ background:"#1158A6",color:"#fff",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
           View All Labs
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </button>
@@ -2026,9 +2026,9 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
           <button onClick={()=>navTo("labs")}
-            style={{ background:"transparent", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#1158A6", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color="#1158A6"; }}>
+            style={{ background:"#1158A6", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#fff", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.borderColor="#0F2D6B"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.borderColor="#1158A6"; }}>
             View All Specialities →
           </button>
         </div>
@@ -2958,7 +2958,7 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
@@ -2967,10 +2967,10 @@ export default function App() {
               <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
-            <button onClick={()=>navTo("labs")}
-              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(-1px)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="#0D1117"; e.currentTarget.style.transform="translateY(0)"; }}>
+            <button onClick={()=>{ const el=document.getElementById("packages-section"); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); }}
+              style={{ background:"#1158A6",color:"#fff",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
               View All Packages →
             </button>
           </div>
@@ -3035,12 +3035,6 @@ export default function App() {
                   <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
                   <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
                 </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
               </div>
               <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
                 <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
@@ -3091,12 +3085,6 @@ export default function App() {
                   <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
                   <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
                 </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
               </div>
               <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
                 <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
