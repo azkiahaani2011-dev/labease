@@ -2825,13 +2825,15 @@ export default function App() {
                 ))}
               </div>
             </div>
-            {/* right person image — flush to right & bottom, blends into hero */}
-            <div style={{ flexShrink:0, width:145, alignSelf:"stretch", position:"relative", overflow:"hidden" }}>
+            {/* right person image */}
+            <div style={{ flexShrink:0, width:145, alignSelf:"stretch", position:"relative" }}>
               <img
                 src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80&fit=crop&crop=top"
                 alt="Doctor"
-                style={{ position:"absolute", bottom:0, right:0, width:145, height:"100%", objectFit:"cover", objectPosition:"top center", mixBlendMode:"multiply" }}
+                style={{ position:"absolute", bottom:0, right:0, width:145, height:"100%", objectFit:"cover", objectPosition:"top center" }}
               />
+              {/* fade left edge to blend with hero */}
+              <div style={{ position:"absolute", top:0, left:0, width:40, height:"100%", background:"linear-gradient(to right, #EBF3FB, transparent)", zIndex:1 }}/>
             </div>
           </div>
         ) : (
@@ -2877,24 +2879,6 @@ export default function App() {
           <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", position:"relative" }}>
             <div style={{ position:"relative", width:340, height:400 }}>
               <div style={{ position:"absolute", bottom:0, left:"50%", transform:"translateX(-50%)", width:300, height:340, borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%", background:"linear-gradient(160deg,#DBEAFE 0%,#EEF4FF 100%)", zIndex:0 }}/>
-              <div style={{ position:"absolute", top:20, left:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
-                <div style={{ width:36, height:36, borderRadius:10, background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>NABL Certified</div>
-                  <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>6 Partner Labs</div>
-                </div>
-              </div>
-              <div style={{ position:"absolute", bottom:60, right:0, background:"#fff", borderRadius:14, padding:"10px 16px", boxShadow:"0 4px 20px rgba(17,88,166,.13)", zIndex:3, display:"flex", alignItems:"center", gap:10 }}>
-                <div style={{ width:36, height:36, borderRadius:10, background:"#F0FDF4", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontSize:".7rem", color:"#9CA3AF", fontWeight:600 }}>Reports Ready</div>
-                  <div style={{ fontSize:".85rem", fontWeight:800, color:"#0D1117", fontFamily:"'Manrope',sans-serif" }}>Within 6 Hours</div>
-                </div>
-              </div>
               <img
                 src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80&fit=crop&crop=top"
                 alt="Doctor"
