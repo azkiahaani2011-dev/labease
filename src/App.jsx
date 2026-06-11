@@ -673,15 +673,23 @@ const G = () => (
     .hero-section { min-height: 520px; }
     .hero-img-col { display: flex; }
     @media (max-width: 767px) {
-      .hero-section { min-height: 0 !important; }
+      .hero-section { min-height: 0 !important; overflow: hidden !important; }
       .hero-img-col { display: none !important; }
       .hero-content {
         padding-top: 32px !important;
         padding-bottom: 28px !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
         gap: 16px !important;
         grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+      }
+      .hero-content > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
       .hero-content h1 { font-size: 1.5rem !important; margin-bottom: 8px !important; line-height: 1.2 !important; }
       .hero-content p  { font-size: .82rem !important; margin-bottom: 16px !important; line-height: 1.55 !important; }
@@ -689,10 +697,10 @@ const G = () => (
       .trust-badges > div:nth-child(2) { display: none !important; } /* hide dividers */
       .trust-badges > div:nth-child(4) { display: none !important; }
       /* search bar compact */
-      .hero-search-bar { border-radius: 14px !important; }
-      .hero-search-input-field { padding: 11px 6px 11px 0 !important; font-size: .85rem !important; }
-      .hero-search-icon { margin: 0 12px !important; }
-      .hero-search-btn { padding: 9px 16px !important; font-size: .78rem !important; margin: 5px !important; border-radius: 10px !important; }
+      .hero-search-bar { border-radius: 14px !important; width: 100% !important; box-sizing: border-box !important; }
+      .hero-search-input-field { padding: 11px 6px 11px 0 !important; font-size: .85rem !important; min-width: 0 !important; }
+      .hero-search-icon { margin: 0 12px !important; flex-shrink: 0 !important; }
+      .hero-search-btn { padding: 9px 16px !important; font-size: .78rem !important; margin: 5px !important; border-radius: 10px !important; flex-shrink: 0 !important; }
     }
     @media (max-width: 430px) {
       .hero-content { padding-top: 24px !important; padding-bottom: 20px !important; }
@@ -2779,7 +2787,7 @@ export default function App() {
         <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div className="hero-content" style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
+        <div className="hero-content" style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:72,paddingBottom:72,paddingLeft:24,paddingRight:24,width:"100%",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:40 }}>
           {/* ── LEFT: text content ── */}
           <div style={{ maxWidth:580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center" }}>
             {/* eyebrow pill */}
