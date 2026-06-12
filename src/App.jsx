@@ -1535,57 +1535,87 @@ const LabIcon = ({ id, s=44 }) => {
 };
 
 const LAB_META = [
-  { id:1, short:"Apollo",     accent:"#1158A6", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001",
-    logos:["https://logo.clearbit.com/apollodiagnostics.in?size=200","https://logo.clearbit.com/apollohospitals.com?size=200"] },
-  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995",
-    logos:["https://logo.clearbit.com/srlworld.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Agilus_Diagnostics_Logo.png"] },
-  { id:3, short:"Metropolis", accent:"#7C3AED", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980",
-    logos:["https://logo.clearbit.com/metropolisindia.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Metropolis_Healthcare_Logo_Green_Background.png"] },
-  { id:4, short:"Dr Lal",     accent:"#059669", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949",
-    logos:["https://logo.clearbit.com/lalpathlabs.com?size=200"] },
-  { id:5, short:"Thyrocare",  accent:"#D97706", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996",
-    logos:["https://logo.clearbit.com/thyrocare.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Thyrocare_new_Logo2022.svg"] },
-  { id:6, short:"Vijaya",     accent:"#0284C7", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981",
-    logos:["https://logo.clearbit.com/vijayadiagnostic.com?size=200"] },
+  { id:1, short:"Apollo",     accent:"#1E6FD9", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001" },
+  { id:2, short:"SRL",        accent:"#F04015", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995" },
+  { id:3, short:"Metropolis", accent:"#8B3CF7", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980" },
+  { id:4, short:"Dr Lal",     accent:"#10B981", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949" },
+  { id:5, short:"Thyrocare",  accent:"#F59E0B", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996" },
+  { id:6, short:"Vijaya",     accent:"#0EA5E9", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981" },
 ];
 
 function LabLogo({ lab, size=52, radius=12 }) {
-  const meta = LAB_META.find(m=>m.id===lab.id);
-  const [idx, setIdx] = React.useState(0);
-  const urls = meta?.logos || [];
-  const failed = idx >= urls.length;
-
-  const accent = meta?.accent || "#1158A6";
-  const bg = meta?.bg || "#EEF4FF";
-
-  if (!failed && urls[idx]) return (
-    <div style={{ width:size, height:size, borderRadius:radius, background:"#fff",
-      border:`1.5px solid ${accent}30`, flexShrink:0,
-      boxShadow:"0 2px 10px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.04)",
-      display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
-      <img
-        src={urls[idx]}
-        alt={lab.name}
-        onError={()=>setIdx(i=>i+1)}
-        style={{ width:size-12, height:size-12, objectFit:"contain", display:"block" }}
-        crossOrigin="anonymous"
-      />
-    </div>
-  );
-
-  // fallback: clean initial badge
-  return (
-    <div style={{ width:size, height:size, borderRadius:radius, background:bg,
-      border:`1.5px solid ${accent}40`, flexShrink:0,
-      boxShadow:"0 2px 10px rgba(0,0,0,.08)",
-      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:1 }}>
-      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:size*.32, color:accent, lineHeight:1 }}>
-        {(meta?.short||lab.name).slice(0,2)}
-      </span>
-      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:700, fontSize:size*.11, color:accent, opacity:.7, letterSpacing:".5px" }}>
-        LABS
-      </span>
-    </div>
+  const p = size / 52; // scale factor
+  const icons = {
+    // Apollo — deep blue, bold medical cross
+    1: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag1`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#1E6FD9"/><stop offset="100%" stopColor="#0A3FA0"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag1)`}/>
+        <rect x="21" y="10" width="10" height="32" rx="4" fill="#fff"/>
+        <rect x="10" y="21" width="32" height="10" rx="4" fill="#fff"/>
+      </svg>
+    ),
+    // SRL — vivid red, bold DNA double helix
+    2: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag2`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#F04015"/><stop offset="100%" stopColor="#B52200"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag2)`}/>
+        <path d="M17 10 C17 18 35 18 35 26 C35 34 17 34 17 42" stroke="#fff" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        <path d="M35 10 C35 18 17 18 17 26 C17 34 35 34 35 42" stroke="rgba(255,255,255,.55)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        <circle cx="17" cy="26" r="3" fill="#fff"/>
+        <circle cx="35" cy="26" r="3" fill="rgba(255,255,255,.6)"/>
+      </svg>
+    ),
+    // Metropolis — rich purple, bold M + pulse line
+    3: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag3`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#8B3CF7"/><stop offset="100%" stopColor="#5B21B6"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag3)`}/>
+        <path d="M11 38 L11 14 L26 30 L41 14 L41 38" stroke="#fff" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+    // Dr Lal PathLabs — emerald green, lab flask with liquid
+    4: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag4`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#10B981"/><stop offset="100%" stopColor="#047857"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag4)`}/>
+        <path d="M21 8 L21 23 L11 39 Q9 43 13 44 L39 44 Q43 43 41 39 L31 23 L31 8 Z" fill="rgba(255,255,255,.18)" stroke="#fff" strokeWidth="2.5" strokeLinejoin="round"/>
+        <path d="M21 8 L31 8" stroke="#fff" strokeWidth="3" strokeLinecap="round"/>
+        <path d="M12 36 Q26 30 40 36" fill="rgba(255,255,255,.35)" stroke="none"/>
+        <ellipse cx="19" cy="38" rx="3" ry="3" fill="#fff" opacity=".9"/>
+        <ellipse cx="28" cy="40" rx="2.5" ry="2.5" fill="#fff" opacity=".7"/>
+        <ellipse cx="35" cy="37" rx="2" ry="2" fill="#fff" opacity=".6"/>
+      </svg>
+    ),
+    // Thyrocare — warm amber, butterfly / thyroid shape
+    5: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag5`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#F59E0B"/><stop offset="100%" stopColor="#B45309"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag5)`}/>
+        <ellipse cx="16" cy="24" rx="11" ry="8" fill="rgba(255,255,255,.30)"/>
+        <ellipse cx="36" cy="24" rx="11" ry="8" fill="rgba(255,255,255,.30)"/>
+        <ellipse cx="16" cy="24" rx="7" ry="5" fill="rgba(255,255,255,.55)"/>
+        <ellipse cx="36" cy="24" rx="7" ry="5" fill="rgba(255,255,255,.55)"/>
+        <circle cx="26" cy="24" r="4.5" fill="#fff"/>
+        <rect x="24.5" y="30" width="3" height="12" rx="1.5" fill="#fff" opacity=".8"/>
+      </svg>
+    ),
+    // Vijaya — ocean blue, bold V with radiology rings
+    6: (
+      <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+        <defs><linearGradient id={`ag6`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0EA5E9"/><stop offset="100%" stopColor="#0369A1"/></linearGradient></defs>
+        <rect width="52" height="52" rx={radius} fill={`url(#ag6)`}/>
+        <circle cx="26" cy="26" r="17" stroke="rgba(255,255,255,.20)" strokeWidth="2" fill="none"/>
+        <circle cx="26" cy="26" r="11" stroke="rgba(255,255,255,.30)" strokeWidth="2" fill="none"/>
+        <path d="M14 12 L26 34 L38 12" stroke="#fff" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  };
+  return icons[lab.id] || (
+    <svg viewBox="0 0 52 52" width={size} height={size} style={{flexShrink:0,display:"block",borderRadius:radius}}>
+      <rect width="52" height="52" rx={radius} fill="#EEF4FF"/>
+      <text x="26" y="34" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="20" fill="#1158A6">{lab.name[0]}</text>
+    </svg>
   );
 }
 
