@@ -1786,7 +1786,14 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
             const displayPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
             const minPrice = displayPrice;
-            const initials = l.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+            const logoMap = {
+              1: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#EBF3FF"/><text x="26" y="20" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="11" fill="#0066CC">APOLLO</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#0066CC">DIAGNOSTICS</text><rect x="10" y="36" width="32" height="2.5" rx="1.25" fill="#0066CC" opacity=".4"/></svg>,
+              2: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#FEF1EE"/><text x="26" y="24" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="17" fill="#E8380D">SRL</text><text x="26" y="36" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="7.5" fill="#E8380D">DIAGNOSTICS</text></svg>,
+              3: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#F5F0FF"/><text x="26" y="21" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="10" fill="#6B21A8">METROPOLIS</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#6B21A8">HEALTHCARE</text><circle cx="26" cy="43" r="3" fill="#6B21A8" opacity=".4"/></svg>,
+              4: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#ECFDF5"/><text x="26" y="18" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#047857">DR. LAL</text><text x="26" y="29" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#047857">PATHLABS</text><rect x="14" y="33" width="24" height="2" rx="1" fill="#047857" opacity=".5"/><text x="26" y="44" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="7" fill="#047857">Est. 1949</text></svg>,
+              5: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#FFFBEB"/><text x="26" y="20" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="10" fill="#B45309">THYROCARE</text><text x="26" y="32" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#B45309">TECHNOLOGIES</text><path d="M20 40 Q26 36 32 40" stroke="#B45309" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>,
+              6: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#F0F9FF"/><text x="26" y="21" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="12" fill="#0369A1">VIJAYA</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#0369A1">DIAGNOSTICS</text><path d="M18 39 L26 44 L34 39" stroke="#0369A1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+            };
             return (
               <div key={l.id} className="hover-lift"
                 style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)",cursor:"pointer" }}
@@ -1795,8 +1802,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                 <div style={{ display:"flex" }}>
                   <div style={{ flex:1,padding:"16px 16px 14px" }}>
                     <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
-                      <div style={{ width:52,height:52,borderRadius:12,background:"#EEF4FF",border:"1.5px solid #DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#1158A6",letterSpacing:"-.02em" }}>{initials}</span>
+                      <div style={{ flexShrink:0 }}>
+                        {logoMap[l.id] || <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#EEF4FF"/><text x="26" y="32" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="16" fill="#1158A6">{l.name[0]}</text></svg>}
                       </div>
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
