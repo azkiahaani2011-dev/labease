@@ -1,4 +1,5 @@
 const Database = require("better-sqlite3");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 
 const DB_PATH = path.join(__dirname, "../../labease.db");
@@ -90,7 +91,22 @@ function initSchema(db) {
       test_name  TEXT    NOT NULL,
       price      INTEGER NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS admins (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      name       TEXT    NOT NULL,
+      email      TEXT    UNIQUE NOT NULL,
+      password   TEXT    NOT NULL,
+      created_at TEXT    DEFAULT (datetime('now'))
+    );
   `);
+
+  // Seed default admin if not exists
+  const existing = db.prepare("SELECT id FROM admins WHERE email=?").get("admin@labease.com");
+  if (!existing) {
+    const hash = bcrypt.hashSync("admin123", 10);
+    db.prepare("INSERT INTO admins (name,email,password) VALUES (?,?,?)").run("Admin", "admin@labease.com", hash);
+  }
 }
 
 module.exports = { getDb };
