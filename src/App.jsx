@@ -1535,12 +1535,12 @@ const LabIcon = ({ id, s=44 }) => {
 };
 
 const LAB_META = [
-  { id:1, short:"Apollo",     accent:"#0066CC", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001", logo:"https://logo.clearbit.com/apollodiagnostics.in" },
-  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995", logo:"https://logo.clearbit.com/srlworld.com" },
-  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980", logo:"https://logo.clearbit.com/metropolisindia.com" },
-  { id:4, short:"Dr Lal",     accent:"#047857", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949", logo:"https://logo.clearbit.com/lalpathlabs.com" },
-  { id:5, short:"Thyrocare",  accent:"#B45309", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996", logo:"https://logo.clearbit.com/thyrocare.com" },
-  { id:6, short:"Vijaya",     accent:"#0369A1", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981", logo:"https://logo.clearbit.com/vijayadiagnostic.com" },
+  { id:1, short:"Apollo",     accent:"#0066CC", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001", logo:"https://logo.clearbit.com/apollodiagnostics.in",   img:"https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=200&q=80" },
+  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995", logo:"https://logo.clearbit.com/srlworld.com",            img:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=200&q=80" },
+  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980", logo:"https://logo.clearbit.com/metropolisindia.com",     img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80" },
+  { id:4, short:"Dr Lal",     accent:"#047857", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949", logo:"https://logo.clearbit.com/lalpathlabs.com",         img:"https://images.unsplash.com/photo-1585435557343-3b092031a831?w=200&q=80" },
+  { id:5, short:"Thyrocare",  accent:"#B45309", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996", logo:"https://logo.clearbit.com/thyrocare.com",           img:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=200&q=80" },
+  { id:6, short:"Vijaya",     accent:"#0369A1", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981", logo:"https://logo.clearbit.com/vijayadiagnostic.com",   img:"https://images.unsplash.com/photo-1516549655169-df83a0774514?w=200&q=80" },
 ];
 
 function LabLogo({ lab, size=52, radius=12 }) {
@@ -1813,9 +1813,19 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                 onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
 
                 <div style={{ display:"flex" }}>
+                  {/* left image panel */}
+                  {(() => { const meta = LAB_META.find(m=>m.id===l.id); return meta?.img ? (
+                    <div style={{ width:110, flexShrink:0, position:"relative", overflow:"hidden", background:meta.bg||"#EEF4FF" }}>
+                      <img src={meta.img} alt={l.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+                        onError={e=>{ e.target.style.display="none"; }}/>
+                      {/* logo overlay */}
+                      <div style={{ position:"absolute",bottom:6,left:6, background:"rgba(255,255,255,.9)", borderRadius:8, padding:"3px 5px", backdropFilter:"blur(4px)" }}>
+                        <LabLogo lab={l} size={32} radius={6}/>
+                      </div>
+                    </div>
+                  ) : null; })()}
                   <div style={{ flex:1,padding:"16px 16px 14px" }}>
                     <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
-                      <LabLogo lab={l} />
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
                           <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
