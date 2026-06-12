@@ -1536,27 +1536,28 @@ const LabIcon = ({ id, s=44 }) => {
 
 const LAB_META = [
   { id:1, short:"Apollo",     accent:"#1E6FD9", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001",
-    img:"https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/apollodiagnostics.in?size=200", logoBg:"#fff" },
   { id:2, short:"SRL",        accent:"#F04015", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995",
-    img:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/srlworld.com?size=200", logoBg:"#fff" },
   { id:3, short:"Metropolis", accent:"#8B3CF7", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980",
-    img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/metropolisindia.com?size=200", logoBg:"#fff" },
   { id:4, short:"Dr Lal",     accent:"#10B981", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949",
-    img:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/lalpathlabs.com?size=200", logoBg:"#fff" },
   { id:5, short:"Thyrocare",  accent:"#F59E0B", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996",
-    img:"https://images.unsplash.com/photo-1614935151651-0bea6508db6b?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/thyrocare.com?size=200", logoBg:"#fff" },
   { id:6, short:"Vijaya",     accent:"#0EA5E9", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981",
-    img:"https://images.unsplash.com/photo-1516549655169-df83a0774514?w=300&h=300&fit=crop&q=90" },
+    logo:"https://logo.clearbit.com/vijayadiagnostic.com?size=200", logoBg:"#fff" },
 ];
 
-function LabLogo({ lab, size=90, radius=12 }) {
+function LabLogo({ lab, size=90, radius=14 }) {
   const meta = LAB_META.find(m=>m.id===lab.id);
   const [err, setErr] = React.useState(false);
-  if (meta?.img && !err) return (
+  if (meta?.logo && !err) return (
     <div style={{ width:size, height:size, borderRadius:radius, overflow:"hidden", flexShrink:0,
-      boxShadow:"0 2px 8px rgba(0,0,0,.12)", border:"1px solid rgba(0,0,0,.06)" }}>
-      <img src={meta.img} alt={lab.name} onError={()=>setErr(true)}
-        style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+      background:"#fff", boxShadow:"0 2px 12px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.06)",
+      display:"flex", alignItems:"center", justifyContent:"center" }}>
+      <img src={meta.logo} alt={lab.name} onError={()=>setErr(true)}
+        style={{ width:size*.80, height:size*.80, objectFit:"contain", display:"block" }}/>
     </div>
   );
   // fallback icon
