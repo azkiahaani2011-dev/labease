@@ -1535,138 +1535,57 @@ const LabIcon = ({ id, s=44 }) => {
 };
 
 const LAB_META = [
-  { id:1, short:"Apollo",     accent:"#1158A6", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001" },
-  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995" },
-  { id:3, short:"Metropolis", accent:"#7C3AED", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980" },
-  { id:4, short:"Dr Lal",     accent:"#059669", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949" },
-  { id:5, short:"Thyrocare",  accent:"#D97706", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996" },
-  { id:6, short:"Vijaya",     accent:"#0284C7", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981" },
+  { id:1, short:"Apollo",     accent:"#1158A6", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001",
+    logos:["https://logo.clearbit.com/apollodiagnostics.in?size=200","https://logo.clearbit.com/apollohospitals.com?size=200"] },
+  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995",
+    logos:["https://logo.clearbit.com/srlworld.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Agilus_Diagnostics_Logo.png"] },
+  { id:3, short:"Metropolis", accent:"#7C3AED", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980",
+    logos:["https://logo.clearbit.com/metropolisindia.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Metropolis_Healthcare_Logo_Green_Background.png"] },
+  { id:4, short:"Dr Lal",     accent:"#059669", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949",
+    logos:["https://logo.clearbit.com/lalpathlabs.com?size=200"] },
+  { id:5, short:"Thyrocare",  accent:"#D97706", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996",
+    logos:["https://logo.clearbit.com/thyrocare.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Thyrocare_new_Logo2022.svg"] },
+  { id:6, short:"Vijaya",     accent:"#0284C7", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981",
+    logos:["https://logo.clearbit.com/vijayadiagnostic.com?size=200"] },
 ];
 
 function LabLogo({ lab, size=52, radius=12 }) {
-  const s = size;
-  const r = radius;
-  const logos = {
-    // Apollo Diagnostics — deep blue gradient, cross icon + wordmark
-    1: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="ap-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#1158A6"/>
-            <stop offset="100%" stopColor="#0040A0"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#ap-bg)"/>
-        {/* medical cross */}
-        <rect x="22" y="9" width="8" height="22" rx="3" fill="#fff" opacity=".95"/>
-        <rect x="14" y="17" width="24" height="8" rx="3" fill="#fff" opacity=".95"/>
-        {/* wordmark */}
-        <text x="26" y="43" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="800" fontSize="7.5" fill="#7BBFFF" letterSpacing="1.2">APOLLO</text>
-      </svg>
-    ),
-    // SRL Diagnostics — bold red, DNA helix motif
-    2: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="srl-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#E8380D"/>
-            <stop offset="100%" stopColor="#C0280A"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#srl-bg)"/>
-        {/* DNA helix lines */}
-        <path d="M18 10 Q26 16 34 10" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity=".5"/>
-        <path d="M18 16 Q26 22 34 16" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity=".3"/>
-        {/* big SRL text */}
-        <text x="26" y="35" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="900" fontSize="18" fill="#fff" letterSpacing=".5">SRL</text>
-        <text x="26" y="46" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="700" fontSize="6" fill="#FFBBAA" letterSpacing="1.5">DIAGNOSTICS</text>
-      </svg>
-    ),
-    // Metropolis — rich purple, city skyline silhouette
-    3: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="mp-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7C3AED"/>
-            <stop offset="100%" stopColor="#5B21B6"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#mp-bg)"/>
-        {/* M letter bold */}
-        <text x="26" y="30" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="900" fontSize="22" fill="#fff" letterSpacing="-1">M</text>
-        {/* decorative arc */}
-        <path d="M14 36 Q26 30 38 36" stroke="#C4B5FD" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-        <text x="26" y="46" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="700" fontSize="5.5" fill="#DDD6FE" letterSpacing="1">METROPOLIS</text>
-      </svg>
-    ),
-    // Dr Lal PathLabs — premium green, flask icon
-    4: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="dl-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#059669"/>
-            <stop offset="100%" stopColor="#047857"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#dl-bg)"/>
-        {/* flask shape */}
-        <path d="M22 9 L22 22 L14 36 Q12 40 16 41 L36 41 Q40 40 38 36 L30 22 L30 9 Z" fill="#fff" opacity=".15"/>
-        <path d="M22 9 L30 9" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity=".7"/>
-        <path d="M20 25 L32 25" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" opacity=".5"/>
-        {/* drops */}
-        <circle cx="20" cy="34" r="2.5" fill="#A7F3D0" opacity=".8"/>
-        <circle cx="26" cy="37" r="2" fill="#6EE7B7" opacity=".7"/>
-        <text x="26" y="48" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="800" fontSize="6" fill="#A7F3D0" letterSpacing=".8">DR LAL</text>
-      </svg>
-    ),
-    // Thyrocare — amber/orange, butterfly thyroid icon
-    5: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="tc-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#D97706"/>
-            <stop offset="100%" stopColor="#B45309"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#tc-bg)"/>
-        {/* thyroid butterfly wings */}
-        <ellipse cx="18" cy="22" rx="9" ry="7" fill="#fff" opacity=".2"/>
-        <ellipse cx="34" cy="22" rx="9" ry="7" fill="#fff" opacity=".2"/>
-        <ellipse cx="18" cy="22" rx="6" ry="4.5" fill="#fff" opacity=".35"/>
-        <ellipse cx="34" cy="22" rx="6" ry="4.5" fill="#fff" opacity=".35"/>
-        <circle cx="26" cy="22" r="3" fill="#fff" opacity=".9"/>
-        <text x="26" y="37" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="900" fontSize="8" fill="#fff" letterSpacing=".3">THYROCARE</text>
-        <text x="26" y="46" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="600" fontSize="5.5" fill="#FDE68A" letterSpacing="1">TECHNOLOGIES</text>
-      </svg>
-    ),
-    // Vijaya Diagnostics — sky blue, victory V + radiology ring
-    6: (
-      <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-        <defs>
-          <linearGradient id="vj-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#0284C7"/>
-            <stop offset="100%" stopColor="#0369A1"/>
-          </linearGradient>
-        </defs>
-        <rect width="52" height="52" rx={r} fill="url(#vj-bg)"/>
-        {/* radiology arc ring */}
-        <circle cx="26" cy="22" r="11" stroke="#fff" strokeWidth="1.5" fill="none" opacity=".2"/>
-        <circle cx="26" cy="22" r="7" stroke="#fff" strokeWidth="1.5" fill="none" opacity=".3"/>
-        {/* V mark */}
-        <path d="M18 13 L26 29 L34 13" stroke="#fff" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-        <text x="26" y="43" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="800" fontSize="7" fill="#BAE6FD" letterSpacing="1">VIJAYA</text>
-        <text x="26" y="50" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontWeight="600" fontSize="5" fill="#7DD3FC" letterSpacing=".8">DIAGNOSTICS</text>
-      </svg>
-    ),
-  };
-  const logo = logos[lab.id];
-  if (logo) return logo;
-  // generic fallback
+  const meta = LAB_META.find(m=>m.id===lab.id);
+  const [idx, setIdx] = React.useState(0);
+  const urls = meta?.logos || [];
+  const failed = idx >= urls.length;
+
+  const accent = meta?.accent || "#1158A6";
+  const bg = meta?.bg || "#EEF4FF";
+
+  if (!failed && urls[idx]) return (
+    <div style={{ width:size, height:size, borderRadius:radius, background:"#fff",
+      border:`1.5px solid ${accent}30`, flexShrink:0,
+      boxShadow:"0 2px 10px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.04)",
+      display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+      <img
+        src={urls[idx]}
+        alt={lab.name}
+        onError={()=>setIdx(i=>i+1)}
+        style={{ width:size-12, height:size-12, objectFit:"contain", display:"block" }}
+        crossOrigin="anonymous"
+      />
+    </div>
+  );
+
+  // fallback: clean initial badge
   return (
-    <svg viewBox="0 0 52 52" width={s} height={s} style={{flexShrink:0,borderRadius:r,display:"block"}}>
-      <rect width="52" height="52" rx={r} fill="#EEF4FF"/>
-      <text x="26" y="32" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="18" fill="#1158A6">{lab.name[0]}</text>
-    </svg>
+    <div style={{ width:size, height:size, borderRadius:radius, background:bg,
+      border:`1.5px solid ${accent}40`, flexShrink:0,
+      boxShadow:"0 2px 10px rgba(0,0,0,.08)",
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:1 }}>
+      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:size*.32, color:accent, lineHeight:1 }}>
+        {(meta?.short||lab.name).slice(0,2)}
+      </span>
+      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:700, fontSize:size*.11, color:accent, opacity:.7, letterSpacing:".5px" }}>
+        LABS
+      </span>
+    </div>
   );
 }
 
