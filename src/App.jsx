@@ -1535,13 +1535,34 @@ const LabIcon = ({ id, s=44 }) => {
 };
 
 const LAB_META = [
-  { id:1, short:"Apollo", accent:"#0066CC", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001" },
-  { id:2, short:"SRL",    accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",   since:"Est. 1995" },
-  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",  since:"Est. 1980" },
-  { id:4, short:"Dr Lal", accent:"#047857", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",  since:"Est. 1949" },
-  { id:5, short:"Thyrocare", accent:"#B45309", bg:"#FFFBEB", city:"Chennai", tag:"Specialist Lab",   since:"Est. 1996" },
-  { id:6, short:"Vijaya", accent:"#0369A1", bg:"#F0F9FF", icon:"V", city:"Hyderabad", tag:"Radiology Expert",  since:"Est. 1981" },
+  { id:1, short:"Apollo",     accent:"#0066CC", bg:"#EBF3FF", city:"Bangalore", tag:"India's #1 Network", since:"Est. 2001", logo:"https://logo.clearbit.com/apollodiagnostics.in" },
+  { id:2, short:"SRL",        accent:"#E8380D", bg:"#FEF1EE", city:"Mumbai",    tag:"Pan-India Chain",    since:"Est. 1995", logo:"https://logo.clearbit.com/srlworld.com" },
+  { id:3, short:"Metropolis", accent:"#6B21A8", bg:"#F5F0FF", city:"Hyderabad", tag:"Highest Rated",      since:"Est. 1980", logo:"https://logo.clearbit.com/metropolisindia.com" },
+  { id:4, short:"Dr Lal",     accent:"#047857", bg:"#ECFDF5", city:"Delhi",     tag:"75+ Years Legacy",   since:"Est. 1949", logo:"https://logo.clearbit.com/lalpathlabs.com" },
+  { id:5, short:"Thyrocare",  accent:"#B45309", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996", logo:"https://logo.clearbit.com/thyrocare.com" },
+  { id:6, short:"Vijaya",     accent:"#0369A1", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981", logo:"https://logo.clearbit.com/vijayadiagnostic.com" },
 ];
+
+function LabLogo({ lab, size=52, radius=12 }) {
+  const [err, setErr] = React.useState(false);
+  const meta = LAB_META.find(m=>m.id===lab.id);
+  if (!err && meta?.logo) return (
+    <div style={{ width:size, height:size, borderRadius:radius, background:meta.bg||"#F0F6FF", border:`1.5px solid ${meta.accent}22`, display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", flexShrink:0 }}>
+      <img src={meta.logo} alt={lab.name} onError={()=>setErr(true)}
+        style={{ width:size-14, height:size-14, objectFit:"contain" }}/>
+    </div>
+  );
+  // fallback SVG
+  const svgMap = {
+    1: <><rect width={size} height={size} rx={radius} fill="#EBF3FF"/><text x={size/2} y={size*.38} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.21} fill="#0066CC">APOLLO</text><text x={size/2} y={size*.63} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.15} fill="#0066CC">DIAGNOSTICS</text><rect x={size*.19} y={size*.69} width={size*.62} height={size*.05} rx={size*.025} fill="#0066CC" opacity=".4"/></>,
+    2: <><rect width={size} height={size} rx={radius} fill="#FEF1EE"/><text x={size/2} y={size*.48} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.33} fill="#E8380D">SRL</text><text x={size/2} y={size*.68} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.14} fill="#E8380D">DIAGNOSTICS</text></>,
+    3: <><rect width={size} height={size} rx={radius} fill="#F5F0FF"/><text x={size/2} y={size*.41} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.19} fill="#6B21A8">METROPOLIS</text><text x={size/2} y={size*.63} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.15} fill="#6B21A8">HEALTHCARE</text></>,
+    4: <><rect width={size} height={size} rx={radius} fill="#ECFDF5"/><text x={size/2} y={size*.36} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.18} fill="#047857">DR. LAL</text><text x={size/2} y={size*.56} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.18} fill="#047857">PATHLABS</text><text x={size/2} y={size*.84} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.13} fill="#047857">Est. 1949</text></>,
+    5: <><rect width={size} height={size} rx={radius} fill="#FFFBEB"/><text x={size/2} y={size*.39} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.19} fill="#B45309">THYROCARE</text><text x={size/2} y={size*.61} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.15} fill="#B45309">TECHNOLOGIES</text></>,
+    6: <><rect width={size} height={size} rx={radius} fill="#F0F9FF"/><text x={size/2} y={size*.42} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.23} fill="#0369A1">VIJAYA</text><text x={size/2} y={size*.63} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize={size*.15} fill="#0369A1">DIAGNOSTICS</text></>,
+  };
+  return <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} style={{flexShrink:0}}>{svgMap[lab.id]||<><rect width={size} height={size} rx={radius} fill="#EEF4FF"/><text x={size/2} y={size*.6} textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize={size*.3} fill="#1158A6">{lab.name[0]}</text></>}</svg>;
+}
 
 const LabsNearMeSection = ({ T, navTo }) => (
   <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
@@ -1786,14 +1807,6 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
             const displayPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
             const minPrice = displayPrice;
-            const logoMap = {
-              1: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#EBF3FF"/><text x="26" y="20" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="11" fill="#0066CC">APOLLO</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#0066CC">DIAGNOSTICS</text><rect x="10" y="36" width="32" height="2.5" rx="1.25" fill="#0066CC" opacity=".4"/></svg>,
-              2: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#FEF1EE"/><text x="26" y="24" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="17" fill="#E8380D">SRL</text><text x="26" y="36" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="7.5" fill="#E8380D">DIAGNOSTICS</text></svg>,
-              3: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#F5F0FF"/><text x="26" y="21" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="10" fill="#6B21A8">METROPOLIS</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#6B21A8">HEALTHCARE</text><circle cx="26" cy="43" r="3" fill="#6B21A8" opacity=".4"/></svg>,
-              4: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#ECFDF5"/><text x="26" y="18" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#047857">DR. LAL</text><text x="26" y="29" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#047857">PATHLABS</text><rect x="14" y="33" width="24" height="2" rx="1" fill="#047857" opacity=".5"/><text x="26" y="44" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="7" fill="#047857">Est. 1949</text></svg>,
-              5: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#FFFBEB"/><text x="26" y="20" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="10" fill="#B45309">THYROCARE</text><text x="26" y="32" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#B45309">TECHNOLOGIES</text><path d="M20 40 Q26 36 32 40" stroke="#B45309" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>,
-              6: <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#F0F9FF"/><text x="26" y="21" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="12" fill="#0369A1">VIJAYA</text><text x="26" y="33" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="700" fontSize="8" fill="#0369A1">DIAGNOSTICS</text><path d="M18 39 L26 44 L34 39" stroke="#0369A1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-            };
             return (
               <div key={l.id} className="hover-lift"
                 style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)",cursor:"pointer" }}
@@ -1802,9 +1815,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                 <div style={{ display:"flex" }}>
                   <div style={{ flex:1,padding:"16px 16px 14px" }}>
                     <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
-                      <div style={{ flexShrink:0 }}>
-                        {logoMap[l.id] || <svg viewBox="0 0 52 52" width="52" height="52"><rect width="52" height="52" rx="12" fill="#EEF4FF"/><text x="26" y="32" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="16" fill="#1158A6">{l.name[0]}</text></svg>}
-                      </div>
+                      <LabLogo lab={l} />
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
                           <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
@@ -1900,9 +1911,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
         <button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
-          <div style={{ width:56,height:56,borderRadius:12,background:`${lab.color}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-            <div style={{ width:24,height:24,borderRadius:"50%",background:lab.color }}/>
-          </div>
+          <LabLogo lab={lab} size={56} />
           <div style={{ flex:1 }}>
             <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4 }}>
               <h1 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
