@@ -1919,16 +1919,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                           <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>{selectedTest ? selectedTest.name : "Tests starting from"}</div>
                           <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
                         </div>
-                        {selectedTest && matchTest ? (
-                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 22px",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",letterSpacing:"-.01em" }}
-                            onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
-                            onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            Book
-                          </button>
-                        ) : selectedTest ? (
+                        {selectedTest && !matchTest && (
                           <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
-                        ) : (
+                        )}
+                        {!selectedTest && (
                           <>
                             <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
                               style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
@@ -1959,6 +1953,16 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                       <div style={{ fontSize:".75rem",color:"var(--muted)" }}>{l.tests.length}+ tests available</div>
                       {l.nabl && <div style={{ fontSize:".75rem",color:"#1158A6",fontWeight:600 }}>NABL Accredited · Est. {l.founded}</div>}
                     </div>
+                    {selectedTest && matchTest && (
+                      <div style={{ paddingTop:12,borderTop:"1px solid #F1F5F9",marginTop:4 }}>
+                        <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
+                          style={{ display:"block",margin:"0 auto",background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
+                          onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
+                          onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
+                          Book
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -3859,9 +3863,9 @@ export default function App() {
             {/* Header */}
             <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <span style={{ color:"#fff",fontWeight:800,fontSize:"1.05rem",fontFamily:"'DM Serif Display',serif",flex:1 }}>Your Cart</span>
+              <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif",flex:1,letterSpacing:".01em" }}>Your Cart</span>
               <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
-              <button onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ background:"rgba(255,255,255,.18)",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,marginLeft:8 }}>✕</button>
+              <button onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,.8)",fontSize:"1.7rem",lineHeight:1,padding:"2px 4px",fontWeight:300,marginLeft:8 }}>×</button>
             </div>
             {/* Body */}
             <div style={{ flex:1,overflowY:"auto",padding:"16px 20px" }}>
