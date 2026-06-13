@@ -184,8 +184,8 @@ function Login(props) {
   const [err, setErr] = useState('');
   function submit(e) {
     e.preventDefault();
-    if (user === 'admin' && pass === 'labease2024') { props.onLogin(); }
-    else setErr('Invalid credentials. Try admin / labease2024');
+    if (user.trim() === 'admin' && pass.trim() === 'labease2024') { props.onLogin(); }
+    else setErr('Invalid credentials. Use admin / labease2024');
   }
   return (
     <div className="login-wrap">
@@ -556,7 +556,7 @@ function App() {
   const [labs, setLabs] = useState(function(){return genLabs();});
   const [tests, setTests] = useState(function(){return genTests();});
 
-  function login() { localStorage.setItem('le_auth','1'); setAuthed(true); }
+  function login() { ['le_admin_auth','labease_admin_auth'].forEach(k=>localStorage.removeItem(k)); localStorage.setItem('le_auth','1'); setAuthed(true); }
   function logout() { localStorage.removeItem('le_auth'); setAuthed(false); }
 
   if (!authed) return React.createElement(Login, {onLogin:login});
