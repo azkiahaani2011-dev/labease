@@ -3877,50 +3877,50 @@ export default function App() {
                 </div>
               ) : (
                 <>
-                  {cart.map(item=>{
-                    const prep = getTestPrep(item.tname);
-                    const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
-                    const isSpecial = prep.prep !== "No special requirement.";
-                    const prepOpen = prepGuideOpen instanceof Set ? prepGuideOpen.has(item.tid) : false;
-                    const togglePrep = () => setPrepGuideOpen(prev => {
-                      const s = new Set(prev instanceof Set ? prev : []);
-                      s.has(item.tid) ? s.delete(item.tid) : s.add(item.tid);
-                      return new Set(s);
-                    });
-                    return (
-                      <div key={item.tid} style={{ borderBottom:"1px solid #F3F4F6",paddingBottom:10,marginBottom:2 }}>
-                        <div style={{ display:"flex",alignItems:"center",paddingTop:10,gap:10 }}>
-                          <div style={{ flex:1 }}>
-                            <div style={{ fontWeight:700,fontSize:".87rem",marginBottom:2 }}>{item.tname}</div>
-                            <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
-                          </div>
-                          <div style={{ textAlign:"right",marginRight:6 }}>
-                            <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
-                            <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
-                          </div>
-                          <button onClick={()=>delCart(item.tid)} title="Remove"
-                            style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
-                            onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
-                            onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
-                        </div>
-                        {/* Prep guide toggle button */}
-                        <button onClick={togglePrep} style={{ marginTop:10,width:"100%",background:prepOpen?"#FFFBEB":"#F9FAFB",border:`1.5px solid ${prepOpen?"#FDE68A":"#E5E7EB"}`,borderRadius:9,padding:"10px 0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6,color:prepOpen?"#92400E":"#374151",fontSize:".84rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
-                          <span>{prepOpen?"▾":"▸"}</span> Preparation Guide
-                        </button>
-                        {/* Inline prep guide */}
-                        {prepOpen && (
-                          <div style={{ marginTop:8,borderRadius:10,overflow:"hidden",border:"1px solid #E5E7EB" }}>
-                            <div style={{ background:"#F9FAFB",padding:"7px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",gap:7 }}>
-                              <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 9px",fontSize:".7rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
-                            </div>
-                            <div style={{ padding:"9px 12px",background:isSpecial?"#FFFBEB":"#F0FDF4",fontSize:".78rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
-                              {isSpecial ? prep.prep : "✅ No special requirement"}
-                            </div>
-                          </div>
-                        )}
+                  {cart.map(item=>(
+                    <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"12px 0",borderBottom:"1px solid #F3F4F6",gap:10 }}>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontWeight:700,fontSize:".87rem",marginBottom:2 }}>{item.tname}</div>
+                        <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
                       </div>
-                    );
-                  })}
+                      <div style={{ textAlign:"right",marginRight:6 }}>
+                        <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                        <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
+                      </div>
+                      <button onClick={()=>delCart(item.tid)} title="Remove"
+                        style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                        onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
+                        onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
+                    </div>
+                  ))}
+
+                  {/* Preparation Guide — separate section */}
+                  <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
+                    <button onClick={()=>setPrepGuideOpen(o=>!o)}
+                      style={{ width:"100%",background:prepGuideOpen?"#FFFBEB":"#F9FAFB",border:"none",borderBottom:prepGuideOpen?"1.5px solid #FDE68A":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:prepGuideOpen?"#92400E":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+                      📋 Preparation Guide <span style={{ fontSize:".75rem" }}>{prepGuideOpen?"▾":"▸"}</span>
+                    </button>
+                    {prepGuideOpen && (
+                      <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
+                        {cart.map(item=>{
+                          const prep = getTestPrep(item.tname);
+                          const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
+                          const isSpecial = prep.prep !== "No special requirement.";
+                          return (
+                            <div key={item.tid} style={{ borderRadius:9,overflow:"hidden",border:"1px solid #E5E7EB" }}>
+                              <div style={{ background:"#F9FAFB",padding:"8px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+                                <span style={{ fontWeight:700,fontSize:".82rem" }}>{item.tname}</span>
+                                <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 8px",fontSize:".68rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
+                              </div>
+                              <div style={{ padding:"9px 12px",background:isSpecial?"#FFFBEB":"#F0FDF4",fontSize:".77rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
+                                {isSpecial ? prep.prep : "✅ No special requirement"}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </>
               )}
             </div>
