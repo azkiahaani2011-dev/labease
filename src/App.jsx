@@ -2799,6 +2799,30 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
+  // Re-apply admin price overrides whenever another tab (admin panel) updates localStorage
+  const [, setPriceRev] = useState(0);
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'le_price_overrides' || e.key === 'le_lab_overrides') {
+        try {
+          const priceOv = JSON.parse(localStorage.getItem('le_price_overrides') || '{}');
+          const labOv   = JSON.parse(localStorage.getItem('le_lab_overrides')   || '{}');
+          LABS.forEach(lab => {
+            if (labOv[lab.id] !== undefined) lab.active = labOv[lab.id];
+            lab.tests.forEach(t => {
+              if (priceOv[t.id]) {
+                if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
+                if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
+              }
+            });
+          });
+          setPriceRev(r => r + 1);
+        } catch(e) {}
+      }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
