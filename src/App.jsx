@@ -1772,7 +1772,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
             </div>
           </div>
           <div style={{ textAlign:"right" }}>
-            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{Math.min(...l.tests.map(t=>t.price))}</div>
+            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>{l.tests?.length ? `₹${Math.min(...l.tests.map(t=>t.price))}` : '—'}</div>
             <div style={{ fontSize:".67rem",color:"var(--muted)",fontWeight:500 }}>tests from</div>
           </div>
         </div>
@@ -2895,8 +2895,8 @@ export default function App() {
         id,
         patient: form.name,
         phone: form.phone,
-        test: cart.map(c => c.name).join(', '),
-        lab: cart[0]?.lab || '',
+        test: cart.map(c => c.tname).join(', '),
+        lab: cart[0]?.lname || '',
         date: form.date,
         mode: form.mode === 'home' ? 'Home' : 'Clinic',
         amount: total,
@@ -2915,11 +2915,11 @@ export default function App() {
     ...el,
     address: el.city || '',
     distance: el.dist || '—',
-    timing: el.timing || '—',
-    homeCollection: el.homeCollection || false,
+    timing: el.timing || 'Call for timings',
+    homeCollection: false,
     nabl: false,
     color: el.color || '#1158A6',
-    tests: el.tests && typeof el.tests === 'object' ? el.tests : [],
+    tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
     reviews: el.reviews || 0,
   })));
   const filtLabs = allLabs.filter(l=>{
