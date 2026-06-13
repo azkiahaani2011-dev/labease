@@ -1167,6 +1167,23 @@ const LABS = [
     ]},
 ];
 
+// Apply admin panel price & lab overrides from localStorage
+(function applyAdminOverrides() {
+  try {
+    const priceOv = JSON.parse(localStorage.getItem('le_price_overrides') || '{}');
+    const labOv   = JSON.parse(localStorage.getItem('le_lab_overrides')   || '{}');
+    LABS.forEach(lab => {
+      if (labOv[lab.id] !== undefined) lab.active = labOv[lab.id];
+      lab.tests.forEach(t => {
+        if (priceOv[t.id]) {
+          if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
+          if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
+        }
+      });
+    });
+  } catch(e) {}
+})();
+
 const NEAR_ME = [
   { name:"Apollo Diagnostics", area:"Indiranagar", dist:"0.4 km", open:true,  rating:4.8, homecoll:true  },
   { name:"SRL Diagnostics",    area:"Koramangala", dist:"1.1 km", open:true,  rating:4.7, homecoll:true  },
