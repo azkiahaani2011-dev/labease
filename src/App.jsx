@@ -2804,27 +2804,22 @@ export default function App() {
     return () => window.removeEventListener("resize", h);
   }, []);
   // Store admin overrides as React state so price changes trigger proper re-renders
-  const [adminOv, setAdminOv] = useState(() => {
+  const loadAdminOv = () => {
     try {
       return {
         prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
         testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
         labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
         labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
+        extraLabs: JSON.parse(localStorage.getItem('le_extra_labs')          || '[]'),
       };
-    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{}}; }
-  });
+    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
+  };
+  const [adminOv, setAdminOv] = useState(loadAdminOv);
   useEffect(() => {
     const handler = (e) => {
-      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides'].includes(e.key)) {
-        try {
-          setAdminOv({
-            prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
-            testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
-            labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
-            labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
-          });
-        } catch(e) {}
+      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs'].includes(e.key)) {
+        setAdminOv(loadAdminOv());
       }
     };
     window.addEventListener('storage', handler);
@@ -2916,7 +2911,18 @@ export default function App() {
     navTo("confirm");
   };
 
-  const filtLabs = LABS.filter(l=>{
+  const allLabs = LABS.concat(adminOv.extraLabs.map(el => ({
+    ...el,
+    address: el.city || '',
+    distance: el.dist || '—',
+    timing: el.timing || '—',
+    homeCollection: el.homeCollection || false,
+    nabl: false,
+    color: el.color || '#1158A6',
+    tests: el.tests && typeof el.tests === 'object' ? el.tests : [],
+    reviews: el.reviews || 0,
+  })));
+  const filtLabs = allLabs.filter(l=>{
     const q=labQ.toLowerCase();
     if(q && !l.name.toLowerCase().includes(q) && !l.address.toLowerCase().includes(q)) return false;
     if(homeF && !l.homeCollection) return false;
