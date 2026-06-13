@@ -35,7 +35,8 @@ const G = () => (
     @keyframes ecgDraw  { 0%{stroke-dashoffset:500} 100%{stroke-dashoffset:0} }
     @keyframes beat     { 0%,100%{transform:scale(1)} 20%{transform:scale(1.2)} 40%{transform:scale(1)} 60%{transform:scale(1.13)} }
     @keyframes drop     { 0%{transform:translateY(-6px);opacity:0} 60%{opacity:1} 100%{transform:translateY(10px);opacity:0} }
-    @keyframes slideUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideUp       { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideInRight  { from{opacity:0;transform:translateX(100%)} to{opacity:1;transform:translateX(0)} }
     @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
     @keyframes scaleIn  { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
     @keyframes floatY   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -1768,7 +1769,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
 }
   
 
-function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart }) {
+function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHome, setFilterHome] = useState(false);
@@ -1919,11 +1920,11 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                           <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
                         </div>
                         {selectedTest && matchTest ? (
-                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); navTo("cart"); }}
+                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
                             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            Book Now →
+                            🛒 Go to Cart
                           </button>
                         ) : selectedTest ? (
                           <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
@@ -1933,7 +1934,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                               style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              Book Now
+                              🛒 Go to Cart
                             </button>
                             <a href="tel:+918000000000" onClick={e=>e.stopPropagation()}
                               style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
@@ -3350,7 +3351,7 @@ export default function App() {
     <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={setLab}
       setTestQ={setTestQ} navTo={navTo} cart={cart}
       selectedTest={selectedTest} setSelectedTest={setSelectedTest}
-      addCart={addCart}/>
+      addCart={addCart} setCartOpen={setCartOpen}/>
   );
 
   /* ═══════════════════════════════════════════════════════════════
@@ -3781,11 +3782,11 @@ export default function App() {
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
           {cart.length>0&&(isMobile
-            ? <button onClick={()=>navTo("cart")} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
+            ? <button onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
                 <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
               </button>
-            : <button onClick={()=>navTo("cart")} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+            : <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 Cart ({cart.length})
               </button>
@@ -3845,6 +3846,102 @@ export default function App() {
       {page==="cart"    && <CartPage/>}
       {page==="booking" && <Booking/>}
       {page==="confirm" && <Confirm/>}
+
+      {/* CART DRAWER */}
+      {cartOpen && (
+        <>
+          <div onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(0,0,0,.45)",backdropFilter:"blur(4px)",animation:"fadeIn .18s" }}/>
+          <div style={{ position:"fixed",top:0,right:0,bottom:0,zIndex:4001,width:"min(420px,100vw)",background:"#fff",boxShadow:"-8px 0 40px rgba(0,0,0,.18)",display:"flex",flexDirection:"column",animation:"slideInRight .22s cubic-bezier(.34,1.2,.64,1)",fontFamily:"'Manrope',sans-serif",overflow:"hidden" }}>
+            {/* Header */}
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+              <span style={{ color:"#fff",fontWeight:800,fontSize:"1.05rem",fontFamily:"'DM Serif Display',serif",flex:1 }}>Your Cart</span>
+              <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
+              <button onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ background:"rgba(255,255,255,.18)",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,marginLeft:8 }}>✕</button>
+            </div>
+            {/* Body */}
+            <div style={{ flex:1,overflowY:"auto",padding:"16px 20px" }}>
+              {cart.length===0 ? (
+                <div style={{ textAlign:"center",padding:"52px 0",color:"#9CA3AF" }}>
+                  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom:12 }}><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                  <div style={{ fontWeight:700,marginBottom:4 }}>Cart is empty</div>
+                  <div style={{ fontSize:".82rem" }}>Browse labs and add tests</div>
+                </div>
+              ) : (
+                <>
+                  {cart.map(item=>(
+                    <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"12px 0",borderBottom:"1px solid #F3F4F6",gap:10 }}>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontWeight:700,fontSize:".87rem",marginBottom:2 }}>{item.tname}</div>
+                        <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
+                      </div>
+                      <div style={{ textAlign:"right",marginRight:6 }}>
+                        <div style={{ fontWeight:900,color:"var(--teal)",fontSize:".96rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
+                        <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
+                      </div>
+                      <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"5px 10px",cursor:"pointer",fontSize:".74rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+            {/* Footer */}
+            {cart.length>0 && (
+              <div style={{ padding:"16px 20px 24px",borderTop:"1px solid #E5E7EB",flexShrink:0 }}>
+                <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".81rem",marginBottom:3 }}>
+                  <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+                </div>
+                <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".81rem",marginBottom:10,fontWeight:700 }}>
+                  <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
+                </div>
+                <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.06rem",marginBottom:16 }}>
+                  <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.18rem" }}>₹{total.toLocaleString()}</span>
+                </div>
+                <button onClick={()=>setPrepGuideOpen(o=>!o)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:10,padding:"12px 0",fontWeight:700,fontSize:".88rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7 }}>
+                  📋 Preparation Guide
+                </button>
+                <button onClick={()=>{ setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,padding:"13px 0" }}>
+                  Proceed to Booking →
+                </button>
+              </div>
+            )}
+            {/* Preparation Guide panel slides up inside drawer */}
+            {prepGuideOpen && (
+              <div style={{ position:"absolute",inset:0,background:"#fff",overflowY:"auto",padding:"20px 20px 32px",animation:"slideUp .22s cubic-bezier(.34,1.2,.64,1)" }}>
+                <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14 }}>
+                  <div style={{ fontWeight:800,fontSize:"1rem" }}>📋 Preparation Guide</div>
+                  <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"#F1F5F9",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
+                </div>
+                <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:9,padding:"9px 13px",fontSize:".77rem",color:"#1E40AF",marginBottom:16,lineHeight:1.5 }}>
+                  ℹ️ Please follow these instructions before your sample collection appointment.
+                </div>
+                {cart.map(item=>{
+                  const prep = getTestPrep(item.tname);
+                  const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
+                  const isSpecial = prep.prep !== "No special requirement.";
+                  return (
+                    <div key={item.tid} style={{ marginBottom:12,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden" }}>
+                      <div style={{ background:"#F9FAFB",padding:"9px 14px",borderBottom:"1px solid #E5E7EB" }}>
+                        <div style={{ fontWeight:700,fontSize:".85rem" }}>{item.tname}</div>
+                        <div style={{ color:"#6B7280",fontSize:".71rem" }}>{item.lname}</div>
+                      </div>
+                      <div style={{ padding:"11px 14px" }}>
+                        <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 10px",fontSize:".71rem",fontWeight:600,display:"inline-block",marginBottom:8 }}>{sampleIcon} Sample: {prep.sample}</span>
+                        <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:8,padding:"8px 12px",fontSize:".78rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.6 }}>
+                          {isSpecial ? prep.prep : "✅ No special requirement"}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                <button onClick={()=>{ setPrepGuideOpen(false); setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,padding:"13px 0",marginTop:6 }}>
+                  Proceed to Booking →
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* AUTH MODAL */}
       {authOpen && (
