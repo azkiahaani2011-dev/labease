@@ -1924,7 +1924,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            🛒 Go to Cart
+                            Book
                           </button>
                         ) : selectedTest ? (
                           <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
@@ -1934,13 +1934,13 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                               style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              🛒 Go to Cart
+                              Book
                             </button>
                             <a href="tel:+918000000000" onClick={e=>e.stopPropagation()}
                               style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              📞 Contact Lab
+                              Contact Lab
                             </a>
                           </>
                         )}
@@ -3400,10 +3400,13 @@ export default function App() {
                       <div style={{ color:"#6B7280",fontSize:".76rem" }}>{item.lname}</div>
                     </div>
                     <div style={{ textAlign:"right",marginRight:8 }}>
-                      <div style={{ fontWeight:900,color:"var(--teal)",fontSize:"1rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
-                      <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
+                      <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1.05rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                      <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                     </div>
-                    <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"6px 12px",cursor:"pointer",fontSize:".76rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
+                    <button onClick={()=>delCart(item.tid)} title="Remove"
+                      style={{ flexShrink:0,width:30,height:30,borderRadius:"50%",border:"1.5px solid #E5E7EB",background:"#fff",color:"#9CA3AF",cursor:"pointer",fontSize:"1.1rem",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s",fontWeight:300 }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background="#FEE2E2"; e.currentTarget.style.color="#DC2626"; e.currentTarget.style.borderColor="#FCA5A5"; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#9CA3AF"; e.currentTarget.style.borderColor="#E5E7EB"; }}>×</button>
                   </div>
                 ))}
                 {/* Totals */}
@@ -3876,10 +3879,13 @@ export default function App() {
                         <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
                       </div>
                       <div style={{ textAlign:"right",marginRight:6 }}>
-                        <div style={{ fontWeight:900,color:"var(--teal)",fontSize:".96rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
-                        <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
+                        <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                        <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                       </div>
-                      <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"5px 10px",cursor:"pointer",fontSize:".74rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
+                      <button onClick={()=>delCart(item.tid)} title="Remove"
+                        style={{ flexShrink:0,width:28,height:28,borderRadius:"50%",border:"1.5px solid #E5E7EB",background:"#fff",color:"#9CA3AF",cursor:"pointer",fontSize:"1rem",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s",fontWeight:300 }}
+                        onMouseEnter={e=>{ e.currentTarget.style.background="#FEE2E2"; e.currentTarget.style.color="#DC2626"; e.currentTarget.style.borderColor="#FCA5A5"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#9CA3AF"; e.currentTarget.style.borderColor="#E5E7EB"; }}>×</button>
                     </div>
                   ))}
                 </>
