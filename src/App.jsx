@@ -1170,15 +1170,19 @@ const LABS = [
 // Apply admin panel price & lab overrides from localStorage
 (function applyAdminOverrides() {
   try {
-    const priceOv = JSON.parse(localStorage.getItem('le_price_overrides') || '{}');
-    const labOv   = JSON.parse(localStorage.getItem('le_lab_overrides')   || '{}');
+    const priceOv    = JSON.parse(localStorage.getItem('le_price_overrides')    || '{}');
+    const labOv      = JSON.parse(localStorage.getItem('le_lab_overrides')      || '{}');
+    const testNameOv = JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}');
+    const labNameOv  = JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}');
     LABS.forEach(lab => {
-      if (labOv[lab.id] !== undefined) lab.active = labOv[lab.id];
+      if (labOv[lab.id]     !== undefined) lab.active = labOv[lab.id];
+      if (labNameOv[lab.id] !== undefined) lab.name   = labNameOv[lab.id];
       lab.tests.forEach(t => {
         if (priceOv[t.id]) {
           if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
           if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
         }
+        if (testNameOv[t.id] !== undefined) t.name = testNameOv[t.id];
       });
     });
   } catch(e) {}
@@ -2803,17 +2807,21 @@ export default function App() {
   const [, setPriceRev] = useState(0);
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === 'le_price_overrides' || e.key === 'le_lab_overrides') {
+      if (e.key === 'le_price_overrides' || e.key === 'le_lab_overrides' || e.key === 'le_test_name_overrides' || e.key === 'le_lab_name_overrides') {
         try {
-          const priceOv = JSON.parse(localStorage.getItem('le_price_overrides') || '{}');
-          const labOv   = JSON.parse(localStorage.getItem('le_lab_overrides')   || '{}');
+          const priceOv    = JSON.parse(localStorage.getItem('le_price_overrides')    || '{}');
+          const labOv      = JSON.parse(localStorage.getItem('le_lab_overrides')      || '{}');
+          const testNameOv = JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}');
+          const labNameOv  = JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}');
           LABS.forEach(lab => {
-            if (labOv[lab.id] !== undefined) lab.active = labOv[lab.id];
+            if (labOv[lab.id]     !== undefined) lab.active = labOv[lab.id];
+            if (labNameOv[lab.id] !== undefined) lab.name   = labNameOv[lab.id];
             lab.tests.forEach(t => {
               if (priceOv[t.id]) {
                 if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
                 if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
               }
+              if (testNameOv[t.id] !== undefined) t.name = testNameOv[t.id];
             });
           });
           setPriceRev(r => r + 1);
@@ -2874,6 +2882,23 @@ export default function App() {
   const confirm = () => {
     const id = "LB"+Math.random().toString(36).slice(2,8).toUpperCase();
     setDone({...form,id,cart:[...cart],total,saving});
+    // Save booking to localStorage so admin panel picks it up
+    try {
+      const booking = {
+        id,
+        patient: form.name,
+        phone: form.phone,
+        test: cart.map(c => c.name).join(', '),
+        lab: cart[0]?.lab || '',
+        date: form.date,
+        mode: form.mode === 'home' ? 'Home' : 'Clinic',
+        amount: total,
+        status: 'Confirmed',
+      };
+      const existing = JSON.parse(localStorage.getItem('le_bookings') || '[]');
+      existing.push(booking);
+      localStorage.setItem('le_bookings', JSON.stringify(existing));
+    } catch(e) {}
     setCart([]); setStep(1);
     setForm({name:"",phone:"",email:"",age:"",date:"",slot:"",mode:"clinic",address:""});
     navTo("confirm");
