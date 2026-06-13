@@ -3646,6 +3646,7 @@ export default function App() {
       const full = LABS.find(x=>x.name.startsWith(l.name.split(" ")[0]));
       return { ...l, full, idx:i };
     })
+    .filter(l => l.full ? l.full.active !== false : true)
     .filter(l => filterOpen ? l.open : true)
     .filter(l => filterHome ? l.homecoll : true)
     .filter(l => filterNabl ? (l.full?.nabl ?? false) : true)

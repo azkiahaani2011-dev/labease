@@ -453,7 +453,7 @@ function Bookings(props) {
     var matchQ = !q || b.patient.toLowerCase().indexOf(q)>-1 || b.id.toLowerCase().indexOf(q)>-1 || b.test.toLowerCase().indexOf(q)>-1;
     var matchF = filter==='All' || b.status===filter;
     return matchQ && matchF;
-  });
+  }).sort(function(a,b){ return b.id.localeCompare(a.id); });
   return (
     <div style={{padding:28}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
@@ -520,7 +520,7 @@ function Labs(props) {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
   const [addingLab, setAddingLab] = useState(false);
-  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',tests:'0'});
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',tests:'0',address:'',timing:'',homeCollection:false,nabl:false,logoUrl:'',color:'#1158A6'});
   function startEdit(lab) { setEditing(lab.id); setForm({name:lab.name,city:lab.city,phone:lab.phone,rating:lab.rating,tests:lab.tests}); }
   function saveEdit(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating),tests:parseInt(form.tests)}):l;});
@@ -547,7 +547,7 @@ function Labs(props) {
   function saveNewLab() {
     if (!newLab.name.trim()) return;
     var maxId = props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
-    var lab = {id:maxId+1,name:newLab.name.trim(),city:newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,tests:parseInt(newLab.tests)||0,active:true};
+    var lab = {id:maxId+1,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'Call for timings',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoUrl:newLab.logoUrl.trim(),tests:parseInt(newLab.tests)||0,active:true,distance:'—',founded:new Date().getFullYear().toString()};
     var next = props.labs.concat([lab]);
     props.setLabs(next);
     localStorage.setItem('le_labs', JSON.stringify(next));
@@ -555,7 +555,7 @@ function Labs(props) {
     try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
     extras.push(lab);
     localStorage.setItem('le_extra_labs', JSON.stringify(extras));
-    setNewLab({name:'',city:'',phone:'',rating:'4.5',tests:'0'});
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',tests:'0',address:'',timing:'',homeCollection:false,nabl:false,logoUrl:'',color:'#1158A6'});
     setAddingLab(false);
   }
   var fields = [['name','Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']];
@@ -569,7 +569,7 @@ function Labs(props) {
         <div className="card" style={{padding:20,marginBottom:20}}>
           <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
-            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']].map(function(pair){
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count'],['address','Address'],['timing','Timing'],['logoUrl','Logo URL'],['color','Button Color']].map(function(pair){
               var k=pair[0]; var lbl=pair[1];
               return (
                 <div key={k}>
@@ -578,6 +578,14 @@ function Labs(props) {
                 </div>
               );
             })}
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <input type="checkbox" id="nl-hc" checked={newLab.homeCollection} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.homeCollection=v;return n;});}} />
+              <label htmlFor="nl-hc" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Home Collection</label>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
+              <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>NABL Accredited</label>
+            </div>
           </div>
           <div style={{display:'flex',gap:8}}>
             <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
