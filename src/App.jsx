@@ -2804,8 +2804,19 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Store admin overrides as React state so price changes trigger proper re-renders
-  const loadAdminOv = () => {
+  // Trigger re-render when admin panel updates localStorage (cross-tab)
+  const [, setOvTick] = useState(0);
+  useEffect(() => {
+    const handler = (e) => {
+      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs'].includes(e.key)) {
+        setOvTick(n => n + 1);
+      }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+  // Read ALL admin overrides fresh from localStorage on every render
+  const adminOv = (() => {
     try {
       return {
         prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
@@ -2815,18 +2826,8 @@ export default function App() {
         extraLabs: JSON.parse(localStorage.getItem('le_extra_labs')          || '[]'),
       };
     } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
-  };
-  const [adminOv, setAdminOv] = useState(loadAdminOv);
-  useEffect(() => {
-    const handler = (e) => {
-      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs'].includes(e.key)) {
-        setAdminOv(loadAdminOv());
-      }
-    };
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
-  }, []);
-  // Apply overrides to LABS on every render — ensures all price/name reads are always current
+  })();
+  // Apply price/name overrides to LABS on every render
   LABS.forEach(lab => {
     if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
     if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
