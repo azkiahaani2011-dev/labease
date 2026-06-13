@@ -519,19 +519,64 @@ function Bookings(props) {
 function Labs(props) {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
+  const [addingLab, setAddingLab] = useState(false);
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',tests:'0'});
   function startEdit(lab) { setEditing(lab.id); setForm({name:lab.name,city:lab.city,phone:lab.phone,rating:lab.rating,tests:lab.tests}); }
   function saveEdit(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating),tests:parseInt(form.tests)}):l;});
-    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next)); setEditing(null);
+    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    // Save lab name override so main UI picks it up
+    var lnov = {};
+    try { lnov = JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}'); } catch(e){}
+    lnov[id] = form.name;
+    localStorage.setItem('le_lab_name_overrides', JSON.stringify(lnov));
+    setEditing(null);
   }
   function toggle(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
     props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
   }
+  function saveNewLab() {
+    if (!newLab.name.trim()) return;
+    var maxId = props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
+    var lab = {id:maxId+1,name:newLab.name.trim(),city:newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,tests:parseInt(newLab.tests)||0,active:true};
+    var next = props.labs.concat([lab]);
+    props.setLabs(next);
+    localStorage.setItem('le_labs', JSON.stringify(next));
+    var extras = [];
+    try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
+    extras.push(lab);
+    localStorage.setItem('le_extra_labs', JSON.stringify(extras));
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',tests:'0'});
+    setAddingLab(false);
+  }
   var fields = [['name','Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']];
   return (
     <div style={{padding:28}}>
-      <div style={{fontSize:22,fontWeight:800,marginBottom:20,color:'#0D1117'}}>Labs</div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+        <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Labs</div>
+        <button className="btn btn-primary" onClick={function(){setAddingLab(!addingLab);}}>+ Add Lab</button>
+      </div>
+      {addingLab && (
+        <div className="card" style={{padding:20,marginBottom:20}}>
+          <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']].map(function(pair){
+              var k=pair[0]; var lbl=pair[1];
+              return (
+                <div key={k}>
+                  <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>{lbl}</label>
+                  <input type="text" style={{width:'100%'}} value={newLab[k]} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
+                </div>
+              );
+            })}
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
+            <button className="btn btn-outline btn-sm" onClick={function(){setAddingLab(false);}}>Cancel</button>
+          </div>
+        </div>
+      )}
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18}}>
         {props.labs.map(function(lab) {
           return (
@@ -593,18 +638,24 @@ function Tests(props) {
 
   var labNames = ['All','Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
 
-  function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp, price:t.price}); }
+  function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp, price:t.price, name:t.name}); }
   function saveEdit(id) {
     var newPrice = parseInt(form.price);
     var newMrp   = parseInt(form.mrp);
+    var newName  = form.name;
     // Update local test list
-    var next = props.tests.map(function(t){ return t.id===id ? Object.assign({},t,{price:newPrice,mrp:newMrp}) : t; });
+    var next = props.tests.map(function(t){ return t.id===id ? Object.assign({},t,{price:newPrice,mrp:newMrp,name:newName}) : t; });
     props.setTests(next);
     // Write to le_price_overrides so main UI picks it up
     var ov = {};
     try { ov = JSON.parse(localStorage.getItem('le_price_overrides')||'{}'); } catch(e){}
     ov[id] = {price:newPrice, mrp:newMrp};
     localStorage.setItem('le_price_overrides', JSON.stringify(ov));
+    // Write to le_test_name_overrides so main UI picks up name change
+    var tnov = {};
+    try { tnov = JSON.parse(localStorage.getItem('le_test_name_overrides')||'{}'); } catch(e){}
+    tnov[id] = newName;
+    localStorage.setItem('le_test_name_overrides', JSON.stringify(tnov));
     setEditing(null);
   }
 
@@ -655,6 +706,10 @@ function Tests(props) {
                     {editing === t.id ? (
                       <div style={{display:'flex',gap:6,alignItems:'flex-end',flexWrap:'wrap'}}>
                         <div>
+                          <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>Test Name</div>
+                          <input type="text" style={{width:160,padding:'4px 8px',fontSize:12}} value={form.name} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{name:v});});}} />
+                        </div>
+                        <div>
                           <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>MRP</div>
                           <input type="number" style={{width:76,padding:'4px 8px',fontSize:12}} value={form.mrp} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{mrp:v});});}} />
                         </div>
@@ -689,6 +744,16 @@ function App() {
   const [bookings, setBookings] = useState(function(){return genBookings();});
   const [labs, setLabs] = useState(function(){return genLabs();});
   const [tests, setTests] = useState(function(){return genTests();});
+
+  useEffect(function() {
+    function handler(e) {
+      if (e.key === 'le_bookings') {
+        try { setBookings(JSON.parse(e.newValue || '[]')); } catch(ex) {}
+      }
+    }
+    window.addEventListener('storage', handler);
+    return function() { window.removeEventListener('storage', handler); };
+  }, []);
 
   function login() { ['le_admin_auth','labease_admin_auth'].forEach(k=>localStorage.removeItem(k)); localStorage.setItem('le_auth','1'); setAuthed(true); }
   function logout() { localStorage.removeItem('le_auth'); setAuthed(false); }
