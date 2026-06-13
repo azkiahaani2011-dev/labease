@@ -1940,6 +1940,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                               style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                               Contact Lab
                             </a>
                           </>
@@ -3404,9 +3405,9 @@ export default function App() {
                       <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                     </div>
                     <button onClick={()=>delCart(item.tid)} title="Remove"
-                      style={{ flexShrink:0,width:30,height:30,borderRadius:"50%",border:"1.5px solid #E5E7EB",background:"#fff",color:"#9CA3AF",cursor:"pointer",fontSize:"1.1rem",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s",fontWeight:300 }}
-                      onMouseEnter={e=>{ e.currentTarget.style.background="#FEE2E2"; e.currentTarget.style.color="#DC2626"; e.currentTarget.style.borderColor="#FCA5A5"; }}
-                      onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#9CA3AF"; e.currentTarget.style.borderColor="#E5E7EB"; }}>×</button>
+                      style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                      onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
+                      onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
                   </div>
                 ))}
                 {/* Totals */}
@@ -3883,9 +3884,9 @@ export default function App() {
                         <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                       </div>
                       <button onClick={()=>delCart(item.tid)} title="Remove"
-                        style={{ flexShrink:0,width:28,height:28,borderRadius:"50%",border:"1.5px solid #E5E7EB",background:"#fff",color:"#9CA3AF",cursor:"pointer",fontSize:"1rem",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s",fontWeight:300 }}
-                        onMouseEnter={e=>{ e.currentTarget.style.background="#FEE2E2"; e.currentTarget.style.color="#DC2626"; e.currentTarget.style.borderColor="#FCA5A5"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#9CA3AF"; e.currentTarget.style.borderColor="#E5E7EB"; }}>×</button>
+                        style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                        onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
+                        onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
                     </div>
                   ))}
                 </>
