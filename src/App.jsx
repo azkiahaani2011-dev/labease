@@ -1780,7 +1780,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button></div>
-          <div className="labs-header-row">
+          <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
             <div>
               <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
@@ -1788,8 +1788,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                 <span style={{ color:"#1158A6", fontWeight:700 }}> {enriched.filter(l=>l.open).length} open now</span>
               </p>
             </div>
-            <div className="labs-sort-row">
-              {/* search — leftmost */}
+            <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
+              {/* search — far left */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
                 <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
@@ -1806,20 +1806,15 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                   </div>
                 )}
               </div>
-              {/* divider */}
               <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
-              {/* sort */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
-              <div style={{ display:"flex", gap:"8px" }}>
-                {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
-                  <button key={v} onClick={()=>setSortBy(v)}
-                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
-                    {l}
-                  </button>
-                ))}
-              </div>
+              {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,label])=>(
+                <button key={v} onClick={()=>setSortBy(v)}
+                  style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
       </div>
       </div>
 
@@ -1892,12 +1887,12 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                               Book Now
                             </button>
-                            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                              style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
+                            <a href="tel:+918000000000" onClick={e=>e.stopPropagation()}
+                              style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              View Tests & Prices
-                            </button>
+                              📞 Call Lab
+                            </a>
                           </>
                         )}
                       </div>
