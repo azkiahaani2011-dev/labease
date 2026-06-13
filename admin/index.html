@@ -148,24 +148,94 @@ function genLabs() {
   return data;
 }
 
+// All tests from the main app, keyed by test ID (labPrefix+num)
+// Structure: { testId, testName, labId, labName, cat, price, mrp }
+var ALL_LAB_TESTS = [
+  {id:'a1',name:'Complete Blood Count (CBC)',labId:1,lab:'Apollo',cat:'Blood',price:299,mrp:499},
+  {id:'a2',name:'Lipid Profile',labId:1,lab:'Apollo',cat:'Blood',price:499,mrp:799},
+  {id:'a3',name:'Thyroid Profile (T3,T4,TSH)',labId:1,lab:'Apollo',cat:'Thyroid',price:649,mrp:999},
+  {id:'a4',name:'HbA1c (Diabetes)',labId:1,lab:'Apollo',cat:'Diabetes',price:399,mrp:599},
+  {id:'a5',name:'Liver Function Test',labId:1,lab:'Apollo',cat:'Liver',price:549,mrp:849},
+  {id:'a6',name:'Kidney Function Test',labId:1,lab:'Apollo',cat:'Kidney',price:549,mrp:849},
+  {id:'a7',name:'Vitamin D (25-OH)',labId:1,lab:'Apollo',cat:'Vitamins',price:899,mrp:1299},
+  {id:'a8',name:'Vitamin B12',labId:1,lab:'Apollo',cat:'Vitamins',price:699,mrp:999},
+  {id:'a9',name:'Full Body Checkup',labId:1,lab:'Apollo',cat:'Packages',price:1999,mrp:3499},
+  {id:'a10',name:'COVID Antibody Test',labId:1,lab:'Apollo',cat:'COVID',price:799,mrp:1199},
+  {id:'a11',name:'Iron Studies',labId:1,lab:'Apollo',cat:'Blood',price:449,mrp:699},
+  {id:'a12',name:'CRP (Inflammation)',labId:1,lab:'Apollo',cat:'Blood',price:349,mrp:599},
+  {id:'b1',name:'Complete Blood Count (CBC)',labId:2,lab:'SRL',cat:'Blood',price:279,mrp:499},
+  {id:'b2',name:'Blood Sugar Fasting',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b3',name:'Blood Sugar Post-Prandial',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b4',name:'Urine Routine & Microscopy',labId:2,lab:'SRL',cat:'Urine',price:149,mrp:299},
+  {id:'b5',name:'TSH (Thyroid Stimulating)',labId:2,lab:'SRL',cat:'Thyroid',price:299,mrp:499},
+  {id:'b6',name:'Iron Studies',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:699},
+  {id:'b7',name:'HbA1c',labId:2,lab:'SRL',cat:'Diabetes',price:349,mrp:599},
+  {id:'b8',name:'Dengue NS1 Antigen',labId:2,lab:'SRL',cat:'Infectious',price:699,mrp:999},
+  {id:'b9',name:'Comprehensive Health Package',labId:2,lab:'SRL',cat:'Packages',price:2499,mrp:4199},
+  {id:'b10',name:'Lipid Profile',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:799},
+  {id:'b11',name:'Urine Culture & Sensitivity',labId:2,lab:'SRL',cat:'Urine',price:499,mrp:799},
+  {id:'b12',name:'HIV 1 & 2 Antibody',labId:2,lab:'SRL',cat:'Infectious',price:299,mrp:549},
+  {id:'c1',name:'Complete Blood Count (CBC)',labId:3,lab:'Metropolis',cat:'Blood',price:259,mrp:499},
+  {id:'c2',name:'Liver Function Test',labId:3,lab:'Metropolis',cat:'Liver',price:499,mrp:849},
+  {id:'c3',name:'Kidney Function Test',labId:3,lab:'Metropolis',cat:'Kidney',price:499,mrp:849},
+  {id:'c4',name:'Thyroid Profile',labId:3,lab:'Metropolis',cat:'Thyroid',price:599,mrp:999},
+  {id:'c5',name:'Vitamin D3',labId:3,lab:'Metropolis',cat:'Vitamins',price:849,mrp:1299},
+  {id:'c6',name:'Vitamin B12',labId:3,lab:'Metropolis',cat:'Vitamins',price:649,mrp:999},
+  {id:'c7',name:'PSA Total (Prostate)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:799,mrp:1199},
+  {id:'c8',name:'CA-125 (Ovarian)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:1099,mrp:1699},
+  {id:'c9',name:'Wellness 360 Package',labId:3,lab:'Metropolis',cat:'Packages',price:2999,mrp:5499},
+  {id:'c10',name:'Allergy Panel (40 Allergens)',labId:3,lab:'Metropolis',cat:'Allergy',price:1999,mrp:3499},
+  {id:'c11',name:'Rheumatoid Arthritis Panel',labId:3,lab:'Metropolis',cat:'Autoimmune',price:899,mrp:1499},
+  {id:'c12',name:'ANA (Autoimmune Screen)',labId:3,lab:'Metropolis',cat:'Autoimmune',price:749,mrp:1199},
+  {id:'d1',name:'Complete Blood Count (CBC)',labId:4,lab:'Dr Lal',cat:'Blood',price:249,mrp:499},
+  {id:'d2',name:'Blood Sugar Random',labId:4,lab:'Dr Lal',cat:'Diabetes',price:79,mrp:199},
+  {id:'d3',name:'HbA1c',labId:4,lab:'Dr Lal',cat:'Diabetes',price:329,mrp:599},
+  {id:'d4',name:'Lipid Profile',labId:4,lab:'Dr Lal',cat:'Blood',price:399,mrp:799},
+  {id:'d5',name:'Urine Culture & Sensitivity',labId:4,lab:'Dr Lal',cat:'Urine',price:499,mrp:799},
+  {id:'d6',name:'Stool Examination',labId:4,lab:'Dr Lal',cat:'Stool',price:149,mrp:299},
+  {id:'d7',name:'Malaria Antigen Test',labId:4,lab:'Dr Lal',cat:'Infectious',price:399,mrp:699},
+  {id:'d8',name:'Widal Test (Typhoid)',labId:4,lab:'Dr Lal',cat:'Infectious',price:199,mrp:399},
+  {id:'d9',name:'Heart Health Package',labId:4,lab:'Dr Lal',cat:'Packages',price:1799,mrp:2999},
+  {id:'d10',name:'Senior Citizen Package',labId:4,lab:'Dr Lal',cat:'Packages',price:2299,mrp:3999},
+  {id:'d11',name:'Testosterone Total',labId:4,lab:'Dr Lal',cat:'Hormones',price:599,mrp:999},
+  {id:'d12',name:'Prolactin',labId:4,lab:'Dr Lal',cat:'Hormones',price:499,mrp:799},
+  {id:'e1',name:'Aarogyam 1.3 (Full Body)',labId:5,lab:'Thyrocare',cat:'Packages',price:999,mrp:2499},
+  {id:'e2',name:'Aarogyam C (Comprehensive)',labId:5,lab:'Thyrocare',cat:'Packages',price:1499,mrp:3499},
+  {id:'e3',name:'Thyroid Panel (T3,T4,TSH)',labId:5,lab:'Thyrocare',cat:'Thyroid',price:399,mrp:799},
+  {id:'e4',name:'Complete Blood Count',labId:5,lab:'Thyrocare',cat:'Blood',price:199,mrp:499},
+  {id:'e5',name:'Vitamin Panel (D3 + B12)',labId:5,lab:'Thyrocare',cat:'Vitamins',price:999,mrp:1799},
+  {id:'e6',name:'Hormone Panel',labId:5,lab:'Thyrocare',cat:'Hormones',price:1299,mrp:2299},
+  {id:'e7',name:'Fertility Panel (Female)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1999,mrp:3499},
+  {id:'e8',name:'Fertility Panel (Male)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1499,mrp:2499},
+  {id:'e9',name:'COVID RT-PCR',labId:5,lab:'Thyrocare',cat:'COVID',price:499,mrp:999},
+  {id:'e10',name:'Lipid Profile',labId:5,lab:'Thyrocare',cat:'Blood',price:349,mrp:799},
+  {id:'e11',name:'Cortisol (Stress Hormone)',labId:5,lab:'Thyrocare',cat:'Hormones',price:449,mrp:799},
+  {id:'e12',name:'DHEA-S',labId:5,lab:'Thyrocare',cat:'Hormones',price:549,mrp:899},
+  {id:'f1',name:'Complete Blood Count (CBC)',labId:6,lab:'Vijaya',cat:'Blood',price:269,mrp:499},
+  {id:'f2',name:'Liver Function Test',labId:6,lab:'Vijaya',cat:'Liver',price:519,mrp:849},
+  {id:'f3',name:'Kidney Panel',labId:6,lab:'Vijaya',cat:'Kidney',price:519,mrp:849},
+  {id:'f4',name:'2D Echo (Cardiac)',labId:6,lab:'Vijaya',cat:'Cardiac',price:1499,mrp:2499},
+  {id:'f5',name:'ECG (12-Lead)',labId:6,lab:'Vijaya',cat:'Cardiac',price:299,mrp:499},
+  {id:'f6',name:'X-Ray Chest (PA View)',labId:6,lab:'Vijaya',cat:'Radiology',price:399,mrp:699},
+  {id:'f7',name:'Ultrasound Abdomen',labId:6,lab:'Vijaya',cat:'Radiology',price:899,mrp:1499},
+  {id:'f8',name:'MRI Brain with Contrast',labId:6,lab:'Vijaya',cat:'Radiology',price:5999,mrp:9999},
+  {id:'f9',name:'CT Scan Chest',labId:6,lab:'Vijaya',cat:'Radiology',price:4499,mrp:7999},
+  {id:'f10',name:'Full Body Checkup Premium',labId:6,lab:'Vijaya',cat:'Packages',price:3499,mrp:5999},
+  {id:'f11',name:'Bone Density (DEXA Scan)',labId:6,lab:'Vijaya',cat:'Radiology',price:1299,mrp:2199},
+  {id:'f12',name:'PFT (Pulmonary Function)',labId:6,lab:'Vijaya',cat:'Cardiac',price:799,mrp:1399},
+];
+
 function genTests() {
-  const saved = localStorage.getItem('le_tests');
-  if (saved) return JSON.parse(saved);
-  const raw = [
-    {name:'CBC',cat:'Haematology',mrp:499,price:299},
-    {name:'Lipid Profile',cat:'Biochemistry',mrp:999,price:599},
-    {name:'Thyroid Profile',cat:'Endocrinology',mrp:1299,price:799},
-    {name:'HbA1c',cat:'Diabetes',mrp:799,price:499},
-    {name:'Vitamin D',cat:'Nutritional',mrp:1499,price:899},
-    {name:'LFT',cat:'Liver',mrp:1199,price:799},
-    {name:'KFT',cat:'Kidney',mrp:1099,price:699},
-    {name:'Urine Routine',cat:'Routine',mrp:399,price:199},
-    {name:'Full Body Checkup',cat:'Preventive',mrp:3499,price:1999},
-    {name:'Dengue NS1',cat:'Infectious',mrp:999,price:699},
-  ];
-  const data = raw.map(function(t, i) { return Object.assign({}, t, {id:i+1, labs:3+(i%4)}); });
-  localStorage.setItem('le_tests', JSON.stringify(data));
-  return data;
+  // Apply any saved price overrides from admin
+  var overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem('le_price_overrides') || '{}'); } catch(e){}
+  return ALL_LAB_TESTS.map(function(t) {
+    var ov = overrides[t.id] || {};
+    return Object.assign({}, t, {
+      price: ov.price !== undefined ? ov.price : t.price,
+      mrp:   ov.mrp   !== undefined ? ov.mrp   : t.mrp,
+    });
+  });
 }
 
 function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
@@ -484,49 +554,80 @@ function Labs(props) {
 
 function Tests(props) {
   const [search, setSearch] = useState('');
+  const [labFilter, setLabFilter] = useState('All');
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
-  function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp,price:t.price}); }
+
+  var labNames = ['All','Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
+
+  function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp, price:t.price}); }
   function saveEdit(id) {
-    var next = props.tests.map(function(t){return t.id===id?Object.assign({},t,{mrp:parseInt(form.mrp),price:parseInt(form.price)}):t;});
-    props.setTests(next); localStorage.setItem('le_tests',JSON.stringify(next)); setEditing(null);
+    var newPrice = parseInt(form.price);
+    var newMrp   = parseInt(form.mrp);
+    // Update local test list
+    var next = props.tests.map(function(t){ return t.id===id ? Object.assign({},t,{price:newPrice,mrp:newMrp}) : t; });
+    props.setTests(next);
+    // Write to le_price_overrides so main UI picks it up
+    var ov = {};
+    try { ov = JSON.parse(localStorage.getItem('le_price_overrides')||'{}'); } catch(e){}
+    ov[id] = {price:newPrice, mrp:newMrp};
+    localStorage.setItem('le_price_overrides', JSON.stringify(ov));
+    setEditing(null);
   }
+
   var filtered = props.tests.filter(function(t) {
-    return !search || t.name.toLowerCase().indexOf(search.toLowerCase())>-1 || t.cat.toLowerCase().indexOf(search.toLowerCase())>-1;
+    var mq = !search || t.name.toLowerCase().indexOf(search.toLowerCase())>-1 || t.cat.toLowerCase().indexOf(search.toLowerCase())>-1;
+    var ml = labFilter==='All' || t.lab===labFilter;
+    return mq && ml;
   });
+
   return (
     <div style={{padding:28}}>
-      <div style={{fontSize:22,fontWeight:800,marginBottom:20,color:'#0D1117'}}>Tests & Pricing</div>
-      <div style={{position:'relative',maxWidth:340,marginBottom:16}}>
-        <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}}>{React.createElement(IconSearch,null)}</span>
-        <input type="text" style={{width:'100%',paddingLeft:32}} placeholder="Search tests or category…" value={search} onChange={function(e){setSearch(e.target.value);}} />
+      <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Tests & Pricing</div>
+      <div style={{color:'#6B7280',fontSize:13,marginBottom:20}}>Edit prices per lab — changes reflect instantly in the main app</div>
+      <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}>
+        <div style={{position:'relative',width:280}}>
+          <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}}>{React.createElement(IconSearch,null)}</span>
+          <input type="text" style={{width:'100%',paddingLeft:32}} placeholder="Search test or category…" value={search} onChange={function(e){setSearch(e.target.value);}} />
+        </div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+          {labNames.map(function(l) {
+            return React.createElement('button', {
+              key:l, className:'btn '+(labFilter===l?'btn-primary':'btn-outline')+' btn-sm',
+              onClick:function(){setLabFilter(l);}
+            }, l);
+          })}
+        </div>
       </div>
+      <div style={{color:'#6B7280',fontSize:12,marginBottom:10}}>{filtered.length} entries</div>
       <div className="card" style={{overflow:'hidden'}}>
         <table>
           <thead>
-            <tr><th>Test Name</th><th>Category</th><th>MRP</th><th>Offer Price</th><th>Discount</th><th>Labs</th><th>Action</th></tr>
+            <tr><th>Test Name</th><th>Lab</th><th>Category</th><th>MRP</th><th>Offer Price</th><th>Discount</th><th>Action</th></tr>
           </thead>
           <tbody>
             {filtered.map(function(t) {
               var disc = Math.round((1 - t.price/t.mrp)*100);
               return (
                 <tr key={t.id}>
-                  <td style={{fontWeight:600}}>{t.name}</td>
+                  <td style={{fontWeight:600,maxWidth:180}}>{t.name}</td>
+                  <td>
+                    <span style={{fontSize:12,background:'#EFF6FF',color:'#1158A6',padding:'3px 8px',borderRadius:6,fontWeight:600,whiteSpace:'nowrap'}}>{t.lab}</span>
+                  </td>
                   <td><span style={{fontSize:12,background:'#F3F4F6',color:'#374151',padding:'3px 8px',borderRadius:6,fontWeight:600}}>{t.cat}</span></td>
                   <td style={{color:'#9CA3AF',textDecoration:'line-through'}}>{fmt(t.mrp)}</td>
                   <td style={{fontWeight:700,color:'#15803D'}}>{fmt(t.price)}</td>
                   <td><span style={{background:'#FFF7ED',color:'#C2410C',fontSize:12,fontWeight:700,padding:'3px 8px',borderRadius:6}}>{disc}% off</span></td>
-                  <td style={{color:'#6B7280'}}>{t.labs} labs</td>
                   <td>
                     {editing === t.id ? (
                       <div style={{display:'flex',gap:6,alignItems:'flex-end',flexWrap:'wrap'}}>
                         <div>
                           <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>MRP</div>
-                          <input type="number" style={{width:80,padding:'4px 8px',fontSize:12}} value={form.mrp} onChange={function(e){var val=e.target.value;setForm(function(f){return Object.assign({},f,{mrp:val});});}} />
+                          <input type="number" style={{width:76,padding:'4px 8px',fontSize:12}} value={form.mrp} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{mrp:v});});}} />
                         </div>
                         <div>
                           <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>Price</div>
-                          <input type="number" style={{width:80,padding:'4px 8px',fontSize:12}} value={form.price} onChange={function(e){var val=e.target.value;setForm(function(f){return Object.assign({},f,{price:val});});}} />
+                          <input type="number" style={{width:76,padding:'4px 8px',fontSize:12}} value={form.price} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{price:v});});}} />
                         </div>
                         <div style={{display:'flex',gap:5}}>
                           <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(t.id);}}>Save</button>
