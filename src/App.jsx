@@ -2804,16 +2804,18 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Trigger re-render when admin panel updates localStorage (cross-tab)
+  // Trigger re-render when admin panel updates localStorage (cross-tab or polling)
   const [, setOvTick] = useState(0);
   useEffect(() => {
     const handler = (e) => {
-      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs'].includes(e.key)) {
+      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'].includes(e.key)) {
         setOvTick(n => n + 1);
       }
     };
     window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
+    // Poll every 3s as fallback for same-tab or missed events
+    const poll = setInterval(() => setOvTick(n => n + 1), 3000);
+    return () => { window.removeEventListener('storage', handler); clearInterval(poll); };
   }, []);
   // Read ALL admin overrides fresh from localStorage on every render
   const adminOv = (() => {
@@ -2823,7 +2825,14 @@ export default function App() {
         testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
         labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
         labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
-        extraLabs: JSON.parse(localStorage.getItem('le_extra_labs')          || '[]'),
+        extraLabs: (() => {
+          // Read from le_extra_labs first; fall back to reading new IDs from le_labs
+          const extra = JSON.parse(localStorage.getItem('le_extra_labs') || '[]');
+          if (extra.length > 0) return extra;
+          const allAdminLabs = JSON.parse(localStorage.getItem('le_labs') || '[]');
+          const knownIds = new Set([1,2,3,4,5,6]);
+          return allAdminLabs.filter(l => !knownIds.has(l.id));
+        })(),
       };
     } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
   })();
