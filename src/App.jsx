@@ -1921,7 +1921,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         </div>
                         {selectedTest && matchTest ? (
                           <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 22px",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",letterSpacing:"-.01em" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                             Book
@@ -3419,7 +3419,7 @@ export default function App() {
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.1rem",marginBottom:20 }}>
-                    <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.25rem" }}>₹{total.toLocaleString()}</span>
+                    <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
                   </div>
                   {/* Buttons */}
                   <button onClick={()=>setPrepOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
@@ -3442,7 +3442,7 @@ export default function App() {
               <div style={{ width:36,height:4,background:"#E5E7EB",borderRadius:4,margin:"0 auto 20px" }}/>
               <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
                 <div style={{ fontWeight:800,fontSize:"1.08rem" }}>📋 Preparation Guide</div>
-                <button onClick={()=>setPrepOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
+                <button onClick={()=>setPrepOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
               </div>
               <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
                 ℹ️ Please follow these instructions before your sample collection appointment.
@@ -3902,7 +3902,7 @@ export default function App() {
                   <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                 </div>
                 <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.06rem",marginBottom:16 }}>
-                  <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.18rem" }}>₹{total.toLocaleString()}</span>
+                  <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
                 </div>
                 <button onClick={()=>setPrepGuideOpen(o=>!o)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:10,padding:"12px 0",fontWeight:700,fontSize:".88rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7 }}>
                   📋 Preparation Guide
@@ -3917,7 +3917,7 @@ export default function App() {
               <div style={{ position:"absolute",inset:0,background:"#fff",overflowY:"auto",padding:"20px 20px 32px",animation:"slideUp .22s cubic-bezier(.34,1.2,.64,1)" }}>
                 <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14 }}>
                   <div style={{ fontWeight:800,fontSize:"1rem" }}>📋 Preparation Guide</div>
-                  <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"#F1F5F9",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
+                  <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
                 </div>
                 <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:9,padding:"9px 13px",fontSize:".77rem",color:"#1E40AF",marginBottom:16,lineHeight:1.5 }}>
                   ℹ️ Please follow these instructions before your sample collection appointment.
