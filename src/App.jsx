@@ -2926,11 +2926,12 @@ export default function App() {
 
   const allLabs = LABS.concat(adminOv.extraLabs.map(el => ({
     ...el,
-    address: el.city || '',
+    active: adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
+    address: el.address || el.city || '',
     distance: el.dist || '—',
     timing: el.timing || 'Call for timings',
-    homeCollection: false,
-    nabl: false,
+    homeCollection: el.homeCollection || false,
+    nabl: el.nabl || false,
     color: el.color || '#1158A6',
     tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
     reviews: el.reviews || 0,
