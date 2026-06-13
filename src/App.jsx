@@ -2767,6 +2767,7 @@ export default function App() {
   const [done,   setDone]   = useState(null);
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
+  const [prepGuideOpen, setPrepGuideOpen] = useState(false);
   const [sideMenu,    setSideMenu]   = useState(false);
   const [selectedTest, setSelectedTest] = useState(null); // {name, cat} when user clicks a specific test
   const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
@@ -3738,8 +3739,8 @@ export default function App() {
 
       {/* CART MODAL */}
       {cartOpen && (
-        <Modal onClose={()=>setCartOpen(false)}>
-          <div style={{ padding:26 }}>
+        <Modal onClose={()=>{ setCartOpen(false); setPrepGuideOpen(false); }}>
+          <div style={{ padding:26, position:"relative" }}>
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
               <h3 style={{ ...T.serif,fontSize:"1.25rem",color:"var(--ink)" }}>Your Cart ({cart.length})</h3>
               <button onClick={()=>setCartOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
@@ -3750,33 +3751,19 @@ export default function App() {
               </div>
             ) : (
               <>
-                {cart.map(item=>{
-                  const prep = getTestPrep(item.tname);
-                  const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
-                  const isSpecial = prep.prep !== "No special requirement.";
-                  return (
-                  <div key={item.tid} style={{ padding:"12px 0",borderBottom:"1px solid #F3F4F6" }}>
-                    <div style={{ display:"flex",alignItems:"flex-start",gap:12 }}>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontWeight:700,fontSize:".88rem",marginBottom:3 }}>{item.tname}</div>
-                        <div style={{ color:"var(--muted)",fontSize:".75rem",marginBottom:6 }}>{item.lname}</div>
-                        <div style={{ display:"flex",gap:6,flexWrap:"wrap",marginBottom:6 }}>
-                          <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 9px",fontSize:".71rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
-                          {isSpecial && <span style={{ background:"#FFF7ED",color:"#C2410C",borderRadius:20,padding:"2px 9px",fontSize:".71rem",fontWeight:600 }}>⚠ Prep required</span>}
-                        </div>
-                        <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:8,padding:"7px 10px",fontSize:".75rem",color:isSpecial?"#92400E":"#166534",lineHeight:1.5 }}>
-                          {isSpecial ? `📋 ${prep.prep}` : "✅ No special requirement"}
-                        </div>
-                      </div>
-                      <div style={{ textAlign:"right",flexShrink:0 }}>
-                        <div style={{ fontWeight:900,color:"var(--teal)",fontSize:".98rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
-                        <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through",marginBottom:6 }}>₹{item.mrp}</div>
-                        <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"5px 11px",cursor:"pointer",fontSize:".76rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
-                      </div>
+                {cart.map(item=>(
+                  <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"11px 0",borderBottom:"1px solid #F9FAFB",gap:12 }}>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontWeight:700,fontSize:".88rem",marginBottom:2 }}>{item.tname}</div>
+                      <div style={{ color:"var(--muted)",fontSize:".75rem" }}>{item.lname}</div>
                     </div>
+                    <div style={{ textAlign:"right",marginRight:8 }}>
+                      <div style={{ fontWeight:900,color:"var(--teal)",fontSize:".98rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
+                      <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
+                    </div>
+                    <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"5px 11px",cursor:"pointer",fontSize:".76rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
                   </div>
-                  );
-                })}
+                ))}
                 <div style={{ paddingTop:14 }}>
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".82rem",marginBottom:3 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
@@ -3784,13 +3771,53 @@ export default function App() {
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.08rem",marginBottom:18 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.08rem",marginBottom:16 }}>
                     <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.22rem" }}>₹{total.toLocaleString()}</span>
                   </div>
+                  <button onClick={()=>setPrepGuideOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1px solid #FDE68A",borderRadius:10,padding:"11px 0",fontWeight:700,fontSize:".88rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7 }}>
+                    📋 Preparation Guide
+                  </button>
                   <button onClick={()=>{ setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10 }}>
-                    Proceed to Book →
+                    Proceed to Booking →
                   </button>
                 </div>
+
+                {/* Preparation Guide overlay inside cart */}
+                {prepGuideOpen && (
+                  <div style={{ position:"absolute",inset:0,background:"#fff",borderRadius:"inherit",overflowY:"auto",zIndex:10,padding:"20px 20px 28px",display:"flex",flexDirection:"column" }}>
+                    <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18 }}>
+                      <div style={{ fontWeight:800,fontSize:"1.05rem" }}>📋 Preparation Guide</div>
+                      <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
+                    </div>
+                    <div style={{ color:"#6B7280",fontSize:".78rem",marginBottom:16,background:"#EFF6FF",borderRadius:8,padding:"8px 12px",border:"1px solid #BFDBFE" }}>
+                      ℹ️ Please follow these instructions before your sample collection appointment.
+                    </div>
+                    {cart.map(item=>{
+                      const prep = getTestPrep(item.tname);
+                      const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
+                      const isSpecial = prep.prep !== "No special requirement.";
+                      return (
+                        <div key={item.tid} style={{ marginBottom:14,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden" }}>
+                          <div style={{ background:"#F9FAFB",padding:"10px 14px",borderBottom:"1px solid #E5E7EB" }}>
+                            <div style={{ fontWeight:700,fontSize:".87rem" }}>{item.tname}</div>
+                            <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
+                          </div>
+                          <div style={{ padding:"12px 14px" }}>
+                            <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
+                              <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"3px 10px",fontSize:".72rem",fontWeight:600 }}>{sampleIcon} Sample: {prep.sample}</span>
+                            </div>
+                            <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:8,padding:"9px 12px",fontSize:".79rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.6 }}>
+                              {isSpecial ? prep.prep : "✅ No special requirement"}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <button onClick={()=>{ setPrepGuideOpen(false); setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,marginTop:6 }}>
+                      Proceed to Booking →
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>
