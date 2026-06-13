@@ -1790,7 +1790,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
 }
   
 
-function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen }) {
+function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHome, setFilterHome] = useState(false);
@@ -1820,8 +1820,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     6:["Radiology","Echo","MRI"],
   };
 
-  // Merge LABS with NEAR_ME metadata
-  const enriched = LABS.map((l,i) => {
+  // Merge LABS (+ admin-added labs) with NEAR_ME metadata
+  const labsSource = allLabs || LABS;
+  const enriched = labsSource.map((l) => {
     const nm = NEAR_ME.find(x => l.name.startsWith(x.name.split(" ")[0]));
     return { ...l, open: nm?.open ?? true, dist: nm?.dist ?? "—", area: nm?.area ?? l.city, homecoll: nm?.homecoll ?? l.homeCollection, tags: tagMap[l.id] || ["Blood Tests","Packages"] };
   });
@@ -3440,7 +3441,7 @@ export default function App() {
     <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={setLab}
       setTestQ={setTestQ} navTo={navTo} cart={cart}
       selectedTest={selectedTest} setSelectedTest={setSelectedTest}
-      addCart={addCart} setCartOpen={setCartOpen}/>
+      addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}/>
   );
 
   /* ═══════════════════════════════════════════════════════════════
