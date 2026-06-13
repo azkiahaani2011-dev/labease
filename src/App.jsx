@@ -3904,8 +3904,8 @@ export default function App() {
                             onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
                         </div>
                         {/* Prep guide toggle button */}
-                        <button onClick={togglePrep} style={{ marginTop:7,background:"none",border:"none",padding:0,cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:prepOpen?"#92400E":"#6B7280",fontSize:".73rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",transition:"color .15s" }}>
-                          <span style={{ fontSize:".8rem" }}>{prepOpen?"▾":"▸"}</span> Preparation Guide
+                        <button onClick={togglePrep} style={{ marginTop:10,width:"100%",background:prepOpen?"#FFFBEB":"#F9FAFB",border:`1.5px solid ${prepOpen?"#FDE68A":"#E5E7EB"}`,borderRadius:9,padding:"10px 0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6,color:prepOpen?"#92400E":"#374151",fontSize:".84rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+                          <span>{prepOpen?"▾":"▸"}</span> Preparation Guide
                         </button>
                         {/* Inline prep guide */}
                         {prepOpen && (
