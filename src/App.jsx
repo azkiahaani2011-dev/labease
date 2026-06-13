@@ -2803,34 +2803,46 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Re-apply admin price overrides whenever another tab (admin panel) updates localStorage
-  const [, setPriceRev] = useState(0);
+  // Store admin overrides as React state so price changes trigger proper re-renders
+  const [adminOv, setAdminOv] = useState(() => {
+    try {
+      return {
+        prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
+        testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
+        labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
+        labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
+      };
+    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{}}; }
+  });
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === 'le_price_overrides' || e.key === 'le_lab_overrides' || e.key === 'le_test_name_overrides' || e.key === 'le_lab_name_overrides') {
+      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides'].includes(e.key)) {
         try {
-          const priceOv    = JSON.parse(localStorage.getItem('le_price_overrides')    || '{}');
-          const labOv      = JSON.parse(localStorage.getItem('le_lab_overrides')      || '{}');
-          const testNameOv = JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}');
-          const labNameOv  = JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}');
-          LABS.forEach(lab => {
-            if (labOv[lab.id]     !== undefined) lab.active = labOv[lab.id];
-            if (labNameOv[lab.id] !== undefined) lab.name   = labNameOv[lab.id];
-            lab.tests.forEach(t => {
-              if (priceOv[t.id]) {
-                if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
-                if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
-              }
-              if (testNameOv[t.id] !== undefined) t.name = testNameOv[t.id];
-            });
+          setAdminOv({
+            prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
+            testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
+            labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
+            labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
           });
-          setPriceRev(r => r + 1);
         } catch(e) {}
       }
     };
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
   }, []);
+  // Apply overrides to LABS on every render — ensures all price/name reads are always current
+  LABS.forEach(lab => {
+    if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
+    if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
+    lab.tests.forEach(t => {
+      const po = adminOv.prices[t.id];
+      if (po) {
+        if (po.price !== undefined) t.price = po.price;
+        if (po.mrp   !== undefined) t.mrp   = po.mrp;
+      }
+      if (adminOv.testNames[t.id] !== undefined) t.name = adminOv.testNames[t.id];
+    });
+  });
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
