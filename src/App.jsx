@@ -3877,22 +3877,50 @@ export default function App() {
                 </div>
               ) : (
                 <>
-                  {cart.map(item=>(
-                    <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"12px 0",borderBottom:"1px solid #F3F4F6",gap:10 }}>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontWeight:700,fontSize:".87rem",marginBottom:2 }}>{item.tname}</div>
-                        <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
+                  {cart.map(item=>{
+                    const prep = getTestPrep(item.tname);
+                    const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
+                    const isSpecial = prep.prep !== "No special requirement.";
+                    const prepOpen = prepGuideOpen instanceof Set ? prepGuideOpen.has(item.tid) : false;
+                    const togglePrep = () => setPrepGuideOpen(prev => {
+                      const s = new Set(prev instanceof Set ? prev : []);
+                      s.has(item.tid) ? s.delete(item.tid) : s.add(item.tid);
+                      return new Set(s);
+                    });
+                    return (
+                      <div key={item.tid} style={{ borderBottom:"1px solid #F3F4F6",paddingBottom:10,marginBottom:2 }}>
+                        <div style={{ display:"flex",alignItems:"center",paddingTop:10,gap:10 }}>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontWeight:700,fontSize:".87rem",marginBottom:2 }}>{item.tname}</div>
+                            <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
+                          </div>
+                          <div style={{ textAlign:"right",marginRight:6 }}>
+                            <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                            <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
+                          </div>
+                          <button onClick={()=>delCart(item.tid)} title="Remove"
+                            style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                            onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
+                            onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
+                        </div>
+                        {/* Prep guide toggle button */}
+                        <button onClick={togglePrep} style={{ marginTop:7,background:"none",border:"none",padding:0,cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:prepOpen?"#92400E":"#6B7280",fontSize:".73rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",transition:"color .15s" }}>
+                          <span style={{ fontSize:".8rem" }}>{prepOpen?"▾":"▸"}</span> Preparation Guide
+                        </button>
+                        {/* Inline prep guide */}
+                        {prepOpen && (
+                          <div style={{ marginTop:8,borderRadius:10,overflow:"hidden",border:"1px solid #E5E7EB" }}>
+                            <div style={{ background:"#F9FAFB",padding:"7px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",gap:7 }}>
+                              <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 9px",fontSize:".7rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
+                            </div>
+                            <div style={{ padding:"9px 12px",background:isSpecial?"#FFFBEB":"#F0FDF4",fontSize:".78rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
+                              {isSpecial ? prep.prep : "✅ No special requirement"}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div style={{ textAlign:"right",marginRight:6 }}>
-                        <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
-                        <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
-                      </div>
-                      <button onClick={()=>delCart(item.tid)} title="Remove"
-                        style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
-                        onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
-                        onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </>
               )}
             </div>
@@ -3908,44 +3936,7 @@ export default function App() {
                 <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.06rem",marginBottom:16 }}>
                   <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
                 </div>
-                <button onClick={()=>setPrepGuideOpen(o=>!o)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:10,padding:"12px 0",fontWeight:700,fontSize:".88rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7 }}>
-                  📋 Preparation Guide
-                </button>
                 <button onClick={()=>{ setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,padding:"13px 0" }}>
-                  Proceed to Booking →
-                </button>
-              </div>
-            )}
-            {/* Preparation Guide panel slides up inside drawer */}
-            {prepGuideOpen && (
-              <div style={{ position:"absolute",inset:0,background:"#fff",overflowY:"auto",padding:"20px 20px 32px",animation:"slideUp .22s cubic-bezier(.34,1.2,.64,1)" }}>
-                <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14 }}>
-                  <div style={{ fontWeight:800,fontSize:"1rem" }}>📋 Preparation Guide</div>
-                  <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
-                </div>
-                <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:9,padding:"9px 13px",fontSize:".77rem",color:"#1E40AF",marginBottom:16,lineHeight:1.5 }}>
-                  ℹ️ Please follow these instructions before your sample collection appointment.
-                </div>
-                {cart.map(item=>{
-                  const prep = getTestPrep(item.tname);
-                  const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
-                  const isSpecial = prep.prep !== "No special requirement.";
-                  return (
-                    <div key={item.tid} style={{ marginBottom:12,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden" }}>
-                      <div style={{ background:"#F9FAFB",padding:"9px 14px",borderBottom:"1px solid #E5E7EB" }}>
-                        <div style={{ fontWeight:700,fontSize:".85rem" }}>{item.tname}</div>
-                        <div style={{ color:"#6B7280",fontSize:".71rem" }}>{item.lname}</div>
-                      </div>
-                      <div style={{ padding:"11px 14px" }}>
-                        <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 10px",fontSize:".71rem",fontWeight:600,display:"inline-block",marginBottom:8 }}>{sampleIcon} Sample: {prep.sample}</span>
-                        <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:8,padding:"8px 12px",fontSize:".78rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.6 }}>
-                          {isSpecial ? prep.prep : "✅ No special requirement"}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <button onClick={()=>{ setPrepGuideOpen(false); setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,padding:"13px 0",marginTop:6 }}>
                   Proceed to Booking →
                 </button>
               </div>
