@@ -1987,7 +1987,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button></div>
+        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
@@ -3409,9 +3409,11 @@ export default function App() {
                       <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                     </div>
                     <button onClick={()=>delCart(item.tid)} title="Remove"
-                      style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                      style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",padding:"4px",transition:"color .15s",display:"flex",alignItems:"center" }}
                       onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
-                      onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
+                      onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    </button>
                   </div>
                 ))}
                 {/* Totals */}
@@ -3888,9 +3890,11 @@ export default function App() {
                         <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                       </div>
                       <button onClick={()=>delCart(item.tid)} title="Remove"
-                        style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",fontSize:"1.25rem",lineHeight:1,padding:"2px 4px",transition:"color .15s",fontWeight:400 }}
+                        style={{ flexShrink:0,background:"none",border:"none",color:"#C4C9D4",cursor:"pointer",padding:"4px",transition:"color .15s",display:"flex",alignItems:"center" }}
                         onMouseEnter={e=>e.currentTarget.style.color="#DC2626"}
-                        onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>×</button>
+                        onMouseLeave={e=>e.currentTarget.style.color="#C4C9D4"}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                      </button>
                     </div>
                   ))}
 
