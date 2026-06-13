@@ -2804,17 +2804,18 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Trigger re-render when admin panel updates localStorage (cross-tab or polling)
+  // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
   useEffect(() => {
-    const handler = (e) => {
-      if (['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'].includes(e.key)) {
-        setOvTick(n => n + 1);
-      }
-    };
+    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'];
+    const handler = (e) => { if (keys.includes(e.key)) setOvTick(n => n + 1); };
     window.addEventListener('storage', handler);
-    // Poll every 3s as fallback for same-tab or missed events
-    const poll = setInterval(() => setOvTick(n => n + 1), 3000);
+    // Poll only when data actually changes — avoids re-render every tick (which breaks inputs)
+    let snap = keys.map(k => localStorage.getItem(k)).join('|');
+    const poll = setInterval(() => {
+      const curr = keys.map(k => localStorage.getItem(k)).join('|');
+      if (curr !== snap) { snap = curr; setOvTick(n => n + 1); }
+    }, 2000);
     return () => { window.removeEventListener('storage', handler); clearInterval(poll); };
   }, []);
   // Read ALL admin overrides fresh from localStorage on every render
