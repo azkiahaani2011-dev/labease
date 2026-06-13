@@ -1776,10 +1776,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <button onClick={()=>navTo("home")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
-          </button>
+          </button></div>
           <div className="labs-header-row">
             <div>
               <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
@@ -1789,19 +1789,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               </p>
             </div>
             <div className="labs-sort-row">
-              {/* sort — leftmost */}
-              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
-              <div style={{ display:"flex", gap:"8px" }}>
-                {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
-                  <button key={v} onClick={()=>setSortBy(v)}
-                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
-                    {l}
-                  </button>
-                ))}
-              </div>
-              {/* divider */}
-              <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
-              {/* search */}
+              {/* search — leftmost */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
                 <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#FAFAFA",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
@@ -1817,6 +1805,18 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     ))}
                   </div>
                 )}
+              </div>
+              {/* divider */}
+              <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
+              {/* sort */}
+              <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
+              <div style={{ display:"flex", gap:"8px" }}>
+                {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,l])=>(
+                  <button key={v} onClick={()=>setSortBy(v)}
+                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
+                    {l}
+                  </button>
+                ))}
               </div>
           </div>
         </div>
@@ -1850,9 +1850,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                           <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
                           {l.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
                         </div>
-                        <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8 }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                          {l.area}, Bangalore &nbsp;·&nbsp; <strong style={{ color:"var(--ink)" }}>{l.dist} away</strong>
+                        <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>
+                          <svg style={{flexShrink:0}} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                          <span style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{l.area}, Bangalore &nbsp;·&nbsp; <strong style={{ color:"var(--ink)" }}>{l.dist} away</strong></span>
                         </div>
                         <div style={{ display:"flex",flexWrap:"wrap",gap:5,marginBottom:10 }}>
                           {l.tags.map(t=>(
@@ -1862,7 +1862,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         </div>
                         <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                           <div style={{ display:"flex",alignItems:"center",gap:4,background:"#EEF4FF",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
-                            <span style={{ color:"#1158A6" }}>★</span>
+                            <span style={{ color:"#F59E0B" }}>★</span>
                             <span style={{ color:"#0D1117" }}>{l.rating}</span>
                           </div>
                           <span style={{ fontSize:".75rem",color:"var(--muted)",fontWeight:500 }}>
@@ -1938,7 +1938,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button>
+        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>← All Labs</button></div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
