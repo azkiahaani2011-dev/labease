@@ -1919,7 +1919,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                           <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
                         </div>
                         {selectedTest && matchTest ? (
-                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); navTo("booking"); }}
+                          <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); navTo("cart"); }}
                             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
@@ -1939,7 +1939,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                               style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              📞 Call Lab
+                              📞 Contact Lab
                             </a>
                           </>
                         )}
@@ -3364,6 +3364,114 @@ export default function App() {
   );
 
   /* ═══════════════════════════════════════════════════════════════
+     CART PAGE
+  ═══════════════════════════════════════════════════════════════ */
+  const CartPage = () => {
+    const [prepOpen, setPrepOpen] = React.useState(false);
+    return (
+      <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
+        <div style={{ maxWidth:560,margin:"0 auto" }}>
+          {/* Back */}
+          <button onClick={()=>navTo("home")} style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+            ← Back to Home
+          </button>
+          <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
+            {/* Header */}
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+              <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'DM Serif Display',serif" }}>Your Cart</div>
+              <span style={{ marginLeft:"auto",background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 12px",fontWeight:700,fontSize:".82rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
+            </div>
+            {cart.length===0 ? (
+              <div style={{ textAlign:"center",padding:"52px 24px",color:"#9CA3AF" }}>
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom:14 }}><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                <div style={{ fontWeight:700,fontSize:"1rem",marginBottom:6 }}>Your cart is empty</div>
+                <div style={{ fontSize:".84rem",marginBottom:20 }}>Browse labs and add tests to get started</div>
+                <button onClick={()=>navTo("labs")} className="btn-anim" style={{ ...T.btn(),borderRadius:50,padding:"10px 24px" }}>Browse Labs →</button>
+              </div>
+            ) : (
+              <div style={{ padding:"20px 24px 28px" }}>
+                {/* Items */}
+                {cart.map(item=>(
+                  <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"13px 0",borderBottom:"1px solid #F3F4F6",gap:12 }}>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontWeight:700,fontSize:".9rem",marginBottom:2 }}>{item.tname}</div>
+                      <div style={{ color:"#6B7280",fontSize:".76rem" }}>{item.lname}</div>
+                    </div>
+                    <div style={{ textAlign:"right",marginRight:8 }}>
+                      <div style={{ fontWeight:900,color:"var(--teal)",fontSize:"1rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
+                      <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
+                    </div>
+                    <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"6px 12px",cursor:"pointer",fontSize:".76rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
+                  </div>
+                ))}
+                {/* Totals */}
+                <div style={{ paddingTop:16,borderTop:"2px dashed #E5E7EB",marginTop:4 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".83rem",marginBottom:4 }}>
+                    <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+                  </div>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".83rem",marginBottom:10,fontWeight:700 }}>
+                    <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
+                  </div>
+                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.1rem",marginBottom:20 }}>
+                    <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.25rem" }}>₹{total.toLocaleString()}</span>
+                  </div>
+                  {/* Buttons */}
+                  <button onClick={()=>setPrepOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
+                    📋 Preparation Guide
+                  </button>
+                  <button onClick={()=>navTo("booking")} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:12,padding:"14px 0",fontSize:".95rem" }}>
+                    Proceed to Booking →
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Preparation Guide full-page overlay */}
+        {prepOpen && (
+          <div style={{ position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(6px)" }}
+            onClick={()=>setPrepOpen(false)}>
+            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:580,maxHeight:"88vh",overflowY:"auto",padding:"24px 20px 36px",fontFamily:"'Manrope',sans-serif" }}>
+              <div style={{ width:36,height:4,background:"#E5E7EB",borderRadius:4,margin:"0 auto 20px" }}/>
+              <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
+                <div style={{ fontWeight:800,fontSize:"1.08rem" }}>📋 Preparation Guide</div>
+                <button onClick={()=>setPrepOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
+              </div>
+              <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
+                ℹ️ Please follow these instructions before your sample collection appointment.
+              </div>
+              {cart.map(item=>{
+                const prep = getTestPrep(item.tname);
+                const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
+                const isSpecial = prep.prep !== "No special requirement.";
+                return (
+                  <div key={item.tid} style={{ marginBottom:14,borderRadius:14,border:"1px solid #E5E7EB",overflow:"hidden" }}>
+                    <div style={{ background:"#F9FAFB",padding:"11px 16px",borderBottom:"1px solid #E5E7EB" }}>
+                      <div style={{ fontWeight:700,fontSize:".88rem" }}>{item.tname}</div>
+                      <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
+                    </div>
+                    <div style={{ padding:"12px 16px" }}>
+                      <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"3px 11px",fontSize:".72rem",fontWeight:600,display:"inline-block",marginBottom:10 }}>{sampleIcon} Sample: {prep.sample}</span>
+                      <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:9,padding:"10px 13px",fontSize:".8rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
+                        {isSpecial ? prep.prep : "✅ No special requirement"}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <button onClick={()=>{ setPrepOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:12,padding:"14px 0",fontSize:".95rem",marginTop:4 }}>
+                Proceed to Booking →
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ═══════════════════════════════════════════════════════════════
      BOOKING PAGE
   ═══════════════════════════════════════════════════════════════ */
   const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>;
@@ -3673,11 +3781,11 @@ export default function App() {
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
           {cart.length>0&&(isMobile
-            ? <button onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
+            ? <button onClick={()=>navTo("cart")} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
                 <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
               </button>
-            : <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+            : <button onClick={()=>navTo("cart")} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 Cart ({cart.length})
               </button>
@@ -3734,95 +3842,9 @@ export default function App() {
       {page==="labs"    && <LabsPage/>}
       {page==="nearme"  && <NearMePage/>}
       {page==="lab"     && <LabDetail/>}
+      {page==="cart"    && <CartPage/>}
       {page==="booking" && <Booking/>}
       {page==="confirm" && <Confirm/>}
-
-      {/* CART MODAL */}
-      {cartOpen && (
-        <Modal onClose={()=>{ setCartOpen(false); setPrepGuideOpen(false); }}>
-          <div style={{ padding:26, position:"relative" }}>
-            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
-              <h3 style={{ ...T.serif,fontSize:"1.25rem",color:"var(--ink)" }}>Your Cart ({cart.length})</h3>
-              <button onClick={()=>setCartOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
-            </div>
-            {cart.length===0 ? (
-              <div style={{ textAlign:"center",padding:36,color:"#9CA3AF" }}>
-                <IPackage s={56}/><div style={{ marginTop:10 }}>Cart is empty</div>
-              </div>
-            ) : (
-              <>
-                {cart.map(item=>(
-                  <div key={item.tid} style={{ display:"flex",alignItems:"center",padding:"11px 0",borderBottom:"1px solid #F9FAFB",gap:12 }}>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontWeight:700,fontSize:".88rem",marginBottom:2 }}>{item.tname}</div>
-                      <div style={{ color:"var(--muted)",fontSize:".75rem" }}>{item.lname}</div>
-                    </div>
-                    <div style={{ textAlign:"right",marginRight:8 }}>
-                      <div style={{ fontWeight:900,color:"var(--teal)",fontSize:".98rem",fontFamily:"'DM Serif Display',serif" }}>₹{item.price}</div>
-                      <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp}</div>
-                    </div>
-                    <button onClick={()=>delCart(item.tid)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:7,padding:"5px 11px",cursor:"pointer",fontSize:".76rem",fontFamily:"'Manrope',sans-serif",fontWeight:700 }}>Remove</button>
-                  </div>
-                ))}
-                <div style={{ paddingTop:14 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".82rem",marginBottom:3 }}>
-                    <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
-                  </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
-                    <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
-                  </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.08rem",marginBottom:16 }}>
-                    <span>Total</span><span style={{ color:"var(--teal)",fontFamily:"'DM Serif Display',serif",fontSize:"1.22rem" }}>₹{total.toLocaleString()}</span>
-                  </div>
-                  <button onClick={()=>setPrepGuideOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1px solid #FDE68A",borderRadius:10,padding:"11px 0",fontWeight:700,fontSize:".88rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7 }}>
-                    📋 Preparation Guide
-                  </button>
-                  <button onClick={()=>{ setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10 }}>
-                    Proceed to Booking →
-                  </button>
-                </div>
-
-                {/* Preparation Guide overlay inside cart */}
-                {prepGuideOpen && (
-                  <div style={{ position:"absolute",inset:0,background:"#fff",borderRadius:"inherit",overflowY:"auto",zIndex:10,padding:"20px 20px 28px",display:"flex",flexDirection:"column" }}>
-                    <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18 }}>
-                      <div style={{ fontWeight:800,fontSize:"1.05rem" }}>📋 Preparation Guide</div>
-                      <button onClick={()=>setPrepGuideOpen(false)} style={{ background:"#F1F5F9",border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:".95rem" }}>✕</button>
-                    </div>
-                    <div style={{ color:"#6B7280",fontSize:".78rem",marginBottom:16,background:"#EFF6FF",borderRadius:8,padding:"8px 12px",border:"1px solid #BFDBFE" }}>
-                      ℹ️ Please follow these instructions before your sample collection appointment.
-                    </div>
-                    {cart.map(item=>{
-                      const prep = getTestPrep(item.tname);
-                      const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
-                      const isSpecial = prep.prep !== "No special requirement.";
-                      return (
-                        <div key={item.tid} style={{ marginBottom:14,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden" }}>
-                          <div style={{ background:"#F9FAFB",padding:"10px 14px",borderBottom:"1px solid #E5E7EB" }}>
-                            <div style={{ fontWeight:700,fontSize:".87rem" }}>{item.tname}</div>
-                            <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
-                          </div>
-                          <div style={{ padding:"12px 14px" }}>
-                            <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                              <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"3px 10px",fontSize:".72rem",fontWeight:600 }}>{sampleIcon} Sample: {prep.sample}</span>
-                            </div>
-                            <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:8,padding:"9px 12px",fontSize:".79rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.6 }}>
-                              {isSpecial ? prep.prep : "✅ No special requirement"}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    <button onClick={()=>{ setPrepGuideOpen(false); setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,marginTop:6 }}>
-                      Proceed to Booking →
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </Modal>
-      )}
 
       {/* AUTH MODAL */}
       {authOpen && (
