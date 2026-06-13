@@ -1831,6 +1831,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     enriched.filter(l => l.name.toLowerCase().includes(searchQ.toLowerCase()) || (l.area||"").toLowerCase().includes(searchQ.toLowerCase())).slice(0,5);
 
   const filtered = enriched
+    .filter(l => l.active !== false)
     .filter(l => !filterOpen || l.open)
     .filter(l => !filterHome || l.homecoll)
     .filter(l => !filterNabl || l.nabl)
@@ -3950,7 +3951,7 @@ export default function App() {
       {page==="nearme"  && <NearMePage/>}
       {page==="lab"     && <LabDetail/>}
       {page==="cart"    && <CartPage/>}
-      {page==="booking" && <Booking/>}
+      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>}
       {page==="confirm" && <Confirm/>}
 
       {/* CART DRAWER */}

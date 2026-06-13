@@ -534,7 +534,15 @@ function Labs(props) {
   }
   function toggle(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
-    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    props.setLabs(next);
+    localStorage.setItem('le_labs', JSON.stringify(next));
+    var toggled = next.find(function(l){return l.id===id;});
+    if (toggled) {
+      var labOv = {};
+      try { labOv = JSON.parse(localStorage.getItem('le_lab_overrides')||'{}'); } catch(e){}
+      labOv[id] = toggled.active;
+      localStorage.setItem('le_lab_overrides', JSON.stringify(labOv));
+    }
   }
   function saveNewLab() {
     if (!newLab.name.trim()) return;
