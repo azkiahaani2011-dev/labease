@@ -10,6 +10,7 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #111827; }
@@ -412,9 +413,36 @@ function Dashboard(props) {
   );
 }
 
+function IconDownload() {
+  return React.createElement('svg', {width:15,height:15,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'}),
+    React.createElement('polyline',{points:'7 10 12 15 17 10'}),
+    React.createElement('line',{x1:12,y1:15,x2:12,y2:3})
+  );
+}
+
 function Bookings(props) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
+  function downloadExcel(rows) {
+    var data = rows.map(function(b) {
+      return {
+        'Booking ID': b.id,
+        'Patient Name': b.patient,
+        'Phone': b.phone,
+        'Test': b.test,
+        'Lab': b.lab,
+        'Date': b.date,
+        'Mode': b.mode,
+        'Amount (₹)': b.amount,
+        'Status': b.status,
+      };
+    });
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Bookings');
+    XLSX.writeFile(wb, 'LabEase_Bookings_' + new Date().toISOString().slice(0,10) + '.xlsx');
+  }
   function updateStatus(id, status) {
     var next = props.bookings.map(function(b){return b.id===id?Object.assign({},b,{status:status}):b;});
     props.setBookings(next);
@@ -428,7 +456,12 @@ function Bookings(props) {
   });
   return (
     <div style={{padding:28}}>
-      <div style={{fontSize:22,fontWeight:800,marginBottom:20,color:'#0D1117'}}>Bookings</div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+        <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Bookings</div>
+        <button className="btn btn-outline" onClick={function(){downloadExcel(filtered);}}>
+          {React.createElement(IconDownload,null)} Download Excel
+        </button>
+      </div>
       <div style={{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}>
         <div style={{position:'relative',flex:'1',minWidth:220}}>
           <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}}>{React.createElement(IconSearch,null)}</span>
