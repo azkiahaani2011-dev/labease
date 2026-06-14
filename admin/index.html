@@ -519,28 +519,17 @@ function Bookings(props) {
 function Labs(props) {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
-  const [editTests, setEditTests] = useState([]);
   const [addingLab, setAddingLab] = useState(false);
-  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
-  const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
-  function startEdit(lab) {
-    setEditing(lab.id);
-    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
-    var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day'};}) : [];
-    setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
-  }
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',tests:'0',address:'',timing:'',homeCollection:false,nabl:false,logoUrl:'',color:'#1158A6'});
+  function startEdit(lab) { setEditing(lab.id); setForm({name:lab.name,city:lab.city,phone:lab.phone,rating:lab.rating,tests:lab.tests}); }
   function saveEdit(id) {
-    var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day'};});
-    var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:testsArr.length?testsArr:l.tests}):l;});
+    var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating),tests:parseInt(form.tests)}):l;});
     props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
-    // update extra_labs too
-    var extras=[];try{extras=JSON.parse(localStorage.getItem('le_extra_labs')||'[]');}catch(e){}
-    var updated=next.find(function(l){return l.id===id;});
-    var knownIds=new Set([1,2,3,4,5,6]);
-    if(!knownIds.has(id)&&updated){extras=extras.map(function(e){return e.id===id?updated:e;});localStorage.setItem('le_extra_labs',JSON.stringify(extras));}
-    // lab name override for original labs
-    var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
-    lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
+    // Save lab name override so main UI picks it up
+    var lnov = {};
+    try { lnov = JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}'); } catch(e){}
+    lnov[id] = form.name;
+    localStorage.setItem('le_lab_name_overrides', JSON.stringify(lnov));
     setEditing(null);
   }
   function toggle(id) {
@@ -558,10 +547,7 @@ function Labs(props) {
   function saveNewLab() {
     if (!newLab.name.trim()) return;
     var maxId = props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
-    var labId = maxId+1;
-    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day'};});
-    if(testsArr.length===0) testsArr=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
-    var lab = {id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    var lab = {id:maxId+1,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'Call for timings',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoUrl:newLab.logoUrl.trim(),tests:parseInt(newLab.tests)||0,active:true,distance:'—',founded:new Date().getFullYear().toString()};
     var next = props.labs.concat([lab]);
     props.setLabs(next);
     localStorage.setItem('le_labs', JSON.stringify(next));
@@ -569,8 +555,7 @@ function Labs(props) {
     try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
     extras.push(lab);
     localStorage.setItem('le_extra_labs', JSON.stringify(extras));
-    setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
-    setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',tests:'0',address:'',timing:'',homeCollection:false,nabl:false,logoUrl:'',color:'#1158A6'});
     setAddingLab(false);
   }
   var fields = [['name','Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']];
@@ -584,7 +569,7 @@ function Labs(props) {
         <div className="card" style={{padding:20,marginBottom:20}}>
           <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
-            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing (e.g. 6:00 AM – 10:00 PM)'],['color','Button Color']].map(function(pair){
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count'],['address','Address'],['timing','Timing'],['logoUrl','Logo URL'],['color','Button Color']].map(function(pair){
               var k=pair[0]; var lbl=pair[1];
               return (
                 <div key={k}>
@@ -593,11 +578,6 @@ function Labs(props) {
                 </div>
               );
             })}
-            <div>
-              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Logo (upload image)</label>
-              <input type="file" accept="image/*" style={{width:'100%',fontSize:12}} onChange={function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){setNewLab(function(f){return Object.assign({},f,{logoBase64:ev.target.result});});};reader.readAsDataURL(file);}} />
-              {newLab.logoBase64 && <img src={newLab.logoBase64} alt="preview" style={{width:48,height:48,objectFit:'contain',marginTop:4,borderRadius:6,border:'1px solid #E5E7EB'}} />}
-            </div>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
               <input type="checkbox" id="nl-hc" checked={newLab.homeCollection} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.homeCollection=v;return n;});}} />
               <label htmlFor="nl-hc" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Home Collection</label>
@@ -606,34 +586,6 @@ function Labs(props) {
               <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
               <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>NABL Accredited</label>
             </div>
-            <div>
-              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In</label>
-              <select style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 6px'}} value={newLab.reportTime} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n.reportTime=v;return n;});}}>
-                {['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'].map(function(r){return <option key={r} value={r}>{r}</option>;})}
-              </select>
-            </div>
-          </div>
-          <div style={{marginBottom:14}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
-            <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:3}}>
-              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
-              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
-              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
-              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
-              <span/>
-            </div>
-            {newLabTests.map(function(t,i){return (
-              <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:6,alignItems:'center'}}>
-                <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                  {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
-                </select>
-                <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
-              </div>
-            );})}
-            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
           </div>
           <div style={{display:'flex',gap:8}}>
             <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
@@ -651,52 +603,15 @@ function Labs(props) {
               </div>
               {editing === lab.id ? (
                 <div>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
-                    {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing'],['color','Button Color']].map(function(pair){
-                      var k=pair[0];var lbl=pair[1];
-                      return (
-                        <div key={k}>
-                          <label style={{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}}>{lbl}</label>
-                          <input type="text" style={{width:'100%'}} value={form[k]||''} onChange={function(e){var v=e.target.value;setForm(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
-                        </div>
-                      );
-                    })}
-                    <div>
-                      <label style={{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}}>Logo (upload)</label>
-                      <input type="file" accept="image/*" style={{width:'100%',fontSize:11}} onChange={function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){setForm(function(f){return Object.assign({},f,{logoBase64:ev.target.result});});};reader.readAsDataURL(file);}} />
-                      {form.logoBase64 && <img src={form.logoBase64} alt="logo" style={{width:36,height:36,objectFit:'contain',marginTop:3,borderRadius:4,border:'1px solid #E5E7EB'}} />}
-                    </div>
-                  </div>
-                  <div style={{display:'flex',gap:16,marginBottom:8}}>
-                    <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}}>
-                      <input type="checkbox" checked={!!form.homeCollection} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{homeCollection:v});});}} /> Home Collection
-                    </label>
-                    <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}}>
-                      <input type="checkbox" checked={!!form.nabl} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});});}} /> NABL Accredited
-                    </label>
-                  </div>
-                  <div style={{marginBottom:8}}>
-                    <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
-                    <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:3}}>
-                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
-                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
-                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
-                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
-                      <span/>
-                    </div>
-                    {editTests.map(function(t,i){return (
-                      <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}}>
-                        <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                        <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                          {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
-                        </select>
-                        <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                  {fields.map(function(pair) {
+                    var k = pair[0]; var lbl = pair[1];
+                    return (
+                      <div key={k} style={{marginBottom:8}}>
+                        <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>{lbl}</label>
+                        <input type="text" style={{width:'100%'}} value={form[k]} onChange={function(e){var val=e.target.value;setForm(function(f){var n=Object.assign({},f);n[k]=val;return n;});}} />
                       </div>
-                    );})}
-                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
-                  </div>
+                    );
+                  })}
                   <div style={{display:'flex',gap:8,marginTop:10}}>
                     <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(lab.id);}}>Save</button>
                     <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);}}>Cancel</button>
@@ -711,7 +626,7 @@ function Labs(props) {
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" strokeWidth="1" style={{verticalAlign:'middle'}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                       {' '}<span style={{fontWeight:600}}>{lab.rating}</span> <span style={{color:'#9CA3AF'}}>rating</span>
                     </div>
-                    <div style={{fontSize:13,color:'#6B7280'}}><strong style={{color:'#0D1117'}}>{Array.isArray(lab.tests)?lab.tests.length:lab.tests}</strong> tests</div>
+                    <div style={{fontSize:13,color:'#6B7280'}}><strong style={{color:'#0D1117'}}>{lab.tests}</strong> tests</div>
                   </div>
                   <div style={{display:'flex',gap:8}}>
                     <button className="btn btn-outline btn-sm" onClick={function(){startEdit(lab);}}>
