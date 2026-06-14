@@ -522,12 +522,12 @@ function Labs(props) {
   const [editTests, setEditTests] = useState([]);
   const [addingLab, setAddingLab] = useState(false);
   const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
-  const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);
+  const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   function startEdit(lab) {
     setEditing(lab.id);
     setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
     var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day'};}) : [];
-    setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);
+    setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   }
   function saveEdit(id) {
     var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day'};});
@@ -570,7 +570,7 @@ function Labs(props) {
     extras.push(lab);
     localStorage.setItem('le_extra_labs', JSON.stringify(extras));
     setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
-    setNewLabTests([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);
+    setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
     setAddingLab(false);
   }
   var fields = [['name','Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']];
@@ -628,12 +628,12 @@ function Labs(props) {
                 <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
                 <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
                 <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                  {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                  {[['Blood','🩸 Blood'],['Thyroid','🦋 Thyroid'],['Diabetes','💉 Diabetes'],['Liver','🟤 Liver'],['Kidney','🫘 Kidney'],['Vitamins','💊 Vitamins'],['Cardiac','❤️ Cardiac (Heart Health)'],['Packages','📋 Packages (Full Body)'],['Radiology','🔬 Radiology'],['Hormones','⚗️ Hormones'],['Infectious','🦠 Infectious'],['COVID','😷 COVID'],['Allergy','🌿 Allergy'],['Autoimmune','🛡️ Autoimmune'],['Cancer Markers','🔴 Cancer Markers'],['Urine','🟡 Urine'],['General','🧪 General']].map(function(pair){return <option key={pair[0]} value={pair[0]}>{pair[1]}</option>;})}
                 </select>
                 <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
               </div>
             );})}
-            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);});}}>+ Add Test</button>
+            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
           </div>
           <div style={{display:'flex',gap:8}}>
             <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
@@ -690,12 +690,12 @@ function Labs(props) {
                         <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
                         <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
                         <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                          {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                          {[['Blood','🩸 Blood'],['Thyroid','🦋 Thyroid'],['Diabetes','💉 Diabetes'],['Liver','🟤 Liver'],['Kidney','🫘 Kidney'],['Vitamins','💊 Vitamins'],['Cardiac','❤️ Cardiac (Heart Health)'],['Packages','📋 Packages (Full Body)'],['Radiology','🔬 Radiology'],['Hormones','⚗️ Hormones'],['Infectious','🦠 Infectious'],['COVID','😷 COVID'],['Allergy','🌿 Allergy'],['Autoimmune','🛡️ Autoimmune'],['Cancer Markers','🔴 Cancer Markers'],['Urine','🟡 Urine'],['General','🧪 General']].map(function(pair){return <option key={pair[0]} value={pair[0]}>{pair[1]}</option>;})}
                         </select>
                         <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
                       </div>
                     );})}
-                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);});}}>+ Add Test</button>
+                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
                   </div>
                   <div style={{display:'flex',gap:8,marginTop:10}}>
                     <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(lab.id);}}>Save</button>
