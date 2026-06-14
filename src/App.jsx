@@ -1760,8 +1760,11 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
   return (
     <div className="hover-lift" style={{ ...T.card,border:"1px solid var(--line)",cursor:"pointer",overflow:"hidden" }}
       onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
-      {/* top colour strip */}
-      <div style={{ height:8,background:"#E5E7EB" }}/>
+      {/* top colour strip / logo */}
+      {l.logoBase64
+        ? <div style={{ height:56,background:"#F9FAFB",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ maxHeight:44,maxWidth:120,objectFit:"contain" }}/></div>
+        : <div style={{ height:8,background:"#E5E7EB" }}/>
+      }
       <div style={{ padding:22 }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:14 }}>
           <div>
@@ -1857,7 +1860,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
-                <span style={{ color:"#1158A6", fontWeight:700 }}> {enriched.filter(l=>l.open).length} open now</span>
+                <span style={{ color:"#1158A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
               </p>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
