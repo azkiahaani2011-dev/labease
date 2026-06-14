@@ -521,7 +521,7 @@ function Labs(props) {
   const [form, setForm] = useState({});
   const [editTests, setEditTests] = useState([]);
   const [addingLab, setAddingLab] = useState(false);
-  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
   const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);
   function startEdit(lab) {
     setEditing(lab.id);
@@ -561,7 +561,7 @@ function Labs(props) {
     var labId = maxId+1;
     var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day'};});
     if(testsArr.length===0) testsArr=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
-    var lab = {id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'Call for timings',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    var lab = {id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
     var next = props.labs.concat([lab]);
     props.setLabs(next);
     localStorage.setItem('le_labs', JSON.stringify(next));
@@ -569,7 +569,7 @@ function Labs(props) {
     try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
     extras.push(lab);
     localStorage.setItem('le_extra_labs', JSON.stringify(extras));
-    setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
     setNewLabTests([{name:'',price:'',mrp:'',cat:'General',time:'Same Day'}]);
     setAddingLab(false);
   }
@@ -584,7 +584,7 @@ function Labs(props) {
         <div className="card" style={{padding:20,marginBottom:20}}>
           <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
-            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing'],['color','Button Color']].map(function(pair){
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing (e.g. 6:00 AM – 10:00 PM)'],['color','Button Color']].map(function(pair){
               var k=pair[0]; var lbl=pair[1];
               return (
                 <div key={k}>
@@ -605,6 +605,12 @@ function Labs(props) {
             <div style={{display:'flex',alignItems:'center',gap:8}}>
               <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
               <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>NABL Accredited</label>
+            </div>
+            <div>
+              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In</label>
+              <select style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 6px'}} value={newLab.reportTime} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n.reportTime=v;return n;});}}>
+                {['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'].map(function(r){return <option key={r} value={r}>{r}</option>;})}
+              </select>
             </div>
           </div>
           <div style={{marginBottom:14}}>
