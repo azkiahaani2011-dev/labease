@@ -1071,7 +1071,9 @@ const IUrine = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fi
 const ILock = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="12" y="22" width="24" height="18" rx="4" fill="#7C3AED" opacity=".85"/><rect x="12" y="22" width="24" height="18" rx="4" fill="url(#lg1)"/><defs><linearGradient id="lg1" x1="12" y1="22" x2="36" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#8B5CF6"/><stop offset="1" stopColor="#6D28D9"/></linearGradient></defs><path d="M17 22V17a7 7 0 0114 0v5" stroke="#5B21B6" strokeWidth="2.2" fill="none" strokeLinecap="round"/><circle cx="24" cy="31" r="3" fill="#fff" opacity=".9"/><rect x="23" y="31" width="2" height="4" rx="1" fill="#fff" opacity=".9"/></svg>);
 const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#0D9488" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#0D9488" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#0D9488" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
 
-const ICONS = { Blood:IBlood, Thyroid:IThyroid, Diabetes:IDiabetes, Cardiac:ICardiac, Vitamins:IVitamin, Kidney:IKidney, Liver:ILiver, Packages:IPackage, Radiology:IRadiology, Hormones:IHormone, Infectious:IInfectious, COVID:ICovid, Allergy:IAllergy, Autoimmune:IAutoimmune, "Cancer Markers":ICancer, Urine:IUrine };
+const IGeneral = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth=".8"/><rect x="16" y="13" width="16" height="22" rx="3" fill="#fff" stroke="#93C5FD" strokeWidth="1.2"/><line x1="20" y1="19" x2="28" y2="19" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round"/><line x1="20" y1="23" x2="28" y2="23" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round"/><line x1="20" y1="27" x2="25" y2="27" stroke="#93C5FD" strokeWidth="1.4" strokeLinecap="round"/></svg>);
+
+const ICONS = { Blood:IBlood, Thyroid:IThyroid, Diabetes:IDiabetes, Cardiac:ICardiac, Vitamins:IVitamin, Kidney:IKidney, Liver:ILiver, Packages:IPackage, Radiology:IRadiology, Hormones:IHormone, Infectious:IInfectious, COVID:ICovid, Allergy:IAllergy, Autoimmune:IAutoimmune, "Cancer Markers":ICancer, Urine:IUrine, General:IGeneral };
 
 /* ─── DATA ───────────────────────────────────────────────────────────────── */
 const LABS = [
@@ -2057,11 +2059,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       {/* category chips */}
       <div style={{ display:"flex",gap:8,overflowX:"auto",paddingBottom:10,marginBottom:20 }}>
         {cats.map(c=>{
-          const Icon=ICONS[c];
+          const Icon=c==="All" ? null : (ICONS[c]||IGeneral);
           return (
             <button key={c} className="chip" onClick={()=>setCatF(c)}
               style={{ background:catF===c?lab.color:"#fff",color:catF===c?"#fff":"var(--muted)",border:`1.5px solid ${catF===c?lab.color:"var(--line)"}`,borderRadius:50,padding:"7px 16px",fontWeight:600,cursor:"pointer",fontSize:".77rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",flexShrink:0,display:"flex",alignItems:"center",gap:5,transition:"all .14s" }}>
-              {Icon && c!=="All" ? <Icon s={16}/> : null}
+              {Icon ? <Icon s={16}/> : null}
               {c}
             </button>
           );
@@ -2082,7 +2084,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
         ) : visibleTests.map(t=>{
-          const added=has(t.id); const d=pct(t.price,t.mrp); const Icon=ICONS[t.cat];
+          const added=has(t.id); const d=pct(t.price,t.mrp); const Icon=ICONS[t.cat]||IGeneral;
           return (
             <div key={t.id} className="test-row" style={{ display:"grid",gridTemplateColumns:"1fr auto auto auto",padding:"12px 16px",borderBottom:"1px solid #F9FAFB",alignItems:"center",gap:12,transition:"background .14s" }}>
               {/* Test name + cat */}
