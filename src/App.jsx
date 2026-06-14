@@ -1630,6 +1630,16 @@ function LabLogo({ lab, size=90, radius=18 }) {
   const meta = LAB_META.find(m => m.id === lab.id);
   const [idx, setIdx] = React.useState(0);
 
+  // admin-uploaded logo takes priority
+  if (lab.logoBase64) return (
+    <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
+      background:"#fff", overflow:"hidden",
+      boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
+      display:"flex", alignItems:"center", justifyContent:"center" }}>
+      <img src={lab.logoBase64} alt={lab.name} style={{ width:size*0.82, height:size*0.82, objectFit:"contain", display:"block" }}/>
+    </div>
+  );
+
   // embedded b64 logos load instantly, no network needed
   const embedded = LAB_LOGOS_B64[lab.id];
   const srcs = embedded ? [embedded, ...(meta?.srcs||[])] : (meta?.srcs||[]);
@@ -3777,8 +3787,11 @@ export default function App() {
                       <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
 
                         {/* avatar */}
-                        <div style={{ width:68,height:68,borderRadius:16,background:"#F1F5F9",border:"2px solid #E2E8F0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                          <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
+                        <div style={{ width:68,height:68,borderRadius:16,background:"#F1F5F9",border:"2px solid #E2E8F0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden" }}>
+                          {l.full?.logoBase64
+                            ? <img src={l.full.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                            : <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
+                          }
                         </div>
 
                         {/* main info */}
