@@ -1631,12 +1631,13 @@ function LabLogo({ lab, size=90, radius=18 }) {
   const [idx, setIdx] = React.useState(0);
 
   // admin-uploaded logo takes priority
-  if (lab.logoBase64) return (
+  const uploadedLogo = lab.logoBase64 || lab.logoUrl || '';
+  if (uploadedLogo) return (
     <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
       background:"#fff", overflow:"hidden",
       boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
       display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <img src={lab.logoBase64} alt={lab.name} style={{ width:size*0.82, height:size*0.82, objectFit:"contain", display:"block" }}/>
+      <img src={uploadedLogo} alt={lab.name} style={{ width:size*0.82, height:size*0.82, objectFit:"contain", display:"block" }}/>
     </div>
   );
 
@@ -3788,8 +3789,8 @@ export default function App() {
 
                         {/* avatar */}
                         <div style={{ width:68,height:68,borderRadius:16,background:"#F1F5F9",border:"2px solid #E2E8F0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden" }}>
-                          {l.full?.logoBase64
-                            ? <img src={l.full.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                          {(l.full?.logoBase64||l.full?.logoUrl)
+                            ? <img src={l.full.logoBase64||l.full.logoUrl} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
                             : <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
                           }
                         </div>
