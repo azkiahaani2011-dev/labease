@@ -1987,7 +1987,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                       </div>
                       <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".75rem",color:"#065F46",fontWeight:600 }}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Reports in {l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs"}
+                        Reports in {l.reportTime || (l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}
                       </div>
                       <div style={{ fontSize:".75rem",color:"var(--muted)" }}>{l.tests.length}+ tests available</div>
                       {l.nabl && <div style={{ fontSize:".75rem",color:"#1158A6",fontWeight:600 }}>NABL Accredited · Est. {l.founded}</div>}
@@ -2944,11 +2944,13 @@ export default function App() {
     ...el,
     active: adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
     address: el.address || el.city || '',
-    distance: el.dist || '—',
-    timing: el.timing || 'Call for timings',
+    distance: el.distance || el.dist || '—',
+    timing: el.timing || '6:00 AM – 10:00 PM',
     homeCollection: el.homeCollection || false,
     nabl: el.nabl || false,
     color: el.color || '#1158A6',
+    founded: el.founded || new Date().getFullYear().toString(),
+    reportTime: el.reportTime || 'Same Day',
     tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
     reviews: el.reviews || 0,
   })));
