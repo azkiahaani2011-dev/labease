@@ -1071,7 +1071,23 @@ const IUrine = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fi
 const ILock = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="12" y="22" width="24" height="18" rx="4" fill="#7C3AED" opacity=".85"/><rect x="12" y="22" width="24" height="18" rx="4" fill="url(#lg1)"/><defs><linearGradient id="lg1" x1="12" y1="22" x2="36" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#8B5CF6"/><stop offset="1" stopColor="#6D28D9"/></linearGradient></defs><path d="M17 22V17a7 7 0 0114 0v5" stroke="#5B21B6" strokeWidth="2.2" fill="none" strokeLinecap="round"/><circle cx="24" cy="31" r="3" fill="#fff" opacity=".9"/><rect x="23" y="31" width="2" height="4" rx="1" fill="#fff" opacity=".9"/></svg>);
 const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#0D9488" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#0D9488" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#0D9488" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
 
-const IGeneral = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth=".8"/><rect x="16" y="13" width="16" height="22" rx="3" fill="#fff" stroke="#93C5FD" strokeWidth="1.2"/><line x1="20" y1="19" x2="28" y2="19" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round"/><line x1="20" y1="23" x2="28" y2="23" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round"/><line x1="20" y1="27" x2="25" y2="27" stroke="#93C5FD" strokeWidth="1.4" strokeLinecap="round"/></svg>);
+const IGeneral = ({ s = 60 }) => (
+  <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
+    <circle cx="36" cy="36" r="36" fill="#EFF6FF"/>
+    {/* microscope base */}
+    <rect x="26" y="52" width="20" height="4" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/>
+    <rect x="33" y="44" width="6" height="10" rx="1" fill="#60A5FA" stroke="#1E293B" strokeWidth="1"/>
+    {/* arm */}
+    <path d="M36 44 L36 28 L28 28" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    {/* eyepiece */}
+    <rect x="22" y="24" width="12" height="6" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/>
+    {/* lens */}
+    <circle cx="38" cy="38" r="7" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/>
+    <circle cx="38" cy="38" r="3.5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/>
+    {/* sparkle */}
+    <circle cx="50" cy="22" r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/>
+  </svg>
+);
 
 const ICONS = { Blood:IBlood, Thyroid:IThyroid, Diabetes:IDiabetes, Cardiac:ICardiac, Vitamins:IVitamin, Kidney:IKidney, Liver:ILiver, Packages:IPackage, Radiology:IRadiology, Hormones:IHormone, Infectious:IInfectious, COVID:ICovid, Allergy:IAllergy, Autoimmune:IAutoimmune, "Cancer Markers":ICancer, Urine:IUrine, General:IGeneral };
 
