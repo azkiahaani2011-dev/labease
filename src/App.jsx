@@ -325,6 +325,12 @@ const G = () => (
       nav, footer, .btn-anim, section:last-of-type { display: none !important; }
     }
 
+    @media(max-width:640px){
+      .test-header { display:none !important; }
+      .test-row { grid-template-columns:1fr auto !important; gap:8px !important; }
+      .test-row > div:nth-child(2), .test-row > div:nth-child(3) { display:none !important; }
+    }
+
     /* ════════════════════════════════════════════════════════════════
        HERO — premium depth & atmosphere
     ════════════════════════════════════════════════════════════════ */
@@ -1069,7 +1075,7 @@ const IAutoimmune = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 4
 const ICancer = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FDF2F8" stroke="#F0ABFC" strokeWidth=".8"/><path d="M24 11C24 11 18 15 18 19C18 23 24 25 24 25C24 25 30 23 30 19C30 15 24 11 24 11Z" fill="#A21CAF" opacity=".85"/><path d="M24 25L18 35L22 33L24 39L26 33L30 35Z" fill="#A21CAF" opacity=".85"/></svg>);
 const IUrine = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FEFCE8" stroke="#FEF08A" strokeWidth=".8"/><rect x="20" y="9" width="8" height="26" rx="4" fill="#EAB308" opacity=".75"/><rect x="20" y="24" width="8" height="11" rx="4" fill="#CA8A04" opacity=".85"/><rect x="18" y="7" width="12" height="4.5" rx="2" fill="#78716C"/></svg>);
 const ILock = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="12" y="22" width="24" height="18" rx="4" fill="#7C3AED" opacity=".85"/><rect x="12" y="22" width="24" height="18" rx="4" fill="url(#lg1)"/><defs><linearGradient id="lg1" x1="12" y1="22" x2="36" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#8B5CF6"/><stop offset="1" stopColor="#6D28D9"/></linearGradient></defs><path d="M17 22V17a7 7 0 0114 0v5" stroke="#5B21B6" strokeWidth="2.2" fill="none" strokeLinecap="round"/><circle cx="24" cy="31" r="3" fill="#fff" opacity=".9"/><rect x="23" y="31" width="2" height="4" rx="1" fill="#fff" opacity=".9"/></svg>);
-const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#0D9488" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#0D9488" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#0D9488" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#0D9488" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
+const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#059669" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#059669" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#059669" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
 
 const IGeneral = ({ s = 60 }) => (<svg width={s} height={s} viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="#EFF6FF"/><rect x="26" y="52" width="20" height="4" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><rect x="33" y="44" width="6" height="10" rx="1" fill="#60A5FA" stroke="#1E293B" strokeWidth="1"/><path d="M36 44 L36 28 L28 28" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><rect x="22" y="24" width="12" height="6" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="7" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="3.5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><circle cx="50" cy="22" r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/></svg>);
 
@@ -1677,7 +1683,7 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"60px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+  <section style={{ padding:"40px 0 36px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
 
       {/* heading row */}
@@ -2167,7 +2173,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   });
 
   return (
-    <section style={{ padding:"52px 0 48px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
+    <section style={{ padding:"36px 0 32px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
@@ -2474,7 +2480,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
   return (
-    <div style={{ padding:"40px 0 80px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
 
         <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:20,padding:0,display:"flex",alignItems:"center",gap:5 }}>
@@ -2617,22 +2623,14 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   </div>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117",marginBottom:6 }}>Walk-in at the Lab</div>
-                    <div style={{ display:"flex",gap:7,flexWrap:"wrap",alignItems:"center" }}>
-                      <span style={{ background:"#EEF4FF",color:"#1158A6",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>Always available</span>
-                      <span style={{ background:"#F0FDF4",color:"#15803D",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>No extra charge</span>
-                      <span style={{ background:"#EEF4FF",color:"#1158A6",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>On-site collection</span>
-                    </div>
+                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Walk-in at the Lab</div>
                   </div>
-                  <div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
-                    {loc.mode==="clinic"&&<span style={{ fontWeight:700,fontSize:".8rem",color:"#1158A6" }}>Selected</span>}
+                  {loc.mode==="clinic"&&<div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
+                    <span style={{ fontWeight:700,fontSize:".8rem",color:"#1158A6" }}>Selected</span>
                     <div style={{ width:38,height:38,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.3)" }}>
-                      {loc.mode==="clinic"
-                        ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                        : <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                      }
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
-                  </div>
+                  </div>}
                 </div>
 
                 {/* Home Collection — Labs Near Me style */}
@@ -2647,26 +2645,14 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     </svg>
                   </div>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117",marginBottom:6 }}>Home Sample Collection</div>
-                    <div style={{ display:"flex",gap:7,flexWrap:"wrap",alignItems:"center" }}>
-                      {lab?.homeCollection ? (<>
-                        <span style={{ background:"#DCFCE7",color:"#15803D",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>● Free service</span>
-                        <span style={{ background:"#EEF4FF",color:"#1158A6",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>Certified phlebotomist</span>
-                        <span style={{ background:"#FFF7ED",color:"#EA580C",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>🏠 Doorstep pickup</span>
-                      </>) : (
-                        <span style={{ background:"#FEE2E2",color:"#DC2626",fontWeight:700,fontSize:".72rem",padding:"3px 10px",borderRadius:50 }}>Not available for this lab</span>
-                      )}
-                    </div>
+                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
                   </div>
-                  <div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
-                    {loc.mode==="home"&&<span style={{ fontWeight:700,fontSize:".8rem",color:"#1158A6" }}>Selected</span>}
+                  {loc.mode==="home"&&<div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
+                    <span style={{ fontWeight:700,fontSize:".8rem",color:"#1158A6" }}>Selected</span>
                     <div style={{ width:38,height:38,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.3)" }}>
-                      {loc.mode==="home"
-                        ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                        : <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                      }
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
-                  </div>
+                  </div>}
                 </div>
               </div>
 
@@ -2685,9 +2671,6 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     onFocus={e=>e.target.style.borderColor="#1158A6"}
                     onBlur={e=>e.target.style.borderColor="#DBEAFE"}
                   />
-                  <div style={{ display:"flex",alignItems:"center",gap:6,marginTop:8 }}>
-                    <span style={{ background:"#DCFCE7",color:"#15803D",fontWeight:700,fontSize:".7rem",padding:"3px 10px",borderRadius:50 }}>● Collector arrives within 30 min of your slot</span>
-                  </div>
                 </div>
               )}
 
@@ -3052,7 +3035,7 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"42px 0 40px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
@@ -3121,7 +3104,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"40px 0 44px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
@@ -3279,10 +3262,10 @@ export default function App() {
 
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"#F8FAFF" }}>
+      <section style={{ padding:"36px 0",background:"#F8FAFF" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:48 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
@@ -3296,7 +3279,7 @@ export default function App() {
               {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FEF2F2",ic:"#DC2626"},
               {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#EFF6FF",ic:"#1158A6"},
               {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
-              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
+              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#059669"},
             ].map(w=>(
               <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
@@ -3313,10 +3296,10 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"#fff" }}>
+      <section style={{ padding:"36px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:40 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
             </div>
@@ -3345,7 +3328,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"80px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"52px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
@@ -3383,7 +3366,7 @@ export default function App() {
       {/* ── PREMIUM FOOTER ───────────────────────────────────────── */}
       <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
         {/* Top band */}
-        <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"56px 0 48px" }}>
+        <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"36px 0 32px" }}>
           <div className="footer-grid" style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px" }}>
             {/* Brand column */}
             <div>
