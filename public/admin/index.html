@@ -608,13 +608,20 @@ function Labs(props) {
             </div>
           </div>
           <div style={{marginBottom:14}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#374151',marginBottom:8}}>Tests / Packages</div>
+            <div style={{fontSize:12,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
+            <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:3}}>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
+              <span/>
+            </div>
             {newLabTests.map(function(t,i){return (
               <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:6,alignItems:'center'}}>
-                <input type="text" placeholder="Test Name" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                <input type="number" placeholder="Price (₹)" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                <input type="number" placeholder="MRP (₹)" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                <input type="text" placeholder="Category" style={{width:'100%'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}} />
+                <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                <input type="text" placeholder="General" style={{width:'100%'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}} />
                 <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
               </div>
             );})}
@@ -661,13 +668,20 @@ function Labs(props) {
                     </label>
                   </div>
                   <div style={{marginBottom:8}}>
-                    <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:6}}>Tests / Packages</div>
+                    <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
+                    <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:3}}>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
+                      <span/>
+                    </div>
                     {editTests.map(function(t,i){return (
                       <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}}>
-                        <input type="text" placeholder="Test Name" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                        <input type="number" placeholder="Price ₹" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                        <input type="number" placeholder="MRP ₹" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                        <input type="text" placeholder="Category" style={{width:'100%'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}} />
+                        <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                        <input type="text" placeholder="General" style={{width:'100%'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}} />
                         <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
                       </div>
                     );})}
