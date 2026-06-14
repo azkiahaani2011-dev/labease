@@ -701,7 +701,7 @@ function Labs(props) {
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" strokeWidth="1" style={{verticalAlign:'middle'}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                       {' '}<span style={{fontWeight:600}}>{lab.rating}</span> <span style={{color:'#9CA3AF'}}>rating</span>
                     </div>
-                    <div style={{fontSize:13,color:'#6B7280'}}><strong style={{color:'#0D1117'}}>{lab.tests}</strong> tests</div>
+                    <div style={{fontSize:13,color:'#6B7280'}}><strong style={{color:'#0D1117'}}>{Array.isArray(lab.tests)?lab.tests.length:lab.tests}</strong> tests</div>
                   </div>
                   <div style={{display:'flex',gap:8}}>
                     <button className="btn btn-outline btn-sm" onClick={function(){startEdit(lab);}}>
