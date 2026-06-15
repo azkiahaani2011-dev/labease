@@ -737,10 +737,10 @@ const G = () => (
       position: relative;
     }
     @media (min-width: 541px) {
-      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
     }
     @media (min-width: 768px) {
-      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
+      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
       .hiw-connector { display: block; }
     }
     @media (max-width: 767px) {
