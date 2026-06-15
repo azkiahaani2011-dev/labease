@@ -733,14 +733,14 @@ const G = () => (
     .hiw-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 12px;
       position: relative;
     }
     @media (min-width: 541px) {
-      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
     }
     @media (min-width: 768px) {
-      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
       .hiw-connector { display: block; }
     }
     @media (max-width: 767px) {
@@ -3211,7 +3211,7 @@ export default function App() {
           </div>
 
           {/* heading */}
-          <div style={{ textAlign:"center", marginBottom:56, paddingTop:8 }}>
+          <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
             <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
             <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
@@ -3244,15 +3244,15 @@ export default function App() {
                 icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 16px", position:"relative", zIndex:1 }}>
-                <div style={{ width:130,height:130,borderRadius:24,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 8px", position:"relative", zIndex:1 }}>
+                <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
                   {s.icon}
                 </div>
-                <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase" }}>Step {s.n}</div>
-                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:10,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
-                <p style={{ color:"#64748B",fontSize:".82rem",textAlign:"center",lineHeight:1.7,maxWidth:180,margin:0 }}>{s.desc}</p>
+                <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:4,textTransform:"uppercase" }}>Step {s.n}</div>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
+                <p style={{ color:"#64748B",fontSize:".82rem",textAlign:"center",lineHeight:1.6,maxWidth:180,margin:0 }}>{s.desc}</p>
               </div>
             ))}
           </div>
