@@ -1683,88 +1683,57 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"20px 0 18px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
-    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
-
-      {/* heading row */}
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:20, marginBottom:0 }}>
-
-        {/* illustration + text centered */}
-        <div style={{ display:"flex", alignItems:"center", gap:24, flexWrap:"wrap", justifyContent:"center" }}>
-          {/* Premium hand + test tube illustration */}
-          <div style={{ flexShrink:0, width:110, height:110, borderRadius:20, background:"#EEF4FB", border:"1px solid #C7DFF5", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(17,88,166,.1)" }}>
-            <svg viewBox="0 0 110 115" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:88,height:88}}>
-              {/* soft cloud blobs */}
-              <ellipse cx="55" cy="75" rx="44" ry="32" fill="#D6EAF8" opacity="0.65"/>
-              <ellipse cx="32" cy="65" rx="20" ry="16" fill="#D6EAF8" opacity="0.5"/>
-              <ellipse cx="80" cy="60" rx="17" ry="13" fill="#D6EAF8" opacity="0.45"/>
-
-              {/* ── BASE ── */}
-              <rect x="22" y="97" width="58" height="12" rx="6" fill="#F87171" stroke="#1C2333" strokeWidth="2.4"/>
-              {/* base highlight */}
-              <rect x="28" y="99" width="42" height="4" rx="2" fill="#FECACA" opacity="0.6"/>
-
-              {/* ── STEM (vertical pillar, slightly tapered) ── */}
-              <path d="M46 95 L46 72 Q46 68 50 68 L54 68 Q58 68 58 72 L58 95Z" fill="#FC9D9D" stroke="#1C2333" strokeWidth="2.2" strokeLinejoin="round"/>
-
-              {/* ── CURVED ARM (the iconic arch of a microscope) ── */}
-              {/* filled arch shape */}
-              <path d="M50 68 Q50 40 72 28 L80 28 Q80 26 78 24 Q54 34 46 68Z" fill="#F87171" stroke="#1C2333" strokeWidth="2.2" strokeLinejoin="round"/>
-              {/* inner arch highlight */}
-              <path d="M54 66 Q54 44 74 33" stroke="#FECACA" strokeWidth="4" strokeLinecap="round" opacity="0.55"/>
-
-              {/* ── STAGE / SPECIMEN PLATFORM ── */}
-              <rect x="18" y="72" width="50" height="9" rx="4.5" fill="#F87171" stroke="#1C2333" strokeWidth="2.2"/>
-              {/* glass slide */}
-              <rect x="24" y="74" width="32" height="5" rx="2.5" fill="#DBEAFE" stroke="#1C2333" strokeWidth="1.5"/>
-              {/* stage clip */}
-              <rect x="20" y="74.5" width="8" height="4" rx="2" fill="#FC9D9D" stroke="#1C2333" strokeWidth="1.5"/>
-
-              {/* ── OBJECTIVE LENS TUBE (blue, angled down from arm) ── */}
-              <rect x="72" y="20" width="13" height="30" rx="5" fill="#38BDF8" stroke="#1C2333" strokeWidth="2.2"/>
-              {/* band on tube */}
-              <rect x="72" y="30" width="13" height="7" rx="1" fill="#0EA5E9" stroke="#1C2333" strokeWidth="1.5"/>
-              {/* lens tip */}
-              <ellipse cx="78.5" cy="50" rx="6.5" ry="3.5" fill="#BAE6FD" stroke="#1C2333" strokeWidth="2"/>
-              {/* lens shine */}
-              <ellipse cx="76" cy="48" rx="2" ry="1.2" fill="white" opacity="0.6"/>
-
-              {/* ── EYEPIECE (top, dark) ── */}
-              <rect x="74" y="8" width="9" height="15" rx="4" fill="#475569" stroke="#1C2333" strokeWidth="2.2"/>
-              <rect x="76" y="5" width="5" height="7" rx="2.5" fill="#334155" stroke="#1C2333" strokeWidth="2"/>
-              {/* eyepiece shine */}
-              <circle cx="76" cy="11" r="1.2" fill="white" opacity="0.55"/>
-
-              {/* ── FOCUS KNOB ── */}
-              <circle cx="47" cy="76" r="5.5" fill="#FECACA" stroke="#1C2333" strokeWidth="2"/>
-              <circle cx="47" cy="76" r="2.2" fill="#F87171"/>
-
-              {/* ── DECORATIVE DOTS ── */}
-              <circle cx="18" cy="40" r="3" fill="#A5B4FC" opacity="0.6"/>
-              <circle cx="96" cy="30" r="2.5" fill="#FCA5A5" opacity="0.55"/>
-              <circle cx="92" cy="92" r="2" fill="#6EE7B7" opacity="0.6"/>
-            </svg>
-          </div>
-          {/* text */}
-          <div>
-            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>VERIFIED PARTNERS</p>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:6 }}>Our Trusted Labs</h2>
-            <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6,maxWidth:420 }}>NABL-accredited diagnostic centres with verified pricing and free home collection across India.</p>
-          </div>
+  <section style={{ padding:"20px 0 18px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:14 }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
+        <div>
+          <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.1rem,2.5vw,1.4rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.02em",lineHeight:1.2,margin:0 }}>Our Trusted Lab Partners</h2>
         </div>
-
-        {/* centered button */}
         <button onClick={()=>navTo("labs")}
-          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,transition:"all .18s",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
-          onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
-          onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
-          View All Labs
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:6,transition:"all .18s",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
+          onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+          View All <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </button>
       </div>
+    </div>
 
+    {/* marquee track */}
+    <div style={{ overflow:"hidden", position:"relative" }}>
+      <style>{`
+        @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; }
+        .marquee-labs-track:hover { animation-play-state: paused; }
+        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 28px; flex-shrink:0; }
+        .marquee-lab-logo img { height:52px; max-width:130px; object-fit:contain; filter:grayscale(20%); transition:filter .2s; }
+        .marquee-lab-logo:hover img { filter:grayscale(0%); }
+        .marquee-lab-logo span { font-size:.7rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
+      `}</style>
+
+      <div className="marquee-labs-track">
+        {[
+          { name:"Apollo Diagnostics",  src: LAB_LOGOS_B64[1] || "https://logo.clearbit.com/apollodiagnostics.in?size=200" },
+          { name:"SRL Diagnostics",     src: LAB_LOGOS_B64[2] || "https://logo.clearbit.com/srlworld.com?size=200" },
+          { name:"Metropolis",          src: LAB_LOGOS_B64[3] || "https://logo.clearbit.com/metropolisindia.com?size=200" },
+          { name:"Dr. Lal PathLabs",    src: LAB_LOGOS_B64[4] || "https://logo.clearbit.com/lalpathlabs.com?size=200" },
+          { name:"Thyrocare",           src: LAB_LOGOS_B64[5] || "https://logo.clearbit.com/thyrocare.com?size=200" },
+          { name:"Vijaya Diagnostics",  src: LAB_LOGOS_B64[6] || "https://logo.clearbit.com/vijayadiagnostic.com?size=200" },
+          { name:"Apollo Diagnostics",  src: LAB_LOGOS_B64[1] || "https://logo.clearbit.com/apollodiagnostics.in?size=200" },
+          { name:"SRL Diagnostics",     src: LAB_LOGOS_B64[2] || "https://logo.clearbit.com/srlworld.com?size=200" },
+          { name:"Metropolis",          src: LAB_LOGOS_B64[3] || "https://logo.clearbit.com/metropolisindia.com?size=200" },
+          { name:"Dr. Lal PathLabs",    src: LAB_LOGOS_B64[4] || "https://logo.clearbit.com/lalpathlabs.com?size=200" },
+          { name:"Thyrocare",           src: LAB_LOGOS_B64[5] || "https://logo.clearbit.com/thyrocare.com?size=200" },
+          { name:"Vijaya Diagnostics",  src: LAB_LOGOS_B64[6] || "https://logo.clearbit.com/vijayadiagnostic.com?size=200" },
+        ].map((l,i)=>(
+          <div key={i} className="marquee-lab-logo" onClick={()=>navTo("labs")} style={{cursor:"pointer"}}>
+            <div style={{ width:140, height:72, borderRadius:14, background:"#F8FAFC", border:"1.5px solid #E5E7EB", display:"flex", alignItems:"center", justifyContent:"center", padding:"10px 16px", boxSizing:"border-box" }}>
+              <img src={l.src} alt={l.name} onError={e=>{ e.target.style.display="none"; }}/>
+            </div>
+            <span>{l.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 )
