@@ -1731,6 +1731,8 @@ const LabsNearMeSection = ({ T, navTo }) => (
               onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
             />
             <span>{l.name}</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
