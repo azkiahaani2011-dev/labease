@@ -577,10 +577,10 @@ const G = () => (
       }
 
       /* Section vertical padding */
-      section[style*="padding:"52px 0"] { padding-top: 36px !important; padding-bottom: 32px !important; }
-      section[style*="padding:"56px 0"] { padding-top: 40px !important; padding-bottom: 36px !important; }
-      section[style*="padding:"60px 0"] { padding-top: 40px !important; padding-bottom: 36px !important; }
-      section[style*="padding:"64px 0"] { padding-top: 44px !important; padding-bottom: 40px !important; }
+      section[style*="padding:"52px 0"] { padding-top: 22px !important; padding-bottom: 20px !important; }
+      section[style*="padding:"56px 0"] { padding-top: 24px !important; padding-bottom: 20px !important; }
+      section[style*="padding:"60px 0"] { padding-top: 24px !important; padding-bottom: 20px !important; }
+      section[style*="padding:"64px 0"] { padding-top: 26px !important; padding-bottom: 22px !important; }
 
       /* Partner marquee: smaller text */
       div[style*="animation:"marquee"] div div {
@@ -601,7 +601,7 @@ const G = () => (
       .booking-sidebar { position: static !important; }
 
       /* CTA section padding */
-      .cta-section { padding: 48px 20px !important; }
+      .cta-section { padding: 28px 20px !important; }
 
       /* Booking form */
       div[style*="maxWidth:680"] {
@@ -1683,7 +1683,7 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"40px 0 36px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+  <section style={{ padding:"20px 0 18px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
 
       {/* heading row */}
@@ -2173,7 +2173,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   });
 
   return (
-    <section style={{ padding:"36px 0 32px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
+    <section style={{ padding:"18px 0 16px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
@@ -3035,10 +3035,10 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"42px 0 40px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
               <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
               <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
@@ -3104,7 +3104,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"40px 0 44px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
@@ -3262,9 +3262,9 @@ export default function App() {
 
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"36px 0",background:"#F8FAFF" }}>
+      <section style={{ padding:"18px 0",background:"#F8FAFF" }}>
         <div style={T.wrap}>
-          <div style={{ textAlign:"center",marginBottom:48 }}>
+          <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
@@ -3296,9 +3296,9 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"36px 0",background:"#fff" }}>
+      <section style={{ padding:"18px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
-          <div style={{ textAlign:"center",marginBottom:40 }}>
+          <div style={{ textAlign:"center",marginBottom:18 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
@@ -3328,7 +3328,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"52px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
