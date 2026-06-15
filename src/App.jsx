@@ -740,7 +740,7 @@ const G = () => (
       .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 36px; }
     }
     @media (min-width: 768px) {
-      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 28px; }
+      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 42px; }
       .hiw-connector { display: block; }
     }
     @media (max-width: 767px) {
@@ -3244,7 +3244,7 @@ export default function App() {
                 icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 8px", position:"relative", zIndex:1, marginLeft: i===3 ? 20 : 0 }}>
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 8px", position:"relative", zIndex:1 }}>
                 <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
