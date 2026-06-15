@@ -1686,8 +1686,8 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"20px 0 18px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
-    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:14 }}>
+  <section style={{ padding:"36px 0 32px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:20 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
           <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
@@ -1708,10 +1708,10 @@ const LabsNearMeSection = ({ T, navTo }) => (
         @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; }
         .marquee-labs-track:hover { animation-play-state: paused; }
-        .marquee-lab-logo img { height:90px; max-width:200px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
-        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 52px; flex-shrink:0; }
+        .marquee-lab-logo img { height:120px; max-width:240px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
+        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; margin:0 64px; flex-shrink:0; }
         .marquee-lab-logo:hover img { filter:grayscale(0%); transform:scale(1.06); }
-        .marquee-lab-logo span { font-size:.78rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
+        .marquee-lab-logo span { font-size:.85rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
       `}</style>
 
       <div className="marquee-labs-track">
