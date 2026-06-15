@@ -1705,34 +1705,32 @@ const LabsNearMeSection = ({ T, navTo }) => (
         @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; }
         .marquee-labs-track:hover { animation-play-state: paused; }
-        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 28px; flex-shrink:0; }
-        .marquee-lab-logo img { height:52px; max-width:130px; object-fit:contain; filter:grayscale(20%); transition:filter .2s; }
-        .marquee-lab-logo:hover img { filter:grayscale(0%); }
-        .marquee-lab-logo span { font-size:.7rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
+        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; margin:0 36px; flex-shrink:0; }
+        .marquee-lab-logo img { height:56px; max-width:140px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
+        .marquee-lab-logo:hover img { filter:grayscale(0%); transform:scale(1.06); }
+        .marquee-lab-logo span { font-size:.68rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
       `}</style>
 
       <div className="marquee-labs-track">
         {[
-          { name:"Apollo Diagnostics",  src: LAB_LOGOS_B64[1] || "https://logo.clearbit.com/apollodiagnostics.in?size=200" },
-          { name:"SRL Diagnostics",     src: LAB_LOGOS_B64[2] || "https://logo.clearbit.com/srlworld.com?size=200" },
-          { name:"Metropolis",          src: LAB_LOGOS_B64[3] || "https://logo.clearbit.com/metropolisindia.com?size=200" },
-          { name:"Dr. Lal PathLabs",    src: LAB_LOGOS_B64[4] || "https://logo.clearbit.com/lalpathlabs.com?size=200" },
-          { name:"Thyrocare",           src: LAB_LOGOS_B64[5] || "https://logo.clearbit.com/thyrocare.com?size=200" },
-          { name:"Vijaya Diagnostics",  src: LAB_LOGOS_B64[6] || "https://logo.clearbit.com/vijayadiagnostic.com?size=200" },
-          { name:"Apollo Diagnostics",  src: LAB_LOGOS_B64[1] || "https://logo.clearbit.com/apollodiagnostics.in?size=200" },
-          { name:"SRL Diagnostics",     src: LAB_LOGOS_B64[2] || "https://logo.clearbit.com/srlworld.com?size=200" },
-          { name:"Metropolis",          src: LAB_LOGOS_B64[3] || "https://logo.clearbit.com/metropolisindia.com?size=200" },
-          { name:"Dr. Lal PathLabs",    src: LAB_LOGOS_B64[4] || "https://logo.clearbit.com/lalpathlabs.com?size=200" },
-          { name:"Thyrocare",           src: LAB_LOGOS_B64[5] || "https://logo.clearbit.com/thyrocare.com?size=200" },
-          { name:"Vijaya Diagnostics",  src: LAB_LOGOS_B64[6] || "https://logo.clearbit.com/vijayadiagnostic.com?size=200" },
+          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
+          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
+          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3] },
+          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
+          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
+          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6] },
+          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
+          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
+          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3] },
+          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
+          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
+          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6] },
         ].map((l,i)=>(
-          <div key={i} className="marquee-lab-logo" onClick={()=>navTo("labs")} style={{cursor:"pointer"}}>
-            <div style={{ width:140, height:72, borderRadius:14, background:"#F8FAFC", border:"1.5px solid #E5E7EB", display:"flex", alignItems:"center", justifyContent:"center", padding:"10px 16px", boxSizing:"border-box" }}>
-              <img src={l.src} alt={l.name} onError={e=>{ e.target.style.display="none"; }}/>
-            </div>
+          <div key={i} className="marquee-lab-logo">
+            <img src={l.b64||l.src} alt={l.name}
+              onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
+            />
             <span>{l.name}</span>
-          </div>
-        ))}
       </div>
     </div>
   </section>
