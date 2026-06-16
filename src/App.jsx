@@ -1686,7 +1686,7 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"16px 0 30px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+  <section style={{ padding:"16px 0 48px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
