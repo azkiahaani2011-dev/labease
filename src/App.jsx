@@ -3,11 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 const G = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #111; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Manrope', sans-serif; background: #FAFAFA; color: #111; -webkit-font-smoothing: antialiased; }
 
     :root {
       --teal: #1158A6;
@@ -91,7 +91,7 @@ const G = () => (
        Base: 390px width (iPhone 14 Pro). Scales up cleanly.
     ═══════════════════════════════════════════════════════════════════ */
 
-    /* ── TYPOGRAPHY — Inter system ─────────────────────────────── */
+    /* ── TYPOGRAPHY — Manrope system ─────────────────────────────── */
     body {
       font-size: 15px;
       line-height: 1.6;
@@ -101,7 +101,7 @@ const G = () => (
       text-rendering: optimizeLegibility;
     }
     h1, h2, h3, h4 {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Manrope', sans-serif;
       text-rendering: optimizeLegibility;
       letter-spacing: -.02em;
     }
@@ -1238,7 +1238,7 @@ const Modal = ({ children, onClose }) => (
 const Toast = ({ msg, onDone }) => {
   useEffect(() => { const t = setTimeout(onDone, 2600); return () => clearTimeout(t); }, []);
   return (
-    <div style={{ position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",background:"var(--teal)",color:"#fff",borderRadius:50,padding:"12px 24px",fontWeight:700,fontSize:".86rem",zIndex:9999,boxShadow:"0 8px 28px rgba(17,88,166,.38)",animation:"slideUp .25s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:10,fontFamily:"'Inter',sans-serif" }}>
+    <div style={{ position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",background:"var(--teal)",color:"#fff",borderRadius:50,padding:"12px 24px",fontWeight:700,fontSize:".86rem",zIndex:9999,boxShadow:"0 8px 28px rgba(17,88,166,.38)",animation:"slideUp .25s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:10,fontFamily:"'Manrope',sans-serif" }}>
       <span style={{ width:20,height:20,borderRadius:"50%",background:"#60A5FA",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".72rem",flexShrink:0 }}>✓</span>
       {msg}
     </div>
@@ -1300,7 +1300,7 @@ const UploadPrescription = () => {
     <>
       {/* ── TRIGGER BUTTON ── */}
       <button onClick={() => setSheet(true)} className="nav-a"
-        style={{ background:"transparent",border:"none",cursor:"pointer",color:"var(--muted)",fontWeight:700,fontSize:".86rem",padding:"7px 6px",borderRadius:8,fontFamily:"'Inter',sans-serif",transition:"color .15s" }}>
+        style={{ background:"transparent",border:"none",cursor:"pointer",color:"var(--muted)",fontWeight:700,fontSize:".86rem",padding:"7px 6px",borderRadius:8,fontFamily:"'Manrope',sans-serif",transition:"color .15s" }}>
         Upload Prescription
       </button>
 
@@ -1312,7 +1312,7 @@ const UploadPrescription = () => {
       {sheet && (
         <div onClick={close} style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(13,17,25,.6)",display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(12px)",animation:"fadeIn .15s" }}>
           <div onClick={e=>e.stopPropagation()}
-            style={{ background:"#fff",width:"100%",maxWidth:480,borderRadius:"28px 28px 0 0",padding:"0 0 env(safe-area-inset-bottom,24px)",fontFamily:"'Inter',sans-serif",animation:"slideUp .26s cubic-bezier(.22,1,.36,1)",boxShadow:"0 -8px 40px rgba(0,0,0,.18)" }}>
+            style={{ background:"#fff",width:"100%",maxWidth:480,borderRadius:"28px 28px 0 0",padding:"0 0 env(safe-area-inset-bottom,24px)",fontFamily:"'Manrope',sans-serif",animation:"slideUp .26s cubic-bezier(.22,1,.36,1)",boxShadow:"0 -8px 40px rgba(0,0,0,.18)" }}>
 
             {/* handle bar */}
             <div style={{ width:40,height:4,borderRadius:99,background:"#D1D5DB",margin:"14px auto 0" }}/>
@@ -1340,7 +1340,7 @@ const UploadPrescription = () => {
               {/* Take Photo */}
               <button
                 onClick={() => { cameraRef.current?.click(); }}
-                style={{ display:"flex",alignItems:"center",gap:14,background:"#F0F6FF",border:"1.5px solid #BFDBFE",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Inter',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(17,88,166,.06)" }}
+                style={{ display:"flex",alignItems:"center",gap:14,background:"#F0F6FF",border:"1.5px solid #BFDBFE",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(17,88,166,.06)" }}
                 onMouseEnter={e=>{ e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.transform="scale(1.01)"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.borderColor="#BFDBFE"; e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(17,88,166,.06)"; }}>
                 <div style={{ width:50,height:50,borderRadius:15,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid #BFDBFE" }}>
@@ -1361,7 +1361,7 @@ const UploadPrescription = () => {
               {/* Choose from Gallery / Files */}
               <button
                 onClick={() => { galleryRef.current?.click(); }}
-                style={{ display:"flex",alignItems:"center",gap:14,background:"#F8F8FF",border:"1.5px solid #D0D4F7",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Inter',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(99,102,241,.06)" }}
+                style={{ display:"flex",alignItems:"center",gap:14,background:"#F8F8FF",border:"1.5px solid #D0D4F7",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(99,102,241,.06)" }}
                 onMouseEnter={e=>{ e.currentTarget.style.borderColor="#6366F1"; e.currentTarget.style.background="#EEEEFD"; e.currentTarget.style.transform="scale(1.01)"; e.currentTarget.style.boxShadow="0 4px 14px rgba(99,102,241,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.borderColor="#D0D4F7"; e.currentTarget.style.background="#F8F8FF"; e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(99,102,241,.06)"; }}>
                 <div style={{ width:50,height:50,borderRadius:15,background:"linear-gradient(135deg,#EDEDFE,#DFE0FB)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid #C4C7F5" }}>
@@ -1388,7 +1388,7 @@ const UploadPrescription = () => {
             </div>
 
             <div style={{ padding:"4px 20px 28px" }}>
-              <button onClick={close} style={{ width:"100%",background:"#F3F4F6",border:"none",color:"#374151",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",padding:"13px",borderRadius:14,transition:"background .14s" }}
+              <button onClick={close} style={{ width:"100%",background:"#F3F4F6",border:"none",color:"#374151",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",padding:"13px",borderRadius:14,transition:"background .14s" }}
                 onMouseEnter={e=>e.currentTarget.style.background="#E5E7EB"}
                 onMouseLeave={e=>e.currentTarget.style.background="#F3F4F6"}>
                 Cancel
@@ -1402,7 +1402,7 @@ const UploadPrescription = () => {
       {modal && file && (
         <div onClick={e=>{ if(e.target===e.currentTarget) close(); }}
           style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .15s" }}>
-          <div style={{ background:"#fff",borderRadius:22,maxWidth:480,width:"100%",fontFamily:"'Inter',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)",overflow:"hidden" }}>
+          <div style={{ background:"#fff",borderRadius:22,maxWidth:480,width:"100%",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)",overflow:"hidden" }}>
 
             {/* header */}
             <div style={{ padding:"20px 22px 16px",borderBottom:"1px solid #F1F5F9",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
@@ -1473,12 +1473,12 @@ const UploadPrescription = () => {
 
               {/* actions */}
               {status === "done" ? (
-                <button onClick={close} style={{ width:"100%",background:"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Inter',sans-serif" }}>Done</button>
+                <button onClick={close} style={{ width:"100%",background:"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Done</button>
               ) : (
                 <div style={{ display:"flex",gap:10 }}>
-                  <button onClick={close} style={{ flex:1,background:"transparent",color:"#6B7280",border:"1.5px solid #E5E7EB",borderRadius:11,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".86rem",fontFamily:"'Inter',sans-serif" }}>Cancel</button>
+                  <button onClick={close} style={{ flex:1,background:"transparent",color:"#6B7280",border:"1.5px solid #E5E7EB",borderRadius:11,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".86rem",fontFamily:"'Manrope',sans-serif" }}>Cancel</button>
                   <button onClick={startUpload} disabled={status==="uploading"}
-                    style={{ flex:2,background:status==="uploading"?"#BFDBFE":"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,cursor:status==="uploading"?"default":"pointer",fontSize:".88rem",fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .18s" }}>
+                    style={{ flex:2,background:status==="uploading"?"#BFDBFE":"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,cursor:status==="uploading"?"default":"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .18s" }}>
                     {status === "uploading"
                       ? <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin .85s linear infinite",transformOrigin:"12px 12px" }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Uploading…</>
                       : <>
@@ -1691,10 +1691,10 @@ const LabsNearMeSection = ({ T, navTo }) => (
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
           <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
-          <h2 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.1rem,2.5vw,1.4rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.02em",lineHeight:1.2,margin:0 }}>Our Trusted Lab Partners</h2>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.1rem,2.5vw,1.4rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.02em",lineHeight:1.2,margin:0 }}>Our Trusted Lab Partners</h2>
         </div>
         <button onClick={()=>navTo("labs")}
-          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",gap:6,transition:"all .18s",whiteSpace:"nowrap" }}
+          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:6,transition:"all .18s",whiteSpace:"nowrap" }}
           onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
           onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
           View All <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -1711,7 +1711,7 @@ const LabsNearMeSection = ({ T, navTo }) => (
         .marquee-lab-logo img { height:64px; max-width:160px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
         .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 52px; flex-shrink:0; }
         .marquee-lab-logo:hover img { filter:grayscale(0%); transform:scale(1.06); }
-        .marquee-lab-logo span { font-size:.78rem; font-weight:700; color:#64748B; font-family:'Inter',sans-serif; white-space:nowrap; }
+        .marquee-lab-logo span { font-size:.78rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
       `}</style>
 
       <div className="marquee-labs-track"
@@ -1769,7 +1769,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
             </div>
           </div>
           <div style={{ textAlign:"right" }}>
-            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'Inter',sans-serif",letterSpacing:"-.03em" }}>{l.tests?.length ? `₹${Math.min(...l.tests.map(t=>t.price))}` : '—'}</div>
+            <div style={{ fontWeight:900,fontSize:"1.15rem",color:"var(--ink)",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>{l.tests?.length ? `₹${Math.min(...l.tests.map(t=>t.price))}` : '—'}</div>
             <div style={{ fontSize:".67rem",color:"var(--muted)",fontWeight:500 }}>tests from</div>
           </div>
         </div>
@@ -1840,18 +1840,18 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     );
 
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Inter',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button></div>
           <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
             <div>
-              <h1 style={{ fontFamily:"'Inter',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
                 <span style={{ color:"#1158A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
@@ -1861,13 +1861,13 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               {/* search — far left */}
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Inter',sans-serif",outline:"none",width:200,background:"#fff",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
+                <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#fff",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
                   onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; setLabSugOpen(true); }}
                   onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
                   <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
                     {labSuggestions.map((l,i)=>(
-                      <button key={l.id} onClick={()=>{ setSearchQ(l.name); setLabSugOpen(false); }} style={{ display:"block",width:"100%",padding:"9px 14px",background:"none",border:"none",borderBottom:i<labSuggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",textAlign:"left",fontSize:".84rem",fontWeight:600,color:"#111",transition:"background .1s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                      <button key={l.id} onClick={()=>{ setSearchQ(l.name); setLabSugOpen(false); }} style={{ display:"block",width:"100%",padding:"9px 14px",background:"none",border:"none",borderBottom:i<labSuggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".84rem",fontWeight:600,color:"#111",transition:"background .1s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
                         {l.name}
                         <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:400,marginLeft:6 }}>{l.area}</span>
                       </button>
@@ -1878,7 +1878,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               <div style={{ width:1, height:22, background:"#E5E7EB", flexShrink:0 }}/>
               {[["rating","Rating"],["price","Price"],["dist","Distance"]].map(([v,label])=>(
                 <button key={v} onClick={()=>setSortBy(v)}
-                  style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }}>
+                  style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 13px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
                   {label}
                 </button>
               ))}
@@ -1911,7 +1911,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                       <LabLogo lab={l} />
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
-                          <span style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
+                          <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
                           {l.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
                         </div>
                         <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>
@@ -1937,7 +1937,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                       <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,flexShrink:0 }}>
                         <div style={{ textAlign:"right",whiteSpace:"nowrap" }}>
                           <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>{selectedTest ? selectedTest.name : "Tests starting from"}</div>
-                          <div style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
+                          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
                         </div>
                         {selectedTest && !matchTest && (
                           <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
@@ -1945,13 +1945,13 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         {!selectedTest && (
                           <>
                             <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
+                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                               Book
                             </button>
                             <a href="tel:+918000000000" onClick={e=>e.stopPropagation()}
-                              style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Inter',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
+                              style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -1976,7 +1976,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     {selectedTest && matchTest && (
                       <div style={{ paddingTop:12,borderTop:"1px solid #F1F5F9",marginTop:4 }}>
                         <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
-                          style={{ display:"block",margin:"0 auto",background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Inter',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
+                          style={{ display:"block",margin:"0 auto",background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
                           onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                           onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                           Book
@@ -2007,12 +2007,12 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
+        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
             <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4 }}>
-              <h1 style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
               {lab.nabl && <Pill>✓ NABL</Pill>}
               {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
             </div>
@@ -2043,7 +2043,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           const Icon=c==="All" ? null : (ICONS[c]||IGeneral);
           return (
             <button key={c} className="chip" onClick={()=>setCatF(c)}
-              style={{ background:catF===c?lab.color:"#fff",color:catF===c?"#fff":"var(--muted)",border:`1.5px solid ${catF===c?lab.color:"var(--line)"}`,borderRadius:50,padding:"7px 16px",fontWeight:600,cursor:"pointer",fontSize:".77rem",fontFamily:"'Inter',sans-serif",whiteSpace:"nowrap",flexShrink:0,display:"flex",alignItems:"center",gap:5,transition:"all .14s" }}>
+              style={{ background:catF===c?lab.color:"#fff",color:catF===c?"#fff":"var(--muted)",border:`1.5px solid ${catF===c?lab.color:"var(--line)"}`,borderRadius:50,padding:"7px 16px",fontWeight:600,cursor:"pointer",fontSize:".77rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",flexShrink:0,display:"flex",alignItems:"center",gap:5,transition:"all .14s" }}>
               {Icon ? <Icon s={16}/> : null}
               {c}
             </button>
@@ -2080,7 +2080,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 </div>
               </div>
               {/* Price */}
-              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'Inter',sans-serif",letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{t.price}</div>
+              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{t.price}</div>
               {/* MRP + discount stacked */}
               <div style={{ textAlign:"center",whiteSpace:"nowrap" }}>
                 <div style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".76rem" }}>₹{t.mrp}</div>
@@ -2089,16 +2089,16 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               {/* Add / Added */}
               <div style={{ textAlign:"center" }}>
                 {added ? (
-                  <button onClick={()=>delCart(t.id)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Inter',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>✓ Added</button>
+                  <button onClick={()=>delCart(t.id)} style={{ background:"#FEE2E2",color:"#DC2626",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>✓ Added</button>
                 ) : (
-                  <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ background:lab.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Inter',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>+ Add</button>
+                  <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ background:lab.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>+ Add</button>
                 )}
               </div>
             </div>
           );
         })}
         {filtTests.length > TESTS_LIMIT && (
-          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
+          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
             {showAllTests ? "Show Less ↑" : `Show ${filtTests.length - TESTS_LIMIT} More Tests ↓`}
           </button>
         )}
@@ -2152,11 +2152,11 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:24, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
-            <h2 style={{ fontFamily:"'Inter',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
           <button onClick={()=>navTo("alltests")}
-            style={{ background:"transparent", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#1158A6", cursor:"pointer", fontFamily:"'Inter',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
+            style={{ background:"transparent", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#1158A6", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
             onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
             onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
@@ -2197,15 +2197,15 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
 /* ─── ALL SPECIALITIES / ALL TESTS PAGE ─────────────────────────────────── */
 function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Inter',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
           <button onClick={()=>navTo("home")}
-            style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+            style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button>
-          <h1 style={{ fontFamily:"'Inter',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
           <p style={{ color:"#6B7280", fontSize:".88rem" }}>Browse popular test categories and compare prices across all certified labs</p>
         </div>
       </div>
@@ -2300,7 +2300,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
           placeholder="Search tests, packages or labs…"
           className="hero-search-input-field"
-          style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Inter',sans-serif",background:"transparent" }}
+          style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
           autoComplete="off"
         />
         {q && (
@@ -2310,7 +2310,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           </button>
         )}
         <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .18s" }}
+          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
           Search
@@ -2322,14 +2322,14 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
         <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,minWidth:"min(100vw - 32px, 580px)",background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 32px rgba(0,0,0,.12)",zIndex:500,overflow:"hidden" }}>
           {suggestions.map((s, i) => (
             <button key={i} onClick={()=>go(s.label)}
-              style={{ display:"block",width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"background .1s" }}
+              style={{ display:"block",width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"background .1s" }}
               onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"}
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
               {s.label}
             </button>
           ))}
           <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6" }}>
-            <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Inter',sans-serif",padding:0 }}>
+            <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0 }}>
               See all results for &ldquo;{q}&rdquo; →
             </button>
           </div>
@@ -2433,7 +2433,7 @@ function PaymentSelector({ total, onPay, onBack }) {
           <div style={{ display:"flex",gap:8 }}>
             <input value={upi} onChange={e=>setUpi(e.target.value)}
               placeholder="yourname@upi"
-              style={{ flex:1,border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",outline:"none",color:"#111",background:"#FAFAFA" }}
+              style={{ flex:1,border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",color:"#111",background:"#FAFAFA" }}
               onFocus={e=>e.target.style.borderColor="#1158A6"}
               onBlur={e=>e.target.style.borderColor="#DBEAFE"}
             />
@@ -2455,11 +2455,11 @@ function PaymentSelector({ total, onPay, onBack }) {
       {/* Action buttons */}
       <div style={{ display:"flex",gap:10,marginTop:4 }}>
         <button onClick={onBack}
-          style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Inter',sans-serif" }}>
+          style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
           ← Back
         </button>
         <button onClick={handlePay} disabled={!method||paying}
-          style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Inter',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
+          style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
           {paying
             ? <><span style={{ width:16,height:16,border:"2px solid rgba(255,255,255,.4)",borderTop:"2px solid #fff",borderRadius:"50%",display:"inline-block",animation:"spin 0.7s linear infinite" }}/> Processing…</>
             : <>{method==="paylater"?"Confirm & Reserve Slot":`Pay ₹${total.toLocaleString()}`}</>
@@ -2474,7 +2474,7 @@ function PaymentSelector({ total, onPay, onBack }) {
 const BookingField = ({ label, req, ...p }) => (
   <div>
     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:6,color:"#374151",letterSpacing:".01em" }}>{label}{req&&<span style={{color:"#EF4444"}}> *</span>}</label>
-    <input style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 14px",fontSize:".88rem",fontFamily:"'Inter',sans-serif",background:"#fff",color:"#111",display:"block",outline:"none",transition:"border-color .15s",boxSizing:"border-box" }}
+    <input style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 14px",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",display:"block",outline:"none",transition:"border-color .15s",boxSizing:"border-box" }}
       onFocus={e=>e.target.style.borderColor="#1158A6"}
       onBlur={e=>e.target.style.borderColor="#E5E7EB"}
       {...p}/>
@@ -2491,10 +2491,10 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
   return (
-    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Inter',sans-serif" }}>
+    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
 
-        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",marginBottom:20,padding:0,display:"flex",alignItems:"center",gap:5 }}>
+        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:20,padding:0,display:"flex",alignItems:"center",gap:5 }}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
           Back to Tests
         </button>
@@ -2547,7 +2547,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <BookingField label="Age & Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
               </div>
               <button disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}
-                style={{ marginTop:22,width:"100%",background:ok1?"#1158A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Inter',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(17,88,166,.3)":"none" }}
+                style={{ marginTop:22,width:"100%",background:ok1?"#1158A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(17,88,166,.3)":"none" }}
                 onMouseEnter={e=>ok1&&(e.currentTarget.style.background="#0F2D6B")}
                 onMouseLeave={e=>ok1&&(e.currentTarget.style.background="#1158A6")}>
                 Continue →
@@ -2579,7 +2579,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     const sel=loc.date===val;
                     return (
                       <button key={val} onClick={()=>sl("date",val)}
-                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Inter',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
+                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
                         <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
                         <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
                       </button>
@@ -2592,16 +2592,16 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <div style={{ display:"flex",flexWrap:"wrap",gap:8 }}>
                   {TIME_SLOTS.map(s=>(
                     <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }}>
+                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
                       {s}
                     </button>
                   ))}
                 </div>
               </div>
               <div style={{ display:"flex",gap:10,marginTop:22 }}>
-                <button onClick={()=>setStep(1)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Inter',sans-serif" }}>← Back</button>
+                <button onClick={()=>setStep(1)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
                 <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}
-                  style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Inter',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
+                  style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
                   onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F2D6B")}
                   onMouseLeave={e=>ok2&&(e.currentTarget.style.background="#1158A6")}>
                   Continue →
@@ -2664,7 +2664,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
                   </label>
                   <textarea rows={3}
-                    style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Inter',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
+                    style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
                     placeholder="Flat / house no., building, street, area, city…"
                     value={loc.address}
                     onChange={e=>sl("address",e.target.value)}
@@ -2675,11 +2675,11 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               )}
 
               <div style={{ display:"flex",gap:10,marginTop:6 }}>
-                <button onClick={()=>setStep(2)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .15s" }}
+                <button onClick={()=>setStep(2)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
                   onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
                   onMouseLeave={e=>e.currentTarget.style.background="#F8FAFF"}>← Back</button>
                 <button disabled={!ok3} onClick={()=>{ setForm(loc); setStep(4); }}
-                  style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Inter',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
+                  style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
                   onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F2D6B")}
                   onMouseLeave={e=>ok3&&(e.currentTarget.style.background="#1158A6")}>
                   Review Order →
@@ -2734,9 +2734,9 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 </div>
               </div>
               <div style={{ display:"flex",gap:10 }}>
-                <button onClick={()=>setStep(3)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Inter',sans-serif" }}>← Back</button>
+                <button onClick={()=>setStep(3)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
                 <button onClick={()=>setStep(5)}
-                  style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
+                  style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
                   Continue to Payment →
@@ -2953,9 +2953,9 @@ export default function App() {
 
   /* ─── shared tokens ─── */
   const T = {
-    btn:(bg="var(--teal)",fg="#fff")=>({ background:bg,color:fg,border:"none",borderRadius:10,padding:"12px 26px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Inter',sans-serif",display:"inline-flex",alignItems:"center",gap:8 }),
-    out:{ background:"transparent",color:"var(--teal)",border:"1.5px solid var(--teal)",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Inter',sans-serif" },
-    inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",background:"#FAFAFA",color:"#111",display:"block" },
+    btn:(bg="var(--teal)",fg="#fff")=>({ background:bg,color:fg,border:"none",borderRadius:10,padding:"12px 26px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",display:"inline-flex",alignItems:"center",gap:8 }),
+    out:{ background:"transparent",color:"var(--teal)",border:"1.5px solid var(--teal)",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" },
+    inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block" },
     wrap:{ maxWidth:1600,margin:"0 auto",padding:"0 24px" },
     card:{ background:"#fff",borderRadius:18,boxShadow:"var(--card-shadow)" },
     serif:{ fontFamily:"'DM Serif Display',serif" },
@@ -2996,7 +2996,7 @@ export default function App() {
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
@@ -3014,7 +3014,7 @@ export default function App() {
               <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }}
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
@@ -3041,12 +3041,12 @@ export default function App() {
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
               <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
-              <h2 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
               <button onClick={()=>setPkgMsg(v=>!v)}
-                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
                 onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
                 onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
@@ -3086,11 +3086,11 @@ export default function App() {
                   <div style={{ fontSize:gridCols===2?".6rem":".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
                   <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:gridCols===2?3:6,flexWrap:"wrap",gap:gridCols===2?4:8 }}>
                     <div style={{ display:"flex",alignItems:"baseline",gap:3 }}>
-                      <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Inter',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); setSelectedTest({name:pkg.title, cat:pkg.badge}); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
+                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
                       Book Now
@@ -3114,11 +3114,11 @@ export default function App() {
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
-                  <h3 style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
+                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
                   <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
                 </div>
                 <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
+                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
                   BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -3170,11 +3170,11 @@ export default function App() {
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
                   <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
-                  <h3 style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
+                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
                   <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
                 </div>
                 <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
+                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
                   VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -3213,7 +3213,7 @@ export default function App() {
           {/* heading */}
           <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
             <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
-            <h2 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
@@ -3251,7 +3251,7 @@ export default function App() {
                   {s.icon}
                 </div>
                 <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:4,textTransform:"uppercase" }}>Step {s.n}</div>
-                <h3 style={{ fontFamily:"'Inter',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
                 <p style={{ color:"#64748B",fontSize:".82rem",textAlign:"center",lineHeight:1.6,maxWidth:180,margin:0 }}>{s.desc}</p>
               </div>
             ))}
@@ -3269,7 +3269,7 @@ export default function App() {
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
-            <h2 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
@@ -3303,14 +3303,14 @@ export default function App() {
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
             </div>
-            <h2 style={{ fontFamily:"'Inter',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:400,margin:"0 auto" }}>Everything you need to know before booking your first test.</p>
           </div>
           <div style={{ display:"grid",gap:8 }}>
             {FAQS.map((item,i)=>(
               <div key={i} style={{ background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF",overflow:"hidden",transition:"all .18s" }}>
                 <button className="faq-q" onClick={()=>setFaq(faq===i?null:i)}
-                  style={{ width:"100%",background:"none",border:"none",padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",fontFamily:"'Inter',sans-serif",textAlign:"left",transition:"background .18s" }}>
+                  style={{ width:"100%",background:"none",border:"none",padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .18s" }}>
                   <span style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117",lineHeight:1.4,flex:1,marginRight:14 }}>{item.q}</span>
                   <span style={{ flexShrink:0,width:28,height:28,borderRadius:50,background:faq===i?"#1158A6":"#fff",color:faq===i?"#fff":"#1158A6",border:"1.5px solid #DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",fontWeight:700,transition:"all .22s",lineHeight:1 }}>
                     {faq===i?"−":"+"}
@@ -3347,14 +3347,14 @@ export default function App() {
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".92rem",boxShadow:"0 8px 32px rgba(0,0,0,.25)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".92rem",boxShadow:"0 8px 32px rgba(0,0,0,.25)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
               onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 14px 40px rgba(0,0,0,.3)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,.25)"; }}>
               Book a Test Now
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.25)",borderRadius:50,padding:"14px 32px",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".9rem",transition:"all .2s" }}
+              style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.25)",borderRadius:50,padding:"14px 32px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
               onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.borderColor="rgba(255,255,255,.5)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.25)"; }}>
               View Lab Packages
@@ -3364,7 +3364,7 @@ export default function App() {
       </section>
 
       {/* ── PREMIUM FOOTER ───────────────────────────────────────── */}
-      <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Inter',sans-serif" }}>
+      <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
         {/* Top band */}
         <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"36px 0 32px" }}>
           <div className="footer-grid" style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px" }}>
@@ -3474,10 +3474,10 @@ export default function App() {
   const CartPage = () => {
     const [prepOpen, setPrepOpen] = React.useState(false);
     return (
-      <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Inter',sans-serif",padding:"32px 16px" }}>
+      <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
-          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             ← Back to Home
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
@@ -3504,7 +3504,7 @@ export default function App() {
                       <div style={{ color:"#6B7280",fontSize:".76rem" }}>{item.lname}</div>
                     </div>
                     <div style={{ textAlign:"right",marginRight:8 }}>
-                      <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1.05rem",fontFamily:"'Inter',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                      <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1.05rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
                       <div style={{ color:"#9CA3AF",fontSize:".74rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                     </div>
                     <button onClick={()=>delCart(item.tid)} title="Remove"
@@ -3524,10 +3524,10 @@ export default function App() {
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.1rem",marginBottom:20 }}>
-                    <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.3rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
+                    <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
                   </div>
                   {/* Buttons */}
-                  <button onClick={()=>setPrepOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Inter',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
+                  <button onClick={()=>setPrepOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
                     📋 Preparation Guide
                   </button>
                   <button onClick={()=>navTo("booking")} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:12,padding:"14px 0",fontSize:".95rem" }}>
@@ -3543,7 +3543,7 @@ export default function App() {
         {prepOpen && (
           <div style={{ position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(6px)" }}
             onClick={()=>setPrepOpen(false)}>
-            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:580,maxHeight:"88vh",overflowY:"auto",padding:"24px 20px 36px",fontFamily:"'Inter',sans-serif" }}>
+            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:580,maxHeight:"88vh",overflowY:"auto",padding:"24px 20px 36px",fontFamily:"'Manrope',sans-serif" }}>
               <div style={{ width:36,height:4,background:"#E5E7EB",borderRadius:4,margin:"0 auto 20px" }}/>
               <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
                 <div style={{ fontWeight:800,fontSize:"1.08rem" }}>📋 Preparation Guide</div>
@@ -3590,7 +3590,7 @@ export default function App() {
      CONFIRM PAGE
   ═══════════════════════════════════════════════════════════════ */
   const Confirm = () => (
-    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F8FAFF",fontFamily:"'Inter',sans-serif" }}>
+    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F8FAFF",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff",maxWidth:520,width:"100%",padding:"40px 36px",textAlign:"center",animation:"scaleIn .35s cubic-bezier(.34,1.56,.64,1)",borderRadius:24,border:"1.5px solid #EEF2FF",boxShadow:"0 8px 40px rgba(17,88,166,.1)" }}>
 
         {/* success icon */}
@@ -3604,7 +3604,7 @@ export default function App() {
         {/* booking ID */}
         <div style={{ background:"#EEF4FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"16px 20px",marginBottom:18 }}>
           <div style={{ fontWeight:700,color:"#9CA3AF",fontSize:".68rem",letterSpacing:".1em",marginBottom:6,textTransform:"uppercase" }}>Booking Reference</div>
-          <div style={{ fontWeight:800,fontSize:"1.8rem",color:"#1158A6",letterSpacing:".12em",fontFamily:"'Inter',sans-serif" }}>{done?.id}</div>
+          <div style={{ fontWeight:800,fontSize:"1.8rem",color:"#1158A6",letterSpacing:".12em",fontFamily:"'Manrope',sans-serif" }}>{done?.id}</div>
         </div>
 
         {/* summary */}
@@ -3619,13 +3619,13 @@ export default function App() {
 
         <div style={{ display:"flex",gap:10 }}>
           <button onClick={()=>{ navTo("labs"); setDone(null); }}
-            style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }}
+            style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
             onMouseEnter={e=>{ e.currentTarget.style.background="#EEF4FF"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="#F8FAFF"; }}>
             Book More
           </button>
           <button onClick={()=>navTo("home")}
-            style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px",fontWeight:800,fontSize:".86rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s" }}
+            style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px",fontWeight:800,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s" }}
             onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>
             Go Home
@@ -3666,11 +3666,11 @@ export default function App() {
     ];
 
     return (
-      <div style={{ minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Inter',sans-serif" }}>
+      <div style={{ minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
         {/* ── page header ── */}
         <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",padding:"20px 0" }}>
           <div style={{ ...T.wrap }}>
-            <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",padding:0,marginBottom:14,display:"flex",alignItems:"center",gap:5 }}>
+            <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",color:"var(--teal)",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:0,marginBottom:14,display:"flex",alignItems:"center",gap:5 }}>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
               Home
             </button>
@@ -3687,7 +3687,7 @@ export default function App() {
                 <span style={{ fontSize:".8rem",color:"var(--muted)",fontWeight:600 }}>Sort:</span>
                 {[["dist","Distance"],["rating","Rating"],["price","Price"]].map(([v,l])=>(
                   <button key={v} onClick={()=>setSortBy(v)}
-                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 12px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }}>
+                    style={{ background:sortBy===v?"var(--teal)":"#fff",color:sortBy===v?"#fff":"var(--muted)",border:`1px solid ${sortBy===v?"var(--teal)":"var(--line)"}`,borderRadius:20,padding:"5px 12px",fontSize:".76rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
                     {l}
                   </button>
                 ))}
@@ -3729,7 +3729,7 @@ export default function App() {
               <div style={{ display:"flex",flexDirection:"column",gap:6 }}>
                 {specialties.map(([label,cat])=>(
                   <button key={cat} onClick={()=>{setCatF(cat);navTo("labs");}}
-                    style={{ background:"none",border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontWeight:600,fontSize:".82rem",color:"var(--muted)",textAlign:"left",padding:"4px 0",display:"flex",alignItems:"center",gap:7,transition:"color .14s" }}
+                    style={{ background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".82rem",color:"var(--muted)",textAlign:"left",padding:"4px 0",display:"flex",alignItems:"center",gap:7,transition:"color .14s" }}
                     onMouseEnter={e=>e.currentTarget.style.color="var(--teal)"}
                     onMouseLeave={e=>e.currentTarget.style.color="var(--muted)"}>
                     <svg width="5" height="5" viewBox="0 0 5 5"><circle cx="2.5" cy="2.5" r="2.5" fill="#CBD5E1"/></svg>
@@ -3778,7 +3778,7 @@ export default function App() {
                         <div style={{ width:68,height:68,borderRadius:16,background:"#F1F5F9",border:"2px solid #E2E8F0",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden" }}>
                           {(l.full?.logoBase64||l.full?.logoUrl)
                             ? <img src={l.full.logoBase64||l.full.logoUrl} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
-                            : <span style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
+                            : <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",color:"#374151",letterSpacing:"-.02em" }}>{initials}</span>
                           }
                         </div>
 
@@ -3824,17 +3824,17 @@ export default function App() {
                           {minPrice && (
                             <div style={{ textAlign:"right" }}>
                               <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>Tests starting from</div>
-                              <div style={{ fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
+                              <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                             </div>
                           )}
                           <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Inter',sans-serif",width:"100%",transition:"filter .15s" }}
+                            style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                             Book Now
                           </button>
                           <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:col,color:"#fff",border:"none",borderRadius:9,padding:"8px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Inter',sans-serif",width:"100%",transition:"filter .15s" }}
+                            style={{ background:col,color:"#fff",border:"none",borderRadius:9,padding:"8px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                             View Tests & Prices
@@ -3873,7 +3873,7 @@ export default function App() {
      NAV + SHELL
   ═══════════════════════════════════════════════════════════════ */
   return (
-    <div style={{ fontFamily:"'Inter',sans-serif",minHeight:"100vh",background:"#FAFAFA" }}>
+    <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#FAFAFA" }}>
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
@@ -3916,9 +3916,9 @@ export default function App() {
             {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:180,zIndex:300,overflow:"hidden" }}>
               {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
               {!user&&[["Log In",()=>{ setProfileDrop(false); openAuth("login"); },"#374151"],["Sign Up",()=>{ setProfileDrop(false); openAuth("signup"); },"#1158A6"]].map(([lbl,fn,clr])=>(
-                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
+                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
               ))}
-              {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}>Sign Out</button></div>}
+              {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}>Sign Out</button></div>}
             </div>}
           </div>
           {/* Menu (hamburger) button */}
@@ -3938,13 +3938,13 @@ export default function App() {
                 ["About Us",()=>{ setSideMenu(false); }],
                 ["Contact Us",()=>{ setSideMenu(false); }],
               ].map(([lbl,fn])=>(
-                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".9rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.color="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
+                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.color="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
                   {lbl}
                 </button>
               ))}
               <div style={{ padding:"10px 16px",borderTop:"1px solid #E5E7EB",display:"flex",gap:8 }}>
-                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
-                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#1158A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Inter',sans-serif" }}>Sign Up</button>
+                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
+                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#1158A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Sign Up</button>
               </div>
             </div>}
           </div>
@@ -3965,7 +3965,7 @@ export default function App() {
       {cartOpen && (
         <>
           <div onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(0,0,0,.45)",backdropFilter:"blur(4px)",animation:"fadeIn .18s" }}/>
-          <div style={{ position:"fixed",top:0,right:0,bottom:0,zIndex:4001,width:"min(420px,100vw)",background:"#fff",boxShadow:"-8px 0 40px rgba(0,0,0,.18)",display:"flex",flexDirection:"column",animation:"slideInRight .22s cubic-bezier(.34,1.2,.64,1)",fontFamily:"'Inter',sans-serif",overflow:"hidden" }}>
+          <div style={{ position:"fixed",top:0,right:0,bottom:0,zIndex:4001,width:"min(420px,100vw)",background:"#fff",boxShadow:"-8px 0 40px rgba(0,0,0,.18)",display:"flex",flexDirection:"column",animation:"slideInRight .22s cubic-bezier(.34,1.2,.64,1)",fontFamily:"'Manrope',sans-serif",overflow:"hidden" }}>
             {/* Header */}
             <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
@@ -3990,7 +3990,7 @@ export default function App() {
                         <div style={{ color:"#6B7280",fontSize:".74rem" }}>{item.lname}</div>
                       </div>
                       <div style={{ textAlign:"right",marginRight:6 }}>
-                        <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Inter',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
+                        <div style={{ fontWeight:900,color:"var(--ink)",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em" }}>₹{item.price.toLocaleString()}</div>
                         <div style={{ color:"#9CA3AF",fontSize:".72rem",textDecoration:"line-through" }}>₹{item.mrp.toLocaleString()}</div>
                       </div>
                       <button onClick={()=>delCart(item.tid)} title="Remove"
@@ -4005,7 +4005,7 @@ export default function App() {
                   {/* Preparation Guide — separate section */}
                   <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
                     <button onClick={()=>setPrepGuideOpen(o=>!o)}
-                      style={{ width:"100%",background:prepGuideOpen?"#FFFBEB":"#F9FAFB",border:"none",borderBottom:prepGuideOpen?"1.5px solid #FDE68A":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:prepGuideOpen?"#92400E":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Inter',sans-serif",transition:"all .15s" }}>
+                      style={{ width:"100%",background:prepGuideOpen?"#FFFBEB":"#F9FAFB",border:"none",borderBottom:prepGuideOpen?"1.5px solid #FDE68A":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:prepGuideOpen?"#92400E":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
                       📋 Preparation Guide <span style={{ fontSize:".75rem" }}>{prepGuideOpen?"▾":"▸"}</span>
                     </button>
                     {prepGuideOpen && (
@@ -4042,7 +4042,7 @@ export default function App() {
                   <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                 </div>
                 <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.06rem",marginBottom:16 }}>
-                  <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Inter',sans-serif",fontWeight:900,fontSize:"1.2rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
+                  <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.2rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
                 </div>
                 <button onClick={()=>{ setCartOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:10,padding:"13px 0" }}>
                   Proceed to Booking →
@@ -4056,7 +4056,7 @@ export default function App() {
       {/* AUTH MODAL */}
       {authOpen && (
         <div onClick={closeAuth} style={{ position:"fixed",inset:0,zIndex:5000,background:"rgba(13,17,25,.6)",display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(12px)",animation:"fadeIn .18s" }}>
-          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:420,fontFamily:"'Inter',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)",overflow:"hidden" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:420,fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)",overflow:"hidden" }}>
 
             {/* header */}
             <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"28px 28px 24px",position:"relative" }}>
@@ -4071,7 +4071,7 @@ export default function App() {
               {/* tab switcher */}
               <div style={{ display:"flex",gap:0,background:"rgba(255,255,255,.15)",borderRadius:50,padding:4,marginTop:18,width:"fit-content" }}>
                 {[["login","Log In"],["signup","Sign Up"]].map(([m,l])=>(
-                  <button key={m} onClick={()=>{ setAuthMode(m); setAuthErr(""); }} style={{ background:authMode===m?"#fff":"transparent",color:authMode===m?"#1158A6":"rgba(255,255,255,.85)",border:"none",borderRadius:50,padding:"7px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Inter',sans-serif",transition:"all .18s" }}>{l}</button>
+                  <button key={m} onClick={()=>{ setAuthMode(m); setAuthErr(""); }} style={{ background:authMode===m?"#fff":"transparent",color:authMode===m?"#1158A6":"rgba(255,255,255,.85)",border:"none",borderRadius:50,padding:"7px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}>{l}</button>
                 ))}
               </div>
             </div>
@@ -4082,21 +4082,21 @@ export default function App() {
                 <>
                   <div style={{ marginBottom:14 }}>
                     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Full Name</label>
-                    <input value={authForm.name} onChange={e=>setAuthForm(f=>({...f,name:e.target.value}))} placeholder="Priya Sharma" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                    <input value={authForm.name} onChange={e=>setAuthForm(f=>({...f,name:e.target.value}))} placeholder="Priya Sharma" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
                   </div>
                   <div style={{ marginBottom:14 }}>
                     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Phone Number</label>
-                    <input value={authForm.phone} onChange={e=>setAuthForm(f=>({...f,phone:e.target.value}))} placeholder="+91 98765 43210" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                    <input value={authForm.phone} onChange={e=>setAuthForm(f=>({...f,phone:e.target.value}))} placeholder="+91 98765 43210" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
                   </div>
                 </>
               )}
               <div style={{ marginBottom:14 }}>
                 <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Email Address</label>
-                <input type="email" value={authForm.email} onChange={e=>setAuthForm(f=>({...f,email:e.target.value}))} placeholder="you@example.com" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                <input type="email" value={authForm.email} onChange={e=>setAuthForm(f=>({...f,email:e.target.value}))} placeholder="you@example.com" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
               </div>
               <div style={{ marginBottom:authErr?10:20 }}>
                 <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Password</label>
-                <input type="password" value={authForm.password} onChange={e=>setAuthForm(f=>({...f,password:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&handleAuth()} placeholder="Min 6 characters" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Inter',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                <input type="password" value={authForm.password} onChange={e=>setAuthForm(f=>({...f,password:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&handleAuth()} placeholder="Min 6 characters" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
               </div>
 
               {authErr && (
@@ -4106,7 +4106,7 @@ export default function App() {
                 </div>
               )}
 
-              <button onClick={handleAuth} disabled={authLoading} className="btn-anim" style={{ width:"100%",background:authLoading?"#93C5FD":"#1158A6",color:"#fff",border:"none",borderRadius:12,padding:"13px",fontWeight:800,fontSize:".95rem",cursor:authLoading?"not-allowed":"pointer",fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+              <button onClick={handleAuth} disabled={authLoading} className="btn-anim" style={{ width:"100%",background:authLoading?"#93C5FD":"#1158A6",color:"#fff",border:"none",borderRadius:12,padding:"13px",fontWeight:800,fontSize:".95rem",cursor:authLoading?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
                 {authLoading ? (
                   <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin .7s linear infinite",transformOrigin:"12px 12px" }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Processing…</>
                 ) : (
@@ -4116,9 +4116,9 @@ export default function App() {
 
               <div style={{ textAlign:"center",marginTop:16,fontSize:".8rem",color:"#9CA3AF" }}>
                 {authMode==="login" ? (
-                  <>Don't have an account?{" "}<button onClick={()=>{ setAuthMode("signup"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".8rem",padding:0 }}>Sign Up free</button></>
+                  <>Don't have an account?{" "}<button onClick={()=>{ setAuthMode("signup"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Sign Up free</button></>
                 ) : (
-                  <>Already have an account?{" "}<button onClick={()=>{ setAuthMode("login"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",fontSize:".8rem",padding:0 }}>Log In</button></>
+                  <>Already have an account?{" "}<button onClick={()=>{ setAuthMode("login"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Log In</button></>
                 )}
               </div>
             </div>
