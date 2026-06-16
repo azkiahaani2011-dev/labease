@@ -10,12 +10,12 @@ const G = () => (
     body { font-family: 'Manrope', sans-serif; background: #FAFAFA; color: #111; -webkit-font-smoothing: antialiased; }
 
     :root {
-      --teal: #1158A6;
-      --teal-light: #1D4ED8;
-      --teal-pale: #EFF6FF;
-      --sky: #2563EB;
+      --teal: #14B8A6;
+      --teal-light: #0F766E;
+      --teal-pale: #F0FDFA;
+      --sky: #0D9488;
       --gold: #C5973A;
-      --ink: #0D1117;
+      --ink: #0F172A;
       --muted: #6B7280;
       --line: #EBEBEB;
       --bg: #FAFAFA;
@@ -72,7 +72,7 @@ const G = () => (
     input:focus, textarea:focus {
       outline: none;
       border-color: var(--teal) !important;
-      box-shadow: 0 0 0 3px rgba(17,88,166,.12) !important;
+      box-shadow: 0 0 0 3px rgba(20,184,166,.12) !important;
     }
     html, body { overflow-x: hidden; }
     button { min-height: 44px; }
@@ -111,11 +111,11 @@ const G = () => (
       --surface-0: #FFFFFF;
       --surface-1: #F7F9FC;
       --surface-2: #EEF2F8;
-      --border:    rgba(17,88,166,.1);
+      --border:    rgba(20,184,166,.1);
       --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
       --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
-      --shadow-lg: 0 12px 40px rgba(17,88,166,.14), 0 4px 12px rgba(0,0,0,.06);
-      --shadow-xl: 0 24px 64px rgba(17,88,166,.18), 0 8px 24px rgba(0,0,0,.08);
+      --shadow-lg: 0 12px 40px rgba(20,184,166,.14), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-xl: 0 24px 64px rgba(20,184,166,.18), 0 8px 24px rgba(0,0,0,.08);
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -127,7 +127,7 @@ const G = () => (
       background: rgba(255,255,255,.92) !important;
       backdrop-filter: saturate(200%) blur(24px) !important;
       -webkit-backdrop-filter: saturate(200%) blur(24px) !important;
-      border-bottom: 1px solid rgba(17,88,166,.07) !important;
+      border-bottom: 1px solid rgba(20,184,166,.07) !important;
       box-shadow: var(--shadow-sm) !important;
     }
 
@@ -173,7 +173,7 @@ const G = () => (
       transition: box-shadow .22s ease !important;
     }
     .pt-tile:hover > div:first-child {
-      box-shadow: 0 12px 32px rgba(17,88,166,.22) !important;
+      box-shadow: 0 12px 32px rgba(20,184,166,.22) !important;
     }
 
     /* ── FAQ ─────────────────────────────────────────────────────── */
@@ -181,7 +181,7 @@ const G = () => (
       border-radius: var(--radius-md) !important;
       transition: background .15s ease !important;
     }
-    .faq-q:hover { background: #EFF6FF !important; }
+    .faq-q:hover { background: #F0FDFA !important; }
 
     /* ── TEST ROWS ───────────────────────────────────────────────── */
     .test-row {
@@ -194,12 +194,12 @@ const G = () => (
       outline: none;
     }
     button:focus-visible {
-      outline: 2px solid #1158A6;
+      outline: 2px solid #14B8A6;
       outline-offset: 3px;
     }
 
     /* ── TEXT SELECTION ──────────────────────────────────────────── */
-    ::selection { background: #DBEAFE; color: #1158A6; }
+    ::selection { background: #99F6E4; color: #14B8A6; }
 
     /* ── SCROLLBAR ───────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -344,15 +344,15 @@ const G = () => (
        SECTION EYEBROW PILLS — consistent across all sections
     ════════════════════════════════════════════════════════════════ */
     /* All eyebrow pills get a consistent box-shadow */
-    div[style*="background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50"] {
-      box-shadow: 0 2px 8px rgba(17,88,166,.1) !important;
+    div[style*="background:"#F0FDFA",border:"1px solid #99F6E4",borderRadius:50"] {
+      box-shadow: 0 2px 8px rgba(20,184,166,.1) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
        LAB CARD — homepage banner
     ════════════════════════════════════════════════════════════════ */
     /* Trusted Labs banner card */
-    div[style*="borderRadius:18,border:"1.5px solid #DBEAFE""][style*="flexWrap:"wrap""] {
+    div[style*="borderRadius:18,border:"1.5px solid #99F6E4""][style*="flexWrap:"wrap""] {
       transition: box-shadow .22s, transform .22s, border-color .22s !important;
     }
 
@@ -389,19 +389,19 @@ const G = () => (
       transition: box-shadow .22s, transform .22s !important;
     }
     div[style*="background:"#fff",borderRadius:16,padding:"24px 18px",border:"1px solid #F1F5F9""]:hover {
-      box-shadow: 0 8px 32px rgba(17,88,166,.12) !important;
+      box-shadow: 0 8px 32px rgba(20,184,166,.12) !important;
       transform: translateY(-3px) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
        FAQ — accordion polish
     ════════════════════════════════════════════════════════════════ */
-    div[style*="background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF""] {
+    div[style*="background:"#F7FFFD",borderRadius:14,border:"1px solid #F0FDFA""] {
       transition: border-color .18s, box-shadow .18s !important;
     }
-    div[style*="background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF""]:hover {
-      border-color: #DBEAFE !important;
-      box-shadow: 0 4px 16px rgba(17,88,166,.06) !important;
+    div[style*="background:"#F7FFFD",borderRadius:14,border:"1px solid #F0FDFA""]:hover {
+      border-color: #99F6E4 !important;
+      box-shadow: 0 4px 16px rgba(20,184,166,.06) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -409,12 +409,12 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     /* Lab cards on list page */
     div[style*="background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow"] {
-      border-color: #EEF2FF !important;
+      border-color: #F0FDFA !important;
       transition: box-shadow .24s, transform .24s, border-color .24s !important;
     }
     div[style*="background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow"]:hover {
-      border-color: #BFDBFE !important;
-      box-shadow: 0 12px 40px rgba(17,88,166,.12) !important;
+      border-color: #99F6E4 !important;
+      box-shadow: 0 12px 40px rgba(20,184,166,.12) !important;
       transform: translateY(-3px) !important;
     }
 
@@ -426,8 +426,8 @@ const G = () => (
       border-radius: 99px !important;
     }
     /* Active step connector */
-    div[style*="height:2,background:"#1158A6",flex:1"] {
-      background: linear-gradient(90deg,#1158A6,#3B82F6) !important;
+    div[style*="height:2,background:"#14B8A6",flex:1"] {
+      background: linear-gradient(90deg,#14B8A6,#3B82F6) !important;
       border-radius: 99px !important;
     }
 
@@ -435,7 +435,7 @@ const G = () => (
        CONFIRM PAGE — success state
     ════════════════════════════════════════════════════════════════ */
     div[style*="background:"#fff",maxWidth:520"][style*="borderRadius:24"] {
-      box-shadow: 0 24px 64px rgba(17,88,166,.14) !important;
+      box-shadow: 0 24px 64px rgba(20,184,166,.14) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -445,7 +445,7 @@ const G = () => (
       transition: box-shadow .18s, border-color .18s, background .15s !important;
     }
     div[style*="borderRadius:14,border"][style*="cursor:"pointer",transition:"all .15s""]:hover {
-      box-shadow: 0 4px 16px rgba(17,88,166,.1) !important;
+      box-shadow: 0 4px 16px rgba(20,184,166,.1) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -467,7 +467,7 @@ const G = () => (
       margin: 0 -8px !important;
     }
     div[style*="alignItems:"center",padding:"11px 0",borderBottom:"1px solid #F9FAFB""]:hover {
-      background: #F8FAFF !important;
+      background: #F7FFFD !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -505,7 +505,7 @@ const G = () => (
       left: 50%;
       right: 50%;
       height: 2px;
-      background: #1158A6;
+      background: #14B8A6;
       border-radius: 99px;
       transition: left .2s, right .2s;
     }
@@ -1046,23 +1046,23 @@ const ILiver = ({ s = 60 }) => (
 );
 const IPackage = ({ s = 60 }) => (
   <svg width={s} height={s} viewBox="0 0 72 72" fill="none">
-    <circle cx="36" cy="36" r="36" fill="#EFF6FF"/>
+    <circle cx="36" cy="36" r="36" fill="#F0FDFA"/>
     {/* clipboard / report */}
     <rect x="18" y="16" width="36" height="44" rx="5" fill="white" stroke="#1E293B" strokeWidth="1.3"/>
     {/* clip */}
-    <rect x="28" y="10" width="16" height="10" rx="4" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.1"/>
-    <rect x="30" y="12" width="12" height="6" rx="3" fill="#93C5FD"/>
+    <rect x="28" y="10" width="16" height="10" rx="4" fill="#99F6E4" stroke="#1E293B" strokeWidth="1.1"/>
+    <rect x="30" y="12" width="12" height="6" rx="3" fill="#5EEAD4"/>
     {/* checklist lines */}
-    <circle cx="25" cy="30" r="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
-    <polyline points="23.5,30 25,31.5 27,28.5" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    <rect x="30" y="29" width="18" height="2.5" rx="1" fill="#DBEAFE"/>
-    <circle cx="25" cy="38" r="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1"/>
-    <polyline points="23.5,38 25,39.5 27,36.5" stroke="#1158A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    <rect x="30" y="37" width="14" height="2.5" rx="1" fill="#DBEAFE"/>
+    <circle cx="25" cy="30" r="3" fill="#99F6E4" stroke="#1E293B" strokeWidth="1"/>
+    <polyline points="23.5,30 25,31.5 27,28.5" stroke="#14B8A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <rect x="30" y="29" width="18" height="2.5" rx="1" fill="#99F6E4"/>
+    <circle cx="25" cy="38" r="3" fill="#99F6E4" stroke="#1E293B" strokeWidth="1"/>
+    <polyline points="23.5,38 25,39.5 27,36.5" stroke="#14B8A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <rect x="30" y="37" width="14" height="2.5" rx="1" fill="#99F6E4"/>
     <circle cx="25" cy="46" r="3" fill="#F0FDF4" stroke="#1E293B" strokeWidth="1"/>
     <rect x="30" y="45" width="18" height="2.5" rx="1" fill="#E2E8F0"/>
     {/* shield badge */}
-    <path d="M48 44L56 47.5L56 55C56 58 48 61 48 61C48 61 40 58 40 55L40 47.5Z" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
+    <path d="M48 44L56 47.5L56 55C56 58 48 61 48 61C48 61 40 58 40 55L40 47.5Z" fill="#14B8A6" stroke="#1E293B" strokeWidth="1"/>
     <polyline points="45,54 47.5,56.5 52,51" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
@@ -1071,19 +1071,19 @@ const IHormone = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" 
 const IInfectious = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#F0FDF4" stroke="#86EFAC" strokeWidth=".8"/>{[0,60,120,180,240,300].map((d,i)=>(<g key={i} transform={`rotate(${d} 24 24)`}><line x1="24" y1="9" x2="24" y2="5.5" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round"/><circle cx="24" cy="4.5" r="2.2" fill="#4ADE80"/></g>))}<circle cx="24" cy="24" r="9" fill="#16A34A" opacity=".85"/></svg>);
 const ICovid = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FFF1F2" stroke="#FDA4AF" strokeWidth=".8"/>{[0,45,90,135,180,225,270,315].map((d,i)=>(<g key={i} transform={`rotate(${d} 24 24)`}><line x1="24" y1="12" x2="24" y2="7.5" stroke="#F43F5E" strokeWidth="1.5" strokeLinecap="round"/><circle cx="24" cy="6" r="2.8" fill="#FB7185"/></g>))}<circle cx="24" cy="24" r="9" fill="#F43F5E" opacity=".85"/></svg>);
 const IAllergy = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FEFCE8" stroke="#FEF08A" strokeWidth=".8"/><circle cx="18" cy="22" r="8.5" fill="#FACC15" opacity=".85"/><circle cx="26" cy="19" r="6.5" fill="#FBBF24" opacity=".85"/><circle cx="32" cy="23" r="5.5" fill="#F59E0B" opacity=".85"/></svg>);
-const IAutoimmune = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#F0F9FF" stroke="#7DD3FC" strokeWidth=".8"/><path d="M24 9L38 15L38 27C38 35 24 43 24 43C24 43 10 35 10 27L10 15Z" fill="#0284C7" opacity=".85"/><polyline points="18,25 22,29 30,21" stroke="white" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>);
+const IAutoimmune = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#F0FDFA" stroke="#7DD3FC" strokeWidth=".8"/><path d="M24 9L38 15L38 27C38 35 24 43 24 43C24 43 10 35 10 27L10 15Z" fill="#0284C7" opacity=".85"/><polyline points="18,25 22,29 30,21" stroke="white" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>);
 const ICancer = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FDF2F8" stroke="#F0ABFC" strokeWidth=".8"/><path d="M24 11C24 11 18 15 18 19C18 23 24 25 24 25C24 25 30 23 30 19C30 15 24 11 24 11Z" fill="#A21CAF" opacity=".85"/><path d="M24 25L18 35L22 33L24 39L26 33L30 35Z" fill="#A21CAF" opacity=".85"/></svg>);
 const IUrine = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FEFCE8" stroke="#FEF08A" strokeWidth=".8"/><rect x="20" y="9" width="8" height="26" rx="4" fill="#EAB308" opacity=".75"/><rect x="20" y="24" width="8" height="11" rx="4" fill="#CA8A04" opacity=".85"/><rect x="18" y="7" width="12" height="4.5" rx="2" fill="#78716C"/></svg>);
 const ILock = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="12" y="22" width="24" height="18" rx="4" fill="#7C3AED" opacity=".85"/><rect x="12" y="22" width="24" height="18" rx="4" fill="url(#lg1)"/><defs><linearGradient id="lg1" x1="12" y1="22" x2="36" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#8B5CF6"/><stop offset="1" stopColor="#6D28D9"/></linearGradient></defs><path d="M17 22V17a7 7 0 0114 0v5" stroke="#5B21B6" strokeWidth="2.2" fill="none" strokeLinecap="round"/><circle cx="24" cy="31" r="3" fill="#fff" opacity=".9"/><rect x="23" y="31" width="2" height="4" rx="1" fill="#fff" opacity=".9"/></svg>);
 const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#059669" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#059669" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#059669" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
 
-const IGeneral = ({ s = 60 }) => (<svg width={s} height={s} viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="#EFF6FF"/><rect x="26" y="52" width="20" height="4" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><rect x="33" y="44" width="6" height="10" rx="1" fill="#60A5FA" stroke="#1E293B" strokeWidth="1"/><path d="M36 44 L36 28 L28 28" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><rect x="22" y="24" width="12" height="6" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="7" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="3.5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><circle cx="50" cy="22" r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/></svg>);
+const IGeneral = ({ s = 60 }) => (<svg width={s} height={s} viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="#F0FDFA"/><rect x="26" y="52" width="20" height="4" rx="2" fill="#5EEAD4" stroke="#1E293B" strokeWidth="1"/><rect x="33" y="44" width="6" height="10" rx="1" fill="#2DD4BF" stroke="#1E293B" strokeWidth="1"/><path d="M36 44 L36 28 L28 28" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><rect x="22" y="24" width="12" height="6" rx="3" fill="#99F6E4" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="7" fill="#99F6E4" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="3.5" fill="#5EEAD4" stroke="#1E293B" strokeWidth="1"/><circle cx="50" cy="22" r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/></svg>);
 
 const ICONS = { Blood:IBlood, Thyroid:IThyroid, Diabetes:IDiabetes, Cardiac:ICardiac, Vitamins:IVitamin, Kidney:IKidney, Liver:ILiver, Packages:IPackage, Radiology:IRadiology, Hormones:IHormone, Infectious:IInfectious, COVID:ICovid, Allergy:IAllergy, Autoimmune:IAutoimmune, "Cancer Markers":ICancer, Urine:IUrine, General:IGeneral };
 
 /* ─── DATA ───────────────────────────────────────────────────────────────── */
 const LABS = [
-  { id:1, name:"Apollo Diagnostics", rating:4.8, reviews:2340, city:"Bangalore", address:"12 MG Road, Bangalore", distance:"1.2 km", timing:"6:00 AM – 10:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"2001",
+  { id:1, name:"Apollo Diagnostics", rating:4.8, reviews:2340, city:"Bangalore", address:"12 MG Road, Bangalore", distance:"1.2 km", timing:"6:00 AM – 10:00 PM", homeCollection:true, nabl:true, color:"#14B8A6", founded:"2001",
     tests:[
       {id:"a1",name:"Complete Blood Count (CBC)",price:299,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"a2",name:"Lipid Profile",price:499,mrp:799,cat:"Blood",time:"Same Day"},
@@ -1098,7 +1098,7 @@ const LABS = [
       {id:"a11",name:"Iron Studies",price:449,mrp:699,cat:"Blood",time:"Same Day"},
       {id:"a12",name:"CRP (Inflammation)",price:349,mrp:599,cat:"Blood",time:"Same Day"},
     ]},
-  { id:2, name:"SRL Diagnostics", rating:4.7, reviews:1890, city:"Mumbai", address:"45 Park Street, Mumbai", distance:"0.8 km", timing:"7:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1995",
+  { id:2, name:"SRL Diagnostics", rating:4.7, reviews:1890, city:"Mumbai", address:"45 Park Street, Mumbai", distance:"0.8 km", timing:"7:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#14B8A6", founded:"1995",
     tests:[
       {id:"b1",name:"Complete Blood Count (CBC)",price:279,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"b2",name:"Blood Sugar Fasting",price:99,mrp:199,cat:"Diabetes",time:"2 hrs"},
@@ -1113,7 +1113,7 @@ const LABS = [
       {id:"b11",name:"Urine Culture & Sensitivity",price:499,mrp:799,cat:"Urine",time:"48 hrs"},
       {id:"b12",name:"HIV 1 & 2 Antibody",price:299,mrp:549,cat:"Infectious",time:"Same Day"},
     ]},
-  { id:3, name:"Metropolis Healthcare", rating:4.9, reviews:3102, city:"Hyderabad", address:"78 Jubilee Hills, Hyderabad", distance:"2.1 km", timing:"5:30 AM – 11:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1980",
+  { id:3, name:"Metropolis Healthcare", rating:4.9, reviews:3102, city:"Hyderabad", address:"78 Jubilee Hills, Hyderabad", distance:"2.1 km", timing:"5:30 AM – 11:00 PM", homeCollection:true, nabl:true, color:"#14B8A6", founded:"1980",
     tests:[
       {id:"c1",name:"Complete Blood Count (CBC)",price:259,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"c2",name:"Liver Function Test",price:499,mrp:849,cat:"Liver",time:"Same Day"},
@@ -1128,7 +1128,7 @@ const LABS = [
       {id:"c11",name:"Rheumatoid Arthritis Panel",price:899,mrp:1499,cat:"Autoimmune",time:"24 hrs"},
       {id:"c12",name:"ANA (Autoimmune Screen)",price:749,mrp:1199,cat:"Autoimmune",time:"48 hrs"},
     ]},
-  { id:4, name:"Dr. Lal PathLabs", rating:4.6, reviews:4210, city:"Delhi", address:"22 Connaught Place, Delhi", distance:"0.5 km", timing:"6:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1949",
+  { id:4, name:"Dr. Lal PathLabs", rating:4.6, reviews:4210, city:"Delhi", address:"22 Connaught Place, Delhi", distance:"0.5 km", timing:"6:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#14B8A6", founded:"1949",
     tests:[
       {id:"d1",name:"Complete Blood Count (CBC)",price:249,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"d2",name:"Blood Sugar Random",price:79,mrp:199,cat:"Diabetes",time:"2 hrs"},
@@ -1143,7 +1143,7 @@ const LABS = [
       {id:"d11",name:"Testosterone Total",price:599,mrp:999,cat:"Hormones",time:"24 hrs"},
       {id:"d12",name:"Prolactin",price:499,mrp:799,cat:"Hormones",time:"24 hrs"},
     ]},
-  { id:5, name:"Thyrocare Technologies", rating:4.5, reviews:1560, city:"Chennai", address:"5 Anna Salai, Chennai", distance:"3.4 km", timing:"7:00 AM – 8:00 PM", homeCollection:true, nabl:false, color:"#1158A6", founded:"1996",
+  { id:5, name:"Thyrocare Technologies", rating:4.5, reviews:1560, city:"Chennai", address:"5 Anna Salai, Chennai", distance:"3.4 km", timing:"7:00 AM – 8:00 PM", homeCollection:true, nabl:false, color:"#14B8A6", founded:"1996",
     tests:[
       {id:"e1",name:"Aarogyam 1.3 (Full Body)",price:999,mrp:2499,cat:"Packages",time:"48 hrs"},
       {id:"e2",name:"Aarogyam C (Comprehensive)",price:1499,mrp:3499,cat:"Packages",time:"48 hrs"},
@@ -1158,7 +1158,7 @@ const LABS = [
       {id:"e11",name:"Cortisol (Stress Hormone)",price:449,mrp:799,cat:"Hormones",time:"24 hrs"},
       {id:"e12",name:"DHEA-S",price:549,mrp:899,cat:"Hormones",time:"24 hrs"},
     ]},
-  { id:6, name:"Vijaya Diagnostics", rating:4.7, reviews:987, city:"Hyderabad", address:"33 Banjara Hills, Hyderabad", distance:"1.9 km", timing:"6:30 AM – 10:30 PM", homeCollection:false, nabl:true, color:"#1158A6", founded:"1981",
+  { id:6, name:"Vijaya Diagnostics", rating:4.7, reviews:987, city:"Hyderabad", address:"33 Banjara Hills, Hyderabad", distance:"1.9 km", timing:"6:30 AM – 10:30 PM", homeCollection:false, nabl:true, color:"#14B8A6", founded:"1981",
     tests:[
       {id:"f1",name:"Complete Blood Count (CBC)",price:269,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"f2",name:"Liver Function Test",price:519,mrp:849,cat:"Liver",time:"Same Day"},
@@ -1223,7 +1223,7 @@ const Stars = ({ r }) => (
 );
 const pct = (p,m) => Math.round((1-p/m)*100);
 
-const Pill = ({ children, bg="#EFF6FF", fg="#1158A6", style={} }) => (
+const Pill = ({ children, bg="#F0FDFA", fg="#14B8A6", style={} }) => (
   <span style={{ background:bg, color:fg, borderRadius:20, padding:"3px 10px", fontSize:".68rem", fontWeight:700, letterSpacing:".04em", display:"inline-flex", alignItems:"center", gap:3, ...style }}>{children}</span>
 );
 
@@ -1238,8 +1238,8 @@ const Modal = ({ children, onClose }) => (
 const Toast = ({ msg, onDone }) => {
   useEffect(() => { const t = setTimeout(onDone, 2600); return () => clearTimeout(t); }, []);
   return (
-    <div style={{ position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",background:"var(--teal)",color:"#fff",borderRadius:50,padding:"12px 24px",fontWeight:700,fontSize:".86rem",zIndex:9999,boxShadow:"0 8px 28px rgba(17,88,166,.38)",animation:"slideUp .25s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:10,fontFamily:"'Manrope',sans-serif" }}>
-      <span style={{ width:20,height:20,borderRadius:"50%",background:"#60A5FA",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".72rem",flexShrink:0 }}>✓</span>
+    <div style={{ position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",background:"var(--teal)",color:"#fff",borderRadius:50,padding:"12px 24px",fontWeight:700,fontSize:".86rem",zIndex:9999,boxShadow:"0 8px 28px rgba(20,184,166,.38)",animation:"slideUp .25s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:10,fontFamily:"'Manrope',sans-serif" }}>
+      <span style={{ width:20,height:20,borderRadius:"50%",background:"#2DD4BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".72rem",flexShrink:0 }}>✓</span>
       {msg}
     </div>
   );
@@ -1320,7 +1320,7 @@ const UploadPrescription = () => {
             {/* header section */}
             <div style={{ padding:"20px 24px 18px",borderBottom:"1px solid #F1F5F9" }}>
               <div style={{ display:"flex",alignItems:"center",gap:14 }}>
-                <div style={{ width:48,height:48,borderRadius:14,background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+                <div style={{ width:48,height:48,borderRadius:14,background:"linear-gradient(135deg,#14B8A6,#0D9488)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(20,184,166,.3)" }}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
@@ -1328,7 +1328,7 @@ const UploadPrescription = () => {
                   </svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1.08rem",color:"#0D1117",letterSpacing:"-.01em" }}>Upload Prescription</div>
+                  <div style={{ fontWeight:800,fontSize:"1.08rem",color:"#0F172A",letterSpacing:"-.01em" }}>Upload Prescription</div>
                   <div style={{ fontSize:".78rem",color:"#9CA3AF",marginTop:2 }}>JPG · PNG · PDF &nbsp;·&nbsp; Max 10 MB</div>
                 </div>
               </div>
@@ -1340,21 +1340,21 @@ const UploadPrescription = () => {
               {/* Take Photo */}
               <button
                 onClick={() => { cameraRef.current?.click(); }}
-                style={{ display:"flex",alignItems:"center",gap:14,background:"#F0F6FF",border:"1.5px solid #BFDBFE",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(17,88,166,.06)" }}
-                onMouseEnter={e=>{ e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.transform="scale(1.01)"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.12)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.borderColor="#BFDBFE"; e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(17,88,166,.06)"; }}>
-                <div style={{ width:50,height:50,borderRadius:15,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid #BFDBFE" }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                style={{ display:"flex",alignItems:"center",gap:14,background:"#F0FDFA",border:"1.5px solid #99F6E4",borderRadius:18,padding:"14px 16px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",width:"100%",transition:"all .18s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 1px 4px rgba(20,184,166,.06)" }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor="#14B8A6"; e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.transform="scale(1.01)"; e.currentTarget.style.boxShadow="0 4px 14px rgba(20,184,166,.12)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor="#99F6E4"; e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(20,184,166,.06)"; }}>
+                <div style={{ width:50,height:50,borderRadius:15,background:"linear-gradient(135deg,#F0FDFA,#99F6E4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid #99F6E4" }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                     <circle cx="12" cy="13" r="4"/>
                   </svg>
                 </div>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:700,fontSize:".95rem",color:"#0D1117",marginBottom:3,letterSpacing:"-.005em" }}>Take a Photo</div>
+                  <div style={{ fontWeight:700,fontSize:".95rem",color:"#0F172A",marginBottom:3,letterSpacing:"-.005em" }}>Take a Photo</div>
                   <div style={{ fontSize:".76rem",color:"#6B7280",lineHeight:1.5 }}>Open camera to photograph your prescription</div>
                 </div>
-                <div style={{ width:28,height:28,borderRadius:9,background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12l4-4-4-4"/></svg>
+                <div style={{ width:28,height:28,borderRadius:9,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#14B8A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12l4-4-4-4"/></svg>
                 </div>
               </button>
 
@@ -1372,7 +1372,7 @@ const UploadPrescription = () => {
                   </svg>
                 </div>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:700,fontSize:".95rem",color:"#0D1117",marginBottom:3,letterSpacing:"-.005em" }}>Choose from Gallery</div>
+                  <div style={{ fontWeight:700,fontSize:".95rem",color:"#0F172A",marginBottom:3,letterSpacing:"-.005em" }}>Choose from Gallery</div>
                   <div style={{ fontSize:".76rem",color:"#6B7280",lineHeight:1.5 }}>Pick an image or PDF from your device</div>
                 </div>
                 <div style={{ width:28,height:28,borderRadius:9,background:"#EDEDFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
@@ -1407,7 +1407,7 @@ const UploadPrescription = () => {
             {/* header */}
             <div style={{ padding:"20px 22px 16px",borderBottom:"1px solid #F1F5F9",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
               <div>
-                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Review Prescription</div>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Review Prescription</div>
                 <div style={{ fontSize:".73rem",color:"#9CA3AF",marginTop:2 }}>Verify the file looks correct before uploading</div>
               </div>
               <button onClick={close} style={{ width:32,height:32,borderRadius:"50%",background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#6B7280",flexShrink:0,fontSize:"1rem" }}>✕</button>
@@ -1429,18 +1429,18 @@ const UploadPrescription = () => {
 
               {/* file chip */}
               <div style={{ display:"flex",alignItems:"center",gap:12,background:"#F8FAFC",borderRadius:11,padding:"11px 14px",border:"1px solid #E9EEF2",marginBottom:16 }}>
-                <div style={{ width:36,height:36,borderRadius:9,background:isPdf?"#FEE2E2":"#DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <div style={{ width:36,height:36,borderRadius:9,background:isPdf?"#FEE2E2":"#99F6E4",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                   {isPdf
                     ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                   }
                 </div>
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ fontWeight:700,fontSize:".84rem",color:"#0D1117",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{file.name}</div>
+                  <div style={{ fontWeight:700,fontSize:".84rem",color:"#0F172A",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{file.name}</div>
                   <div style={{ fontSize:".72rem",color:"#9CA3AF",marginTop:1 }}>{fmt(file.size)} · {isPdf?"PDF Document":"Image"}</div>
                 </div>
                 {status === "done" && (
-                  <div style={{ width:24,height:24,borderRadius:"50%",background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                  <div style={{ width:24,height:24,borderRadius:"50%",background:"#14B8A6",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="1.5,6 4.5,9 10.5,3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                 )}
@@ -1453,19 +1453,19 @@ const UploadPrescription = () => {
                     <span>Uploading…</span><span>{Math.min(100,Math.round(pct))}%</span>
                   </div>
                   <div style={{ height:5,background:"#F1F5F9",borderRadius:99,overflow:"hidden" }}>
-                    <div style={{ height:"100%",width:`${Math.min(100,pct)}%`,background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:99,transition:"width .2s linear" }}/>
+                    <div style={{ height:"100%",width:`${Math.min(100,pct)}%`,background:"linear-gradient(90deg,#14B8A6,#0D9488)",borderRadius:99,transition:"width .2s linear" }}/>
                   </div>
                 </div>
               )}
 
               {/* success */}
               {status === "done" && (
-                <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:11,padding:"12px 14px",marginBottom:14,display:"flex",gap:10,alignItems:"flex-start" }}>
-                  <div style={{ width:22,height:22,borderRadius:"50%",background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1 }}>
+                <div style={{ background:"#F0FDFA",border:"1px solid #99F6E4",borderRadius:11,padding:"12px 14px",marginBottom:14,display:"flex",gap:10,alignItems:"flex-start" }}>
+                  <div style={{ width:22,height:22,borderRadius:"50%",background:"#14B8A6",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1 }}>
                     <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><polyline points="1.5,6 4.5,9 10.5,3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <div>
-                    <div style={{ fontWeight:700,fontSize:".84rem",color:"#1158A6" }}>Uploaded successfully!</div>
+                    <div style={{ fontWeight:700,fontSize:".84rem",color:"#14B8A6" }}>Uploaded successfully!</div>
                     <div style={{ fontSize:".73rem",color:"#6B7280",marginTop:1 }}>Our team will review your prescription and reach out within 2 hours.</div>
                   </div>
                 </div>
@@ -1473,14 +1473,14 @@ const UploadPrescription = () => {
 
               {/* actions */}
               {status === "done" ? (
-                <button onClick={close} style={{ width:"100%",background:"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Done</button>
+                <button onClick={close} style={{ width:"100%",background:"#14B8A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Done</button>
               ) : (
                 <div style={{ display:"flex",gap:10 }}>
                   <button onClick={close} style={{ flex:1,background:"transparent",color:"#6B7280",border:"1.5px solid #E5E7EB",borderRadius:11,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".86rem",fontFamily:"'Manrope',sans-serif" }}>Cancel</button>
                   <button onClick={startUpload} disabled={status==="uploading"}
-                    style={{ flex:2,background:status==="uploading"?"#BFDBFE":"#1158A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,cursor:status==="uploading"?"default":"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .18s" }}>
+                    style={{ flex:2,background:status==="uploading"?"#99F6E4":"#14B8A6",color:"#fff",border:"none",borderRadius:11,padding:"12px",fontWeight:700,cursor:status==="uploading"?"default":"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .18s" }}>
                     {status === "uploading"
-                      ? <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin .85s linear infinite",transformOrigin:"12px 12px" }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Uploading…</>
+                      ? <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin .85s linear infinite",transformOrigin:"12px 12px" }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Uploading…</>
                       : <>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
                           Upload Prescription
@@ -1503,13 +1503,13 @@ const LabIcon = ({ id, s=44 }) => {
   const icons = {
     1: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
         <circle cx="22" cy="12" r="8" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.2"/>
-        <path d="M10 44 Q10 30 22 28 Q34 30 34 44" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/>
+        <path d="M10 44 Q10 30 22 28 Q34 30 34 44" fill="#99F6E4" stroke="#1E293B" strokeWidth="1.2"/>
         <path d="M14 28 Q12 34 13 38 Q14 42 22 40 Q30 42 31 38 Q32 34 30 28" fill="white" stroke="#1E293B" strokeWidth="1.1"/>
-        <path d="M16 30 Q13 36 15 38 Q17 40 22 39 Q27 40 29 38 Q31 36 28 30" stroke="#0066CC" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
-        <circle cx="16" cy="32" r="2.5" fill="none" stroke="#0066CC" strokeWidth="1.2"/>
-        <circle cx="28" cy="32" r="2.5" fill="none" stroke="#0066CC" strokeWidth="1.2"/>
-        <circle cx="22" cy="38" r="3" fill="#0066CC" stroke="#1E293B" strokeWidth="0.8"/>
-        <circle cx="22" cy="38" r="1.5" fill="#93C5FD"/>
+        <path d="M16 30 Q13 36 15 38 Q17 40 22 39 Q27 40 29 38 Q31 36 28 30" stroke="#14B8A6" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
+        <circle cx="16" cy="32" r="2.5" fill="none" stroke="#14B8A6" strokeWidth="1.2"/>
+        <circle cx="28" cy="32" r="2.5" fill="none" stroke="#14B8A6" strokeWidth="1.2"/>
+        <circle cx="22" cy="38" r="3" fill="#14B8A6" stroke="#1E293B" strokeWidth="0.8"/>
+        <circle cx="22" cy="38" r="1.5" fill="#5EEAD4"/>
       </svg>,
     2: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
         <rect x="8" y="30" width="26" height="4" rx="2" fill="#FECACA" stroke="#1E293B" strokeWidth="1"/>
@@ -1551,13 +1551,13 @@ const LabIcon = ({ id, s=44 }) => {
         <text x="31" y="24" textAnchor="middle" fontSize="6" fontWeight="800" fill="#1E293B" fontFamily="sans-serif">T4</text>
       </svg>,
     6: <svg width={s} height={s} viewBox="0 0 44 44" fill="none">
-        <rect x="6" y="8" width="32" height="24" rx="5" fill="#E0F2FE" stroke="#1E293B" strokeWidth="1.2"/>
+        <rect x="6" y="8" width="32" height="24" rx="5" fill="#F0FDFA" stroke="#1E293B" strokeWidth="1.2"/>
         <rect x="10" y="12" width="24" height="16" rx="3" fill="white" stroke="#1E293B" strokeWidth="1"/>
-        <line x1="10" y1="18" x2="34" y2="18" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="2 2"/>
-        <line x1="10" y1="24" x2="34" y2="24" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="2 2"/>
-        <ellipse cx="22" cy="17" rx="4" ry="5" fill="#BAE6FD"/>
-        <path d="M16 28 Q16 22 22 21 Q28 22 28 28" fill="#BAE6FD"/>
-        <rect x="8" y="32" width="28" height="4" rx="2" fill="#0369A1" stroke="#1E293B" strokeWidth="1"/>
+        <line x1="10" y1="18" x2="34" y2="18" stroke="#99F6E4" strokeWidth="1" strokeDasharray="2 2"/>
+        <line x1="10" y1="24" x2="34" y2="24" stroke="#99F6E4" strokeWidth="1" strokeDasharray="2 2"/>
+        <ellipse cx="22" cy="17" rx="4" ry="5" fill="#99F6E4"/>
+        <path d="M16 28 Q16 22 22 21 Q28 22 28 28" fill="#99F6E4"/>
+        <rect x="8" y="32" width="28" height="4" rx="2" fill="#0F766E" stroke="#1E293B" strokeWidth="1"/>
         <rect x="18" y="36" width="8" height="5" rx="1" fill="#0EA5E9" stroke="#1E293B" strokeWidth="0.8"/>
       </svg>,
   };
@@ -1633,7 +1633,7 @@ const LAB_META = [
     srcs:["https://logo.clearbit.com/lalpathlabs.com?size=200","https://commons.wikimedia.org/wiki/Special:FilePath/Dr._Lal_PathLabs_Logo.png"] },
   { id:5, short:"Thyrocare",  accent:"#B45309", bg:"#FFFBEB", city:"Chennai",   tag:"Specialist Lab",     since:"Est. 1996",
     srcs:["https://commons.wikimedia.org/wiki/Special:FilePath/Thyrocare_new_Logo2022.svg","https://logo.clearbit.com/thyrocare.com?size=200"] },
-  { id:6, short:"Vijaya",     accent:"#0369A1", bg:"#F0F9FF", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981",
+  { id:6, short:"Vijaya",     accent:"#0F766E", bg:"#F0FDFA", city:"Hyderabad", tag:"Radiology Expert",   since:"Est. 1981",
     srcs:["https://logo.clearbit.com/vijayadiagnostic.com?size=200","https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com"] },
 ];
 
@@ -1671,8 +1671,8 @@ function LabLogo({ lab, size=90, radius=18 }) {
     </div>
   );
 
-  const accent = meta?.accent || "#1158A6";
-  const bg = meta?.bg || "#EEF4FF";
+  const accent = meta?.accent || "#14B8A6";
+  const bg = meta?.bg || "#F0FDFA";
   return (
     <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
       background:bg, display:"flex", flexDirection:"column",
@@ -1690,14 +1690,14 @@ const LabsNearMeSection = ({ T, navTo }) => (
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
-          <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.1rem,2.5vw,1.4rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.02em",lineHeight:1.2,margin:0 }}>Our Trusted Lab Partners</h2>
+          <p style={{ fontSize:".68rem",fontWeight:700,color:"#14B8A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.1rem,2.5vw,1.4rem)",fontWeight:900,color:"#0F172A",letterSpacing:"-.02em",lineHeight:1.2,margin:0 }}>Our Trusted Lab Partners</h2>
         </div>
         <button onClick={()=>navTo("labs")}
-          style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:6,transition:"all .18s",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
+          style={{ background:"transparent",color:"#14B8A6",border:"1.5px solid #14B8A6",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:6,transition:"all .18s",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"}
           onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-          View All <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          View All <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#14B8A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </button>
       </div>
     </div>
@@ -1765,7 +1765,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
             <h3 style={{ fontWeight:800,fontSize:"1rem",color:"var(--ink)",marginBottom:4,lineHeight:1.2 }}>{l.name}</h3>
             <div style={{ display:"flex",gap:5,flexWrap:"wrap" }}>
               {l.nabl && <Pill>✓ NABL</Pill>}
-              {l.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home</Pill>}
+              {l.homeCollection && <Pill bg="#F0FDFA" fg="#0F766E">🏠 Home</Pill>}
             </div>
           </div>
           <div style={{ textAlign:"right" }}>
@@ -1845,7 +1845,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #14B8A6",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button></div>
@@ -1854,7 +1854,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
-                <span style={{ color:"#1158A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
+                <span style={{ color:"#14B8A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
               </p>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
@@ -1862,12 +1862,12 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               <div style={{ position:"relative" }} ref={labSearchRef}>
                 <svg style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
                 <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs…" style={{ paddingLeft:28,paddingRight:12,paddingTop:8,paddingBottom:8,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".82rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:200,background:"#fff",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
-                  onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; setLabSugOpen(true); }}
+                  onFocus={e=>{ e.target.style.border="1.5px solid #14B8A6"; e.target.style.boxShadow="0 0 0 3px rgba(20,184,166,.1)"; setLabSugOpen(true); }}
                   onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
                 {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
                   <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
                     {labSuggestions.map((l,i)=>(
-                      <button key={l.id} onClick={()=>{ setSearchQ(l.name); setLabSugOpen(false); }} style={{ display:"block",width:"100%",padding:"9px 14px",background:"none",border:"none",borderBottom:i<labSuggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".84rem",fontWeight:600,color:"#111",transition:"background .1s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                      <button key={l.id} onClick={()=>{ setSearchQ(l.name); setLabSugOpen(false); }} style={{ display:"block",width:"100%",padding:"9px 14px",background:"none",border:"none",borderBottom:i<labSuggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".84rem",fontWeight:600,color:"#111",transition:"background .1s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
                         {l.name}
                         <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:400,marginLeft:6 }}>{l.area}</span>
                       </button>
@@ -1912,7 +1912,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                       <div style={{ flex:1,minWidth:180 }}>
                         <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
                           <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
-                          {l.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
+                          {l.nabl && <span style={{ background:"#F0FDFA",color:"#14B8A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
                         </div>
                         <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>
                           <svg style={{flexShrink:0}} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1922,12 +1922,12 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                           {l.tags.map(t=>(
                             <span key={t} style={{ background:"#F1F5F9",color:"#374151",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>{t}</span>
                           ))}
-                          {l.homecoll && <span style={{ background:"#E0F2FE",color:"#0369A1",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>🏠 Home Collection</span>}
+                          {l.homecoll && <span style={{ background:"#F0FDFA",color:"#0F766E",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>🏠 Home Collection</span>}
                         </div>
                         <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                          <div style={{ display:"flex",alignItems:"center",gap:4,background:"#EEF4FF",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
+                          <div style={{ display:"flex",alignItems:"center",gap:4,background:"#F0FDFA",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
                             <span style={{ color:"#F59E0B" }}>★</span>
-                            <span style={{ color:"#0D1117" }}>{l.rating}</span>
+                            <span style={{ color:"#0F172A" }}>{l.rating}</span>
                           </div>
                           <span style={{ fontSize:".75rem",color:"var(--muted)",fontWeight:500 }}>
                             {l.rating>=4.8?"Excellent":l.rating>=4.6?"Very Good":"Good"} · {l.reviews.toLocaleString()} reviews
@@ -1945,7 +1945,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         {!selectedTest && (
                           <>
                             <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
+                              style={{ background:"#14B8A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(20,184,166,.25)" }}
                               onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                               onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                               Book
@@ -1971,12 +1971,12 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         Reports in {l.reportTime || (l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}
                       </div>
                       <div style={{ fontSize:".75rem",color:"var(--muted)" }}>{l.tests.length}+ tests available</div>
-                      {l.nabl && <div style={{ fontSize:".75rem",color:"#1158A6",fontWeight:600 }}>NABL Accredited · Est. {l.founded}</div>}
+                      {l.nabl && <div style={{ fontSize:".75rem",color:"#14B8A6",fontWeight:600 }}>NABL Accredited · Est. {l.founded}</div>}
                     </div>
                     {selectedTest && matchTest && (
                       <div style={{ paddingTop:12,borderTop:"1px solid #F1F5F9",marginTop:4 }}>
                         <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
-                          style={{ display:"block",margin:"0 auto",background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
+                          style={{ display:"block",margin:"0 auto",background:"#14B8A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(20,184,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
                           onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                           onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                           Book
@@ -2007,14 +2007,14 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
+        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #14B8A6",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
             <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4 }}>
               <h1 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
               {lab.nabl && <Pill>✓ NABL</Pill>}
-              {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
+              {lab.homeCollection && <Pill bg="#F0FDFA" fg="#0F766E">🏠 Home Collection</Pill>}
             </div>
             <div style={{ display:"flex",gap:6,alignItems:"center",marginBottom:3 }}>
               <Stars r={lab.rating}/>
@@ -2033,7 +2033,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
         <input style={{ ...T.inp,paddingLeft:36,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:".9rem",transition:"border .18s,box-shadow .18s" }}
           placeholder="Search tests…" value={testQ} onChange={e=>setTestQ(e.target.value)}
-          onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; }}
+          onFocus={e=>{ e.target.style.border="1.5px solid #14B8A6"; e.target.style.boxShadow="0 0 0 3px rgba(20,184,166,.1)"; }}
           onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
       </div>
 
@@ -2084,7 +2084,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               {/* MRP + discount stacked */}
               <div style={{ textAlign:"center",whiteSpace:"nowrap" }}>
                 <div style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".76rem" }}>₹{t.mrp}</div>
-                <div style={{ color:"#2563EB",fontSize:".62rem",fontWeight:700 }}>{d}% off</div>
+                <div style={{ color:"#0D9488",fontSize:".62rem",fontWeight:700 }}>{d}% off</div>
               </div>
               {/* Add / Added */}
               <div style={{ textAlign:"center" }}>
@@ -2098,7 +2098,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           );
         })}
         {filtTests.length > TESTS_LIMIT && (
-          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
+          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#14B8A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
             {showAllTests ? "Show Less ↑" : `Show ${filtTests.length - TESTS_LIMIT} More Tests ↓`}
           </button>
         )}
@@ -2141,7 +2141,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   const arrStyle = v => ({
     position:"absolute", top:"50%", transform:"translateY(-50%)",
     width:36, height:36, borderRadius:"50%", background:"#fff",
-    border:"1.5px solid #E0EAFF", boxShadow:"0 2px 12px rgba(17,88,166,.14)",
+    border:"1.5px solid #E0EAFF", boxShadow:"0 2px 12px rgba(20,184,166,.14)",
     display:"flex", alignItems:"center", justifyContent:"center",
     cursor:"pointer", zIndex:10,
     opacity:v?1:0, pointerEvents:v?"all":"none", transition:"opacity .2s",
@@ -2152,15 +2152,15 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:24, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0F172A", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
           <button onClick={()=>navTo("alltests")}
-            style={{ background:"transparent", border:"1.5px solid #1158A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#1158A6", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+            style={{ background:"transparent", border:"1.5px solid #14B8A6", borderRadius:50, padding:"9px 22px", fontWeight:700, fontSize:".84rem", color:"#14B8A6", cursor:"pointer", fontFamily:"'Manrope',sans-serif", transition:"all .16s", whiteSpace:"nowrap", minHeight:44, flexShrink:0 }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#F0FDFA"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
-            onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
-            onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
+            onMouseDown={e=>{ e.currentTarget.style.background="#14B8A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+            onMouseUp={e=>{ e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.color="#14B8A6"; e.currentTarget.style.transform="scale(1)"; }}>
             View All Specialities →
           </button>
         </div>
@@ -2172,15 +2172,15 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
               <div key={cat} className="pt-tile"
                 onClick={()=>{ setCatF(cat); setSelectedTest({name:label, cat}); navTo("labs"); }}
                 style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"18px 10px 16px", minWidth:110, maxWidth:130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; }}
+                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0FDFA"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="transparent"; }}>
                 <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)", transition:"box-shadow .2s" }}
-                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.2)"}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 24px rgba(20,184,166,.2)"}
                   onMouseLeave={e=>e.currentTarget.style.boxShadow="0 2px 14px rgba(0,0,0,.09)"}>
                   <Icon s={86}/>
                 </div>
                 <div style={{ fontWeight:700, color:"#1F2937", fontSize:".8rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
-                <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
+                <div style={{ fontSize:".68rem", fontWeight:800, color:"#14B8A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
               </div>
             ))}
           </div>
@@ -2201,11 +2201,11 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
           <button onClick={()=>navTo("home")}
-            style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+            style={{ background:"#fff",border:"1.5px solid #14B8A6",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button>
-          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0F172A", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
           <p style={{ color:"#6B7280", fontSize:".88rem" }}>Browse popular test categories and compare prices across all certified labs</p>
         </div>
       </div>
@@ -2215,14 +2215,14 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
           {POPULAR_CATS.map(({ cat, label, Icon }) => (
             <div key={cat} className="pt-tile"
               onClick={()=>{ setCatF(cat); setSelectedTest({name:label, cat}); navTo("labs"); }}
-              style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"22px 12px 18px", background:"#fff", borderRadius:18, border:"1px solid #EEF2FF", cursor:"pointer", transition:"transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.13)"; }}
+              style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"22px 12px 18px", background:"#fff", borderRadius:18, border:"1px solid #F0FDFA", cursor:"pointer", transition:"transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.boxShadow="0 8px 24px rgba(20,184,166,.13)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; e.currentTarget.style.boxShadow="none"; }}>
               <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)" }}>
                 <Icon s={86}/>
               </div>
               <div style={{ fontWeight:700, color:"#1F2937", fontSize:".85rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
-              <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
+              <div style={{ fontSize:".68rem", fontWeight:800, color:"#14B8A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
             </div>
           ))}
         </div>
@@ -2288,7 +2288,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:0, paddingRight:0 }}>
       {/* Search bar */}
-      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden" }}>
+      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 16px rgba(20,184,166,.12)",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
@@ -2310,9 +2310,9 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           </button>
         )}
         <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
-          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+          style={{ background:"#14B8A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#0F766E"}
+          onMouseLeave={e=>e.currentTarget.style.background="#14B8A6"}>
           Search
         </button>
       </div>
@@ -2323,13 +2323,13 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           {suggestions.map((s, i) => (
             <button key={i} onClick={()=>go(s.label)}
               style={{ display:"block",width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"background .1s" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"}
+              onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"}
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
               {s.label}
             </button>
           ))}
           <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6" }}>
-            <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0 }}>
+            <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#14B8A6",fontFamily:"'Manrope',sans-serif",padding:0 }}>
               See all results for &ldquo;{q}&rdquo; →
             </button>
           </div>
@@ -2376,7 +2376,7 @@ function _CarouselDots({ trackRef, total }) {
   return (
     <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:16 }}>
       {Array.from({ length: pages }).map((_,i) => (
-        <div key={i} style={{ width: i===active ? 18 : 6, height:6, borderRadius:99, background:i===active?"#1158A6":"#DBEAFE", transition:"width .25s,background .25s" }}/>
+        <div key={i} style={{ width: i===active ? 18 : 6, height:6, borderRadius:99, background:i===active?"#14B8A6":"#99F6E4", transition:"width .25s,background .25s" }}/>
       ))}
     </div>
   );
@@ -2411,14 +2411,14 @@ function PaymentSelector({ total, onPay, onBack }) {
       <div style={{ display:"flex",flexDirection:"column",gap:10,marginBottom:20 }}>
         {methods.map(m => (
           <div key={m.id} onClick={()=>setMethod(m.id)}
-            style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,border:`1.5px solid ${method===m.id?"#1158A6":"#E8EEFF"}`,background:method===m.id?"#EFF6FF":"#fff",cursor:"pointer",transition:"all .15s",boxShadow:method===m.id?"0 2px 12px rgba(17,88,166,.12)":"none" }}>
+            style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,border:`1.5px solid ${method===m.id?"#14B8A6":"#E8EEFF"}`,background:method===m.id?"#F0FDFA":"#fff",cursor:"pointer",transition:"all .15s",boxShadow:method===m.id?"0 2px 12px rgba(20,184,166,.12)":"none" }}>
             {/* radio dot */}
-            <div style={{ width:20,height:20,borderRadius:"50%",border:`2px solid ${method===m.id?"#1158A6":"#CBD5E1"}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"border-color .15s" }}>
-              {method===m.id&&<div style={{ width:10,height:10,borderRadius:"50%",background:"#1158A6" }}/>}
+            <div style={{ width:20,height:20,borderRadius:"50%",border:`2px solid ${method===m.id?"#14B8A6":"#CBD5E1"}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"border-color .15s" }}>
+              {method===m.id&&<div style={{ width:10,height:10,borderRadius:"50%",background:"#14B8A6" }}/>}
             </div>
             <span style={{ fontSize:"1.3rem",flexShrink:0 }}>{m.icon}</span>
             <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117" }}>{m.label}</div>
+              <div style={{ fontWeight:700,fontSize:".9rem",color:"#0F172A" }}>{m.label}</div>
               <div style={{ fontSize:".74rem",color:"#9CA3AF" }}>{m.sub}</div>
             </div>
             {m.id==="paylater"&&<span style={{ fontSize:".68rem",fontWeight:700,color:"#16A34A",background:"#DCFCE7",borderRadius:20,padding:"2px 9px",flexShrink:0 }}>FREE</span>}
@@ -2433,11 +2433,11 @@ function PaymentSelector({ total, onPay, onBack }) {
           <div style={{ display:"flex",gap:8 }}>
             <input value={upi} onChange={e=>setUpi(e.target.value)}
               placeholder="yourname@upi"
-              style={{ flex:1,border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",color:"#111",background:"#FAFAFA" }}
-              onFocus={e=>e.target.style.borderColor="#1158A6"}
-              onBlur={e=>e.target.style.borderColor="#DBEAFE"}
+              style={{ flex:1,border:"1.5px solid #99F6E4",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",color:"#111",background:"#FAFAFA" }}
+              onFocus={e=>e.target.style.borderColor="#14B8A6"}
+              onBlur={e=>e.target.style.borderColor="#99F6E4"}
             />
-            <div style={{ display:"flex",alignItems:"center",padding:"0 12px",background:"#EFF6FF",borderRadius:10,fontSize:".75rem",fontWeight:700,color:"#1158A6",border:"1.5px solid #DBEAFE",whiteSpace:"nowrap" }}>Verify →</div>
+            <div style={{ display:"flex",alignItems:"center",padding:"0 12px",background:"#F0FDFA",borderRadius:10,fontSize:".75rem",fontWeight:700,color:"#14B8A6",border:"1.5px solid #99F6E4",whiteSpace:"nowrap" }}>Verify →</div>
           </div>
           <div style={{ fontSize:".7rem",color:"#9CA3AF",marginTop:6 }}>
             💡 UPI payment integration coming soon. Currently books your appointment.
@@ -2455,11 +2455,11 @@ function PaymentSelector({ total, onPay, onBack }) {
       {/* Action buttons */}
       <div style={{ display:"flex",gap:10,marginTop:4 }}>
         <button onClick={onBack}
-          style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
+          style={{ flex:1,background:"#F7FFFD",color:"#14B8A6",border:"1.5px solid #99F6E4",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
           ← Back
         </button>
         <button onClick={handlePay} disabled={!method||paying}
-          style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
+          style={{ flex:2,background:method?(paying?"#4B8DE0":"#14B8A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(20,184,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
           {paying
             ? <><span style={{ width:16,height:16,border:"2px solid rgba(255,255,255,.4)",borderTop:"2px solid #fff",borderRadius:"50%",display:"inline-block",animation:"spin 0.7s linear infinite" }}/> Processing…</>
             : <>{method==="paylater"?"Confirm & Reserve Slot":`Pay ₹${total.toLocaleString()}`}</>
@@ -2475,7 +2475,7 @@ const BookingField = ({ label, req, ...p }) => (
   <div>
     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:6,color:"#374151",letterSpacing:".01em" }}>{label}{req&&<span style={{color:"#EF4444"}}> *</span>}</label>
     <input style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 14px",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",display:"block",outline:"none",transition:"border-color .15s",boxSizing:"border-box" }}
-      onFocus={e=>e.target.style.borderColor="#1158A6"}
+      onFocus={e=>e.target.style.borderColor="#14B8A6"}
       onBlur={e=>e.target.style.borderColor="#E5E7EB"}
       {...p}/>
   </div>
@@ -2494,47 +2494,47 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
     <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
 
-        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:20,padding:0,display:"flex",alignItems:"center",gap:5 }}>
+        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",marginBottom:20,padding:0,display:"flex",alignItems:"center",gap:5 }}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
           Back to Tests
         </button>
 
         <div style={{ marginBottom:24 }}>
-          <h1 style={{ fontWeight:800,fontSize:"1.5rem",color:"#0D1117",marginBottom:4 }}>Complete Your Booking</h1>
+          <h1 style={{ fontWeight:800,fontSize:"1.5rem",color:"#0F172A",marginBottom:4 }}>Complete Your Booking</h1>
           <p style={{ color:"#9CA3AF",fontSize:".86rem" }}>
             {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
-            <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
-            &nbsp;·&nbsp; <span style={{ color:"#1158A6",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</span>
+            <strong style={{ color:"#14B8A6" }}>₹{total.toLocaleString()}</strong>
+            &nbsp;·&nbsp; <span style={{ color:"#14B8A6",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</span>
           </p>
         </div>
 
         {/* STEP BAR */}
-        <div style={{ background:"#fff",borderRadius:16,padding:"18px 24px",marginBottom:20,border:"1.5px solid #EEF2FF",boxShadow:"0 2px 10px rgba(17,88,166,.06)",display:"flex",alignItems:"center" }}>
+        <div style={{ background:"#fff",borderRadius:16,padding:"18px 24px",marginBottom:20,border:"1.5px solid #F0FDFA",boxShadow:"0 2px 10px rgba(20,184,166,.06)",display:"flex",alignItems:"center" }}>
           {steps.map((l,i)=>(
             <div key={l} style={{ display:"flex",alignItems:"center",flex:i<4?1:"none" }}>
               <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:5 }}>
-                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#1158A6":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 3px 10px rgba(17,88,166,.3)":"none" }}>
+                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#14B8A6":step===i+1?"#14B8A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 3px 10px rgba(20,184,166,.3)":"none" }}>
                   {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
                 </div>
-                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#1158A6":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
+                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#14B8A6":step>i+1?"#14B8A6":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
               </div>
-              {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
+              {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#14B8A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
             </div>
           ))}
         </div>
 
         {/* STEP CARD */}
-        <div style={{ background:"#fff",borderRadius:18,padding:"28px 28px",border:"1.5px solid #EEF2FF",boxShadow:"0 4px 20px rgba(17,88,166,.07)" }}>
+        <div style={{ background:"#fff",borderRadius:18,padding:"28px 28px",border:"1.5px solid #F0FDFA",boxShadow:"0 4px 20px rgba(20,184,166,.07)" }}>
 
           {/* STEP 1 — Patient */}
           {step===1&&(
             <div style={{ animation:"slideUp .28s" }}>
               <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <div style={{ width:40,height:40,borderRadius:12,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Patient Information</div>
+                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Patient Information</div>
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 1 of 4</div>
                 </div>
               </div>
@@ -2547,9 +2547,9 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <BookingField label="Age & Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
               </div>
               <button disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}
-                style={{ marginTop:22,width:"100%",background:ok1?"#1158A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                onMouseEnter={e=>ok1&&(e.currentTarget.style.background="#0F2D6B")}
-                onMouseLeave={e=>ok1&&(e.currentTarget.style.background="#1158A6")}>
+                style={{ marginTop:22,width:"100%",background:ok1?"#14B8A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(20,184,166,.3)":"none" }}
+                onMouseEnter={e=>ok1&&(e.currentTarget.style.background="#0F766E")}
+                onMouseLeave={e=>ok1&&(e.currentTarget.style.background="#14B8A6")}>
                 Continue →
               </button>
             </div>
@@ -2559,11 +2559,11 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
           {step===2&&(
             <div style={{ animation:"slideUp .28s" }}>
               <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <div style={{ width:40,height:40,borderRadius:12,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Date & Time Slot</div>
+                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Date & Time Slot</div>
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 2 of 4</div>
                 </div>
               </div>
@@ -2579,7 +2579,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     const sel=loc.date===val;
                     return (
                       <button key={val} onClick={()=>sl("date",val)}
-                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
+                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#14B8A6":"#E5E7EB"}`,background:sel?"#14B8A6":isToday?"#F0FDFA":"#fff",color:sel?"#fff":isToday?"#14B8A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
                         <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
                         <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
                       </button>
@@ -2592,18 +2592,18 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <div style={{ display:"flex",flexWrap:"wrap",gap:8 }}>
                   {TIME_SLOTS.map(s=>(
                     <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
+                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#14B8A6":"#E5E7EB"}`,background:loc.slot===s?"#14B8A6":"#F7FFFD",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
                       {s}
                     </button>
                   ))}
                 </div>
               </div>
               <div style={{ display:"flex",gap:10,marginTop:22 }}>
-                <button onClick={()=>setStep(1)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
+                <button onClick={()=>setStep(1)} style={{ flex:1,background:"#F7FFFD",color:"#14B8A6",border:"1.5px solid #99F6E4",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
                 <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}
-                  style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok2&&(e.currentTarget.style.background="#1158A6")}>
+                  style={{ flex:2,background:ok2?"#14B8A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(20,184,166,.3)":"none" }}
+                  onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F766E")}
+                  onMouseLeave={e=>ok2&&(e.currentTarget.style.background="#14B8A6")}>
                   Continue →
                 </button>
               </div>
@@ -2614,13 +2614,13 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
           {step===3&&(
             <div style={{ animation:"slideUp .28s" }}>
               <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#1158A6,#3B82F6)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(17,88,166,.35)" }}>
+                <div style={{ width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#14B8A6,#3B82F6)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(20,184,166,.35)" }}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5z"/><polyline points="9 3 9 8 19 8"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
                   </svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Sample Collection</div>
+                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Sample Collection</div>
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 3 of 4 · How would you like your sample collected?</div>
                 </div>
               </div>
@@ -2629,28 +2629,28 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
                 {/* Visit Lab — Labs Near Me style */}
                 <div onClick={()=>setLoc(f=>({...f,mode:"clinic"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="clinic"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="clinic"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="clinic"?"#14B8A6":"#99F6E4"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="clinic"?"0 4px 18px rgba(20,184,166,.13)":"0 2px 16px rgba(20,184,166,.07)",cursor:"pointer",transition:"all .2s",width:"100%" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(20,184,166,.13)"; e.currentTarget.style.borderColor="#14B8A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="clinic"?"0 4px 18px rgba(20,184,166,.13)":"0 2px 10px rgba(20,184,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="clinic"?"#14B8A6":"#99F6E4"; e.currentTarget.style.transform="translateY(0)"; }}>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Walk-in at the Lab</div>
+                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0F172A" }}>Walk-in at the Lab</div>
                     <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Visit the lab at your convenience</div>
                   </div>
-                  {loc.mode==="clinic"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
+                  {loc.mode==="clinic"&&<div style={{ width:32,height:32,borderRadius:50,background:"#14B8A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(20,184,166,.35)",flexShrink:0 }}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>}
                 </div>
 
                 {/* Home Collection — Labs Near Me style */}
                 <div onClick={()=>lab?.homeCollection&&setLoc(f=>({...f,mode:"home"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:lab?.homeCollection?"pointer":"not-allowed",opacity:lab?.homeCollection?1:.5,transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ if(!lab?.homeCollection)return; e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#14B8A6":"#99F6E4"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(20,184,166,.13)":"0 2px 16px rgba(20,184,166,.07)",cursor:lab?.homeCollection?"pointer":"not-allowed",opacity:lab?.homeCollection?1:.5,transition:"all .2s",width:"100%" }}
+                  onMouseEnter={e=>{ if(!lab?.homeCollection)return; e.currentTarget.style.boxShadow="0 8px 28px rgba(20,184,166,.13)"; e.currentTarget.style.borderColor="#14B8A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(20,184,166,.13)":"0 2px 10px rgba(20,184,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#14B8A6":"#99F6E4"; e.currentTarget.style.transform="translateY(0)"; }}>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
+                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0F172A" }}>Home Sample Collection</div>
                     <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Phlebotomist visits your doorstep</div>
                   </div>
-                  {loc.mode==="home"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
+                  {loc.mode==="home"&&<div style={{ width:32,height:32,borderRadius:50,background:"#14B8A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(20,184,166,.35)",flexShrink:0 }}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>}
                 </div>
@@ -2658,30 +2658,30 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
               {/* Address input */}
               {loc.mode==="home"&&(
-                <div style={{ background:"#F8FAFF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
-                  <label style={{ display:"flex",alignItems:"center",gap:7,fontWeight:700,fontSize:".82rem",color:"#1158A6",marginBottom:10 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div style={{ background:"#F7FFFD",border:"1.5px solid #99F6E4",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
+                  <label style={{ display:"flex",alignItems:"center",gap:7,fontWeight:700,fontSize:".82rem",color:"#14B8A6",marginBottom:10 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
                   </label>
                   <textarea rows={3}
-                    style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
+                    style={{ width:"100%",border:"1.5px solid #99F6E4",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
                     placeholder="Flat / house no., building, street, area, city…"
                     value={loc.address}
                     onChange={e=>sl("address",e.target.value)}
-                    onFocus={e=>e.target.style.borderColor="#1158A6"}
-                    onBlur={e=>e.target.style.borderColor="#DBEAFE"}
+                    onFocus={e=>e.target.style.borderColor="#14B8A6"}
+                    onBlur={e=>e.target.style.borderColor="#99F6E4"}
                   />
                 </div>
               )}
 
               <div style={{ display:"flex",gap:10,marginTop:6 }}>
-                <button onClick={()=>setStep(2)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
-                  onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
-                  onMouseLeave={e=>e.currentTarget.style.background="#F8FAFF"}>← Back</button>
+                <button onClick={()=>setStep(2)} style={{ flex:1,background:"#F7FFFD",color:"#14B8A6",border:"1.5px solid #99F6E4",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
+                  onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"}
+                  onMouseLeave={e=>e.currentTarget.style.background="#F7FFFD"}>← Back</button>
                 <button disabled={!ok3} onClick={()=>{ setForm(loc); setStep(4); }}
-                  style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok3&&(e.currentTarget.style.background="#1158A6")}>
+                  style={{ flex:2,background:ok3?"#14B8A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(20,184,166,.3)":"none" }}
+                  onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F766E")}
+                  onMouseLeave={e=>ok3&&(e.currentTarget.style.background="#14B8A6")}>
                   Review Order →
                 </button>
               </div>
@@ -2692,53 +2692,53 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
           {step===4&&(
             <div style={{ animation:"slideUp .28s" }}>
               <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <div style={{ width:40,height:40,borderRadius:12,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Review & Confirm</div>
+                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Review & Confirm</div>
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 4 of 5</div>
                 </div>
               </div>
-              <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #EEF2FF" }}>
+              <div style={{ background:"#F7FFFD",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #F0FDFA" }}>
                 <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Booking Details</div>
                 {[["Patient",form.name],["Phone",form.phone],["Email",form.email],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Mode",form.mode==="home"?"Home Collection":"Visit Lab"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
-                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
+                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #F0FDFA",fontSize:".83rem" }}>
                     <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
-                    <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"58%",textAlign:"right" }}>{v}</span>
+                    <span style={{ fontWeight:700,color:"#0F172A",maxWidth:"58%",textAlign:"right" }}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #EEF2FF" }}>
+              <div style={{ background:"#F7FFFD",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #F0FDFA" }}>
                 <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Selected Tests</div>
                 {cart.map(item=>(
                   <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:7,fontSize:".83rem" }}>
                     <span style={{ color:"#374151",fontWeight:600 }}>{item.tname}</span>
                     <div style={{ display:"flex",gap:10,alignItems:"center" }}>
                       <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".78rem" }}>₹{item.mrp}</span>
-                      <span style={{ fontWeight:800,color:"#1158A6" }}>₹{item.price}</span>
+                      <span style={{ fontWeight:800,color:"#14B8A6" }}>₹{item.price}</span>
                     </div>
                   </div>
                 ))}
-                <div style={{ borderTop:"1.5px dashed #DBEAFE",paddingTop:10,marginTop:8 }}>
+                <div style={{ borderTop:"1.5px dashed #99F6E4",paddingTop:10,marginTop:8 }}>
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".8rem",marginBottom:3 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#2563EB",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#0D9488",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1rem",color:"#0F172A" }}>
                     <span>Total Payable</span>
-                    <span style={{ color:"#1158A6",fontSize:"1.2rem",fontWeight:800 }}>₹{total.toLocaleString()}</span>
+                    <span style={{ color:"#14B8A6",fontSize:"1.2rem",fontWeight:800 }}>₹{total.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
               <div style={{ display:"flex",gap:10 }}>
-                <button onClick={()=>setStep(3)} style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
+                <button onClick={()=>setStep(3)} style={{ flex:1,background:"#F7FFFD",color:"#14B8A6",border:"1.5px solid #99F6E4",borderRadius:50,padding:"13px",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>← Back</button>
                 <button onClick={()=>setStep(5)}
-                  style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  style={{ flex:2,background:"#14B8A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(20,184,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F766E"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#14B8A6"; e.currentTarget.style.transform="translateY(0)"; }}>
                   Continue to Payment →
                 </button>
               </div>
@@ -2753,16 +2753,16 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Choose Payment Method</div>
+                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0F172A" }}>Choose Payment Method</div>
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 5 of 5 · Secure checkout</div>
                 </div>
               </div>
 
               {/* Amount summary strip */}
-              <div style={{ background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderRadius:14,padding:"14px 18px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #BFDBFE" }}>
+              <div style={{ background:"linear-gradient(135deg,#F0FDFA,#99F6E4)",borderRadius:14,padding:"14px 18px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #99F6E4" }}>
                 <div>
                   <div style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>Amount Payable</div>
-                  <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.6rem",color:"#0D1117",lineHeight:1 }}>₹{total.toLocaleString()}</div>
+                  <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.6rem",color:"#0F172A",lineHeight:1 }}>₹{total.toLocaleString()}</div>
                 </div>
                 <div style={{ textAlign:"right" }}>
                   <div style={{ fontSize:".7rem",color:"#16A34A",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</div>
@@ -2931,7 +2931,7 @@ export default function App() {
     timing: el.timing || '6:00 AM – 10:00 PM',
     homeCollection: el.homeCollection || false,
     nabl: el.nabl || false,
-    color: el.color || '#1158A6',
+    color: el.color || '#14B8A6',
     founded: el.founded || new Date().getFullYear().toString(),
     reportTime: el.reportTime || 'Same Day',
     tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
@@ -2979,26 +2979,26 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0FDFA 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
         {/* background geometric accents */}
-        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(20,184,166,.05)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(20,184,166,.04)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#14B8A6",opacity:.12,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#14B8A6",opacity:.1,pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,boxShadow:"0 2px 14px rgba(20,184,166,.1)",border:"1px solid #99F6E4",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#14B8A6,#0D9488)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#14B8A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0F172A",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#14B8A6 0%,#0D9488 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
@@ -3014,9 +3014,9 @@ export default function App() {
               <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+                  style={{ background:"#fff",border:"1px solid #99F6E4",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#14B8A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#14B8A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#14B8A6"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#14B8A6"; e.currentTarget.style.borderColor="#99F6E4"; }}>
                   {t}
                 </button>
               ))}
@@ -3040,17 +3040,17 @@ export default function App() {
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
-              <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
-              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <p style={{ fontSize:".72rem",fontWeight:700,color:"#14B8A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
+              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0F172A",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
               <button onClick={()=>setPkgMsg(v=>!v)}
-                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
-                onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+                style={{ background:"transparent",color:"#14B8A6",border:"1.5px solid #14B8A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#F0FDFA"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
-                onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
-                onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
+                onMouseDown={e=>{ e.currentTarget.style.background="#14B8A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+                onMouseUp={e=>{ e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.color="#14B8A6"; e.currentTarget.style.transform="scale(1)"; }}>
                 View All Packages →
               </button>
               {pkgMsg && <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600,background:"#F1F5F9",borderRadius:8,padding:"4px 12px",whiteSpace:"nowrap" }}>Only 6 packages available</span>}
@@ -3062,8 +3062,8 @@ export default function App() {
             {[
               { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
               { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700" },
-              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700" },
-              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop" },
+              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#14B8A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700" },
+              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0F766E", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop" },
               { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop" },
               { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop" },
             ].map((pkg,i)=>(
@@ -3086,13 +3086,13 @@ export default function App() {
                   <div style={{ fontSize:gridCols===2?".6rem":".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
                   <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:gridCols===2?3:6,flexWrap:"wrap",gap:gridCols===2?4:8 }}>
                     <div style={{ display:"flex",alignItems:"baseline",gap:3 }}>
-                      <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
+                      <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0F172A",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); setSelectedTest({name:pkg.title, cat:pkg.badge}); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
-                      onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                      onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                      style={{ background:"#14B8A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
+                      onMouseEnter={e=>e.currentTarget.style.background="#0F766E"}
+                      onMouseLeave={e=>e.currentTarget.style.background="#14B8A6"}>
                       Book Now
                     </button>
                   </div>
@@ -3160,51 +3160,51 @@ export default function App() {
                   <circle cx="41" cy="75.5" r="1.2" fill="white"/>
                   <circle cx="55" cy="75.5" r="1.2" fill="white"/>
                   <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                  <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
+                  <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#99F6E4" stroke="#1E293B" strokeWidth="1"/>
                 </svg>
               </div>
             </div>
 
             {/* Card 2 — Fast Report Delivery */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE" }}>
+            <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDFA",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(20,184,166,.10)",border:"1px solid #99F6E4" }}>
               <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
                 <div>
-                  <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
+                  <div style={{ display:"inline-block",background:"#F0FDFA",border:"1px solid #5EEAD4",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#14B8A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
                   <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
                   <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
                 </div>
                 <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+                  style={{ alignSelf:"flex-start",marginTop:16,background:"#14B8A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(20,184,166,.35)",transition:"all .18s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F766E"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#14B8A6"; e.currentTarget.style.transform="translateY(0)"; }}>
                   VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </button>
               </div>
               <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
                 <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                  <ellipse cx="100" cy="110" rx="72" ry="80" fill="#DBEAFE" opacity="0.6"/>
+                  <ellipse cx="100" cy="110" rx="72" ry="80" fill="#99F6E4" opacity="0.6"/>
                   <rect x="52" y="30" width="92" height="130" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
                   <rect x="76" y="26" width="44" height="10" rx="5" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="62" y="54" width="72" height="6" rx="3" fill="#DBEAFE"/>
+                  <rect x="62" y="54" width="72" height="6" rx="3" fill="#99F6E4"/>
                   <rect x="62" y="66" width="56" height="5" rx="2.5" fill="#E2E8F0"/>
                   <rect x="62" y="78" width="64" height="5" rx="2.5" fill="#E2E8F0"/>
-                  <rect x="62" y="94" width="14" height="36" rx="3" fill="#93C5FD"/>
-                  <rect x="80" y="106" width="14" height="24" rx="3" fill="#BFDBFE"/>
-                  <rect x="98" y="100" width="14" height="30" rx="3" fill="#60A5FA"/>
-                  <rect x="116" y="110" width="14" height="20" rx="3" fill="#BFDBFE"/>
+                  <rect x="62" y="94" width="14" height="36" rx="3" fill="#5EEAD4"/>
+                  <rect x="80" y="106" width="14" height="24" rx="3" fill="#99F6E4"/>
+                  <rect x="98" y="100" width="14" height="30" rx="3" fill="#2DD4BF"/>
+                  <rect x="116" y="110" width="14" height="20" rx="3" fill="#99F6E4"/>
                   <rect x="62" y="136" width="72" height="14" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
                   <path d="M70 143 L74 147 L82 140" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                   <line x1="88" y1="143" x2="126" y2="143" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
-                  <rect x="100" y="148" width="60" height="36" rx="8" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="100" y="156" width="60" height="14" rx="0" fill="#1158A6"/>
-                  <polygon points="108,184 116,184 112,192" fill="#1158A6" stroke="#1E293B" strokeWidth="0.5"/>
-                  <circle cx="112" cy="158" r="5" fill="#DBEAFE"/>
+                  <rect x="100" y="148" width="60" height="36" rx="8" fill="#14B8A6" stroke="#1E293B" strokeWidth="1"/>
+                  <rect x="100" y="156" width="60" height="14" rx="0" fill="#14B8A6"/>
+                  <polygon points="108,184 116,184 112,192" fill="#14B8A6" stroke="#1E293B" strokeWidth="0.5"/>
+                  <circle cx="112" cy="158" r="5" fill="#99F6E4"/>
                   <path d="M110 158 L112 160 L116 155" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                   <line x1="120" y1="156" x2="152" y2="156" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="120" y1="162" x2="146" y2="162" stroke="#93C5FD" strokeWidth="1.2" strokeLinecap="round"/>
-                  <circle cx="24" cy="80" r="7" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-                  <circle cx="162" cy="55" r="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
-                  <circle cx="22" cy="148" r="5" fill="#DBEAFE" opacity="0.8"/>
+                  <line x1="120" y1="162" x2="146" y2="162" stroke="#5EEAD4" strokeWidth="1.2" strokeLinecap="round"/>
+                  <circle cx="24" cy="80" r="7" fill="#99F6E4" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+                  <circle cx="162" cy="55" r="5" fill="#5EEAD4" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
+                  <circle cx="22" cy="148" r="5" fill="#99F6E4" opacity="0.8"/>
                 </svg>
               </div>
             </div>
@@ -3212,24 +3212,24 @@ export default function App() {
 
           {/* heading */}
           <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
-            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+            <p style={{ fontSize:".72rem",fontWeight:700,color:"#14B8A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0F172A",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
           {/* 4-step row */}
           <div className="hiw-grid">
             {/* connector line */}
-            <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
+            <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#99F6E4,#99F6E4,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
 
             {[
               {
-                n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
+                n:"01", label:"Search & Book", accent:"#14B8A6", bg:"#F0FDFA",
                 desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
                 icon:( <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
-                n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
+                n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0FDFA",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
                 icon:( <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
@@ -3251,7 +3251,7 @@ export default function App() {
                   {s.icon}
                 </div>
                 <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:4,textTransform:"uppercase" }}>Step {s.n}</div>
-                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:"1rem",color:"#0F172A",marginBottom:6,textAlign:"center",lineHeight:1.3 }}>{s.label}</h3>
                 <p style={{ color:"#64748B",fontSize:".82rem",textAlign:"center",lineHeight:1.6,maxWidth:180,margin:0 }}>{s.desc}</p>
               </div>
             ))}
@@ -3262,32 +3262,32 @@ export default function App() {
 
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"18px 0",background:"#F8FAFF" }}>
+      <section style={{ padding:"18px 0",background:"#F7FFFD" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
-              <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
-              <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#F0FDFA,#99F6E4)",border:"1px solid #99F6E4",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
+              <span style={{ width:6,height:6,borderRadius:"50%",background:"#14B8A6",flexShrink:0,display:"inline-block" }}/>
+              <span style={{ fontSize:".7rem",fontWeight:800,color:"#14B8A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0F172A",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
-              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
+              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#F0FDFA",ic:"#14B8A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
               {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FEF2F2",ic:"#DC2626"},
-              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#EFF6FF",ic:"#1158A6"},
+              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#F0FDFA",ic:"#14B8A6"},
               {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
               {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#059669"},
             ].map(w=>(
               <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
-                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(20,184,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
                 <div style={{ width:gridCols===2?44:60,height:gridCols===2?44:60,borderRadius:gridCols===2?11:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
                   <w.Icon s={gridCols===2?24:36}/>
                 </div>
-                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
+                <div style={{ fontWeight:800,color:"#0F172A",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
                 <div style={{ color:"#9CA3AF",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
               </div>
             ))}
@@ -3299,25 +3299,25 @@ export default function App() {
       <section style={{ padding:"18px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:18 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
-              <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
-              <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#F0FDFA,#99F6E4)",border:"1px solid #99F6E4",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
+              <span style={{ width:6,height:6,borderRadius:"50%",background:"#14B8A6",flexShrink:0,display:"inline-block" }}/>
+              <span style={{ fontSize:".7rem",fontWeight:800,color:"#14B8A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
             </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0F172A",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:400,margin:"0 auto" }}>Everything you need to know before booking your first test.</p>
           </div>
           <div style={{ display:"grid",gap:8 }}>
             {FAQS.map((item,i)=>(
-              <div key={i} style={{ background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF",overflow:"hidden",transition:"all .18s" }}>
+              <div key={i} style={{ background:"#F7FFFD",borderRadius:14,border:"1px solid #F0FDFA",overflow:"hidden",transition:"all .18s" }}>
                 <button className="faq-q" onClick={()=>setFaq(faq===i?null:i)}
                   style={{ width:"100%",background:"none",border:"none",padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .18s" }}>
-                  <span style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117",lineHeight:1.4,flex:1,marginRight:14 }}>{item.q}</span>
-                  <span style={{ flexShrink:0,width:28,height:28,borderRadius:50,background:faq===i?"#1158A6":"#fff",color:faq===i?"#fff":"#1158A6",border:"1.5px solid #DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",fontWeight:700,transition:"all .22s",lineHeight:1 }}>
+                  <span style={{ fontWeight:700,fontSize:".9rem",color:"#0F172A",lineHeight:1.4,flex:1,marginRight:14 }}>{item.q}</span>
+                  <span style={{ flexShrink:0,width:28,height:28,borderRadius:50,background:faq===i?"#14B8A6":"#fff",color:faq===i?"#fff":"#14B8A6",border:"1.5px solid #99F6E4",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",fontWeight:700,transition:"all .22s",lineHeight:1 }}>
                     {faq===i?"−":"+"}
                   </span>
                 </button>
                 {faq===i && (
-                  <div style={{ padding:"0 20px 16px",color:"#6B7280",fontSize:".86rem",lineHeight:1.78,borderTop:"1px solid #EEF2FF",paddingTop:12,animation:"slideUp .2s" }}>
+                  <div style={{ padding:"0 20px 16px",color:"#6B7280",fontSize:".86rem",lineHeight:1.78,borderTop:"1px solid #F0FDFA",paddingTop:12,animation:"slideUp .2s" }}>
                     {item.a}
                   </div>
                 )}
@@ -3328,7 +3328,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg,#0F172A 0%,#14B8A6 50%,#134E4A 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
@@ -3347,11 +3347,11 @@ export default function App() {
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".92rem",boxShadow:"0 8px 32px rgba(0,0,0,.25)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              style={{ background:"#fff",color:"#14B8A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".92rem",boxShadow:"0 8px 32px rgba(0,0,0,.25)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
               onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 14px 40px rgba(0,0,0,.3)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,.25)"; }}>
               Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#14B8A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
               style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.25)",borderRadius:50,padding:"14px 32px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
@@ -3371,7 +3371,7 @@ export default function App() {
             {/* Brand column */}
             <div>
               <div style={{ display:"flex",alignItems:"baseline",gap:2,marginBottom:16 }}>
-                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.7rem",color:"#60A5FA",lineHeight:1 }}>Lab</span>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.7rem",color:"#2DD4BF",lineHeight:1 }}>Lab</span>
                 <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.7rem",color:"#fff",lineHeight:1 }}>Ease</span>
                 <sup style={{ fontSize:".5rem",color:"#4B5563",fontWeight:600,marginLeft:2 }}>™</sup>
               </div>
@@ -3477,12 +3477,12 @@ export default function App() {
       <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
-          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #14B8A6",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             ← Back to Home
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
             {/* Header */}
-            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
+            <div style={{ background:"linear-gradient(135deg,#14B8A6,#0D9488)",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
               <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'DM Serif Display',serif" }}>Your Cart</div>
               <span style={{ marginLeft:"auto",background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 12px",fontWeight:700,fontSize:".82rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
@@ -3520,7 +3520,7 @@ export default function App() {
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".83rem",marginBottom:4 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".83rem",marginBottom:10,fontWeight:700 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#14B8A6",fontSize:".83rem",marginBottom:10,fontWeight:700 }}>
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.1rem",marginBottom:20 }}>
@@ -3549,7 +3549,7 @@ export default function App() {
                 <div style={{ fontWeight:800,fontSize:"1.08rem" }}>📋 Preparation Guide</div>
                 <button onClick={()=>setPrepOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
               </div>
-              <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
+              <div style={{ background:"#F0FDFA",border:"1px solid #99F6E4",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
                 ℹ️ Please follow these instructions before your sample collection appointment.
               </div>
               {cart.map(item=>{
@@ -3563,7 +3563,7 @@ export default function App() {
                       <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
                     </div>
                     <div style={{ padding:"12px 16px" }}>
-                      <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"3px 11px",fontSize:".72rem",fontWeight:600,display:"inline-block",marginBottom:10 }}>{sampleIcon} Sample: {prep.sample}</span>
+                      <span style={{ background:"#F0FDFA",color:"#0F766E",borderRadius:20,padding:"3px 11px",fontSize:".72rem",fontWeight:600,display:"inline-block",marginBottom:10 }}>{sampleIcon} Sample: {prep.sample}</span>
                       <div style={{ background:isSpecial?"#FFFBEB":"#F0FDF4",border:`1px solid ${isSpecial?"#FDE68A":"#BBF7D0"}`,borderRadius:9,padding:"10px 13px",fontSize:".8rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
                         {isSpecial ? prep.prep : "✅ No special requirement"}
                       </div>
@@ -3590,44 +3590,44 @@ export default function App() {
      CONFIRM PAGE
   ═══════════════════════════════════════════════════════════════ */
   const Confirm = () => (
-    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F8FAFF",fontFamily:"'Manrope',sans-serif" }}>
-      <div style={{ background:"#fff",maxWidth:520,width:"100%",padding:"40px 36px",textAlign:"center",animation:"scaleIn .35s cubic-bezier(.34,1.56,.64,1)",borderRadius:24,border:"1.5px solid #EEF2FF",boxShadow:"0 8px 40px rgba(17,88,166,.1)" }}>
+    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F7FFFD",fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ background:"#fff",maxWidth:520,width:"100%",padding:"40px 36px",textAlign:"center",animation:"scaleIn .35s cubic-bezier(.34,1.56,.64,1)",borderRadius:24,border:"1.5px solid #F0FDFA",boxShadow:"0 8px 40px rgba(20,184,166,.1)" }}>
 
         {/* success icon */}
-        <div style={{ width:72,height:72,borderRadius:50,background:"linear-gradient(135deg,#1158A6,#0F2D6B)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",boxShadow:"0 8px 28px rgba(17,88,166,.35)" }}>
+        <div style={{ width:72,height:72,borderRadius:50,background:"linear-gradient(135deg,#14B8A6,#0F766E)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",boxShadow:"0 8px 28px rgba(20,184,166,.35)" }}>
           <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><polyline points="5,16 12,23 27,9" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
 
-        <h2 style={{ fontWeight:800,fontSize:"1.6rem",color:"#0D1117",marginBottom:6 }}>Booking Confirmed!</h2>
-        <p style={{ color:"#9CA3AF",marginBottom:24,lineHeight:1.7,fontSize:".88rem" }}>Details sent to <strong style={{color:"#0D1117"}}>{done?.email}</strong>. You'll receive a WhatsApp notification shortly.</p>
+        <h2 style={{ fontWeight:800,fontSize:"1.6rem",color:"#0F172A",marginBottom:6 }}>Booking Confirmed!</h2>
+        <p style={{ color:"#9CA3AF",marginBottom:24,lineHeight:1.7,fontSize:".88rem" }}>Details sent to <strong style={{color:"#0F172A"}}>{done?.email}</strong>. You'll receive a WhatsApp notification shortly.</p>
 
         {/* booking ID */}
-        <div style={{ background:"#EEF4FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"16px 20px",marginBottom:18 }}>
+        <div style={{ background:"#F0FDFA",border:"1.5px solid #99F6E4",borderRadius:14,padding:"16px 20px",marginBottom:18 }}>
           <div style={{ fontWeight:700,color:"#9CA3AF",fontSize:".68rem",letterSpacing:".1em",marginBottom:6,textTransform:"uppercase" }}>Booking Reference</div>
-          <div style={{ fontWeight:800,fontSize:"1.8rem",color:"#1158A6",letterSpacing:".12em",fontFamily:"'Manrope',sans-serif" }}>{done?.id}</div>
+          <div style={{ fontWeight:800,fontSize:"1.8rem",color:"#14B8A6",letterSpacing:".12em",fontFamily:"'Manrope',sans-serif" }}>{done?.id}</div>
         </div>
 
         {/* summary */}
-        <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
+        <div style={{ background:"#F7FFFD",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #F0FDFA" }}>
           {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",`${done?.cart?.length} test(s)`],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
-            <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
+            <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #F0FDFA",fontSize:".83rem" }}>
               <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
-              <span style={{ fontWeight:700,color:"#0D1117" }}>{v}</span>
+              <span style={{ fontWeight:700,color:"#0F172A" }}>{v}</span>
             </div>
           ))}
         </div>
 
         <div style={{ display:"flex",gap:10 }}>
           <button onClick={()=>{ navTo("labs"); setDone(null); }}
-            style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#EEF4FF"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="#F8FAFF"; }}>
+            style={{ flex:1,background:"#F7FFFD",color:"#14B8A6",border:"1.5px solid #99F6E4",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#F0FDFA"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="#F7FFFD"; }}>
             Book More
           </button>
           <button onClick={()=>navTo("home")}
-            style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px",fontWeight:800,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>
+            style={{ flex:1,background:"#14B8A6",color:"#fff",border:"none",borderRadius:50,padding:"12px",fontWeight:800,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(20,184,166,.3)",transition:"all .18s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#0F766E"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="#14B8A6"; }}>
             Go Home
           </button>
         </div>
@@ -3655,7 +3655,7 @@ export default function App() {
     .sort((a,b)=> sortBy==="rating" ? b.rating-a.rating : sortBy==="price" ? (a.full?Math.min(...a.full.tests.map(t=>t.price)):99999)-(b.full?Math.min(...b.full.tests.map(t=>t.price)):99999) : parseFloat(a.dist)-parseFloat(b.dist));
 
     const specialties = [["Blood Tests","Blood"],["Thyroid","Thyroid"],["Diabetes","Diabetes"],["Vitamin Tests","Vitamins"],["Full Body","Packages"],["Cardiac","Cardiac"],["Radiology","Radiology"]];
-    const colors = ["#1158A6","#1158A6","#1158A6","#1158A6","#1158A6","#1158A6"];
+    const colors = ["#14B8A6","#14B8A6","#14B8A6","#14B8A6","#14B8A6","#14B8A6"];
     const tagMap = [
       ["Blood Tests","Packages","Home Collection"],
       ["Pathology","Urine","Thyroid"],
@@ -3740,11 +3740,11 @@ export default function App() {
             </div>
 
             {/* location */}
-            <div style={{ background:"#EFF6FF",borderRadius:14,border:"1px solid #BFDBFE",padding:"14px 16px",display:"flex",gap:8,alignItems:"flex-start" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div style={{ background:"#F0FDFA",borderRadius:14,border:"1px solid #99F6E4",padding:"14px 16px",display:"flex",gap:8,alignItems:"flex-start" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               <div>
-                <div style={{ fontWeight:700,fontSize:".78rem",color:"#1158A6",marginBottom:2 }}>Your Location</div>
-                <div style={{ fontSize:".75rem",color:"#1D4ED8" }}>Bangalore, Karnataka</div>
+                <div style={{ fontWeight:700,fontSize:".78rem",color:"#14B8A6",marginBottom:2 }}>Your Location</div>
+                <div style={{ fontSize:".75rem",color:"#0F766E" }}>Bangalore, Karnataka</div>
               </div>
             </div>
           </div>
@@ -3787,7 +3787,7 @@ export default function App() {
                           {/* name + badges */}
                           <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5 }}>
                             <span style={{ fontWeight:800,fontSize:"1rem",color:"var(--ink)" }}>{l.name}</span>
-                            {l.full?.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
+                            {l.full?.nabl && <span style={{ background:"#F0FDFA",color:"#14B8A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
                             <span style={{ fontSize:".64rem",fontWeight:700,padding:"2px 8px",borderRadius:20,background:l.open?"#DCFCE7":"#FEE2E2",color:l.open?"#15803D":"#DC2626" }}>
                               {l.open?"● Open Now":"● Closed"}
                             </span>
@@ -3804,12 +3804,12 @@ export default function App() {
                             {tags.map(t=>(
                               <span key={t} style={{ background:"#F1F5F9",color:"#374151",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>{t}</span>
                             ))}
-                            {l.homecoll && <span style={{ background:"#E0F2FE",color:"#0369A1",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>🏠 Home Collection</span>}
+                            {l.homecoll && <span style={{ background:"#F0FDFA",color:"#0F766E",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>🏠 Home Collection</span>}
                           </div>
 
                           {/* rating bar */}
                           <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                            <div style={{ display:"flex",alignItems:"center",gap:4,background:l.rating>=4.8?"#1158A6":l.rating>=4.6?"#1D4ED8":"#2563EB",color:"#fff",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
+                            <div style={{ display:"flex",alignItems:"center",gap:4,background:l.rating>=4.8?"#14B8A6":l.rating>=4.6?"#0F766E":"#0D9488",color:"#fff",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
                               ★ {l.rating}
                             </div>
                             <span style={{ fontSize:".75rem",color:"var(--muted)",fontWeight:500 }}>
@@ -3887,7 +3887,7 @@ export default function App() {
           </button>
           {/* Logo */}
           <div onClick={()=>{ navTo("home"); setSideMenu(false); setProfileDrop(false); }} style={{ cursor:"pointer",display:"flex",alignItems:"baseline",gap:1 }}>
-            <span style={{ ...T.serif,fontSize:"1.6rem",color:"#60A5FA" }}>Lab</span>
+            <span style={{ ...T.serif,fontSize:"1.6rem",color:"#2DD4BF" }}>Lab</span>
             <span style={{ ...T.serif,fontSize:"1.6rem",color:"#1E3A8A" }}>Ease</span>
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
@@ -3910,13 +3910,13 @@ export default function App() {
               onMouseEnter={e=>e.currentTarget.style.opacity=".7"}
               onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
               {user
-                ? <div style={{ width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontWeight:800,fontSize:".74rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
+                ? <div style={{ width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#14B8A6,#0D9488)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontWeight:800,fontSize:".74rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
                 : <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
             </button>
             {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:180,zIndex:300,overflow:"hidden" }}>
-              {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
-              {!user&&[["Log In",()=>{ setProfileDrop(false); openAuth("login"); },"#374151"],["Sign Up",()=>{ setProfileDrop(false); openAuth("signup"); },"#1158A6"]].map(([lbl,fn,clr])=>(
-                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
+              {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#F0FDFA,#99F6E4)",borderBottom:"1px solid #99F6E4" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0F172A" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
+              {!user&&[["Log In",()=>{ setProfileDrop(false); openAuth("login"); },"#374151"],["Sign Up",()=>{ setProfileDrop(false); openAuth("signup"); },"#14B8A6"]].map(([lbl,fn,clr])=>(
+                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F7FFFD"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
               ))}
               {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}>Sign Out</button></div>}
             </div>}
@@ -3938,13 +3938,13 @@ export default function App() {
                 ["About Us",()=>{ setSideMenu(false); }],
                 ["Contact Us",()=>{ setSideMenu(false); }],
               ].map(([lbl,fn])=>(
-                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.color="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
+                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0FDFA"; e.currentTarget.style.color="#14B8A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
                   {lbl}
                 </button>
               ))}
               <div style={{ padding:"10px 16px",borderTop:"1px solid #E5E7EB",display:"flex",gap:8 }}>
-                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
-                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#1158A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Sign Up</button>
+                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #99F6E4",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#14B8A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#F0FDFA"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
+                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#14B8A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Sign Up</button>
               </div>
             </div>}
           </div>
@@ -3967,7 +3967,7 @@ export default function App() {
           <div onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(0,0,0,.45)",backdropFilter:"blur(4px)",animation:"fadeIn .18s" }}/>
           <div style={{ position:"fixed",top:0,right:0,bottom:0,zIndex:4001,width:"min(420px,100vw)",background:"#fff",boxShadow:"-8px 0 40px rgba(0,0,0,.18)",display:"flex",flexDirection:"column",animation:"slideInRight .22s cubic-bezier(.34,1.2,.64,1)",fontFamily:"'Manrope',sans-serif",overflow:"hidden" }}>
             {/* Header */}
-            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
+            <div style={{ background:"linear-gradient(135deg,#14B8A6,#0D9488)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
               <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif",flex:1,letterSpacing:".01em" }}>Your Cart</span>
               <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
@@ -4018,7 +4018,7 @@ export default function App() {
                             <div key={item.tid} style={{ borderRadius:9,overflow:"hidden",border:"1px solid #E5E7EB" }}>
                               <div style={{ background:"#F9FAFB",padding:"8px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
                                 <span style={{ fontWeight:700,fontSize:".82rem" }}>{item.tname}</span>
-                                <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 8px",fontSize:".68rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
+                                <span style={{ background:"#F0FDFA",color:"#0F766E",borderRadius:20,padding:"2px 8px",fontSize:".68rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
                               </div>
                               <div style={{ padding:"9px 12px",background:isSpecial?"#FFFBEB":"#F0FDF4",fontSize:".77rem",color:isSpecial?"#78350F":"#166534",lineHeight:1.65 }}>
                                 {isSpecial ? prep.prep : "✅ No special requirement"}
@@ -4038,7 +4038,7 @@ export default function App() {
                 <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".81rem",marginBottom:3 }}>
                   <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                 </div>
-                <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".81rem",marginBottom:10,fontWeight:700 }}>
+                <div style={{ display:"flex",justifyContent:"space-between",color:"#14B8A6",fontSize:".81rem",marginBottom:10,fontWeight:700 }}>
                   <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                 </div>
                 <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.06rem",marginBottom:16 }}>
@@ -4059,7 +4059,7 @@ export default function App() {
           <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:420,fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)",overflow:"hidden" }}>
 
             {/* header */}
-            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"28px 28px 24px",position:"relative" }}>
+            <div style={{ background:"linear-gradient(135deg,#14B8A6,#0D9488)",padding:"28px 28px 24px",position:"relative" }}>
               <button onClick={closeAuth} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
               <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:14 }}>
                 <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.4rem",color:"#90C3F5" }}>Lab</span>
@@ -4071,7 +4071,7 @@ export default function App() {
               {/* tab switcher */}
               <div style={{ display:"flex",gap:0,background:"rgba(255,255,255,.15)",borderRadius:50,padding:4,marginTop:18,width:"fit-content" }}>
                 {[["login","Log In"],["signup","Sign Up"]].map(([m,l])=>(
-                  <button key={m} onClick={()=>{ setAuthMode(m); setAuthErr(""); }} style={{ background:authMode===m?"#fff":"transparent",color:authMode===m?"#1158A6":"rgba(255,255,255,.85)",border:"none",borderRadius:50,padding:"7px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}>{l}</button>
+                  <button key={m} onClick={()=>{ setAuthMode(m); setAuthErr(""); }} style={{ background:authMode===m?"#fff":"transparent",color:authMode===m?"#14B8A6":"rgba(255,255,255,.85)",border:"none",borderRadius:50,padding:"7px 22px",fontWeight:700,fontSize:".82rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}>{l}</button>
                 ))}
               </div>
             </div>
@@ -4106,7 +4106,7 @@ export default function App() {
                 </div>
               )}
 
-              <button onClick={handleAuth} disabled={authLoading} className="btn-anim" style={{ width:"100%",background:authLoading?"#93C5FD":"#1158A6",color:"#fff",border:"none",borderRadius:12,padding:"13px",fontWeight:800,fontSize:".95rem",cursor:authLoading?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+              <button onClick={handleAuth} disabled={authLoading} className="btn-anim" style={{ width:"100%",background:authLoading?"#5EEAD4":"#14B8A6",color:"#fff",border:"none",borderRadius:12,padding:"13px",fontWeight:800,fontSize:".95rem",cursor:authLoading?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",boxShadow:"0 4px 14px rgba(20,184,166,.3)" }}>
                 {authLoading ? (
                   <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin .7s linear infinite",transformOrigin:"12px 12px" }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Processing…</>
                 ) : (
@@ -4116,9 +4116,9 @@ export default function App() {
 
               <div style={{ textAlign:"center",marginTop:16,fontSize:".8rem",color:"#9CA3AF" }}>
                 {authMode==="login" ? (
-                  <>Don't have an account?{" "}<button onClick={()=>{ setAuthMode("signup"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Sign Up free</button></>
+                  <>Don't have an account?{" "}<button onClick={()=>{ setAuthMode("signup"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Sign Up free</button></>
                 ) : (
-                  <>Already have an account?{" "}<button onClick={()=>{ setAuthMode("login"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#1158A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Log In</button></>
+                  <>Already have an account?{" "}<button onClick={()=>{ setAuthMode("login"); setAuthErr(""); }} style={{ background:"none",border:"none",color:"#14B8A6",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".8rem",padding:0 }}>Log In</button></>
                 )}
               </div>
             </div>
