@@ -2578,8 +2578,10 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
           {step===3&&(
             <div style={{ animation:"slideUp .28s" }}>
               <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1.5px solid #DBEAFE" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <div style={{ width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#1158A6,#3B82F6)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(17,88,166,.35)" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5z"/><polyline points="9 3 9 8 19 8"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+                  </svg>
                 </div>
                 <div>
                   <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Sample Collection</div>
@@ -2594,11 +2596,6 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="clinic"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",transition:"all .2s",width:"100%" }}
                   onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="clinic"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ width:52,height:52,borderRadius:16,background:"linear-gradient(135deg,#EEF4FF 60%,#DBEAFE)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(17,88,166,.12)" }}>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-                    </svg>
-                  </div>
                   <div style={{ flex:1 }}>
                     <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Walk-in at the Lab</div>
                     <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Visit the lab at your convenience</div>
@@ -2613,12 +2610,6 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:lab?.homeCollection?"pointer":"not-allowed",opacity:lab?.homeCollection?1:.5,transition:"all .2s",width:"100%" }}
                   onMouseEnter={e=>{ if(!lab?.homeCollection)return; e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ width:52,height:52,borderRadius:16,background:"linear-gradient(135deg,#EEF4FF 60%,#DBEAFE)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 2px 8px rgba(17,88,166,.12)" }}>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/><path d="M12 7v0"/>
-                      <circle cx="18" cy="8" r="3" fill="#EEF4FF" stroke="#1158A6" strokeWidth="1.8"/><line x1="18" y1="7" x2="18" y2="9"/><line x1="17" y1="8" x2="19" y2="8"/>
-                    </svg>
-                  </div>
                   <div style={{ flex:1 }}>
                     <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
                     <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Phlebotomist visits your doorstep</div>
