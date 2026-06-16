@@ -1703,18 +1703,20 @@ const LabsNearMeSection = ({ T, navTo }) => (
     </div>
 
     {/* marquee track */}
-    <div style={{ overflow:"hidden", position:"relative" }}>
+    <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110 }}>
       <style>{`
         @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; }
-        .marquee-labs-track:hover { animation-play-state: paused; }
+        .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; align-items:center; cursor:pointer; }
+        .marquee-labs-track.paused { animation-play-state: paused; }
         .marquee-lab-logo img { height:64px; max-width:160px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
         .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 52px; flex-shrink:0; }
         .marquee-lab-logo:hover img { filter:grayscale(0%); transform:scale(1.06); }
         .marquee-lab-logo span { font-size:.78rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
       `}</style>
 
-      <div className="marquee-labs-track">
+      <div className="marquee-labs-track"
+        onClick={e=>e.currentTarget.classList.toggle("paused")}
+        onMouseLeave={e=>e.currentTarget.classList.remove("paused")}>
         {[
           { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
           { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
