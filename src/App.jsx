@@ -1686,8 +1686,8 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"28px 0 24px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
-    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:16 }}>
+  <section style={{ padding:"34px 0 30px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
           <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
@@ -1718,19 +1718,20 @@ const LabsNearMeSection = ({ T, navTo }) => (
         {[
           { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
           { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3] },
+          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
           { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
           { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6] },
+          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
           { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
           { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3] },
+          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
           { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
           { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6] },
+          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
         ].map((l,i)=>(
           <div key={i} className="marquee-lab-logo">
             <img src={l.b64||l.src} alt={l.name}
+              style={l.small ? {height:"40px",maxWidth:"110px"} : undefined}
               onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
             />
             <span>{l.name}</span>
