@@ -1703,7 +1703,7 @@ const LabsNearMeSection = ({ T, navTo }) => (
     </div>
 
     {/* marquee track */}
-    <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110 }}>
+    <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110, paddingTop:32 }}>
       <style>{`
         @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; align-items:center; cursor:pointer; }
