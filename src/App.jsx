@@ -1686,7 +1686,7 @@ function LabLogo({ lab, size=90, radius=18 }) {
 }
 
 const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"16px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+  <section style={{ padding:"16px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
@@ -2150,7 +2150,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   return (
     <section style={{ padding:"18px 0 16px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:24, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
             <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
