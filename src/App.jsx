@@ -1845,7 +1845,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #E5E7EB",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button></div>
@@ -2007,7 +2007,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {/* sticky header */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #E5E7EB",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
+        <div style={{ display:"flex" }}><button onClick={()=>navTo("labs")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:12,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>All Labs</button></div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
@@ -2201,7 +2201,7 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
           <button onClick={()=>navTo("home")}
-            style={{ background:"#fff",border:"1.5px solid #E5E7EB",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+            style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:6,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button>
@@ -3477,7 +3477,7 @@ export default function App() {
       <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
-          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #E5E7EB",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:24,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             ← Back to Home
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
