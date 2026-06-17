@@ -2908,7 +2908,7 @@ function PromoCarousel({ navTo }) {
       {/* Navigation dots */}
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
         {[0,1].map(i=>(
-          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?16:5,height:5,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?36:14,height:14,borderRadius:50,background:i===idx?"#1158A6":"#DBEAFE",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
         ))}
       </div>
     </div>
@@ -3113,7 +3113,7 @@ function FeaturesCarousel() {
         {/* Navigation dots */}
         <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
           {[0,1].map(i => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?16:5, height:5, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.4)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
+            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?36:14, height:14, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.35)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
           ))}
         </div>
       </div>
@@ -3349,8 +3349,8 @@ export default function App() {
 
             {/* location bar */}
             <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#111",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#6B7280",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
             </div>
 
