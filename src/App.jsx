@@ -2951,42 +2951,43 @@ function FeaturesCarousel() {
   const current = FEATURE_SLIDES[slide];
 
   return (
-    <section style={{ padding:"32px 0 28px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+    <section style={{ padding:"36px 0 30px", background:"linear-gradient(135deg,#0F2D6B 0%,#1158A6 60%,#1D4ED8 100%)", borderBottom:"1px solid #0F2D6B" }}>
       <div style={{ maxWidth:1080,margin:"0 auto",padding:"0 20px" }}>
-        <div style={{ textAlign:"center",marginBottom:22 }}>
-          <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>WHY CHOOSE US</p>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.3rem,2.8vw,1.8rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.2 }}>Everything You Need, In One Place</h2>
+        <div style={{ textAlign:"center",marginBottom:24 }}>
+          <p style={{ fontSize:".72rem",fontWeight:700,color:"#93C5FD",letterSpacing:".14em",textTransform:"uppercase",marginBottom:8 }}>WHY CHOOSE US</p>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.3rem,2.8vw,1.8rem)",fontWeight:900,color:"#fff",letterSpacing:"-.03em",lineHeight:1.2 }}>Everything You Need, In One Place</h2>
         </div>
-        <div style={{ minHeight:220, transition:"all .4s" }}>
+        {/* Fixed-height slide container so both slides are equal size */}
+        <div style={{ height:220 }}>
           {current.type === "features" ? (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, height:"100%" }}>
               {current.items.map((item,i) => (
-                <div key={i} style={{ display:"flex",alignItems:"center",gap:14,background:"#F8FAFF",borderRadius:14,padding:"16px 18px",border:"1px solid #EEF2F8" }}>
-                  <div style={{ flexShrink:0,width:52,height:52,borderRadius:12,background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.07)" }}>
-                    {item.icon}
+                <div key={i} style={{ display:"flex",alignItems:"center",gap:12,background:"rgba(255,255,255,.1)",borderRadius:14,padding:"14px 16px",border:"1px solid rgba(255,255,255,.15)",backdropFilter:"blur(6px)" }}>
+                  <div style={{ flexShrink:0,width:48,height:48,borderRadius:12,background:"rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                    {React.cloneElement(item.icon, { stroke:"#fff" })}
                   </div>
                   <div>
-                    <div style={{ fontWeight:800,fontSize:".88rem",color:"#0D1117",marginBottom:2 }}>{item.label}</div>
-                    <div style={{ fontSize:".76rem",color:"#6B7280",lineHeight:1.4 }}>{item.desc}</div>
+                    <div style={{ fontWeight:800,fontSize:".86rem",color:"#fff",marginBottom:2 }}>{item.label}</div>
+                    <div style={{ fontSize:".74rem",color:"#BFDBFE",lineHeight:1.4 }}>{item.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, height:"100%" }}>
               {current.items.map((item,i) => (
-                <div key={i} style={{ textAlign:"center",background:"#F8FAFF",borderRadius:14,padding:"24px 16px",border:"1px solid #EEF2F8" }}>
-                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.6rem,3vw,2.2rem)",color:item.color,marginBottom:6 }}>{item.value}</div>
-                  <div style={{ fontSize:".82rem",color:"#6B7280",fontWeight:600 }}>{item.label}</div>
+                <div key={i} style={{ textAlign:"center",background:"rgba(255,255,255,.1)",borderRadius:14,padding:"24px 16px",border:"1px solid rgba(255,255,255,.15)",display:"flex",flexDirection:"column",justifyContent:"center" }}>
+                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.8rem,3vw,2.4rem)",color:"#fff",marginBottom:6 }}>{item.value}</div>
+                  <div style={{ fontSize:".82rem",color:"#BFDBFE",fontWeight:600 }}>{item.label}</div>
                 </div>
               ))}
             </div>
           )}
         </div>
         {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:18 }}>
+        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:20 }}>
           {FEATURE_SLIDES.map((_,i) => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8,height:8,borderRadius:50,background:i===slide?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8,height:8,borderRadius:50,background:i===slide?"#fff":"rgba(255,255,255,.35)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
           ))}
         </div>
       </div>
@@ -3363,7 +3364,7 @@ export default function App() {
                 icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"16px 4px", position:"relative", zIndex:1 }}>
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"10px 4px 6px", position:"relative", zIndex:1 }}>
                 <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
