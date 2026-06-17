@@ -3096,7 +3096,7 @@ function FeaturesCarousel() {
   );
 
   return (
-    <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
+    <section style={{ padding:"32px 0 28px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
         {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
