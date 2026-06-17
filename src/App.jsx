@@ -2123,76 +2123,6 @@ const POPULAR_CATS = [
   { cat:"Packages", label:"Full Body",    Icon:IPackage  },
 ];
 
-/* ─── FEATURES SWIPE CAROUSEL ───────────────────────────────────────────── */
-function FeaturesCarousel({ isMobile }) {
-  const trackRef = React.useRef(null);
-  const [slide, setSlide] = React.useState(0);
-  const onScroll = () => {
-    const el = trackRef.current;
-    if(el) setSlide(Math.round(el.scrollLeft / el.offsetWidth));
-  };
-  const goTo = i => {
-    setSlide(i);
-    const el = trackRef.current;
-    if(el) el.scrollTo({ left: i * el.offsetWidth, behavior:"smooth" });
-  };
-  return (
-    <section style={{ padding:"20px 0 24px", background:"#F0F4FA" }}>
-      <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
-        <div ref={trackRef} onScroll={onScroll}
-          style={{ display:"flex", overflowX:"auto", scrollSnapType:"x mandatory", scrollbarWidth:"none", msOverflowStyle:"none", borderRadius:20, gap:0 }}>
-
-          {/* Slide 1 — Features grid */}
-          <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute",right:-40,top:-40,width:220,height:220,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
-            <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".95rem":"1.1rem",color:"#fff",marginBottom:20,letterSpacing:"-.02em" }}>Everything you need, in one place</h3>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:isMobile?"14px 12px":"18px 28px" }}>
-              {[
-                { icon:"🔬", title:"1500+ Labs",      sub:"Choose from top certified labs" },
-                { icon:"✅", title:"NABL Accredited", sub:"Verified quality standards" },
-                { icon:"🧪", title:"3000+ Tests",     sub:"Widest test catalogue" },
-                { icon:"⏰", title:"On-Time Reports", sub:"Digital delivery in hours" },
-                { icon:"🏠", title:"Home Collection", sub:"At your convenience" },
-                { icon:"🏷️", title:"Best Discounts",  sub:"Attractive offers & savings" },
-              ].map(f=>(
-                <div key={f.title} style={{ display:"flex", alignItems:"center", gap:10 }}>
-                  <div style={{ width:42,height:42,borderRadius:12,background:"rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.2rem",flexShrink:0 }}>{f.icon}</div>
-                  <div>
-                    <div style={{ fontWeight:800,color:"#fff",fontSize:isMobile?".76rem":".86rem",lineHeight:1.2 }}>{f.title}</div>
-                    <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".66rem":".74rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Slide 2 — Promo */}
-          <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between", gap:20, position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute",left:-40,bottom:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
-            <div style={{ flex:1, zIndex:1 }}>
-              <p style={{ color:"rgba(255,255,255,.7)",fontSize:".75rem",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:8 }}>Exclusive Offer</p>
-              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.1rem":"1.5rem",color:"#fff",lineHeight:1.2,marginBottom:16,letterSpacing:"-.02em" }}>Book tests from any lab in your city</h3>
-              <div style={{ display:"inline-block",background:"#fff",borderRadius:50,padding:"10px 24px",marginBottom:10 }}>
-                <span style={{ fontWeight:800,color:"#1158A6",fontSize:isMobile?".85rem":"1rem" }}>Get 10% off with wallet coins</span>
-              </div>
-              <p style={{ color:"rgba(255,255,255,.65)",fontSize:".8rem",marginTop:8 }}>Grab ₹100 worth of coins on signup</p>
-            </div>
-            <div style={{ fontSize:isMobile?"3.5rem":"5rem",flexShrink:0,zIndex:1,filter:"drop-shadow(0 4px 16px rgba(0,0,0,.3))" }}>💰</div>
-          </div>
-        </div>
-
-        {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
-          {[0,1].map(i=>(
-            <button key={i} onClick={()=>goTo(i)}
-              style={{ width:slide===i?28:8,height:8,borderRadius:99,background:slide===i?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .25s",minHeight:"auto" }}/>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   const trackRef = React.useRef(null);
   const [canLeft,  setCanLeft]  = React.useState(false);
@@ -3295,7 +3225,7 @@ export default function App() {
           </div>
 
           {/* 4-step row — 2 per row */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:6, position:"relative" }}>
 
             {[
               {
@@ -3336,7 +3266,76 @@ export default function App() {
       </section>
 
       {/* ── FEATURES SWIPE CAROUSEL ──────────────────────────────── */}
-      <FeaturesCarousel isMobile={isMobile}/>
+      {(()=>{
+        const trackRef2 = React.useRef(null);
+        const [slide, setSlide] = React.useState(0);
+        const slides = 2;
+        const goTo = i => {
+          setSlide(i);
+          const el = trackRef2.current;
+          if(el) el.scrollTo({ left: i * el.offsetWidth, behavior:"smooth" });
+        };
+        const onScroll2 = () => {
+          const el = trackRef2.current;
+          if(el) setSlide(Math.round(el.scrollLeft / el.offsetWidth));
+        };
+        return (
+          <section style={{ padding:"20px 0 24px", background:"#F0F4FA" }}>
+            <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
+              <div ref={trackRef2} onScroll={onScroll2}
+                style={{ display:"flex", overflowX:"auto", scrollSnapType:"x mandatory", scrollbarWidth:"none", msOverflowStyle:"none", borderRadius:20, gap:16 }}>
+
+                {/* Slide 1 — Features grid */}
+                <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, position:"relative", overflow:"hidden" }}>
+                  <div style={{ position:"absolute",right:-40,top:-40,width:220,height:220,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
+                  <div style={{ position:"absolute",right:40,bottom:-30,width:140,height:140,borderRadius:"50%",background:"rgba(255,255,255,.03)",pointerEvents:"none" }}/>
+                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".95rem":"1.1rem",color:"#fff",marginBottom:20,letterSpacing:"-.02em" }}>Everything you need, in one place</h3>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:isMobile?"12px 8px":"16px 24px" }}>
+                    {[
+                      { icon:"🔬", title:"1500+ Labs",      sub:"Choose from top certified labs" },
+                      { icon:"✅", title:"NABL Accredited", sub:"Verified quality standards" },
+                      { icon:"🧪", title:"3000+ Tests",     sub:"Widest test catalogue" },
+                      { icon:"⏰", title:"On-Time Reports", sub:"Digital delivery in hours" },
+                      { icon:"🏠", title:"Home Collection", sub:"At your convenience" },
+                      { icon:"%",  title:"Best Discounts",  sub:"Attractive offers & savings" },
+                    ].map(f=>(
+                      <div key={f.title} style={{ display:"flex", alignItems:"center", gap:10 }}>
+                        <div style={{ width:40,height:40,borderRadius:12,background:"rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:f.icon==="%"?"1rem":"1.2rem",fontWeight:900,color:f.icon==="%"?"#fff":"unset",flexShrink:0 }}>{f.icon}</div>
+                        <div>
+                          <div style={{ fontWeight:800,color:"#fff",fontSize:isMobile?".75rem":".85rem",lineHeight:1.2 }}>{f.title}</div>
+                          <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".65rem":".73rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Slide 2 — Promo */}
+                <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between", gap:20, position:"relative", overflow:"hidden" }}>
+                  <div style={{ position:"absolute",left:-40,bottom:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
+                  <div style={{ flex:1, zIndex:1 }}>
+                    <p style={{ color:"rgba(255,255,255,.7)",fontSize:".75rem",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:8 }}>Exclusive Offer</p>
+                    <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.1rem":"1.5rem",color:"#fff",lineHeight:1.2,marginBottom:16,letterSpacing:"-.02em" }}>Book tests from any lab in your city</h3>
+                    <div style={{ display:"inline-block",background:"#fff",borderRadius:50,padding:"10px 24px",marginBottom:10 }}>
+                      <span style={{ fontWeight:800,color:"#1158A6",fontSize:isMobile?".85rem":"1rem" }}>Get 10% off with wallet coins</span>
+                    </div>
+                    <p style={{ color:"rgba(255,255,255,.65)",fontSize:".8rem",marginTop:8 }}>Grab ₹100 worth of coins on signup</p>
+                  </div>
+                  <div style={{ fontSize:isMobile?"3rem":"4.5rem",flexShrink:0,zIndex:1,filter:"drop-shadow(0 4px 12px rgba(0,0,0,.3))" }}>💰</div>
+                </div>
+              </div>
+
+              {/* Dots */}
+              <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
+                {[...Array(slides)].map((_,i)=>(
+                  <button key={i} onClick={()=>goTo(i)}
+                    style={{ width:slide===i?28:8,height:8,borderRadius:99,background:slide===i?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .25s",minHeight:"auto" }}/>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
       <section style={{ padding:"18px 0",background:"#F8FAFF" }}>
