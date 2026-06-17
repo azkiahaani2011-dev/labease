@@ -2957,7 +2957,7 @@ function FeaturesCarousel() {
           <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>WHY CHOOSE US</p>
           <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.3rem,2.8vw,1.8rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.2 }}>Everything You Need, In One Place</h2>
         </div>
-        <div style={{ minHeight:160, transition:"all .4s" }}>
+        <div style={{ minHeight:220, transition:"all .4s" }}>
           {current.type === "features" ? (
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
               {current.items.map((item,i) => (
@@ -3338,8 +3338,8 @@ export default function App() {
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
-          {/* 4-step row — 2 per row */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:12, position:"relative" }}>
+          {/* 4-step row — 2 per row, no gap */}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
 
             {[
               {
@@ -3363,7 +3363,7 @@ export default function App() {
                 icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"0 8px", position:"relative", zIndex:1 }}>
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"16px 4px", position:"relative", zIndex:1 }}>
                 <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
