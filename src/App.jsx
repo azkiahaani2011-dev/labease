@@ -2800,7 +2800,7 @@ function PromoCarousel({ navTo }) {
   }, [idx]);
 
   return (
-    <div style={{ position:"relative", marginBottom:8 }}>
+    <div style={{ position:"relative", marginBottom:10 }}>
       <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
         {/* Card 1 — Home Sample Pickup */}
         <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
