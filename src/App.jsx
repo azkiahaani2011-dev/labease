@@ -3080,9 +3080,9 @@ function FeaturesCarousel() {
 
   /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "24px 20px" : "24px 44px", height: mob ? "auto" : 280, boxSizing:"border-box", display:"flex", alignItems:"center" }}>
+    <div style={{ ...CARD, padding: mob ? "24px 20px" : "20px 44px", height: mob ? "auto" : 280, boxSizing:"border-box", display:"flex", alignItems:"center" }}>
       <Wave/>
-      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "16px 18px" : "22px 52px", width:"100%", zIndex:1 }}>
+      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "14px 18px" : "14px 48px", width:"100%", zIndex:1 }}>
         {[
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
@@ -3090,13 +3090,13 @@ function FeaturesCarousel() {
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 10 : 16 }}>
-            <div style={{ width: mob ? 42 : 54, height: mob ? 42 : 54, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 10 : 14 }}>
+            <div style={{ width: mob ? 40 : 46, height: mob ? 40 : 46, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
             <div>
-              <div style={{ fontSize: mob ? ".68rem" : ".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
-              <div style={{ fontSize: mob ? ".78rem" : ".92rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
+              <div style={{ fontSize: mob ? ".68rem" : ".74rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".78rem" : ".86rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
             </div>
           </div>
         ))}
