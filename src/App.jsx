@@ -2800,7 +2800,7 @@ function PromoCarousel({ navTo }) {
   }, [idx]);
 
   return (
-    <div style={{ position:"relative", marginBottom:40 }}>
+    <div style={{ position:"relative", marginBottom:8 }}>
       <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
         {/* Card 1 — Home Sample Pickup */}
         <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
@@ -2905,10 +2905,10 @@ function PromoCarousel({ navTo }) {
           </div>
         </div>
       </div>
-      {/* Navigation dots */}
-      <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
+      {/* Navigation dots — overlaid at bottom center */}
+      <div style={{ position:"absolute", bottom:16, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
         {[0,1].map(i=>(
-          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?36:14,height:14,borderRadius:50,background:i===idx?"#1158A6":"#DBEAFE",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?36:14,height:14,borderRadius:50,background:i===idx?"#1158A6":"rgba(17,88,166,.25)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
         ))}
       </div>
     </div>
@@ -3107,14 +3107,14 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height: mob ? "auto" : 280 }}>
+        <div style={{ height: mob ? "auto" : 280, position:"relative" }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
-        </div>
-        {/* Navigation dots */}
-        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
-          {[0,1].map(i => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?36:14, height:14, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.35)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
-          ))}
+          {/* Navigation dots — overlaid at bottom center of card */}
+          <div style={{ position:"absolute", bottom:14, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
+            {[0,1].map(i => (
+              <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?36:14, height:14, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.4)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
+            ))}
+          </div>
         </div>
       </div>
     </section>
