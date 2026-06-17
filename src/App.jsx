@@ -2780,6 +2780,220 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   );
 }
 
+/* ─── PROMO CAROUSEL ─────────────────────────────────────────────────────── */
+function PromoCarousel({ navTo }) {
+  const trackRef = useRef(null);
+  const [idx, setIdx] = useState(0);
+  const total = 2;
+
+  const goTo = (i) => {
+    const n = (i + total) % total;
+    setIdx(n);
+    if (trackRef.current) {
+      trackRef.current.scrollTo({ left: n * trackRef.current.offsetWidth, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const t = setInterval(() => goTo(idx + 1), 4000);
+    return () => clearInterval(t);
+  }, [idx]);
+
+  return (
+    <div style={{ position:"relative", marginBottom:40 }}>
+      <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
+        {/* Card 1 — Home Sample Pickup */}
+        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
+          <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0",height:"100%" }}>
+            <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
+              <div>
+                <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
+                <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
+              </div>
+              <button onClick={()=>navTo("labs")}
+                style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
+                BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              </button>
+            </div>
+            <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
+              <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
+                <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
+                <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                <rect x="88" y="58" width="30" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+                <rect x="122" y="58" width="26" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+                <rect x="88" y="104" width="60" height="90" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+                <circle cx="84" cy="142" r="5" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
+                <rect x="72" y="198" width="92" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
+                <rect x="52" y="170" width="22" height="28" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.2"/>
+                <ellipse cx="63" cy="170" rx="13" ry="6" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
+                <path d="M63 164 Q55 150 48 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <ellipse cx="48" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(-20 48 138)"/>
+                <path d="M63 162 Q70 148 76 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <ellipse cx="76" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(20 76 138)"/>
+                <circle cx="46" cy="74" r="20" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
+                <path d="M26 68 Q26 50 46 48 Q66 50 66 68 L64 60 Q54 46 46 46 Q38 46 28 60 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
+                <path d="M22 108 Q22 98 46 96 Q70 98 70 108 L74 198 H18 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                <path d="M40 98 L32 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M52 98 L60 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="30" cy="112" r="10" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.2"/>
+                <rect x="27" y="107" width="6" height="10" rx="1" fill="#EF4444"/>
+                <rect x="24.5" y="109.5" width="11" height="5" rx="1" fill="#EF4444"/>
+                <path d="M70 112 Q84 126 80 156" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
+                <path d="M70 112 Q84 126 80 156" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+                <rect x="67" y="150" width="28" height="22" rx="4" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.5"/>
+                <rect x="77" y="146" width="8" height="8" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
+                <line x1="78" y1="158" x2="88" y2="158" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="83" y1="153" x2="83" y2="163" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                <ellipse cx="39" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                <ellipse cx="53" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
+                <circle cx="40" cy="77" r="3" fill="#1E293B"/>
+                <circle cx="54" cy="77" r="3" fill="#1E293B"/>
+                <circle cx="41" cy="75.5" r="1.2" fill="white"/>
+                <circle cx="55" cy="75.5" r="1.2" fill="white"/>
+                <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        {/* Card 2 — Fast Report Delivery */}
+        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 0 0 10px", boxSizing:"border-box" }}>
+          <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE",height:"100%" }}>
+            <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
+              <div>
+                <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
+                <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
+              </div>
+              <button onClick={()=>navTo("labs")}
+                style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
+                VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              </button>
+            </div>
+            <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
+              <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
+                <ellipse cx="100" cy="110" rx="72" ry="80" fill="#DBEAFE" opacity="0.6"/>
+                <rect x="52" y="30" width="92" height="130" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+                <rect x="76" y="26" width="44" height="10" rx="5" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1"/>
+                <rect x="62" y="54" width="72" height="6" rx="3" fill="#DBEAFE"/>
+                <rect x="62" y="66" width="56" height="5" rx="2.5" fill="#E2E8F0"/>
+                <rect x="62" y="78" width="64" height="5" rx="2.5" fill="#E2E8F0"/>
+                <rect x="62" y="94" width="14" height="36" rx="3" fill="#93C5FD"/>
+                <rect x="80" y="106" width="14" height="24" rx="3" fill="#BFDBFE"/>
+                <rect x="98" y="100" width="14" height="30" rx="3" fill="#60A5FA"/>
+                <rect x="116" y="110" width="14" height="20" rx="3" fill="#BFDBFE"/>
+                <rect x="62" y="136" width="72" height="14" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
+                <path d="M70 143 L74 147 L82 140" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <line x1="88" y1="143" x2="126" y2="143" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="100" y="148" width="60" height="36" rx="8" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
+                <rect x="100" y="156" width="60" height="14" rx="0" fill="#1158A6"/>
+                <polygon points="108,184 116,184 112,192" fill="#1158A6" stroke="#1E293B" strokeWidth="0.5"/>
+                <circle cx="112" cy="158" r="5" fill="#DBEAFE"/>
+                <path d="M110 158 L112 160 L116 155" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <line x1="120" y1="156" x2="152" y2="156" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="120" y1="162" x2="146" y2="162" stroke="#93C5FD" strokeWidth="1.2" strokeLinecap="round"/>
+                <circle cx="24" cy="80" r="7" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
+                <circle cx="162" cy="55" r="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
+                <circle cx="22" cy="148" r="5" fill="#DBEAFE" opacity="0.8"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Dots */}
+      <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
+        {[0,1].map(i=>(
+          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?24:8,height:8,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── FEATURES CAROUSEL ──────────────────────────────────────────────────── */
+const FEATURE_SLIDES = [
+  {
+    type: "features",
+    items: [
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Home Collection", desc:"Phlebotomist at your doorstep" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Fast Reports", desc:"Results in as little as 6 hours" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>, label:"Digital Reports", desc:"WhatsApp & email delivery" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"NABL Certified", desc:"All partner labs accredited" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>, label:"Best Prices", desc:"Transparent, no hidden fees" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0891B2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>, label:"24/7 Support", desc:"Expert help round the clock" },
+    ]
+  },
+  {
+    type: "stats",
+    items: [
+      { value:"50K+", label:"Happy Patients", color:"#1158A6" },
+      { value:"200+", label:"Partner Labs", color:"#059669" },
+      { value:"1500+", label:"Tests Available", color:"#7C3AED" },
+      { value:"6 Hrs", label:"Fastest Report", color:"#DC2626" },
+    ]
+  }
+];
+
+function FeaturesCarousel() {
+  const [slide, setSlide] = useState(0);
+  const total = FEATURE_SLIDES.length;
+
+  useEffect(() => {
+    const t = setInterval(() => setSlide(s => (s + 1) % total), 4000);
+    return () => clearInterval(t);
+  }, []);
+
+  const current = FEATURE_SLIDES[slide];
+
+  return (
+    <section style={{ padding:"32px 0 28px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <div style={{ maxWidth:1080,margin:"0 auto",padding:"0 20px" }}>
+        <div style={{ textAlign:"center",marginBottom:22 }}>
+          <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>WHY CHOOSE US</p>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.3rem,2.8vw,1.8rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.2 }}>Everything You Need, In One Place</h2>
+        </div>
+        <div style={{ minHeight:160, transition:"all .4s" }}>
+          {current.type === "features" ? (
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
+              {current.items.map((item,i) => (
+                <div key={i} style={{ display:"flex",alignItems:"center",gap:14,background:"#F8FAFF",borderRadius:14,padding:"16px 18px",border:"1px solid #EEF2F8" }}>
+                  <div style={{ flexShrink:0,width:52,height:52,borderRadius:12,background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.07)" }}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight:800,fontSize:".88rem",color:"#0D1117",marginBottom:2 }}>{item.label}</div>
+                    <div style={{ fontSize:".76rem",color:"#6B7280",lineHeight:1.4 }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
+              {current.items.map((item,i) => (
+                <div key={i} style={{ textAlign:"center",background:"#F8FAFF",borderRadius:14,padding:"24px 16px",border:"1px solid #EEF2F8" }}>
+                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.6rem,3vw,2.2rem)",color:item.color,marginBottom:6 }}>{item.value}</div>
+                  <div style={{ fontSize:".82rem",color:"#6B7280",fontWeight:600 }}>{item.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {/* Dots */}
+        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:18 }}>
+          {FEATURE_SLIDES.map((_,i) => (
+            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8,height:8,borderRadius:50,background:i===slide?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
@@ -3114,108 +3328,8 @@ export default function App() {
       <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
-          {/* MediBuddy-style illustrated promo cards */}
-          <div className="promo-grid">
-            {/* Card 1 — Home Sample Pickup */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0" }}>
-              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
-                <div>
-                  <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
-                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Sample Pickup<br/>in Just 2 Hrs!</h3>
-                  <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
-                </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
-              </div>
-              <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
-                <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                  <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
-                  <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  <rect x="88" y="58" width="30" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <rect x="122" y="58" width="26" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <rect x="88" y="104" width="60" height="90" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                  <circle cx="84" cy="142" r="5" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="72" y="198" width="92" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="52" y="170" width="22" height="28" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.2"/>
-                  <ellipse cx="63" cy="170" rx="13" ry="6" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                  <path d="M63 164 Q55 150 48 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                  <ellipse cx="48" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(-20 48 138)"/>
-                  <path d="M63 162 Q70 148 76 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                  <ellipse cx="76" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(20 76 138)"/>
-                  <circle cx="46" cy="74" r="20" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
-                  <path d="M26 68 Q26 50 46 48 Q66 50 66 68 L64 60 Q54 46 46 46 Q38 46 28 60 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
-                  <path d="M22 108 Q22 98 46 96 Q70 98 70 108 L74 198 H18 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  <path d="M40 98 L32 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M52 98 L60 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="30" cy="112" r="10" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.2"/>
-                  <rect x="27" y="107" width="6" height="10" rx="1" fill="#EF4444"/>
-                  <rect x="24.5" y="109.5" width="11" height="5" rx="1" fill="#EF4444"/>
-                  <path d="M70 112 Q84 126 80 156" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                  <path d="M70 112 Q84 126 80 156" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                  <rect x="67" y="150" width="28" height="22" rx="4" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.5"/>
-                  <rect x="77" y="146" width="8" height="8" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
-                  <line x1="78" y1="158" x2="88" y2="158" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="83" y1="153" x2="83" y2="163" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <ellipse cx="39" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                  <ellipse cx="53" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                  <circle cx="40" cy="77" r="3" fill="#1E293B"/>
-                  <circle cx="54" cy="77" r="3" fill="#1E293B"/>
-                  <circle cx="41" cy="75.5" r="1.2" fill="white"/>
-                  <circle cx="55" cy="75.5" r="1.2" fill="white"/>
-                  <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                  <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-                </svg>
-              </div>
-            </div>
-
-            {/* Card 2 — Fast Report Delivery */}
-            <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE" }}>
-              <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
-                <div>
-                  <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
-                  <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#1E3A5F",lineHeight:1.25,marginBottom:8 }}>Reports Delivered<br/>in 6 Hours!</h3>
-                  <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Ready in hours.</p>
-                </div>
-                <button onClick={()=>navTo("labs")}
-                  style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </button>
-              </div>
-              <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px 0" }}>
-                <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                  <ellipse cx="100" cy="110" rx="72" ry="80" fill="#DBEAFE" opacity="0.6"/>
-                  <rect x="52" y="30" width="92" height="130" rx="10" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                  <rect x="76" y="26" width="44" height="10" rx="5" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="62" y="54" width="72" height="6" rx="3" fill="#DBEAFE"/>
-                  <rect x="62" y="66" width="56" height="5" rx="2.5" fill="#E2E8F0"/>
-                  <rect x="62" y="78" width="64" height="5" rx="2.5" fill="#E2E8F0"/>
-                  <rect x="62" y="94" width="14" height="36" rx="3" fill="#93C5FD"/>
-                  <rect x="80" y="106" width="14" height="24" rx="3" fill="#BFDBFE"/>
-                  <rect x="98" y="100" width="14" height="30" rx="3" fill="#60A5FA"/>
-                  <rect x="116" y="110" width="14" height="20" rx="3" fill="#BFDBFE"/>
-                  <rect x="62" y="136" width="72" height="14" rx="4" fill="#DCFCE7" stroke="#BBF7D0" strokeWidth="1"/>
-                  <path d="M70 143 L74 147 L82 140" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="88" y1="143" x2="126" y2="143" stroke="#86EFAC" strokeWidth="1.5" strokeLinecap="round"/>
-                  <rect x="100" y="148" width="60" height="36" rx="8" fill="#1158A6" stroke="#1E293B" strokeWidth="1"/>
-                  <rect x="100" y="156" width="60" height="14" rx="0" fill="#1158A6"/>
-                  <polygon points="108,184 116,184 112,192" fill="#1158A6" stroke="#1E293B" strokeWidth="0.5"/>
-                  <circle cx="112" cy="158" r="5" fill="#DBEAFE"/>
-                  <path d="M110 158 L112 160 L116 155" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="120" y1="156" x2="152" y2="156" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="120" y1="162" x2="146" y2="162" stroke="#93C5FD" strokeWidth="1.2" strokeLinecap="round"/>
-                  <circle cx="24" cy="80" r="7" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1" opacity="0.8"/>
-                  <circle cx="162" cy="55" r="5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1" opacity="0.7"/>
-                  <circle cx="22" cy="148" r="5" fill="#DBEAFE" opacity="0.8"/>
-                </svg>
-              </div>
-            </div>
-          </div>
+          {/* MediBuddy-style illustrated promo cards — auto-swipe carousel */}
+          <PromoCarousel navTo={navTo}/>
 
           {/* heading */}
           <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
@@ -3265,6 +3379,7 @@ export default function App() {
         </div>
       </section>
 
+      <FeaturesCarousel/>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
       <section style={{ padding:"18px 0",background:"#F8FAFF" }}>
