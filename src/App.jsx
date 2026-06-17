@@ -732,19 +732,17 @@ const G = () => (
     ════════════════════════════════════════════════════════════════ */
     .hiw-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
       position: relative;
     }
     @media (min-width: 541px) {
-      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 36px; }
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
     }
     @media (min-width: 768px) {
-      .hiw-grid { grid-template-columns: repeat(4, 1fr); gap: 42px; }
-      .hiw-connector { display: block; }
-    }
-    @media (max-width: 767px) {
+      .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 36px; }
       .hiw-connector { display: none !important; }
+    }
     }
 
     /* ════════════════════════════════════════════════════════════════
