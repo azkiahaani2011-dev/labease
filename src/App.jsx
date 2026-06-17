@@ -2151,77 +2151,99 @@ const FEATURE_SLIDES = [
 ];
 
 function FeaturesCarousel({ isMobile }) {
-  const [slide, setSlide] = React.useState(0);
+  const trackRef = React.useRef(null);
+  const [active, setActive] = React.useState(0);
   const total = FEATURE_SLIDES.length;
 
-  const goTo = React.useCallback(i => setSlide((i + total) % total), [total]);
-
+  /* auto-swipe every 4 s */
   React.useEffect(() => {
-    const id = setInterval(() => goTo(slide + 1), 4000);
+    const id = setInterval(() => {
+      setActive(p => {
+        const next = (p + 1) % total;
+        const el = trackRef.current;
+        if (el) {
+          const cardW = el.offsetWidth / (isMobile ? 1 : 2);
+          el.scrollTo({ left: next * cardW, behavior:"smooth" });
+        }
+        return next;
+      });
+    }, 4000);
     return () => clearInterval(id);
-  }, [slide, goTo]);
+  }, [isMobile, total]);
 
-  const s = FEATURE_SLIDES[slide];
+  const goTo = i => {
+    setActive(i);
+    const el = trackRef.current;
+    if (el) {
+      const cardW = el.offsetWidth / (isMobile ? 1 : 2);
+      el.scrollTo({ left: i * cardW, behavior:"smooth" });
+    }
+  };
 
-  /* wave SVG decoration */
   const Wave = () => (
-    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",opacity:.08,pointerEvents:"none" }} viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",opacity:.07,pointerEvents:"none" }} viewBox="0 0 1440 120" preserveAspectRatio="none">
       <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z" fill="#fff"/>
       <path d="M0,80 C300,20 600,100 900,60 C1100,30 1300,90 1440,70 L1440,120 L0,120 Z" fill="#fff"/>
     </svg>
   );
 
+  const cardStyle = { flexShrink:0, width:isMobile?"100%":"calc(50% - 8px)", background:"linear-gradient(135deg,#0A1F4E 0%,#1158A6 100%)", borderRadius:22, padding:isMobile?"22px 18px":"28px 28px", position:"relative", overflow:"hidden", boxShadow:"0 8px 40px rgba(17,88,166,.22)" };
+
   return (
     <section style={{ padding:"20px 0 28px", background:"#fff" }}>
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px" }}>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 24px" }}>
 
-        {/* Card */}
-        <div style={{ background:"linear-gradient(135deg,#0A1F4E 0%,#1158A6 100%)", borderRadius:22, padding:isMobile?"22px 18px":"32px 36px", position:"relative", overflow:"hidden", minHeight:isMobile?220:200, boxShadow:"0 8px 40px rgba(17,88,166,.25)", transition:"all .35s" }}>
-          <Wave/>
+        {/* Track — shows 2 cards at once on desktop */}
+        <div ref={trackRef}
+          style={{ display:"flex", gap:16, overflowX:"auto", scrollSnapType:"x mandatory", scrollbarWidth:"none", msOverflowStyle:"none", borderRadius:22 }}>
 
-          {s.type === "features" && (
-            <>
-              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1.05rem",color:"#fff",marginBottom:22,letterSpacing:"-.02em",position:"relative",zIndex:1 }}>{s.title}</h3>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:isMobile?"14px 16px":"16px 32px", position:"relative", zIndex:1 }}>
-                {s.items.map(f=>(
-                  <div key={f.title} style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:44,height:44,borderRadius:12,background:"rgba(255,255,255,.13)",border:"1px solid rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{f.svg}</div>
-                    <div>
-                      <div style={{ fontWeight:700,color:"#fff",fontSize:isMobile?".78rem":".88rem",lineHeight:1.2 }}>{f.title}</div>
-                      <div style={{ color:"rgba(255,255,255,.55)",fontSize:isMobile?".67rem":".75rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
-                    </div>
+          {/* Card 1 — Features */}
+          <div style={{ ...cardStyle, scrollSnapAlign:"start" }}>
+            <Wave/>
+            <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1rem",color:"#fff",marginBottom:20,letterSpacing:"-.02em",position:"relative",zIndex:1 }}>{FEATURE_SLIDES[0].title}</h3>
+            <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:isMobile?"14px 12px":"14px 20px",position:"relative",zIndex:1 }}>
+              {FEATURE_SLIDES[0].items.map(f=>(
+                <div key={f.title} style={{ display:"flex",alignItems:"center",gap:10 }}>
+                  <div style={{ width:40,height:40,borderRadius:11,background:"rgba(255,255,255,.13)",border:"1px solid rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{f.svg}</div>
+                  <div>
+                    <div style={{ fontWeight:700,color:"#fff",fontSize:isMobile?".76rem":".84rem",lineHeight:1.2 }}>{f.title}</div>
+                    <div style={{ color:"rgba(255,255,255,.5)",fontSize:isMobile?".65rem":".72rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
                   </div>
-                ))}
-              </div>
-            </>
-          )}
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {s.type === "stats" && (
+          {/* Card 2 — Stats */}
+          <div style={{ ...cardStyle, scrollSnapAlign:"start" }}>
+            <Wave/>
             <div style={{ position:"relative",zIndex:1 }}>
-              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1.05rem",color:"#fff",marginBottom:24,letterSpacing:"-.02em" }}>{s.title}</h3>
-              <div style={{ display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:isMobile?"14px":"20px",marginBottom:20 }}>
-                {s.stats.map(st=>(
-                  <div key={st.label} style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.15)",borderRadius:14,padding:isMobile?"14px":"18px 20px",textAlign:"center" }}>
-                    <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.3rem":"1.7rem",color:"#fff",letterSpacing:"-.03em",lineHeight:1 }}>{st.num}</div>
-                    <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".68rem":".76rem",marginTop:5,fontWeight:600 }}>{st.label}</div>
+              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1rem",color:"#fff",marginBottom:20,letterSpacing:"-.02em" }}>{FEATURE_SLIDES[1].title}</h3>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:isMobile?"12px":"14px",marginBottom:18 }}>
+                {FEATURE_SLIDES[1].stats.map(st=>(
+                  <div key={st.label} style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.15)",borderRadius:14,padding:isMobile?"14px":"16px",textAlign:"center" }}>
+                    <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.3rem":"1.6rem",color:"#fff",letterSpacing:"-.03em",lineHeight:1 }}>{st.num}</div>
+                    <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".68rem":".74rem",marginTop:5,fontWeight:600 }}>{st.label}</div>
                   </div>
                 ))}
               </div>
               <div style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
-                <div style={{ width:6,height:6,borderRadius:"50%",background:"#4ADE80" }}/>
-                <span style={{ color:"rgba(255,255,255,.6)",fontSize:".75rem",fontWeight:600 }}>{s.sub}</span>
+                <div style={{ width:6,height:6,borderRadius:"50%",background:"#4ADE80",flexShrink:0 }}/>
+                <span style={{ color:"rgba(255,255,255,.6)",fontSize:".73rem",fontWeight:600 }}>{FEATURE_SLIDES[1].sub}</span>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:16 }}>
-          {FEATURE_SLIDES.map((_,i)=>(
-            <button key={i} onClick={()=>goTo(i)}
-              style={{ width:i===slide?28:8,height:8,borderRadius:99,background:i===slide?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s",minHeight:"auto" }}/>
-          ))}
-        </div>
+        {/* Dots — only visible on mobile since desktop shows both */}
+        {isMobile && (
+          <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
+            {FEATURE_SLIDES.map((_,i)=>(
+              <button key={i} onClick={()=>goTo(i)}
+                style={{ width:i===active?28:8,height:8,borderRadius:99,background:i===active?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s",minHeight:"auto" }}/>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
