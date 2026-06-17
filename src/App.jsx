@@ -2941,73 +2941,96 @@ const FEATURE_SLIDES = [
 
 function FeaturesCarousel() {
   const [slide, setSlide] = useState(0);
-  const slides = [
-    { id:"why" },
-    { id:"stats" },
-  ];
+  const total = 2;
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % slides.length), 4500);
+    const t = setInterval(() => setSlide(s => (s + 1) % total), 4500);
     return () => clearInterval(t);
   }, []);
 
-  const CARD_STYLE = {
-    borderRadius:18,
-    padding:"28px 28px 24px",
-    background:"rgba(255,255,255,.08)",
-    border:"1px solid rgba(255,255,255,.15)",
-    backdropFilter:"blur(8px)",
-    flex:1,
-    minWidth:0,
-  };
+  const CARD = { borderRadius:16, background:"rgba(255,255,255,.07)", border:"1px solid rgba(255,255,255,.14)", overflow:"hidden", position:"relative" };
 
-  /* ── Slide 1 ── two-card layout matching reference ── */
+  const WaveBg = () => (
+    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",height:"55%",opacity:.07,pointerEvents:"none" }} viewBox="0 0 400 120" preserveAspectRatio="none">
+      <path d="M0 60 Q100 20 200 60 Q300 100 400 60 L400 120 L0 120Z" fill="white"/>
+      <path d="M0 80 Q100 40 200 80 Q300 120 400 80 L400 120 L0 120Z" fill="white"/>
+    </svg>
+  );
+
+  const IcoMicroscope = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M12 4V2M8.5 5.5 7 4M15.5 5.5 17 4M4 20a8 8 0 0 1 16 0"/><line x1="6" y1="20" x2="18" y2="20"/></svg>;
+  const IcoFlask      = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3h6M9 3v8L4.5 19A2 2 0 006.36 22h11.28A2 2 0 0019.5 19L15 11V3"/><line x1="6" y1="16" x2="18" y2="16"/></svg>;
+  const IcoShield     = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>;
+  const IcoClock      = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
+  const IcoHome       = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>;
+  const IcoTag        = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>;
+
+  /* icons for the ring in left card */
+  const ringIcons = [
+    <path key="r0" d="M9 3h6v8L4.5 19h15L15 11V3" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round"/>,
+    <rect key="r1" x="7" y="7" width="10" height="10" rx="2" stroke="white" strokeWidth="1.5" fill="none"/>,
+    <circle key="r2" cx="12" cy="12" r="5" stroke="white" strokeWidth="1.5" fill="none"/>,
+    <path key="r3" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="white" strokeWidth="1.5" fill="none"/>,
+    <path key="r4" d="M8 12h8M12 8v8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>,
+    <circle key="r5" cx="12" cy="8" r="4" stroke="white" strokeWidth="1.5" fill="none"/>,
+    <path key="r6" d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="white" strokeWidth="1.5" fill="none"/>,
+    <polyline key="r7" points="12 6 12 12 16 14" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>,
+  ];
+
   const SlideWhy = () => (
-    <div style={{ display:"flex", gap:16, height:220 }}>
-      {/* Left card — Why LabEase */}
-      <div style={{ ...CARD_STYLE, display:"flex", alignItems:"center", gap:24 }}>
-        <div style={{ flex:1, minWidth:0 }}>
-          <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.1rem,2vw,1.4rem)",color:"#fff",lineHeight:1.25,marginBottom:14 }}>Why LabEase<br/>is Better?</h3>
-          <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:9 }}>
-            {["Keeps all your health records in one place","Book from 200+ NABL-certified labs","Reports delivered in as little as 6 hours","Free certified phlebotomist home visit"].map((b,i)=>(
-              <li key={i} style={{ display:"flex",alignItems:"flex-start",gap:8,fontSize:".8rem",color:"#BFDBFE",lineHeight:1.4 }}>
-                <span style={{ width:6,height:6,borderRadius:"50%",background:"#60A5FA",flexShrink:0,marginTop:5 }}/>
+    <div style={{ display:"flex", gap:14, height:200 }}>
+      {/* LEFT */}
+      <div style={{ ...CARD, flex:"0 0 46%", display:"flex", alignItems:"center", padding:"22px 18px 22px 22px", gap:12 }}>
+        <WaveBg/>
+        <div style={{ flex:1, zIndex:1 }}>
+          <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(.95rem,1.7vw,1.25rem)",color:"#fff",lineHeight:1.25,marginBottom:12 }}>Why LabEase<br/>is Helpful?</h3>
+          <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:7 }}>
+            {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need","Free certified phlebotomist home visit"].map((b,i)=>(
+              <li key={i} style={{ display:"flex",alignItems:"flex-start",gap:7,fontSize:".76rem",color:"rgba(255,255,255,.85)",lineHeight:1.35 }}>
+                <span style={{ width:5,height:5,borderRadius:"50%",background:"#fff",flexShrink:0,marginTop:5 }}/>
                 {b}
               </li>
             ))}
           </ul>
         </div>
-        {/* Circular diagram */}
-        <div style={{ flexShrink:0,width:130,height:130,position:"relative",display:"flex",alignItems:"center",justifyContent:"center" }}>
-          <svg viewBox="0 0 130 130" width="130" height="130" style={{ position:"absolute",top:0,left:0 }}>
-            {[0,1,2,3,4,5,6,7].map((i)=>{
-              const angle = (i/8)*2*Math.PI - Math.PI/2;
-              const r = 52;
-              const cx = 65 + r*Math.cos(angle);
-              const cy = 65 + r*Math.sin(angle);
-              return <circle key={i} cx={cx} cy={cy} r={14} fill="rgba(99,102,241,.55)" stroke="rgba(255,255,255,.3)" strokeWidth="1"/>;
+        {/* Ring diagram */}
+        <div style={{ flexShrink:0,width:118,height:118,position:"relative",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1 }}>
+          <svg viewBox="0 0 120 120" width="118" height="118">
+            {ringIcons.map((icon,i)=>{
+              const angle=(i/8)*2*Math.PI-Math.PI/2, r=47;
+              const cx=60+r*Math.cos(angle), cy=60+r*Math.sin(angle);
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy={cy} r="13" fill="rgba(79,70,229,.65)" stroke="rgba(255,255,255,.3)" strokeWidth="1"/>
+                  <g transform={`translate(${cx-12},${cy-12})`}>{icon}</g>
+                </g>
+              );
             })}
-            <circle cx="65" cy="65" r="26" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.4)" strokeWidth="1.5"/>
+            <circle cx="60" cy="60" r="22" fill="white"/>
+            <text x="60" y="56" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="8.5" fill="#1158A6">Lab</text>
+            <text x="60" y="67" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="8.5" fill="#1158A6">Ease</text>
           </svg>
-          <span style={{ position:"relative",zIndex:1,fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"-.02em" }}>LabEase</span>
         </div>
       </div>
-      {/* Right card — 6 features 2×3 */}
-      <div style={{ ...CARD_STYLE }}>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 20px", height:"100%", alignContent:"center" }}>
+
+      {/* RIGHT */}
+      <div style={{ ...CARD, flex:1, padding:"18px 22px", display:"flex", alignItems:"center" }}>
+        <WaveBg/>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px 28px", width:"100%", zIndex:1 }}>
           {[
-            { icon:"🔬", label:"Choose from", sub:"1500+ Tests" },
-            { icon:"✅", label:"Verified & NABL", sub:"Accredited Labs" },
-            { icon:"🧪", label:"Choose from", sub:"200+ Partner Labs" },
-            { icon:"⏱️", label:"On Time", sub:"Reports" },
-            { icon:"🏠", label:"Sample Collection", sub:"at your doorstep" },
-            { icon:"🏷️", label:"Attractive Prices", sub:"& Offers" },
-          ].map((f,i)=>(
-            <div key={i} style={{ display:"flex",alignItems:"center",gap:10 }}>
-              <div style={{ width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,.12)",border:"1.5px solid rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0 }}>{f.icon}</div>
+            { I:IcoMicroscope, t1:"Choose from",       t2:"1500+ Labs" },
+            { I:IcoShield,     t1:"Verified & NABL",   t2:"Accredited Labs" },
+            { I:IcoFlask,      t1:"Choose from",       t2:"3000+ Tests" },
+            { I:IcoClock,      t1:"On Time",           t2:"Reports" },
+            { I:IcoHome,       t1:"Sample Collection", t2:"at your convenience" },
+            { I:IcoTag,        t1:"Attractive Discounts", t2:"& Offers" },
+          ].map(({I,t1,t2},i)=>(
+            <div key={i} style={{ display:"flex",alignItems:"center",gap:11 }}>
+              <div style={{ width:40,height:40,borderRadius:"50%",border:"1.5px solid rgba(255,255,255,.45)",background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <I/>
+              </div>
               <div>
-                <div style={{ fontSize:".72rem",color:"#BFDBFE",lineHeight:1.2 }}>{f.label}</div>
-                <div style={{ fontSize:".8rem",fontWeight:800,color:"#fff",lineHeight:1.2 }}>{f.sub}</div>
+                <div style={{ fontSize:".7rem",color:"rgba(255,255,255,.7)",lineHeight:1.2 }}>{t1}</div>
+                <div style={{ fontSize:".8rem",fontWeight:800,color:"#fff",lineHeight:1.3 }}>{t2}</div>
               </div>
             </div>
           ))}
@@ -3016,31 +3039,29 @@ function FeaturesCarousel() {
     </div>
   );
 
-  /* ── Slide 2 — stats ── */
   const SlideStats = () => (
-    <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, height:220 }}>
+    <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14, height:200 }}>
       {[
-        { value:"50K+", label:"Happy Patients", emoji:"😊" },
-        { value:"200+", label:"Partner Labs", emoji:"🏥" },
-        { value:"1500+", label:"Tests Available", emoji:"🧪" },
-        { value:"6 Hrs", label:"Fastest Report", emoji:"⚡" },
+        { value:"50K+",  label:"Happy Patients" },
+        { value:"200+",  label:"Partner Labs" },
+        { value:"1500+", label:"Tests Available" },
+        { value:"6 Hrs", label:"Fastest Report" },
       ].map((item,i)=>(
-        <div key={i} style={{ textAlign:"center",...CARD_STYLE,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center" }}>
-          <div style={{ fontSize:"1.8rem",marginBottom:6 }}>{item.emoji}</div>
-          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.7rem,2.5vw,2.2rem)",color:"#fff",marginBottom:4 }}>{item.value}</div>
-          <div style={{ fontSize:".78rem",color:"#BFDBFE",fontWeight:600 }}>{item.label}</div>
+        <div key={i} style={{ ...CARD,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",padding:"20px 16px" }}>
+          <WaveBg/>
+          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.8rem,3vw,2.4rem)",color:"#fff",marginBottom:6,zIndex:1 }}>{item.value}</div>
+          <div style={{ fontSize:".82rem",color:"rgba(255,255,255,.75)",fontWeight:600,zIndex:1 }}>{item.label}</div>
         </div>
       ))}
     </div>
   );
 
   return (
-    <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#0F2D6B 0%,#1158A6 55%,#1D4ED8 100%)" }}>
+    <section style={{ padding:"28px 0 22px", background:"linear-gradient(150deg,#0F2D6B 0%,#1158A6 60%,#1D4ED8 100%)" }}>
       <div style={{ maxWidth:1080,margin:"0 auto",padding:"0 20px" }}>
-        {slide === 0 ? <SlideWhy/> : <SlideStats/>}
-        {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:16 }}>
-          {slides.map((_,i)=>(
+        {slide===0 ? <SlideWhy/> : <SlideStats/>}
+        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
+          {[0,1].map(i=>(
             <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8,height:8,borderRadius:50,background:i===slide?"#fff":"rgba(255,255,255,.35)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
           ))}
         </div>
