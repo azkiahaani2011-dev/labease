@@ -3020,105 +3020,86 @@ function FeaturesCarousel() {
     position: "relative",
   };
 
+  /* Slide 1 — Why LabEase (full width) */
   const SlideWhy = () => (
-    <div style={{ display:"flex", gap:16, alignItems:"stretch" }}>
-      {/* ── LEFT card ── */}
-      <div style={{ ...CARD, flex:"0 0 43%", display:"flex", flexDirection:"row", alignItems:"center", padding:"26px 20px 26px 28px", gap:0 }}>
-        <Wave/>
-        {/* Text side */}
-        <div style={{ flex:1, zIndex:1, paddingRight:10 }}>
-          <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.1rem,2vw,1.6rem)", color:"#fff", lineHeight:1.2, marginBottom:16 }}>
-            Why LabEase<br/>is Helpful?
-          </h3>
-          <ul style={{ listStyle:"none", padding:0, margin:0, display:"flex", flexDirection:"column", gap:9 }}>
-            {[
-              "Keeps all your health records in one place",
-              "Shows when each record was created",
-              "Lets you store as many records as you need",
-            ].map((b,i) => (
-              <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:8, fontSize:".82rem", color:"rgba(255,255,255,.9)", lineHeight:1.4 }}>
-                <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.8)", flexShrink:0, marginTop:5 }}/>
-                {b}
-              </li>
-            ))}
-          </ul>
-        </div>
-        {/* Ring diagram */}
-        <div style={{ flexShrink:0, width:130, height:130, zIndex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <svg viewBox="0 0 130 130" width="130" height="130">
-            {/* Outer dashed ring */}
-            <circle cx="65" cy="65" r="58" stroke="rgba(255,255,255,.15)" strokeWidth="1" strokeDasharray="4 3" fill="none"/>
-            {/* 8 icon circles */}
-            {[0,1,2,3,4,5,6,7].map(i => {
-              const a = (i/8)*2*Math.PI - Math.PI/2;
-              const r = 50, cx = 65+r*Math.cos(a), cy = 65+r*Math.sin(a);
-              return (
-                <g key={i}>
-                  <circle cx={cx} cy={cy} r="14" fill="rgba(79,70,229,.7)" stroke="rgba(255,255,255,.25)" strokeWidth="1"/>
-                  <foreignObject x={cx-9} y={cy-9} width="18" height="18">
-                    <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"100%", height:"100%" }}>
-                      <RingIcon i={i}/>
-                    </div>
-                  </foreignObject>
-                </g>
-              );
-            })}
-            {/* Center white circle */}
-            <circle cx="65" cy="65" r="24" fill="white"/>
-            <text x="65" y="61" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#1158A6">Lab</text>
-            <text x="65" y="73" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="9.5" fill="#1158A6">Ease</text>
-          </svg>
-        </div>
-      </div>
-
-      {/* ── RIGHT card ── */}
-      <div style={{ ...CARD, flex:1, padding:"26px 28px", display:"flex", alignItems:"center" }}>
-        <Wave/>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px 40px", width:"100%", zIndex:1 }}>
-          {[
-            { Ic:IMicroscope, t1:"Choose from",          t2:"1500+ Labs" },
-            { Ic:IBadgeCheck, t1:"Verified & NABL",      t2:"Accredited Labs" },
-            { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
-            { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
-            { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
-            { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
-          ].map(({ Ic, t1, t2 }, i) => (
-            <div key={i} style={{ display:"flex", alignItems:"center", gap:14 }}>
-              <div style={{ width:50, height:50, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
-                <Ic/>
-              </div>
-              <div>
-                <div style={{ fontSize:".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
-                <div style={{ fontSize:".9rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
-              </div>
-            </div>
+    <div style={{ ...CARD, display:"flex", flexDirection:"row", alignItems:"center", padding:"30px 36px 30px 40px", minHeight:200 }}>
+      <Wave/>
+      <div style={{ flex:1, zIndex:1, paddingRight:20 }}>
+        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom:20 }}>
+          Why LabEase<br/>is Helpful?
+        </h3>
+        <ul style={{ listStyle:"none", padding:0, margin:0, display:"flex", flexDirection:"column", gap:12 }}>
+          {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
+            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize:".9rem", color:"rgba(255,255,255,.9)", lineHeight:1.4 }}>
+              <span style={{ width:7, height:7, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:6 }}/>
+              {b}
+            </li>
           ))}
-        </div>
+        </ul>
+      </div>
+      <div style={{ flexShrink:0, width:190, height:190, zIndex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <svg viewBox="0 0 190 190" width="190" height="190">
+          <circle cx="95" cy="95" r="85" stroke="rgba(255,255,255,.12)" strokeWidth="1.2" strokeDasharray="5 4" fill="none"/>
+          {[0,1,2,3,4,5,6,7].map(idx => {
+            const a=(idx/8)*2*Math.PI-Math.PI/2, r=72, cx=95+r*Math.cos(a), cy=95+r*Math.sin(a);
+            const icons=[
+              <><rect x="5" y="5" width="14" height="14" rx="2" stroke="white" strokeWidth="1.6" fill="none"/><polyline points="8 12 10 14 15 9" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/></>,
+              <><rect x="4" y="3" width="16" height="18" rx="2" stroke="white" strokeWidth="1.6" fill="none"/><line x1="7" y1="9" x2="17" y2="9" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><line x1="7" y1="13" x2="14" y2="13" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></>,
+              <><circle cx="12" cy="8" r="5" stroke="white" strokeWidth="1.6" fill="none"/><path d="M3 21a9 9 0 0118 0" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round"/></>,
+              <><path d="M12 22s8-4 8-10V6l-8-3-8 3v6c0 6 8 10 8 10z" stroke="white" strokeWidth="1.6" fill="none"/></>,
+              <><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round"/><line x1="6" y1="3" x2="18" y2="3" stroke="white" strokeWidth="1.6" strokeLinecap="round"/></>,
+              <><circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.6" fill="none"/><polyline points="12 7 12 12 15 15" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></>,
+              <><circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.6" fill="none"/><line x1="8" y1="16" x2="16" y2="8" stroke="white" strokeWidth="1.6" strokeLinecap="round"/><circle cx="9.5" cy="9.5" r="1.8" fill="white"/><circle cx="14.5" cy="14.5" r="1.8" fill="white"/></>,
+              <><path d="M3 9l9-6 9 6v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" strokeWidth="1.6" fill="none"/><polyline points="9 21 9 12 15 12 15 21" stroke="white" strokeWidth="1.6" fill="none"/></>,
+            ];
+            return (
+              <g key={idx}>
+                <circle cx={cx} cy={cy} r="19" fill="rgba(79,70,229,.72)" stroke="rgba(255,255,255,.28)" strokeWidth="1.2"/>
+                <g transform={`translate(${cx-12},${cy-12})`}>
+                  <svg viewBox="0 0 24 24" width="24" height="24">{icons[idx]}</svg>
+                </g>
+              </g>
+            );
+          })}
+          <circle cx="95" cy="95" r="32" fill="white" stroke="rgba(255,255,255,.3)" strokeWidth="1"/>
+          <text x="95" y="90" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="13" fill="#1158A6">Lab</text>
+          <text x="95" y="106" textAnchor="middle" fontFamily="Manrope,sans-serif" fontWeight="900" fontSize="13" fill="#1158A6">Ease</text>
+        </svg>
       </div>
     </div>
   );
 
-  const SlideStats = () => (
-    <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
-      {[
-        { value:"50K+",  label:"Happy Patients" },
-        { value:"200+",  label:"Partner Labs" },
-        { value:"1500+", label:"Tests Available" },
-        { value:"6 Hrs", label:"Fastest Report" },
-      ].map((item,i) => (
-        <div key={i} style={{ ...CARD, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"32px 16px" }}>
-          <Wave/>
-          <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.8rem,3vw,2.6rem)", color:"#fff", marginBottom:8, zIndex:1 }}>{item.value}</div>
-          <div style={{ fontSize:".85rem", color:"rgba(255,255,255,.7)", fontWeight:600, zIndex:1 }}>{item.label}</div>
-        </div>
-      ))}
+  /* Slide 2 — 6 Features (full width) */
+  const SlideFeatures = () => (
+    <div style={{ ...CARD, padding:"30px 44px", minHeight:200, display:"flex", alignItems:"center" }}>
+      <Wave/>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"22px 52px", width:"100%", zIndex:1 }}>
+        {[
+          { Ic:IMicroscope, t1:"Choose from",          t2:"1500+ Labs" },
+          { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
+          { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
+          { Ic:IBadgeCheck, t1:"Verified & NABL",      t2:"Accredited Labs" },
+          { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
+          { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
+        ].map(({ Ic, t1, t2 }, i) => (
+          <div key={i} style={{ display:"flex", alignItems:"center", gap:16 }}>
+            <div style={{ width:54, height:54, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+              <Ic/>
+            </div>
+            <div>
+              <div style={{ fontSize:".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
+              <div style={{ fontSize:".92rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 
   return (
     <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
-        {slide === 0 ? <SlideWhy/> : <SlideStats/>}
+        {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
           {[0,1].map(i => (
             <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?26:8, height:8, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.3)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
