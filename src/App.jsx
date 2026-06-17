@@ -20,8 +20,8 @@ const G = () => (
       --line: #EBEBEB;
       --bg: #FAFAFA;
       --white: #FFFFFF;
-      --card-shadow: 0 2px 20px rgba(0,0,0,.06);
-      --card-shadow-hover: 0 12px 40px rgba(0,0,0,.13);
+      --card-shadow: 0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+      --card-shadow-hover: 0 20px 60px rgba(17,88,166,.18), 0 8px 24px rgba(0,0,0,.08);
     }
 
     /* Keyframes */
@@ -50,8 +50,8 @@ const G = () => (
     @keyframes countIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
     /* Interactions */
-    .hover-lift { transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s; }
-    .hover-lift:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover) !important; }
+    .hover-lift { transition: transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s; }
+    .hover-lift:hover { transform: translateY(-8px); box-shadow: var(--card-shadow-hover) !important; }
     .hover-scale { transition: transform .18s; }
     .hover-scale:hover { transform: scale(1.03); }
     .btn-anim { transition: all .18s cubic-bezier(.34,1.56,.64,1); }
@@ -2148,11 +2148,15 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   });
 
   return (
-    <section style={{ padding:"18px 0 16px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
+    <section style={{ padding:"44px 0 40px", background:"#fff", borderTop:"1px solid #F1F5F9", borderBottom:"1px solid #F1F5F9" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:24, flexWrap:"wrap", gap:12 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"1.45rem", fontWeight:800, color:"#0D1117", marginBottom:6, letterSpacing:"-.01em" }}>Popular Tests</h2>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,marginBottom:10 }}>
+              <div style={{ width:32,height:3,borderRadius:99,background:"linear-gradient(90deg,#1158A6,#2563EB)" }}/>
+              <p style={{ fontSize:".72rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",margin:0 }}>TEST CATEGORIES</p>
+            </div>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif", fontSize:"clamp(1.5rem,3vw,2.1rem)", fontWeight:900, color:"#0D1117", marginBottom:8, letterSpacing:"-.04em",lineHeight:1.12 }}>Popular Tests</h2>
             <p style={{ color:"#6B7280", fontSize:".85rem" }}>Compare prices across all certified labs and book instantly</p>
           </div>
           <button onClick={()=>navTo("alltests")}
@@ -2979,51 +2983,84 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
-        {/* background geometric accents */}
-        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
+      <section className="hero-section" style={{ background:"linear-gradient(135deg,#0A1628 0%,#0F2654 40%,#1158A6 100%)", minHeight:isMobile?420:500, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+        {/* Premium background orbs */}
+        <div style={{ position:"absolute",right:-80,top:-80,width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(37,99,235,.35) 0%,transparent 70%)",pointerEvents:"none",animation:"orb1 12s ease-in-out infinite" }}/>
+        <div style={{ position:"absolute",left:-100,bottom:-100,width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(17,88,166,.3) 0%,transparent 70%)",pointerEvents:"none",animation:"orb2 15s ease-in-out infinite" }}/>
+        {/* subtle grid texture */}
+        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
+        {/* bottom fade */}
+        <div style={{ position:"absolute",bottom:0,left:0,right:0,height:80,background:"linear-gradient(to bottom,transparent,rgba(10,22,40,.4))",pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:48,paddingBottom:isMobile?24:48,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box" }}>
+          <div style={{ maxWidth:isMobile?"100%":640,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.12)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",borderRadius:50,padding:"6px 18px 6px 10px",marginBottom:20,border:"1px solid rgba(255,255,255,.2)",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#3B82F6,#60A5FA)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>TRUSTED</span>
+              <span style={{ color:"rgba(255,255,255,.9)",fontSize:".73rem",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>India's most trusted lab booking platform</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
-              Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2rem,4.5vw,3.2rem)",color:"#fff",lineHeight:1.12,marginBottom:16,fontWeight:900,letterSpacing:"-.04em",textShadow:"0 2px 20px rgba(0,0,0,.3)" }}>
+              Book Lab Tests at<br/>
+              <span style={{ background:"linear-gradient(90deg,#60A5FA 0%,#93C5FD 50%,#BAE6FD 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>India's Best Prices</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
-              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
+            <p style={{ color:"rgba(255,255,255,.78)",fontSize:".97rem",lineHeight:1.8,marginBottom:28,maxWidth:480,margin:"0 auto 28px" }}>
+              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports within hours.
             </p>
 
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
             {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+            <div style={{ display:"flex",gap:8,marginTop:20,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
+              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.55)",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+                  style={{ background:"rgba(255,255,255,.12)",backdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.25)",borderRadius:50,padding:"6px 16px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",minHeight:"auto" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.25)"; e.currentTarget.style.color="#fff"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.12)"; e.currentTarget.style.color="rgba(255,255,255,.9)"; }}>
                   {t}
                 </button>
               ))}
             </div>
+
+            {/* trust badges */}
+            <div style={{ display:"flex",gap:isMobile?12:24,justifyContent:"center",alignItems:"center",marginTop:28,flexWrap:"wrap" }}>
+              {[
+                { icon:"🏆", text:"NABL Accredited" },
+                { icon:"🔒", text:"100% Secure" },
+                { icon:"⚡", text:"Reports in 6 hrs" },
+              ].map(b=>(
+                <div key={b.text} style={{ display:"flex",alignItems:"center",gap:6,color:"rgba(255,255,255,.7)",fontSize:".75rem",fontWeight:600 }}>
+                  <span style={{ fontSize:"1rem" }}>{b.icon}</span>{b.text}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+      </section>
 
+      {/* ── STATS BAR ──────────────────────────────────────────────── */}
+      <section style={{ background:"#fff",borderBottom:"1px solid #F1F5F9",boxShadow:"0 4px 24px rgba(0,0,0,.06)" }}>
+        <div style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px",display:"grid",gridTemplateColumns:`repeat(${isMobile?2:4},1fr)`,gap:0 }}>
+          {[
+            { num:"50,000+", label:"Happy Patients",   color:"#1158A6" },
+            { num:"200+",    label:"Certified Labs",   color:"#059669" },
+            { num:"1,500+",  label:"Tests Available",  color:"#7C3AED" },
+            { num:"₹500 Cr", label:"Savings Generated",color:"#D97706" },
+          ].map((s,i,a)=>(
+            <div key={s.label} style={{ padding:isMobile?"18px 12px":"24px 20px",textAlign:"center",borderRight:i<a.length-1?"1px solid #F1F5F9":"none",transition:"background .18s" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"}
+              onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+              <div style={{ fontSize:isMobile?"1.4rem":"1.9rem",fontWeight:900,color:s.color,fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em",lineHeight:1 }}>{s.num}</div>
+              <div style={{ fontSize:".75rem",color:"#64748B",fontWeight:600,marginTop:4,lineHeight:1.3 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
       </section>
 
 
@@ -3035,13 +3072,16 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"48px 0 44px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
-              <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
-              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <div style={{ display:"inline-flex",alignItems:"center",gap:8,marginBottom:10 }}>
+                <div style={{ width:32,height:3,borderRadius:99,background:"linear-gradient(90deg,#1158A6,#2563EB)" }}/>
+                <p style={{ fontSize:".72rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",margin:0 }}>HEALTH PACKAGES</p>
+              </div>
+              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3vw,2.1rem)",fontWeight:900,color:"#0D1117",marginBottom:8,letterSpacing:"-.04em",lineHeight:1.12 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
@@ -3104,7 +3144,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"48px 0 44px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
@@ -3211,9 +3251,13 @@ export default function App() {
           </div>
 
           {/* heading */}
-          <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
-            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+          <div style={{ textAlign:"center", marginBottom:36 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,marginBottom:12,justifyContent:"center" }}>
+              <div style={{ width:24,height:3,borderRadius:99,background:"linear-gradient(90deg,#1158A6,#2563EB)" }}/>
+              <p style={{ fontSize:".72rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",margin:0 }}>HOW IT WORKS</p>
+              <div style={{ width:24,height:3,borderRadius:99,background:"linear-gradient(90deg,#2563EB,#1158A6)" }}/>
+            </div>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2.1rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.04em",lineHeight:1.12,marginBottom:12 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
@@ -3289,6 +3333,81 @@ export default function App() {
                 </div>
                 <div style={{ fontWeight:800,color:"#0D1117",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
                 <div style={{ color:"#9CA3AF",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHY LABEASE ─────────────────────────────────────────── */}
+      <section style={{ padding:"56px 0 52px",background:"linear-gradient(135deg,#0A1628 0%,#0F2654 60%,#1158A6 100%)",position:"relative",overflow:"hidden" }}>
+        <div style={{ position:"absolute",right:-120,top:-120,width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(37,99,235,.2) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"28px 28px",pointerEvents:"none" }}/>
+        <div style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px",position:"relative",zIndex:1 }}>
+          <div style={{ textAlign:"center",marginBottom:44 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,marginBottom:12,justifyContent:"center" }}>
+              <div style={{ width:24,height:2,borderRadius:99,background:"rgba(255,255,255,.4)" }}/>
+              <p style={{ fontSize:".72rem",fontWeight:800,color:"rgba(255,255,255,.6)",letterSpacing:".14em",textTransform:"uppercase",margin:0 }}>WHY CHOOSE US</p>
+              <div style={{ width:24,height:2,borderRadius:99,background:"rgba(255,255,255,.4)" }}/>
+            </div>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.6rem,3.5vw,2.3rem)",fontWeight:900,color:"#fff",letterSpacing:"-.04em",lineHeight:1.12,marginBottom:12 }}>Healthcare Booking, Reimagined</h2>
+            <p style={{ color:"rgba(255,255,255,.65)",fontSize:".92rem",maxWidth:440,margin:"0 auto",lineHeight:1.7 }}>Everything that makes LabEase the preferred choice for 50,000+ patients.</p>
+          </div>
+          <div style={{ display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:16 }}>
+            {[
+              { icon:"⚡",title:"Instant Booking",desc:"Book in under 60 seconds. No calls, no queues, no paperwork.",color:"#3B82F6" },
+              { icon:"🏥",title:"NABL Certified Labs",desc:"Every lab is accredited, quality-checked and government-approved.",color:"#10B981" },
+              { icon:"💰",title:"Lowest Prices",desc:"We negotiate directly with labs so you always get the best rate.",color:"#F59E0B" },
+              { icon:"🏠",title:"Free Home Collection",desc:"Certified phlebotomist visits your home at your chosen time slot.",color:"#8B5CF6" },
+              { icon:"📱",title:"Digital Reports",desc:"Secure reports delivered to WhatsApp & email within hours.",color:"#EC4899" },
+              { icon:"🛡️",title:"Privacy First",desc:"Your health data is encrypted and never shared with third parties.",color:"#14B8A6" },
+            ].map(f=>(
+              <div key={f.title}
+                style={{ background:"rgba(255,255,255,.07)",backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",border:"1px solid rgba(255,255,255,.12)",borderRadius:20,padding:isMobile?"18px 16px":"28px 24px",transition:"all .28s cubic-bezier(.34,1.56,.64,1)" }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.13)"; e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.boxShadow="0 20px 60px rgba(0,0,0,.3)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.07)"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="none"; }}>
+                <div style={{ width:isMobile?40:52,height:isMobile?40:52,borderRadius:14,background:`${f.color}22`,border:`1.5px solid ${f.color}44`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:isMobile?10:14,fontSize:isMobile?"1.3rem":"1.6rem" }}>{f.icon}</div>
+                <div style={{ fontWeight:800,color:"#fff",fontSize:isMobile?".82rem":".95rem",marginBottom:6,fontFamily:"'Manrope',sans-serif",lineHeight:1.3 }}>{f.title}</div>
+                <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".72rem":".8rem",lineHeight:1.6 }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ─────────────────────────────────────────── */}
+      <section style={{ padding:"52px 0 48px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+        <div style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px" }}>
+          <div style={{ textAlign:"center",marginBottom:36 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,marginBottom:10,justifyContent:"center" }}>
+              <div style={{ width:24,height:3,borderRadius:99,background:"linear-gradient(90deg,#1158A6,#2563EB)" }}/>
+              <p style={{ fontSize:".72rem",fontWeight:800,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",margin:0 }}>PATIENT STORIES</p>
+              <div style={{ width:24,height:3,borderRadius:99,background:"linear-gradient(90deg,#2563EB,#1158A6)" }}/>
+            </div>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3vw,2.1rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.04em",lineHeight:1.12,marginBottom:10 }}>Trusted by Thousands</h2>
+            <p style={{ color:"#64748B",fontSize:".88rem",maxWidth:400,margin:"0 auto",lineHeight:1.6 }}>Real patients. Real experiences. No paid reviews.</p>
+          </div>
+          <div style={{ display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:16 }}>
+            {[
+              { name:"Priya Sharma",city:"Mumbai",rating:5,text:"Booked a full body checkup at 11 PM. Phlebotomist arrived at 7 AM sharp. Reports on WhatsApp by noon. Absolutely seamless experience!",avatar:"PS" },
+              { name:"Rajesh Kumar",city:"Delhi",rating:5,text:"Saved ₹2,400 compared to the walk-in price at the same lab. LabEase showed me I was overpaying all these years. Never going back.",avatar:"RK" },
+              { name:"Ananya Patel",city:"Bangalore",rating:5,text:"Thyroid tests every 3 months. LabEase makes it so easy — same trusted lab, home collection, digital reports. My doctor loves the format too.",avatar:"AP" },
+            ].map(t=>(
+              <div key={t.name} className="hover-lift"
+                style={{ background:"#fff",borderRadius:20,padding:"24px",border:"1px solid #F1F5F9",boxShadow:"var(--card-shadow)",transition:"all .28s" }}>
+                <div style={{ display:"flex",gap:4,marginBottom:14 }}>
+                  {[...Array(t.rating)].map((_,i)=>(
+                    <span key={i} style={{ color:"#F59E0B",fontSize:"1rem" }}>★</span>
+                  ))}
+                </div>
+                <p style={{ color:"#374151",fontSize:".88rem",lineHeight:1.75,marginBottom:20,fontStyle:"italic" }}>"{t.text}"</p>
+                <div style={{ display:"flex",alignItems:"center",gap:12 }}>
+                  <div style={{ width:42,height:42,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,color:"#fff",fontSize:".8rem",flexShrink:0 }}>{t.avatar}</div>
+                  <div>
+                    <div style={{ fontWeight:800,color:"#0D1117",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>{t.name}</div>
+                    <div style={{ color:"#9CA3AF",fontSize:".76rem",fontWeight:600 }}>{t.city}</div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
