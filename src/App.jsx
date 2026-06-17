@@ -2138,15 +2138,11 @@ const FEATURE_SLIDES = [
     ],
   },
   {
-    type:"stats",
-    title:"Trusted by patients across Hyderabad",
-    stats:[
-      { num:"50,000+", label:"Happy Patients" },
-      { num:"200+",    label:"Certified Labs" },
-      { num:"1,500+",  label:"Tests Available" },
-      { num:"6 hrs",   label:"Avg Report Time" },
-    ],
-    sub:"NABL accredited · Free home collection · Secure & private",
+    type:"promo",
+    label:"EXCLUSIVE OFFER",
+    title:"Book tests from any lab in your city",
+    cta:"Get 10% off with wallet coins",
+    sub:"Grab ₹100 worth of coins on signup",
   },
 ];
 
@@ -2196,20 +2192,30 @@ function FeaturesCarousel({ isMobile }) {
             </>
           )}
 
-          {s.type === "stats" && (
-            <div style={{ position:"relative",zIndex:1 }}>
-              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1.05rem",color:"#fff",marginBottom:24,letterSpacing:"-.02em" }}>{s.title}</h3>
-              <div style={{ display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:isMobile?"14px":"20px",marginBottom:20 }}>
-                {s.stats.map(st=>(
-                  <div key={st.label} style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.15)",borderRadius:14,padding:isMobile?"14px":"18px 20px",textAlign:"center" }}>
-                    <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.3rem":"1.7rem",color:"#fff",letterSpacing:"-.03em",lineHeight:1 }}>{st.num}</div>
-                    <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".68rem":".76rem",marginTop:5,fontWeight:600 }}>{st.label}</div>
-                  </div>
-                ))}
+          {s.type === "promo" && (
+            <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",gap:20,height:"100%",position:"relative",zIndex:1,minHeight:isMobile?176:136 }}>
+              <div style={{ flex:1 }}>
+                <span style={{ display:"inline-block",background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"4px 14px",fontSize:".65rem",fontWeight:800,color:"rgba(255,255,255,.85)",letterSpacing:".1em",marginBottom:14 }}>{s.label}</span>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.05rem":"1.4rem",color:"#fff",lineHeight:1.2,marginBottom:18,letterSpacing:"-.03em" }}>{s.title}</h3>
+                <div style={{ display:"inline-block",background:"#fff",borderRadius:50,padding:"10px 22px",marginBottom:10,boxShadow:"0 4px 16px rgba(0,0,0,.15)" }}>
+                  <span style={{ fontWeight:800,color:"#1158A6",fontSize:isMobile?".82rem":".95rem" }}>{s.cta}</span>
+                </div>
+                <p style={{ color:"rgba(255,255,255,.6)",fontSize:".78rem",marginTop:8 }}>{s.sub}</p>
               </div>
-              <div style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
-                <div style={{ width:6,height:6,borderRadius:"50%",background:"#4ADE80" }}/>
-                <span style={{ color:"rgba(255,255,255,.6)",fontSize:".75rem",fontWeight:600 }}>{s.sub}</span>
+              <div style={{ flexShrink:0,opacity:.9 }}>
+                <svg width={isMobile?90:120} height={isMobile?90:120} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="60" cy="60" r="58" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)" strokeWidth="1.5"/>
+                  <rect x="38" y="30" width="44" height="58" rx="6" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" strokeWidth="1.5"/>
+                  <rect x="46" y="42" width="28" height="3" rx="1.5" fill="rgba(255,255,255,.5)"/>
+                  <rect x="46" y="50" width="20" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/>
+                  <rect x="46" y="58" width="24" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/>
+                  <circle cx="60" cy="78" r="12" fill="#1158A6" stroke="rgba(255,255,255,.4)" strokeWidth="1.5"/>
+                  <path d="M60 72v12M54 78h12" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+                  <circle cx="84" cy="36" r="10" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.3)" strokeWidth="1.5"/>
+                  <path d="M80 36l2.5 2.5L88 33" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="36" cy="86" r="8" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.2)" strokeWidth="1"/>
+                  <path d="M33 86h6M36 83v6" stroke="rgba(255,255,255,.6)" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
               </div>
             </div>
           )}
