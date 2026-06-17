@@ -2908,7 +2908,7 @@ function PromoCarousel({ navTo }) {
       {/* Navigation dots */}
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
         {[0,1].map(i=>(
-          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?24:8,height:8,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?16:5,height:5,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
         ))}
       </div>
     </div>
@@ -3031,7 +3031,7 @@ function FeaturesCarousel() {
 
   /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", minHeight: mob ? "auto" : 280 }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", height: mob ? "auto" : 280, boxSizing:"border-box" }}>
       <Wave/>
       <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 20, textAlign: mob ? "center" : "left" }}>
         <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 20 }}>
@@ -3080,7 +3080,7 @@ function FeaturesCarousel() {
 
   /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "24px 20px" : "30px 44px", minHeight: mob ? "auto" : 280, display:"flex", alignItems:"center" }}>
+    <div style={{ ...CARD, padding: mob ? "24px 20px" : "24px 44px", height: mob ? "auto" : 280, boxSizing:"border-box", display:"flex", alignItems:"center" }}>
       <Wave/>
       <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "16px 18px" : "22px 52px", width:"100%", zIndex:1 }}>
         {[
@@ -3107,13 +3107,13 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ minHeight: mob ? "auto" : 280 }}>
+        <div style={{ height: mob ? "auto" : 280 }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         </div>
         {/* Navigation dots */}
         <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
           {[0,1].map(i => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8, height:8, borderRadius:50, background:i===slide?"#1158A6":"#CBD5E1", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
+            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?16:5, height:5, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.4)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
           ))}
         </div>
       </div>
