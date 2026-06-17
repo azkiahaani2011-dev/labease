@@ -3084,7 +3084,6 @@ function FeaturesCarousel() {
       <Wave/>
       <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "16px 18px" : "22px 52px", width:"100%", zIndex:1 }}>
         {[
-          { Ic:IMicroscope, t1:"Choose from",          t2:"1500+ Labs" },
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
           { Ic:IBadgeCheck, t1:"Verified & NABL",      t2:"Accredited Labs" },
@@ -3350,8 +3349,8 @@ export default function App() {
 
             {/* location bar */}
             <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#1158A6",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#111",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
             </div>
 
