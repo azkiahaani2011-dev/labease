@@ -2905,23 +2905,11 @@ function PromoCarousel({ navTo }) {
           </div>
         </div>
       </div>
-      {/* Navigation arrows + dots */}
-      <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:16, marginTop:14 }}>
-        <button onClick={()=>goTo(idx-1)} style={{ width:34,height:34,borderRadius:"50%",background:"#fff",border:"1.5px solid #E2E8F0",boxShadow:"0 2px 8px rgba(0,0,0,.1)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s" }}
-          onMouseEnter={e=>{e.currentTarget.style.background="#1158A6";e.currentTarget.style.borderColor="#1158A6";}}
-          onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#E2E8F0";}}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{pointerEvents:"none"}}><path d="M10 4l-4 4 4 4"/></svg>
-        </button>
-        <div style={{ display:"flex", gap:6 }}>
-          {[0,1].map(i=>(
-            <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?24:8,height:8,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
-          ))}
-        </div>
-        <button onClick={()=>goTo(idx+1)} style={{ width:34,height:34,borderRadius:"50%",background:"#fff",border:"1.5px solid #E2E8F0",boxShadow:"0 2px 8px rgba(0,0,0,.1)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s" }}
-          onMouseEnter={e=>{e.currentTarget.style.background="#1158A6";e.currentTarget.style.borderColor="#1158A6";}}
-          onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#E2E8F0";}}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{pointerEvents:"none"}}><path d="M6 4l4 4-4 4"/></svg>
-        </button>
+      {/* Navigation dots */}
+      <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
+        {[0,1].map(i=>(
+          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?24:8,height:8,borderRadius:50,background:i===idx?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+        ))}
       </div>
     </div>
   );
@@ -3123,23 +3111,11 @@ function FeaturesCarousel() {
         <div style={{ minHeight: mob ? "auto" : 280 }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         </div>
-        {/* Navigation arrows + dots */}
-        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:16, marginTop:14 }}>
-          <button onClick={()=>setSlide(s=>(s+1)%2===0?1:0)} style={{ width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.15)",border:"1.5px solid rgba(255,255,255,.3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s" }}
-            onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.3)";}}
-            onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.15)";}}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 4l-4 4 4 4"/></svg>
-          </button>
-          <div style={{ display:"flex", gap:6 }}>
-            {[0,1].map(i => (
-              <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?26:8, height:8, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.3)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
-            ))}
-          </div>
-          <button onClick={()=>setSlide(s=>(s+1)%2)} style={{ width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.15)",border:"1.5px solid rgba(255,255,255,.3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s" }}
-            onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.3)";}}
-            onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.15)";}}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4l4 4-4 4"/></svg>
-          </button>
+        {/* Navigation dots */}
+        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:6, marginTop:14 }}>
+          {[0,1].map(i => (
+            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8, height:8, borderRadius:50, background:i===slide?"#1158A6":"#CBD5E1", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
+          ))}
         </div>
       </div>
     </section>
