@@ -3223,7 +3223,7 @@ export default function App() {
           </div>
 
           {/* 4-step row */}
-          <div className="hiw-grid">
+          <div className="hiw-grid" style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:28, position:"relative" }}>
             {/* connector line */}
             <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
 
