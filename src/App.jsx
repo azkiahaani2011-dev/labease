@@ -3012,9 +3012,9 @@ function FeaturesCarousel() {
 
   const CARD = {
     borderRadius: 18,
-    background: "linear-gradient(160deg, rgba(26,58,120,.95) 0%, rgba(17,45,100,.98) 100%)",
+    background: "linear-gradient(160deg, #1158A6 0%, #0F2D6B 100%)",
     border: "1.5px solid rgba(255,255,255,.18)",
-    boxShadow: "0 8px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.1)",
+    boxShadow: "0 8px 40px rgba(17,88,166,.25), inset 0 1px 0 rgba(255,255,255,.1)",
     overflow: "hidden",
     position: "relative",
   };
@@ -3096,7 +3096,7 @@ function FeaturesCarousel() {
   );
 
   return (
-    <section style={{ padding:"32px 0 28px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
+    <section style={{ padding:"32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
         {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
