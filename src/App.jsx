@@ -2168,7 +2168,7 @@ function FeaturesCarousel({ isMobile }) {
   );
 
   return (
-    <section style={{ padding:"20px 0 28px", background:"#EEF4FF" }}>
+    <section style={{ padding:"20px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px" }}>
 
         {/* Card */}
@@ -2202,7 +2202,21 @@ function FeaturesCarousel({ isMobile }) {
                 </div>
                 <p style={{ color:"rgba(255,255,255,.6)",fontSize:".78rem",marginTop:8 }}>{s.sub}</p>
               </div>
-              <div style={{ fontSize:isMobile?"3.5rem":"5.5rem",flexShrink:0,filter:"drop-shadow(0 4px 20px rgba(0,0,0,.35))",lineHeight:1 }}>💰</div>
+              <div style={{ flexShrink:0,opacity:.9 }}>
+                <svg width={isMobile?90:120} height={isMobile?90:120} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="60" cy="60" r="58" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)" strokeWidth="1.5"/>
+                  <rect x="38" y="30" width="44" height="58" rx="6" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" strokeWidth="1.5"/>
+                  <rect x="46" y="42" width="28" height="3" rx="1.5" fill="rgba(255,255,255,.5)"/>
+                  <rect x="46" y="50" width="20" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/>
+                  <rect x="46" y="58" width="24" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/>
+                  <circle cx="60" cy="78" r="12" fill="#1158A6" stroke="rgba(255,255,255,.4)" strokeWidth="1.5"/>
+                  <path d="M60 72v12M54 78h12" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+                  <circle cx="84" cy="36" r="10" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.3)" strokeWidth="1.5"/>
+                  <path d="M80 36l2.5 2.5L88 33" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="36" cy="86" r="8" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.2)" strokeWidth="1"/>
+                  <path d="M33 86h6M36 83v6" stroke="rgba(255,255,255,.6)" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </div>
             </div>
           )}
         </div>
