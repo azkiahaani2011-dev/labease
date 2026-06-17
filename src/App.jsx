@@ -3002,19 +3002,20 @@ function FeaturesCarousel() {
     return <svg viewBox="0 0 24 24" width="14" height="14">{icons[i % icons.length]}</svg>;
   };
 
-  /* ── Wave background (subtle, like reference) ── */
+  /* ── Wave background matching reference exactly ── */
   const Wave = () => (
-    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",height:"65%",pointerEvents:"none" }} viewBox="0 0 600 160" preserveAspectRatio="none">
-      <path d="M0 80 Q150 30 300 80 Q450 130 600 80 L600 160 L0 160Z" fill="rgba(255,255,255,.045)"/>
-      <path d="M0 100 Q150 55 300 100 Q450 145 600 100 L600 160 L0 160Z" fill="rgba(255,255,255,.035)"/>
-      <path d="M0 120 Q150 75 300 120 Q450 165 600 120 L600 160 L0 160Z" fill="rgba(255,255,255,.025)"/>
+    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",height:"70%",pointerEvents:"none" }} viewBox="0 0 600 180" preserveAspectRatio="none">
+      <path d="M0 90 C100 50,200 130,300 90 C400 50,500 130,600 90 L600 180 L0 180Z" fill="rgba(255,255,255,.055)"/>
+      <path d="M0 110 C100 70,200 150,300 110 C400 70,500 150,600 110 L600 180 L0 180Z" fill="rgba(255,255,255,.04)"/>
+      <path d="M0 130 C100 95,200 165,300 130 C400 95,500 165,600 130 L600 180 L0 180Z" fill="rgba(255,255,255,.03)"/>
     </svg>
   );
 
   const CARD = {
-    borderRadius: 14,
-    background: "rgba(15,45,107,.75)",
-    border: "1px solid rgba(255,255,255,.12)",
+    borderRadius: 18,
+    background: "linear-gradient(160deg, rgba(26,58,120,.95) 0%, rgba(17,45,100,.98) 100%)",
+    border: "1.5px solid rgba(255,255,255,.18)",
+    boxShadow: "0 8px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.1)",
     overflow: "hidden",
     position: "relative",
   };
@@ -3083,12 +3084,12 @@ function FeaturesCarousel() {
             { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
           ].map(({ Ic, t1, t2 }, i) => (
             <div key={i} style={{ display:"flex", alignItems:"center", gap:14 }}>
-              <div style={{ width:46, height:46, borderRadius:"50%", border:"1.8px solid rgba(255,255,255,.5)", background:"rgba(255,255,255,.06)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+              <div style={{ width:50, height:50, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
                 <Ic/>
               </div>
               <div>
-                <div style={{ fontSize:".76rem", color:"rgba(255,255,255,.65)", lineHeight:1.3, marginBottom:1 }}>{t1}</div>
-                <div style={{ fontSize:".88rem", fontWeight:800, color:"#fff", lineHeight:1.3 }}>{t2}</div>
+                <div style={{ fontSize:".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
+                <div style={{ fontSize:".9rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
               </div>
             </div>
           ))}
@@ -3115,7 +3116,7 @@ function FeaturesCarousel() {
   );
 
   return (
-    <section style={{ padding:"28px 0 22px", background:"linear-gradient(150deg,#0D2554 0%,#1158A6 55%,#1A4FC4 100%)" }}>
+    <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
         {slide === 0 ? <SlideWhy/> : <SlideStats/>}
         <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
