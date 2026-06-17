@@ -2124,68 +2124,94 @@ const POPULAR_CATS = [
 ];
 
 /* ─── FEATURES SWIPE CAROUSEL ───────────────────────────────────────────── */
+const FEATURE_SLIDES = [
+  {
+    type:"features",
+    title:"Everything you need, in one place",
+    items:[
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>, title:"1500+ Labs",      sub:"Choose from top certified labs" },
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, title:"NABL Accredited", sub:"Verified & certified quality" },
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>, title:"3000+ Tests",     sub:"Widest test catalogue" },
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title:"On-Time Reports", sub:"Digital delivery in hours" },
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, title:"Home Collection", sub:"Sample pickup at your door" },
+      { svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>, title:"Attractive Discounts", sub:"Best offers & savings" },
+    ],
+  },
+  {
+    type:"promo",
+    label:"EXCLUSIVE OFFER",
+    title:"Book tests from any lab in your city",
+    cta:"Get 10% off with wallet coins",
+    sub:"Grab ₹100 worth of coins on signup",
+  },
+];
+
 function FeaturesCarousel({ isMobile }) {
-  const trackRef = React.useRef(null);
   const [slide, setSlide] = React.useState(0);
-  const onScroll = () => {
-    const el = trackRef.current;
-    if(el) setSlide(Math.round(el.scrollLeft / el.offsetWidth));
-  };
-  const goTo = i => {
-    setSlide(i);
-    const el = trackRef.current;
-    if(el) el.scrollTo({ left: i * el.offsetWidth, behavior:"smooth" });
-  };
+  const total = FEATURE_SLIDES.length;
+
+  const goTo = React.useCallback(i => setSlide((i + total) % total), [total]);
+
+  React.useEffect(() => {
+    const id = setInterval(() => goTo(slide + 1), 4000);
+    return () => clearInterval(id);
+  }, [slide, goTo]);
+
+  const s = FEATURE_SLIDES[slide];
+
+  /* wave SVG decoration */
+  const Wave = () => (
+    <svg style={{ position:"absolute",bottom:0,left:0,width:"100%",opacity:.08,pointerEvents:"none" }} viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z" fill="#fff"/>
+      <path d="M0,80 C300,20 600,100 900,60 C1100,30 1300,90 1440,70 L1440,120 L0,120 Z" fill="#fff"/>
+    </svg>
+  );
+
   return (
-    <section style={{ padding:"20px 0 24px", background:"#F0F4FA" }}>
-      <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
-        <div ref={trackRef} onScroll={onScroll}
-          style={{ display:"flex", overflowX:"auto", scrollSnapType:"x mandatory", scrollbarWidth:"none", msOverflowStyle:"none", borderRadius:20, gap:0 }}>
+    <section style={{ padding:"20px 0 28px", background:"#EEF4FF" }}>
+      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px" }}>
 
-          {/* Slide 1 — Features grid */}
-          <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute",right:-40,top:-40,width:220,height:220,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
-            <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".95rem":"1.1rem",color:"#fff",marginBottom:20,letterSpacing:"-.02em" }}>Everything you need, in one place</h3>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:isMobile?"14px 12px":"18px 28px" }}>
-              {[
-                { icon:"🔬", title:"1500+ Labs",      sub:"Choose from top certified labs" },
-                { icon:"✅", title:"NABL Accredited", sub:"Verified quality standards" },
-                { icon:"🧪", title:"3000+ Tests",     sub:"Widest test catalogue" },
-                { icon:"⏰", title:"On-Time Reports", sub:"Digital delivery in hours" },
-                { icon:"🏠", title:"Home Collection", sub:"At your convenience" },
-                { icon:"🏷️", title:"Best Discounts",  sub:"Attractive offers & savings" },
-              ].map(f=>(
-                <div key={f.title} style={{ display:"flex", alignItems:"center", gap:10 }}>
-                  <div style={{ width:42,height:42,borderRadius:12,background:"rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.2rem",flexShrink:0 }}>{f.icon}</div>
-                  <div>
-                    <div style={{ fontWeight:800,color:"#fff",fontSize:isMobile?".76rem":".86rem",lineHeight:1.2 }}>{f.title}</div>
-                    <div style={{ color:"rgba(255,255,255,.6)",fontSize:isMobile?".66rem":".74rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
+        {/* Card */}
+        <div style={{ background:"linear-gradient(135deg,#0A1F4E 0%,#1158A6 100%)", borderRadius:22, padding:isMobile?"22px 18px":"32px 36px", position:"relative", overflow:"hidden", minHeight:isMobile?220:200, boxShadow:"0 8px 40px rgba(17,88,166,.25)", transition:"all .35s" }}>
+          <Wave/>
+
+          {s.type === "features" && (
+            <>
+              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:800,fontSize:isMobile?".92rem":"1.05rem",color:"#fff",marginBottom:22,letterSpacing:"-.02em",position:"relative",zIndex:1 }}>{s.title}</h3>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:isMobile?"14px 16px":"16px 32px", position:"relative", zIndex:1 }}>
+                {s.items.map(f=>(
+                  <div key={f.title} style={{ display:"flex", alignItems:"center", gap:12 }}>
+                    <div style={{ width:44,height:44,borderRadius:12,background:"rgba(255,255,255,.13)",border:"1px solid rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{f.svg}</div>
+                    <div>
+                      <div style={{ fontWeight:700,color:"#fff",fontSize:isMobile?".78rem":".88rem",lineHeight:1.2 }}>{f.title}</div>
+                      <div style={{ color:"rgba(255,255,255,.55)",fontSize:isMobile?".67rem":".75rem",lineHeight:1.3,marginTop:2 }}>{f.sub}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Slide 2 — Promo */}
-          <div style={{ minWidth:"100%", scrollSnapAlign:"start", background:"linear-gradient(135deg,#0F2654 0%,#1158A6 100%)", borderRadius:20, padding:isMobile?"20px 16px":"28px 32px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"space-between", gap:20, position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute",left:-40,bottom:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
-            <div style={{ flex:1, zIndex:1 }}>
-              <p style={{ color:"rgba(255,255,255,.7)",fontSize:".75rem",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:8 }}>Exclusive Offer</p>
-              <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.1rem":"1.5rem",color:"#fff",lineHeight:1.2,marginBottom:16,letterSpacing:"-.02em" }}>Book tests from any lab in your city</h3>
-              <div style={{ display:"inline-block",background:"#fff",borderRadius:50,padding:"10px 24px",marginBottom:10 }}>
-                <span style={{ fontWeight:800,color:"#1158A6",fontSize:isMobile?".85rem":"1rem" }}>Get 10% off with wallet coins</span>
+                ))}
               </div>
-              <p style={{ color:"rgba(255,255,255,.65)",fontSize:".8rem",marginTop:8 }}>Grab ₹100 worth of coins on signup</p>
+            </>
+          )}
+
+          {s.type === "promo" && (
+            <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",gap:20,height:"100%",position:"relative",zIndex:1,minHeight:isMobile?176:136 }}>
+              <div style={{ flex:1 }}>
+                <span style={{ display:"inline-block",background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"4px 14px",fontSize:".65rem",fontWeight:800,color:"rgba(255,255,255,.85)",letterSpacing:".1em",marginBottom:14 }}>{s.label}</span>
+                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.05rem":"1.4rem",color:"#fff",lineHeight:1.2,marginBottom:18,letterSpacing:"-.03em" }}>{s.title}</h3>
+                <div style={{ display:"inline-block",background:"#fff",borderRadius:50,padding:"10px 22px",marginBottom:10,boxShadow:"0 4px 16px rgba(0,0,0,.15)" }}>
+                  <span style={{ fontWeight:800,color:"#1158A6",fontSize:isMobile?".82rem":".95rem" }}>{s.cta}</span>
+                </div>
+                <p style={{ color:"rgba(255,255,255,.6)",fontSize:".78rem",marginTop:8 }}>{s.sub}</p>
+              </div>
+              <div style={{ fontSize:isMobile?"3.5rem":"5.5rem",flexShrink:0,filter:"drop-shadow(0 4px 20px rgba(0,0,0,.35))",lineHeight:1 }}>💰</div>
             </div>
-            <div style={{ fontSize:isMobile?"3.5rem":"5rem",flexShrink:0,zIndex:1,filter:"drop-shadow(0 4px 16px rgba(0,0,0,.3))" }}>💰</div>
-          </div>
+          )}
         </div>
 
         {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:14 }}>
-          {[0,1].map(i=>(
+        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:16 }}>
+          {FEATURE_SLIDES.map((_,i)=>(
             <button key={i} onClick={()=>goTo(i)}
-              style={{ width:slide===i?28:8,height:8,borderRadius:99,background:slide===i?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .25s",minHeight:"auto" }}/>
+              style={{ width:i===slide?28:8,height:8,borderRadius:99,background:i===slide?"#1158A6":"#CBD5E1",border:"none",cursor:"pointer",padding:0,transition:"all .3s",minHeight:"auto" }}/>
           ))}
         </div>
       </div>
