@@ -2941,10 +2941,17 @@ const FEATURE_SLIDES = [
 
 function FeaturesCarousel() {
   const [slide, setSlide] = useState(0);
+  const [mob, setMob] = useState(window.innerWidth <= 640);
 
   useEffect(() => {
     const t = setInterval(() => setSlide(s => (s + 1) % 2), 4500);
     return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const h = () => setMob(window.innerWidth <= 640);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
   }, []);
 
   /* ── Right card SVG icons — white line-art matching reference ── */
@@ -3019,25 +3026,28 @@ function FeaturesCarousel() {
     position: "relative",
   };
 
-  /* Slide 1 — Why LabEase (full width) */
+  const SLIDE_H = mob ? "auto" : 220;
+  const ringSize = mob ? 130 : 190;
+
+  /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection:"row", alignItems:"center", padding:"30px 36px 30px 40px", minHeight:200 }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", minHeight: SLIDE_H }}>
       <Wave/>
-      <div style={{ flex:1, zIndex:1, paddingRight:20 }}>
-        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom:20 }}>
+      <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 20, textAlign: mob ? "center" : "left" }}>
+        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 20 }}>
           Why LabEase<br/>is Helpful?
         </h3>
-        <ul style={{ listStyle:"none", padding:0, margin:0, display:"flex", flexDirection:"column", gap:12 }}>
+        <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 9 : 12, maxWidth: mob ? 280 : "none" }}>
           {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
-            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize:".9rem", color:"rgba(255,255,255,.9)", lineHeight:1.4 }}>
-              <span style={{ width:7, height:7, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:6 }}/>
+            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize: mob ? ".82rem" : ".9rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
+              <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:5 }}/>
               {b}
             </li>
           ))}
         </ul>
       </div>
-      <div style={{ flexShrink:0, width:190, height:190, zIndex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <svg viewBox="0 0 190 190" width="190" height="190">
+      <div style={{ flexShrink:0, width:ringSize, height:ringSize, zIndex:1, display:"flex", alignItems:"center", justifyContent:"center", marginTop: mob ? 16 : 0 }}>
+        <svg viewBox="0 0 190 190" width={ringSize} height={ringSize}>
           <circle cx="95" cy="95" r="85" stroke="rgba(255,255,255,.12)" strokeWidth="1.2" strokeDasharray="5 4" fill="none"/>
           {[0,1,2,3,4,5,6,7].map(idx => {
             const a=(idx/8)*2*Math.PI-Math.PI/2, r=72, cx=95+r*Math.cos(a), cy=95+r*Math.sin(a);
@@ -3068,11 +3078,11 @@ function FeaturesCarousel() {
     </div>
   );
 
-  /* Slide 2 — 6 Features (full width) */
+  /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding:"30px 44px", minHeight:200, display:"flex", alignItems:"center" }}>
+    <div style={{ ...CARD, padding: mob ? "24px 20px" : "30px 44px", minHeight: SLIDE_H, display:"flex", alignItems:"center" }}>
       <Wave/>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"22px 52px", width:"100%", zIndex:1 }}>
+      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "16px 18px" : "22px 52px", width:"100%", zIndex:1 }}>
         {[
           { Ic:IMicroscope, t1:"Choose from",          t2:"1500+ Labs" },
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
@@ -3081,13 +3091,13 @@ function FeaturesCarousel() {
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap:16 }}>
-            <div style={{ width:54, height:54, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 10 : 16 }}>
+            <div style={{ width: mob ? 42 : 54, height: mob ? 42 : 54, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
             <div>
-              <div style={{ fontSize:".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
-              <div style={{ fontSize:".92rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
+              <div style={{ fontSize: mob ? ".68rem" : ".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".78rem" : ".92rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
             </div>
           </div>
         ))}
@@ -3096,8 +3106,8 @@ function FeaturesCarousel() {
   );
 
   return (
-    <section style={{ padding:"32px 0 28px", background:"#fff" }}>
-      <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
+    <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
+      <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
         {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
           {[0,1].map(i => (
