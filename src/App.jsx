@@ -3224,10 +3224,8 @@ export default function App() {
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
-          {/* 4-step row */}
-          <div className="hiw-grid">
-            {/* connector line */}
-            <div className="hiw-connector" style={{ position:"absolute",top:53,left:"12.5%",right:"12.5%",height:2,background:"linear-gradient(90deg,#DBEAFE,#BAE6FD,#DDD6FE,#BBF7D0)",zIndex:0,borderRadius:99 }}/>
+          {/* 4-step row — 2 per row */}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:28, position:"relative" }}>
 
             {[
               {
