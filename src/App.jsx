@@ -2940,13 +2940,6 @@ const FEATURE_SLIDES = [
 ];
 
 function FeaturesCarousel() {
-  const [slide, setSlide] = useState(0);
-  const total = 2;
-
-  useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % total), 4500);
-    return () => clearInterval(t);
-  }, []);
 
   /* ── Right card SVG icons — white line-art matching reference ── */
   const IMicroscope = () => (
@@ -3099,12 +3092,7 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#09193D 0%,#0F2D6B 40%,#1158A6 100%)" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
-        {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
-        <div style={{ display:"flex", justifyContent:"center", gap:8, marginTop:16 }}>
-          {[0,1].map(i => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?26:8, height:8, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.3)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
-          ))}
-        </div>
+        <SlideWhy/>
       </div>
     </section>
   );
