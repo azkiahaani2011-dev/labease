@@ -2941,52 +2941,106 @@ const FEATURE_SLIDES = [
 
 function FeaturesCarousel() {
   const [slide, setSlide] = useState(0);
-  const total = FEATURE_SLIDES.length;
+  const slides = [
+    { id:"why" },
+    { id:"stats" },
+  ];
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % total), 4000);
+    const t = setInterval(() => setSlide(s => (s + 1) % slides.length), 4500);
     return () => clearInterval(t);
   }, []);
 
-  const current = FEATURE_SLIDES[slide];
+  const CARD_STYLE = {
+    borderRadius:18,
+    padding:"28px 28px 24px",
+    background:"rgba(255,255,255,.08)",
+    border:"1px solid rgba(255,255,255,.15)",
+    backdropFilter:"blur(8px)",
+    flex:1,
+    minWidth:0,
+  };
+
+  /* ── Slide 1 ── two-card layout matching reference ── */
+  const SlideWhy = () => (
+    <div style={{ display:"flex", gap:16, height:220 }}>
+      {/* Left card — Why LabEase */}
+      <div style={{ ...CARD_STYLE, display:"flex", alignItems:"center", gap:24 }}>
+        <div style={{ flex:1, minWidth:0 }}>
+          <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.1rem,2vw,1.4rem)",color:"#fff",lineHeight:1.25,marginBottom:14 }}>Why LabEase<br/>is Better?</h3>
+          <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:9 }}>
+            {["Keeps all your health records in one place","Book from 200+ NABL-certified labs","Reports delivered in as little as 6 hours","Free certified phlebotomist home visit"].map((b,i)=>(
+              <li key={i} style={{ display:"flex",alignItems:"flex-start",gap:8,fontSize:".8rem",color:"#BFDBFE",lineHeight:1.4 }}>
+                <span style={{ width:6,height:6,borderRadius:"50%",background:"#60A5FA",flexShrink:0,marginTop:5 }}/>
+                {b}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* Circular diagram */}
+        <div style={{ flexShrink:0,width:130,height:130,position:"relative",display:"flex",alignItems:"center",justifyContent:"center" }}>
+          <svg viewBox="0 0 130 130" width="130" height="130" style={{ position:"absolute",top:0,left:0 }}>
+            {[0,1,2,3,4,5,6,7].map((i)=>{
+              const angle = (i/8)*2*Math.PI - Math.PI/2;
+              const r = 52;
+              const cx = 65 + r*Math.cos(angle);
+              const cy = 65 + r*Math.sin(angle);
+              return <circle key={i} cx={cx} cy={cy} r={14} fill="rgba(99,102,241,.55)" stroke="rgba(255,255,255,.3)" strokeWidth="1"/>;
+            })}
+            <circle cx="65" cy="65" r="26" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.4)" strokeWidth="1.5"/>
+          </svg>
+          <span style={{ position:"relative",zIndex:1,fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"-.02em" }}>LabEase</span>
+        </div>
+      </div>
+      {/* Right card — 6 features 2×3 */}
+      <div style={{ ...CARD_STYLE }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 20px", height:"100%", alignContent:"center" }}>
+          {[
+            { icon:"🔬", label:"Choose from", sub:"1500+ Tests" },
+            { icon:"✅", label:"Verified & NABL", sub:"Accredited Labs" },
+            { icon:"🧪", label:"Choose from", sub:"200+ Partner Labs" },
+            { icon:"⏱️", label:"On Time", sub:"Reports" },
+            { icon:"🏠", label:"Sample Collection", sub:"at your doorstep" },
+            { icon:"🏷️", label:"Attractive Prices", sub:"& Offers" },
+          ].map((f,i)=>(
+            <div key={i} style={{ display:"flex",alignItems:"center",gap:10 }}>
+              <div style={{ width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,.12)",border:"1.5px solid rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0 }}>{f.icon}</div>
+              <div>
+                <div style={{ fontSize:".72rem",color:"#BFDBFE",lineHeight:1.2 }}>{f.label}</div>
+                <div style={{ fontSize:".8rem",fontWeight:800,color:"#fff",lineHeight:1.2 }}>{f.sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ── Slide 2 — stats ── */
+  const SlideStats = () => (
+    <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, height:220 }}>
+      {[
+        { value:"50K+", label:"Happy Patients", emoji:"😊" },
+        { value:"200+", label:"Partner Labs", emoji:"🏥" },
+        { value:"1500+", label:"Tests Available", emoji:"🧪" },
+        { value:"6 Hrs", label:"Fastest Report", emoji:"⚡" },
+      ].map((item,i)=>(
+        <div key={i} style={{ textAlign:"center",...CARD_STYLE,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center" }}>
+          <div style={{ fontSize:"1.8rem",marginBottom:6 }}>{item.emoji}</div>
+          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.7rem,2.5vw,2.2rem)",color:"#fff",marginBottom:4 }}>{item.value}</div>
+          <div style={{ fontSize:".78rem",color:"#BFDBFE",fontWeight:600 }}>{item.label}</div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
-    <section style={{ padding:"36px 0 30px", background:"linear-gradient(135deg,#0F2D6B 0%,#1158A6 60%,#1D4ED8 100%)", borderBottom:"1px solid #0F2D6B" }}>
+    <section style={{ padding:"32px 0 26px", background:"linear-gradient(135deg,#0F2D6B 0%,#1158A6 55%,#1D4ED8 100%)" }}>
       <div style={{ maxWidth:1080,margin:"0 auto",padding:"0 20px" }}>
-        <div style={{ textAlign:"center",marginBottom:24 }}>
-          <p style={{ fontSize:".72rem",fontWeight:700,color:"#93C5FD",letterSpacing:".14em",textTransform:"uppercase",marginBottom:8 }}>WHY CHOOSE US</p>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.3rem,2.8vw,1.8rem)",fontWeight:900,color:"#fff",letterSpacing:"-.03em",lineHeight:1.2 }}>Everything You Need, In One Place</h2>
-        </div>
-        {/* Fixed-height slide container so both slides are equal size */}
-        <div style={{ height:220 }}>
-          {current.type === "features" ? (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, height:"100%" }}>
-              {current.items.map((item,i) => (
-                <div key={i} style={{ display:"flex",alignItems:"center",gap:12,background:"rgba(255,255,255,.1)",borderRadius:14,padding:"14px 16px",border:"1px solid rgba(255,255,255,.15)",backdropFilter:"blur(6px)" }}>
-                  <div style={{ flexShrink:0,width:48,height:48,borderRadius:12,background:"rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                    {React.cloneElement(item.icon, { stroke:"#fff" })}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight:800,fontSize:".86rem",color:"#fff",marginBottom:2 }}>{item.label}</div>
-                    <div style={{ fontSize:".74rem",color:"#BFDBFE",lineHeight:1.4 }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, height:"100%" }}>
-              {current.items.map((item,i) => (
-                <div key={i} style={{ textAlign:"center",background:"rgba(255,255,255,.1)",borderRadius:14,padding:"24px 16px",border:"1px solid rgba(255,255,255,.15)",display:"flex",flexDirection:"column",justifyContent:"center" }}>
-                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1.8rem,3vw,2.4rem)",color:"#fff",marginBottom:6 }}>{item.value}</div>
-                  <div style={{ fontSize:".82rem",color:"#BFDBFE",fontWeight:600 }}>{item.label}</div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {slide === 0 ? <SlideWhy/> : <SlideStats/>}
         {/* Dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:20 }}>
-          {FEATURE_SLIDES.map((_,i) => (
+        <div style={{ display:"flex",justifyContent:"center",gap:8,marginTop:16 }}>
+          {slides.map((_,i)=>(
             <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?24:8,height:8,borderRadius:50,background:i===slide?"#fff":"rgba(255,255,255,.35)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
           ))}
         </div>
@@ -3364,7 +3418,7 @@ export default function App() {
                 icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"10px 4px 6px", position:"relative", zIndex:1 }}>
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 4px 0", position:"relative", zIndex:1 }}>
                 <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
