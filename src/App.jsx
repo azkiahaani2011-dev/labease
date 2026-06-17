@@ -3006,15 +3006,15 @@ export default function App() {
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
+            {/* location bar */}
+            <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#1158A6",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
-
-            {/* location bar */}
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"8px 18px",marginTop:14,boxShadow:"0 2px 10px rgba(17,88,166,.08)",cursor:"default" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span style={{ fontSize:".82rem",fontWeight:700,color:"#1158A6",letterSpacing:".01em" }}>Hyderabad</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </div>
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
