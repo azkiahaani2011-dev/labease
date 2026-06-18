@@ -2908,7 +2908,7 @@ function PromoCarousel({ navTo }) {
       {/* Navigation dots — overlaid at bottom center */}
       <div style={{ position:"absolute", bottom:16, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
         {[0,1].map(i=>(
-          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?14:6,height:6,borderRadius:50,background:i===idx?"#1158A6":"rgba(17,88,166,.3)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
+          <button key={i} onClick={()=>goTo(i)} style={{ width:8,height:8,borderRadius:"50%",background:i===idx?"#1158A6":"rgba(17,88,166,.25)",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
         ))}
       </div>
     </div>
@@ -3112,7 +3112,7 @@ function FeaturesCarousel() {
           {/* Navigation dots — overlaid at bottom center of card */}
           <div style={{ position:"absolute", bottom:14, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
             {[0,1].map(i => (
-              <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?14:6, height:6, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.5)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
+              <button key={i} onClick={()=>setSlide(i)} style={{ width:8, height:8, borderRadius:"50%", background:i===slide?"#fff":"rgba(255,255,255,.4)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
             ))}
           </div>
         </div>
