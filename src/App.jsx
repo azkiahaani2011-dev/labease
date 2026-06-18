@@ -1851,7 +1851,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           </button></div>
           <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
             <div>
-              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"var(--ink)", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#1158A6", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
               <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
                 <span style={{ color:"#1158A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
