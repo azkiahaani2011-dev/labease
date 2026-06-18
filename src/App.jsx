@@ -2782,28 +2782,28 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
 /* ─── PROMO CAROUSEL ─────────────────────────────────────────────────────── */
 function PromoCarousel({ navTo }) {
+  const trackRef = useRef(null);
   const [idx, setIdx] = useState(0);
-  const [animate, setAnimate] = useState(true);
   const total = 2;
 
   const goTo = (i) => {
-    setAnimate(true);
-    setIdx((i + total) % total);
+    const n = (i + total) % total;
+    setIdx(n);
+    if (trackRef.current) {
+      trackRef.current.scrollTo({ left: n * trackRef.current.offsetWidth, behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setAnimate(true);
-      setIdx(s => (s + 1) % total);
-    }, 4000);
+    const t = setInterval(() => goTo(idx + 1), 4000);
     return () => clearInterval(t);
-  }, []);
+  }, [idx]);
 
   return (
-    <div style={{ position:"relative", marginBottom:10, overflow:"hidden", borderRadius:20 }}>
-      <div style={{ display:"flex", transition: animate ? "transform .55s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${idx * -100}%)`, willChange:"transform" }}>
+    <div style={{ position:"relative", marginBottom:10 }}>
+      <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
         {/* Card 1 — Home Sample Pickup */}
-        <div style={{ minWidth:"100%", flexShrink:0, padding:"0 10px 0 0", boxSizing:"border-box" }}>
+        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
           <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0",height:"100%" }}>
             <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
               <div>
@@ -2860,7 +2860,7 @@ function PromoCarousel({ navTo }) {
           </div>
         </div>
         {/* Card 2 — Fast Report Delivery */}
-        <div style={{ minWidth:"100%", flexShrink:0, padding:"0 0 0 10px", boxSizing:"border-box" }}>
+        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 0 0 10px", boxSizing:"border-box" }}>
           <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE",height:"100%" }}>
             <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
               <div>
