@@ -3025,7 +3025,7 @@ function FeaturesCarousel() {
 
   /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", height: mob ? "auto" : 280, boxSizing:"border-box" }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", height: mob ? "auto" : 280, maxHeight: mob ? "none" : 280, boxSizing:"border-box", overflow:"hidden" }}>
       <Wave/>
       <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 20, textAlign: mob ? "center" : "left" }}>
         <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 20 }}>
@@ -3074,7 +3074,7 @@ function FeaturesCarousel() {
 
   /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "24px 20px" : "20px 44px", height: mob ? "auto" : 280, boxSizing:"border-box", display:"flex", alignItems:"center" }}>
+    <div style={{ ...CARD, padding: mob ? "24px 20px" : "20px 44px", height: mob ? "auto" : 280, maxHeight: mob ? "none" : 280, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
       <Wave/>
       <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "14px 18px" : "14px 48px", width:"100%", zIndex:1 }}>
         {[
@@ -3101,7 +3101,7 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height: mob ? "auto" : 280, position:"relative" }}>
+        <div style={{ height: mob ? "auto" : 280, minHeight: mob ? "auto" : 280, position:"relative" }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         </div>
       </div>
