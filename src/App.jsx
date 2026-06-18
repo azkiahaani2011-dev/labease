@@ -2905,12 +2905,6 @@ function PromoCarousel({ navTo }) {
           </div>
         </div>
       </div>
-      {/* Navigation dots — overlaid at bottom center */}
-      <div style={{ position:"absolute", bottom:16, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
-        {[0,1].map(i=>(
-          <button key={i} onClick={()=>goTo(i)} style={{ width:i===idx?32:10,height:10,borderRadius:50,background:i===idx?"#1158A6":"#DBEAFE",border:"none",cursor:"pointer",padding:0,transition:"all .3s" }}/>
-        ))}
-      </div>
     </div>
   );
 }
@@ -3109,12 +3103,6 @@ function FeaturesCarousel() {
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
         <div style={{ height: mob ? "auto" : 280, position:"relative" }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
-          {/* Navigation dots — overlaid at bottom center of card */}
-          <div style={{ position:"absolute", bottom:14, left:0, right:0, display:"flex", justifyContent:"center", alignItems:"center", gap:6, zIndex:10 }}>
-            {[0,1].map(i => (
-              <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?32:10, height:10, borderRadius:50, background:i===slide?"#fff":"rgba(255,255,255,.45)", border:"none", cursor:"pointer", padding:0, transition:"all .3s" }}/>
-            ))}
-          </div>
         </div>
       </div>
     </section>
@@ -3575,7 +3563,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
