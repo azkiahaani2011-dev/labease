@@ -3101,8 +3101,11 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height: mob ? "auto" : 220, position:"relative" }}>
-          {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
+        <div style={{ height: mob ? "auto" : 220, overflow:"hidden", borderRadius:18 }}>
+          <div style={{ display:"flex", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
+            <div style={{ minWidth:"100%", flexShrink:0 }}><SlideWhy/></div>
+            <div style={{ minWidth:"100%", flexShrink:0 }}><SlideFeatures/></div>
+          </div>
         </div>
       </div>
     </section>
