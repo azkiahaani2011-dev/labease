@@ -1843,18 +1843,18 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
-      <div style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"20px 0" }}>
+      <div style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)", borderBottom:"1px solid rgba(255,255,255,.1)", padding:"20px 0" }}>
         <div style={{ ...T.wrap }}>
-          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"#fff",border:"1.5px solid #1158A6",color:"#1158A6",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
+          <div style={{ display:"flex" }}><button onClick={()=>navTo("home")} style={{ background:"rgba(255,255,255,.15)",border:"1.5px solid rgba(255,255,255,.4)",color:"#fff",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",padding:"8px 16px",marginBottom:16,display:"inline-flex",alignItems:"center",gap:6,borderRadius:50 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Back to Home
           </button></div>
           <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
             <div>
-              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#1158A6", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
-              <p style={{ color:"var(--muted)", fontSize:".84rem" }}>
+              <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#fff", marginBottom:4, letterSpacing:"-.03em" }}>All Labs</h1>
+              <p style={{ color:"rgba(255,255,255,.7)", fontSize:".84rem" }}>
                 {filtered.length} lab{filtered.length!==1?"s":""} found ·
-                <span style={{ color:"#1158A6", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
+                <span style={{ color:"#86EFAC", fontWeight:700 }}> {filtered.filter(l=>l.open).length} open now</span>
               </p>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
