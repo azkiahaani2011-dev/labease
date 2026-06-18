@@ -96,16 +96,19 @@ const REPORT_OPTIONS = ['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'];
 
 function genBookings() {
   const saved = localStorage.getItem('le_bookings');
-  if (saved) return JSON.parse(saved);
-  const prices = {'CBC':299,'Lipid Profile':599,'Thyroid Profile':799,'HbA1c':499,'Vitamin D':899,'LFT':799,'KFT':699,'Urine Routine':199,'Full Body Checkup':1999,'Dengue NS1':699};
-  const data = [];
-  for (let i = 0; i < 28; i++) {
-    const t = TEST_NAMES[i % 10];
-    const d = new Date(2024, 3 + Math.floor(i/5), (i % 27) + 1);
-    data.push({ id:'LB'+(1000+i), patient:PATIENTS[i%10], phone:PHONES[i%10], test:t, lab:LAB_NAMES[i%6], date:d.toISOString().slice(0,10), mode:MODES[i%2], amount:prices[t], status:STATUSES[i%5] });
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      // Remove old auto-generated demo entries (IDs LB1000–LB1027)
+      const real = data.filter(b => !/^LB10[012]\d$/.test(b.id));
+      if (real.length !== data.length) {
+        localStorage.setItem('le_bookings', JSON.stringify(real));
+        return real;
+      }
+      return data;
+    } catch(e) {}
   }
-  localStorage.setItem('le_bookings', JSON.stringify(data));
-  return data;
+  return [];
 }
 
 function genLabs() {
@@ -270,7 +273,7 @@ function Sidebar({page,setPage,onLogout}) {
 }
 
 // Dashboard
-function Dashboard({bookings}) {
+function Dashboard({bookings,setBookings}) {
   const total=bookings.length;
   const active=bookings.filter(b=>b.status==='Confirmed'||b.status==='Sample Collected').length;
   const revenue=bookings.filter(b=>b.status!=='Cancelled').reduce((s,b)=>s+b.amount,0);
@@ -288,7 +291,10 @@ function Dashboard({bookings}) {
   ];
   return html`
     <div style="padding:28px">
-      <div style="font-size:22px;font-weight:800;margin-bottom:6px;color:#0D1117">Dashboard</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:22px;font-weight:800;color:#0D1117">Dashboard</div>
+        <button class="btn btn-outline btn-sm" onClick=${()=>{try{const s=localStorage.getItem('le_bookings');if(s)setBookings(JSON.parse(s));}catch(e){}}} style="font-size:12px">↻ Refresh</button>
+      </div>
       <div style="font-size:13.5px;color:#6B7280;margin-bottom:24px">Welcome back, Admin. Here's what's happening today.</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
         ${stats.map(s=>html`
@@ -310,7 +316,7 @@ function Dashboard({bookings}) {
               <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:5px">
                 <span>${s}</span><span style="color:#6B7280">${sc[s]}</span>
               </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:${((sc[s]/total)*100)}%;background:${scol[s]}"/></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${total?((sc[s]/total)*100):0}%;background:${scol[s]}"/></div>
             </div>`)}
         </div>
         <div class="card" style="padding:22px">
@@ -326,6 +332,7 @@ function Dashboard({bookings}) {
       </div>
       <div class="card">
         <div style="padding:18px 20px 0;font-weight:700;font-size:15px;color:#0D1117">Recent Bookings</div>
+        ${recent.length===0?html`<div style="padding:40px;text-align:center;color:#9CA3AF;font-size:13.5px">No bookings yet. Bookings from patients will appear here automatically.</div>`:html`
         <table>
           <thead><tr><th>ID</th><th>Patient</th><th>Test</th><th>Lab</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
           <tbody>
@@ -337,7 +344,7 @@ function Dashboard({bookings}) {
                 <td><span class=${statusBadgeClass(b.status)}>${b.status}</span></td>
               </tr>`)}
           </tbody>
-        </table>
+        </table>`}
       </div>
     </div>`;
 }
@@ -675,7 +682,9 @@ function App() {
 
   useEffect(()=>{
     function handler(e){if(e.key==='le_bookings'){try{setBookings(JSON.parse(e.newValue||'[]'));}catch(ex){}}}
+    function onFocus(){try{const s=localStorage.getItem('le_bookings');if(s)setBookings(JSON.parse(s));}catch(e){}}
     window.addEventListener('storage',handler);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)onFocus();});
     return ()=>window.removeEventListener('storage',handler);
   },[]);
 
@@ -695,7 +704,7 @@ function App() {
             <span style="font-weight:500">Admin</span>
           </div>
         </div>
-        ${page==='dashboard'&&html`<${Dashboard} bookings=${bookings}/>`}
+        ${page==='dashboard'&&html`<${Dashboard} bookings=${bookings} setBookings=${setBookings}/>`}
         ${page==='bookings'&&html`<${Bookings} bookings=${bookings} setBookings=${setBookings}/>`}
         ${page==='labs'&&html`<${Labs} labs=${labs} setLabs=${setLabs}/>`}
         ${page==='tests'&&html`<${Tests} tests=${tests} setTests=${setTests}/>`}
