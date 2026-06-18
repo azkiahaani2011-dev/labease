@@ -1843,9 +1843,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
-      <div style={{ background:"linear-gradient(135deg,#EBF3FF 0%,#F0F7FF 60%,#E8F0FE 100%)", borderBottom:"1px solid #DBEAFE", padding:"32px 0 28px" }}>
+      <div style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)", borderBottom:"none", padding:"32px 0 28px" }}>
         <div style={{ ...T.wrap }}>
-          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.6rem,3.5vw,2.4rem)", color:"#0D1117", margin:0, letterSpacing:"-.03em" }}>Our Trusted Lab Partners</h1>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.6rem,3.5vw,2.4rem)", color:"#fff", margin:0, letterSpacing:"-.03em" }}>Our Trusted Lab Partners</h1>
         </div>
       </div>
 
