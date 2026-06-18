@@ -3025,7 +3025,7 @@ function FeaturesCarousel() {
 
   /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "16px 14px" : "18px 24px 18px 30px", height: mob ? "auto" : 220, boxSizing:"border-box", overflow:"hidden" }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "14px 14px" : "18px 24px 18px 30px", height: mob ? 220 : 220, boxSizing:"border-box", overflow:"hidden" }}>
       <Wave/>
       <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 16, textAlign: mob ? "center" : "left" }}>
         <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.1rem" : "clamp(1.2rem,2vw,1.6rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 10 : 14 }}>
@@ -3074,7 +3074,7 @@ function FeaturesCarousel() {
 
   /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "24px 20px" : "28px 44px", height: mob ? "auto" : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
+    <div style={{ ...CARD, padding: mob ? "14px 14px" : "28px 44px", height: mob ? 220 : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
       <Wave/>
       <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "18px 16px" : "28px 52px", width:"100%", zIndex:1 }}>
         {[
@@ -3101,10 +3101,10 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height: mob ? "auto" : 220, overflow:"hidden", borderRadius:18 }}>
-          <div style={{ display:"flex", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
-            <div style={{ minWidth:"100%", flexShrink:0 }}><SlideWhy/></div>
-            <div style={{ minWidth:"100%", flexShrink:0 }}><SlideFeatures/></div>
+        <div style={{ height:220, overflow:"hidden", borderRadius:18 }}>
+          <div style={{ display:"flex", height:"100%", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
+            <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
+            <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideFeatures/></div>
           </div>
         </div>
       </div>
