@@ -3084,13 +3084,13 @@ function FeaturesCarousel() {
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 7 : 18 }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 7 : 18, minWidth:0 }}>
             <div style={{ width: mob ? 32 : 62, height: mob ? 32 : 62, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
-            <div>
-              <div style={{ fontSize: mob ? ".58rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1 }}>{t1}</div>
-              <div style={{ fontSize: mob ? ".68rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2 }}>{t2}</div>
+            <div style={{ minWidth:0, overflow:"hidden" }}>
+              <div style={{ fontSize: mob ? ".58rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".68rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t2}</div>
             </div>
           </div>
         ))}
