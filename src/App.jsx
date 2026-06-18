@@ -3025,16 +3025,16 @@ function FeaturesCarousel() {
 
   /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "18px 16px" : "30px 36px 30px 40px", height: mob ? 260 : 280, maxHeight: mob ? 260 : 280, boxSizing:"border-box", overflow:"hidden" }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", height: mob ? "auto" : 280, boxSizing:"border-box" }}>
       <Wave/>
       <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 20, textAlign: mob ? "center" : "left" }}>
-        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.5rem" : "clamp(1.6rem,2.8vw,2.2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 18 : 24 }}>
+        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 20 }}>
           Why LabEase<br/>is Helpful?
         </h3>
-        <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 14 : 18, maxWidth: mob ? 300 : "none" }}>
+        <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 9 : 12, maxWidth: mob ? 280 : "none" }}>
           {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
-            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:12, fontSize: mob ? ".95rem" : "1.05rem", color:"rgba(255,255,255,.9)", lineHeight:1.45, textAlign:"left" }}>
-              <span style={{ width:8, height:8, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:6 }}/>
+            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize: mob ? ".82rem" : ".9rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
+              <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:5 }}/>
               {b}
             </li>
           ))}
@@ -3074,9 +3074,9 @@ function FeaturesCarousel() {
 
   /* Slide 2 — 6 Features */
   const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "14px 16px" : "20px 44px", height: mob ? 260 : 280, maxHeight: mob ? 260 : 280, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
+    <div style={{ ...CARD, padding: mob ? "24px 20px" : "30px 44px", height: mob ? "auto" : 280, display:"flex", alignItems:"center" }}>
       <Wave/>
-      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "10px 14px" : "14px 48px", width:"100%", zIndex:1 }}>
+      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "16px 18px" : "22px 52px", width:"100%", zIndex:1 }}>
         {[
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
@@ -3084,13 +3084,13 @@ function FeaturesCarousel() {
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 8 : 14 }}>
-            <div style={{ width: mob ? 34 : 46, height: mob ? 34 : 46, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 10 : 16 }}>
+            <div style={{ width: mob ? 42 : 54, height: mob ? 42 : 54, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
             <div>
-              <div style={{ fontSize: mob ? ".62rem" : ".74rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1 }}>{t1}</div>
-              <div style={{ fontSize: mob ? ".72rem" : ".86rem", fontWeight:700, color:"#fff", lineHeight:1.2 }}>{t2}</div>
+              <div style={{ fontSize: mob ? ".68rem" : ".78rem", color:"rgba(255,255,255,.6)", lineHeight:1.3, marginBottom:2 }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".78rem" : ".92rem", fontWeight:700, color:"#fff", lineHeight:1.3 }}>{t2}</div>
             </div>
           </div>
         ))}
@@ -3101,7 +3101,7 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#fff" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height: mob ? 260 : 280, position:"relative" }}>
+        <div style={{ minHeight: mob ? "auto" : 280, position:"relative" }}>
           {slide === 0 ? <SlideWhy/> : <SlideFeatures/>}
         </div>
       </div>
