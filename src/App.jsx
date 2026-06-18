@@ -3021,20 +3021,20 @@ function FeaturesCarousel() {
   };
 
   const SLIDE_H = mob ? "auto" : 220;
-  const ringSize = mob ? 130 : 190;
+  const ringSize = mob ? 130 : 220;
 
   /* Slide 1 — Why LabEase */
   const SlideWhy = () => (
-    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "24px 20px" : "30px 36px 30px 40px", height: mob ? "auto" : 280, boxSizing:"border-box", overflow:"hidden" }}>
+    <div style={{ ...CARD, display:"flex", flexDirection: mob ? "column" : "row", alignItems:"center", padding: mob ? "20px 16px" : "16px 28px 16px 36px", height: mob ? "auto" : 280, boxSizing:"border-box", overflow:"hidden" }}>
       <Wave/>
       <div style={{ flex:1, zIndex:1, paddingRight: mob ? 0 : 20, textAlign: mob ? "center" : "left" }}>
-        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.4rem,2.5vw,2rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 20 }}>
+        <h3 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize: mob ? "1.3rem" : "clamp(1.5rem,2.6vw,2.1rem)", color:"#fff", lineHeight:1.2, marginBottom: mob ? 14 : 22 }}>
           Why LabEase<br/>is Helpful?
         </h3>
-        <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 9 : 12, maxWidth: mob ? 280 : "none" }}>
+        <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 9 : 16, maxWidth: mob ? 280 : "none" }}>
           {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
-            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize: mob ? ".82rem" : ".9rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
-              <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:5 }}/>
+            <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:10, fontSize: mob ? ".82rem" : "1rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
+              <span style={{ width:7, height:7, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:5 }}/>
               {b}
             </li>
           ))}
