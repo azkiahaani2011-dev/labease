@@ -1893,10 +1893,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 
                   {/* ── Row 1: Logo + Info + Checkmark ── */}
                   <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
-                    {/* Logo with label underneath */}
-                    <div style={{ flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:0 }}>
+                    {/* Logo */}
+                    <div style={{ flexShrink:0 }}>
                       <LabLogo lab={l} size={86} radius={10} />
-                      <div style={{ marginTop:4,background:"#fff",border:"1px solid #E5E7EB",borderRadius:6,padding:"3px 8px",fontSize:".62rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",textAlign:"center",maxWidth:90,lineHeight:1.3 }}>LabEase<br/>VERIFIED</div>
                     </div>
 
                     {/* Text block */}
@@ -1913,22 +1912,16 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
                         {l.tests.length} Tests Available
                       </div>
+                      {/* Rating inline */}
+                      <div style={{ display:"inline-flex",alignItems:"center",gap:4,marginTop:6,background:"#FEF9C3",borderRadius:6,padding:"3px 8px" }}>
+                        <span style={{ color:"#F59E0B",fontSize:".9rem" }}>★</span>
+                        <span style={{ fontWeight:800,fontSize:".82rem",color:"#92400E" }}>{l.rating}</span>
+                        <span style={{ fontSize:".76rem",color:"#78350F" }}>({l.reviews} reviews)</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* ── Row 2: Stat badges ── */}
-                  <div style={{ display:"flex",gap:10,marginBottom:14 }}>
-                    <div style={{ flex:1,display:"flex",alignItems:"center",gap:10,background:"#16A34A",borderRadius:10,padding:"9px 12px" }}>
-                      <span style={{ fontSize:"1.15rem",fontWeight:900,color:"#fff",whiteSpace:"nowrap" }}>👍 {satisfaction}%</span>
-                      <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.9)",lineHeight:1.4,fontWeight:600 }}>Patient<br/>Recommendation</span>
-                    </div>
-                    <div style={{ flex:1,display:"flex",alignItems:"center",gap:10,background:"#1158A6",borderRadius:10,padding:"9px 12px" }}>
-                      <span style={{ fontSize:"1.15rem",fontWeight:900,color:"#fff",whiteSpace:"nowrap" }}>✦ {l.rating}</span>
-                      <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.9)",lineHeight:1.4,fontWeight:600 }}>Lab Quality<br/>Rating</span>
-                    </div>
-                  </div>
-
-                  {/* ── Row 3: Location + Price ── */}
+                  {/* ── Row 2: Location + Price ── */}
                   <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
                     <span style={{ fontWeight:700 }}>{l.area||"Hyderabad"}</span>
                     <span style={{ color:"#D1D5DB",margin:"0 7px" }}>•</span>
