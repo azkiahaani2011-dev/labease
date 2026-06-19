@@ -1885,56 +1885,51 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                 onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
                 <div style={{ padding:"18px 16px 16px" }}>
 
-                  {/* Logo + name/price + badge */}
-                  <div style={{ display:"flex",gap:12,alignItems:"flex-start",marginBottom:12 }}>
+                  {/* Logo + name/price */}
+                  <div style={{ display:"flex",gap:12,alignItems:"flex-start",marginBottom:8 }}>
                     <LabLogo lab={l} size={58} radius={8} />
                     <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:5 }}>
-                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:".97rem",color:"#0D1117",lineHeight:1.35,letterSpacing:"-.02em" }}>{l.name}</span>
+                      {/* Name + Price */}
+                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:6 }}>
+                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1rem",color:"#0D1117",lineHeight:1.35,letterSpacing:"-.02em" }}>{l.name}</span>
                         <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.25rem",color:"#0D1117",flexShrink:0,letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{minPrice.toLocaleString()}</span>
                       </div>
-                      <span style={{ background:"#DBEAFE",color:"#1E40AF",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,display:"inline-block",lineHeight:1.5 }}>
-                        {selectedTest ? selectedTest.name : (l.tags && l.tags[0]) || "Diagnostics"}
-                      </span>
+                      {/* Address */}
+                      <div style={{ fontSize:".84rem",fontWeight:700,color:"#374151",lineHeight:1.6 }}>
+                        {l.address || `${l.area||"Hyderabad"}, Telangana, India`}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Address + Book Now */}
-                  <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:14,marginBottom:12 }}>
-                    <div style={{ fontSize:".85rem",fontWeight:700,color:"#374151",lineHeight:1.65,flex:1 }}>
-                      {l.address || `${l.area||"Hyderabad"}, Telangana, India`}
+                  {/* Info row + Book Now */}
+                  <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,marginTop:10 }}>
+                    <div style={{ display:"flex",alignItems:"center",gap:12,flexWrap:"nowrap",fontSize:".8rem",color:"#374151",minWidth:0 }}>
+                      <span style={{ display:"flex",alignItems:"center",gap:4,whiteSpace:"nowrap" }}>
+                        <span>⌛</span><span>{l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}</span>
+                      </span>
+                      <span style={{ color:"#D1D5DB" }}>|</span>
+                      <span style={{ display:"flex",alignItems:"center",gap:4,whiteSpace:"nowrap" }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        <span>{l.tests.length}</span>
+                        <span onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }} style={{ color:"#1158A6",fontWeight:600,cursor:"pointer",textDecoration:"underline" }}>(View More)</span>
+                      </span>
+                      <span style={{ color:"#D1D5DB" }}>|</span>
+                      <span style={{ display:"inline-flex",alignItems:"center",gap:4,background:"#DBEAFE",borderRadius:20,padding:"3px 10px",whiteSpace:"nowrap" }}>
+                        <span style={{ color:"#F59E0B" }}>★</span>
+                        <span style={{ fontWeight:800,color:"#0D1117" }}>{l.rating}</span>
+                        <span style={{ color:"#374151" }}>({l.reviews})</span>
+                      </span>
                     </div>
                     {selectedTest && matchTest
                       ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
+                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"10px 20px",fontWeight:700,cursor:"pointer",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
                           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
                       : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
+                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"10px 20px",fontWeight:700,cursor:"pointer",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
                           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
                     }
-                  </div>
-
-                  {/* Report time */}
-                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8,fontSize:".84rem",color:"#374151" }}>
-                    <span style={{ fontSize:"1rem" }}>⌛</span>
-                    <span>{l.reportTime || (l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}</span>
-                  </div>
-
-                  {/* Test count + View More */}
-                  <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:10,fontSize:".84rem",color:"#374151" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    <span>{l.tests.length}</span>
-                    <span onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                      style={{ color:"#1158A6",fontWeight:600,cursor:"pointer",textDecoration:"underline" }}>(View More)</span>
-                  </div>
-
-                  {/* Rating pill */}
-                  <div style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#DBEAFE",borderRadius:20,padding:"5px 13px" }}>
-                    <span style={{ color:"#F59E0B",fontSize:"1rem",lineHeight:1 }}>★</span>
-                    <span style={{ fontWeight:800,fontSize:".83rem",color:"#0D1117" }}>{l.rating}</span>
-                    <span style={{ fontSize:".78rem",color:"#374151" }}>({l.reviews} Reviews)</span>
                   </div>
 
                 </div>
