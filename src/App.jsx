@@ -1884,64 +1884,93 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           )}
           {filtered.map(l => {
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
-            const displayPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
-            const minPrice = displayPrice;
+            const minPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
+            const satisfaction = Math.round(85 + (l.rating - 4) * 30);
+            const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
             return (
-              <div key={l.id} className="hover-lift"
-                style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",cursor:"pointer" }}
-                onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
-                <div style={{ padding:"22px 18px 20px" }}>
+              <div key={l.id} style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 18px 0",fontFamily:"'Manrope',sans-serif" }}>
 
-                  {/* Logo + name/price row */}
-                  <div style={{ display:"flex",gap:14,alignItems:"flex-start" }}>
-                    <LabLogo lab={l} size={70} radius={10} />
-                    <div style={{ flex:1,minWidth:0 }}>
-                      {/* Name + Price */}
-                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:6 }}>
-                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.35,letterSpacing:"-.02em" }}>{l.name}</span>
-                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"#0D1117",flexShrink:0,letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{minPrice.toLocaleString()}</span>
-                      </div>
-                      {/* Test badge if selected */}
-                      {selectedTest && matchTest && (
-                        <div style={{ display:"inline-block",background:"#DBEAFE",color:"#1158A6",borderRadius:20,padding:"3px 10px",fontSize:".76rem",fontWeight:700,marginBottom:8 }}>{matchTest.name}</div>
-                      )}
-                      {/* Address + Book Now */}
-                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:12,marginBottom:14 }}>
-                        <div style={{ fontSize:".88rem",fontWeight:500,color:"#374151",lineHeight:1.6 }}>
-                          {l.address || `${l.area||"Hyderabad"}, Telangana, India`}
-                        </div>
-                        {selectedTest && matchTest
-                          ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
-                              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                          : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
-                              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                        }
-                      </div>
-                      {/* Info lines */}
-                      <div style={{ display:"flex",flexDirection:"column",gap:6,fontSize:".84rem",color:"#374151" }}>
-                        <span style={{ display:"flex",alignItems:"center",gap:6 }}>
-                          <span style={{ fontSize:"1rem" }}>⌛</span>
-                          <span style={{ fontWeight:500 }}>{l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}</span>
-                        </span>
-                        <span style={{ display:"flex",alignItems:"center",gap:6 }}>
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                          <span>{l.tests.length}</span>
-                          <span onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }} style={{ color:"#1158A6",fontWeight:600,cursor:"pointer",textDecoration:"underline" }}>(View More)</span>
-                        </span>
-                        <span style={{ display:"inline-flex",alignItems:"center",gap:4,background:"#DBEAFE",borderRadius:20,padding:"4px 12px",alignSelf:"flex-start" }}>
-                          <span style={{ color:"#1158A6",fontSize:"1rem" }}>★</span>
-                          <span style={{ fontWeight:800,color:"#0D1117" }}>{l.rating}</span>
-                          <span style={{ color:"#374151" }}>({l.reviews} Reviews)</span>
-                        </span>
-                      </div>
-                    </div>
+                {/* Top: logo + details */}
+                <div style={{ display:"flex",gap:16,alignItems:"flex-start",marginBottom:14 }}>
+
+                  {/* Logo block */}
+                  <div style={{ flexShrink:0 }}>
+                    <LabLogo lab={l} size={90} radius={12} />
                   </div>
 
+                  {/* Right details */}
+                  <div style={{ flex:1,minWidth:0 }}>
+                    {/* Name row */}
+                    <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:6,marginBottom:2 }}>
+                      <span onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                        style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",cursor:"pointer" }}>{l.name}</span>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0,marginTop:2 }}><circle cx="12" cy="12" r="10" stroke="#22C55E" strokeWidth="1.8"/><polyline points="8 12 11 15 16 9" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                    {/* Type */}
+                    <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:3 }}>Diagnostic Lab</div>
+                    {/* Tests count — green message style */}
+                    <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".82rem",fontWeight:700,color:"#16A34A" }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+                      {l.tests.length} Tests Available
+                    </div>
+                  </div>
                 </div>
+
+                {/* Stat badges row */}
+                <div style={{ display:"flex",gap:12,marginBottom:12,flexWrap:"wrap" }}>
+                  <div style={{ display:"flex",alignItems:"center",gap:8,background:"#16A34A",borderRadius:8,padding:"6px 12px",minWidth:130 }}>
+                    <span style={{ fontSize:"1.1rem",fontWeight:900,color:"#fff" }}>👍 {satisfaction}%</span>
+                    <div style={{ fontSize:".7rem",color:"rgba(255,255,255,.85)",lineHeight:1.3 }}>Patient<br/>Satisfaction</div>
+                  </div>
+                  <div style={{ display:"flex",alignItems:"center",gap:8,background:"#1158A6",borderRadius:8,padding:"6px 12px",minWidth:130 }}>
+                    <span style={{ fontSize:"1.1rem",fontWeight:900,color:"#fff" }}>★ {l.rating}</span>
+                    <div style={{ fontSize:".7rem",color:"rgba(255,255,255,.85)",lineHeight:1.3 }}>Lab Quality<br/>Rating</div>
+                  </div>
+                </div>
+
+                {/* Address + price */}
+                <div style={{ fontSize:".84rem",color:"#374151",marginBottom:2 }}>
+                  <span style={{ fontWeight:600 }}>{l.area||"Hyderabad"}</span>
+                  <span style={{ color:"#9CA3AF",margin:"0 6px" }}>•</span>
+                  <span>{l.name}</span>
+                </div>
+                <div style={{ fontSize:".88rem",color:"#0D1117",fontWeight:700,marginBottom:12 }}>
+                  ~₹{minPrice.toLocaleString()} <span style={{ fontWeight:400,color:"#6B7280",fontSize:".8rem" }}>Starting Price</span>
+                </div>
+
+                {/* Next available */}
+                <div style={{ fontSize:".72rem",fontWeight:800,color:"#16A34A",letterSpacing:".08em",textTransform:"uppercase",marginBottom:6 }}>REPORT READY IN</div>
+                <div style={{ display:"flex",gap:16,marginBottom:16,fontSize:".82rem",color:"#374151" }}>
+                  <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {reportTime}
+                  </div>
+                  {l.homeCollection!==false && (
+                    <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                      Home Collection Available
+                    </div>
+                  )}
+                </div>
+
+                {/* Action buttons */}
+                <div style={{ display:"flex",gap:10,paddingBottom:18 }}>
+                  <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                    style={{ flex:1,background:"#fff",color:"#1158A6",border:"2px solid #1158A6",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
+                    onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+                    onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; }}>View Tests</button>
+                  {selectedTest && matchTest
+                    ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
+                        style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 2px 10px rgba(17,88,166,.3)",transition:"all .15s" }}
+                        onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>Book Now</button>
+                    : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                        style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 2px 10px rgba(17,88,166,.3)",transition:"all .15s" }}
+                        onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>Book Now</button>
+                  }
+                </div>
+
               </div>
             );
           })}
