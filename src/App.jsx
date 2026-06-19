@@ -1887,13 +1887,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 
                   {/* ROW 1: logo | name+price | badge */}
                   <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:12 }}>
-                    {/* Logo */}
-                    <div style={{ width:68,height:68,borderRadius:10,overflow:"hidden",flexShrink:0,border:"1px solid #E5E7EB",background:"#F9FAFB" }}>
-                      {l.logoBase64
-                        ? <img src={l.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
-                        : <div style={{ width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",background:l.color||"#1158A6",color:"#fff",fontWeight:900,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif" }}>{l.name.charAt(0)}</div>
-                      }
-                    </div>
+                    <LabLogo lab={l} size={76} radius={10} />
                     {/* Name + price + badge */}
                     <div style={{ flex:1,minWidth:0 }}>
                       {/* Name row with price on right */}
