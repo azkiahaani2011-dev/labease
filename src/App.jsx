@@ -1850,8 +1850,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       </div>
 
       {/* ── BODY: FULL WIDTH LAB LIST ── */}
-      <div style={{ ...T.wrap, padding:"16px 16px", background:"#F3F4F6", minHeight:"80vh" }}>
+      <div style={{ background:"#F3F4F6", minHeight:"80vh", padding:"16px 0" }}>
         {/* Search + Sort row */}
+        <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:10,marginBottom:16,alignItems:"center",maxWidth:580 }}>
         <div style={{ position:"relative", flex:1 }} ref={labSearchRef}>
           <svg style={{ position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
@@ -1875,7 +1876,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="8" cy="6" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="16" cy="12" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="10" cy="18" r="2" fill="#1158A6" stroke="#1158A6"/></svg>
         </button>
         </div>
-        <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+        </div>
+        <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
           {filtered.length===0 && (
             <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:48,textAlign:"center",color:"#9CA3AF" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
@@ -1888,7 +1890,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const satisfaction = Math.round(85 + (l.rating - 4) * 30);
             const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
             return (
-              <div key={l.id} style={{ background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 1px 4px rgba(0,0,0,.06)",fontFamily:"'Manrope',sans-serif" }}>
+              <div key={l.id} style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
                 <div style={{ padding:"20px 18px 18px" }}>
 
                   {/* ── Row 1: Logo + Info + Checkmark ── */}
