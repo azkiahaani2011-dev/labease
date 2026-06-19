@@ -1850,7 +1850,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       </div>
 
       {/* ── BODY: FULL WIDTH LAB LIST ── */}
-      <div style={{ ...T.wrap, padding:"16px 16px" }}>
+      <div style={{ ...T.wrap, padding:"16px 16px", background:"#F3F4F6", minHeight:"80vh" }}>
         {/* Search + Sort row */}
         <div style={{ display:"flex",gap:10,marginBottom:16,alignItems:"center",maxWidth:580 }}>
         <div style={{ position:"relative", flex:1 }} ref={labSearchRef}>
@@ -1875,9 +1875,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="8" cy="6" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="16" cy="12" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="10" cy="18" r="2" fill="#1158A6" stroke="#1158A6"/></svg>
         </button>
         </div>
-        <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+        <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
           {filtered.length===0 && (
-            <div style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",padding:48,textAlign:"center",color:"var(--muted)" }}>
+            <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:48,textAlign:"center",color:"#9CA3AF" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
               No labs match your filters.
             </div>
@@ -1888,89 +1888,91 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const satisfaction = Math.round(85 + (l.rating - 4) * 30);
             const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
             return (
-              <div key={l.id} style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 18px 0",fontFamily:"'Manrope',sans-serif" }}>
+              <div key={l.id} style={{ background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 1px 4px rgba(0,0,0,.06)",fontFamily:"'Manrope',sans-serif" }}>
+                <div style={{ padding:"20px 18px 18px" }}>
 
-                {/* Top: logo + details */}
-                <div style={{ display:"flex",gap:16,alignItems:"flex-start",marginBottom:14 }}>
-
-                  {/* Logo block */}
-                  <div style={{ flexShrink:0 }}>
-                    <LabLogo lab={l} size={90} radius={12} />
-                  </div>
-
-                  {/* Right details */}
-                  <div style={{ flex:1,minWidth:0 }}>
-                    {/* Name row */}
-                    <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:6,marginBottom:2 }}>
-                      <span onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                        style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",cursor:"pointer" }}>{l.name}</span>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0,marginTop:2 }}><circle cx="12" cy="12" r="10" stroke="#22C55E" strokeWidth="1.8"/><polyline points="8 12 11 15 16 9" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  {/* ── Row 1: Logo + Info + Checkmark ── */}
+                  <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
+                    {/* Logo with label underneath */}
+                    <div style={{ flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:0 }}>
+                      <LabLogo lab={l} size={86} radius={10} />
+                      <div style={{ marginTop:4,background:"#fff",border:"1px solid #E5E7EB",borderRadius:6,padding:"3px 8px",fontSize:".62rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",textAlign:"center",maxWidth:90,lineHeight:1.3 }}>LabEase<br/>VERIFIED</div>
                     </div>
-                    {/* Type */}
-                    <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:3 }}>Diagnostic Lab</div>
-                    {/* Tests count — green message style */}
-                    <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".82rem",fontWeight:700,color:"#16A34A" }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-                      {l.tests.length} Tests Available
+
+                    {/* Text block */}
+                    <div style={{ flex:1,minWidth:0 }}>
+                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:6 }}>
+                        <span style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em" }}>{l.name}</span>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0,marginTop:1 }}>
+                          <circle cx="12" cy="12" r="10" stroke="#9CA3AF" strokeWidth="1.5"/>
+                          <polyline points="8 12 11 15 16 9" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5,marginTop:1 }}>Diagnostic Lab</div>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+                        {l.tests.length} Tests Available
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Stat badges row */}
-                <div style={{ display:"flex",gap:12,marginBottom:12,flexWrap:"wrap" }}>
-                  <div style={{ display:"flex",alignItems:"center",gap:8,background:"#16A34A",borderRadius:8,padding:"6px 12px",minWidth:130 }}>
-                    <span style={{ fontSize:"1.1rem",fontWeight:900,color:"#fff" }}>👍 {satisfaction}%</span>
-                    <div style={{ fontSize:".7rem",color:"rgba(255,255,255,.85)",lineHeight:1.3 }}>Patient<br/>Satisfaction</div>
+                  {/* ── Row 2: Stat badges ── */}
+                  <div style={{ display:"flex",gap:10,marginBottom:14 }}>
+                    <div style={{ flex:1,display:"flex",alignItems:"center",gap:10,background:"#16A34A",borderRadius:10,padding:"9px 12px" }}>
+                      <span style={{ fontSize:"1.15rem",fontWeight:900,color:"#fff",whiteSpace:"nowrap" }}>👍 {satisfaction}%</span>
+                      <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.9)",lineHeight:1.4,fontWeight:600 }}>Patient<br/>Recommendation</span>
+                    </div>
+                    <div style={{ flex:1,display:"flex",alignItems:"center",gap:10,background:"#1158A6",borderRadius:10,padding:"9px 12px" }}>
+                      <span style={{ fontSize:"1.15rem",fontWeight:900,color:"#fff",whiteSpace:"nowrap" }}>✦ {l.rating}</span>
+                      <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.9)",lineHeight:1.4,fontWeight:600 }}>Lab Quality<br/>Rating</span>
+                    </div>
                   </div>
-                  <div style={{ display:"flex",alignItems:"center",gap:8,background:"#1158A6",borderRadius:8,padding:"6px 12px",minWidth:130 }}>
-                    <span style={{ fontSize:"1.1rem",fontWeight:900,color:"#fff" }}>★ {l.rating}</span>
-                    <div style={{ fontSize:".7rem",color:"rgba(255,255,255,.85)",lineHeight:1.3 }}>Lab Quality<br/>Rating</div>
-                  </div>
-                </div>
 
-                {/* Address + price */}
-                <div style={{ fontSize:".84rem",color:"#374151",marginBottom:2 }}>
-                  <span style={{ fontWeight:600 }}>{l.area||"Hyderabad"}</span>
-                  <span style={{ color:"#9CA3AF",margin:"0 6px" }}>•</span>
-                  <span>{l.name}</span>
-                </div>
-                <div style={{ fontSize:".88rem",color:"#0D1117",fontWeight:700,marginBottom:12 }}>
-                  ~₹{minPrice.toLocaleString()} <span style={{ fontWeight:400,color:"#6B7280",fontSize:".8rem" }}>Starting Price</span>
-                </div>
-
-                {/* Next available */}
-                <div style={{ fontSize:".72rem",fontWeight:800,color:"#16A34A",letterSpacing:".08em",textTransform:"uppercase",marginBottom:6 }}>REPORT READY IN</div>
-                <div style={{ display:"flex",gap:16,marginBottom:16,fontSize:".82rem",color:"#374151" }}>
-                  <div style={{ display:"flex",alignItems:"center",gap:5 }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    {reportTime}
+                  {/* ── Row 3: Location + Price ── */}
+                  <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
+                    <span style={{ fontWeight:700 }}>{l.area||"Hyderabad"}</span>
+                    <span style={{ color:"#D1D5DB",margin:"0 7px" }}>•</span>
+                    <span>{l.name}</span>
                   </div>
-                  {l.homeCollection!==false && (
+                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
+                    ~₹{minPrice.toLocaleString()}
+                    <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
+                  </div>
+
+                  {/* ── Row 4: Available slots ── */}
+                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:7 }}>NEXT AVAILABLE AT</div>
+                  <div style={{ display:"flex",gap:20,marginBottom:16,fontSize:".82rem",color:"#374151",fontWeight:500 }}>
                     <div style={{ display:"flex",alignItems:"center",gap:5 }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                      Home Collection Available
+                      {reportTime}, Today
                     </div>
-                  )}
-                </div>
+                    {l.homeCollection!==false && (
+                      <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        Home Collection
+                      </div>
+                    )}
+                  </div>
 
-                {/* Action buttons */}
-                <div style={{ display:"flex",gap:10,paddingBottom:18 }}>
-                  <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                    style={{ flex:1,background:"#fff",color:"#1158A6",border:"2px solid #1158A6",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}
-                    onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; }}>View Tests</button>
-                  {selectedTest && matchTest
-                    ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                        style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 2px 10px rgba(17,88,166,.3)",transition:"all .15s" }}
-                        onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>Book Now</button>
-                    : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                        style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 2px 10px rgba(17,88,166,.3)",transition:"all .15s" }}
-                        onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; }}>Book Now</button>
-                  }
-                </div>
+                  {/* ── Row 5: Action buttons ── */}
+                  <div style={{ display:"flex",gap:10 }}>
+                    <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                      style={{ flex:1,background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
+                      onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
+                      onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+                    {selectedTest && matchTest
+                      ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
+                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                      : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                    }
+                  </div>
 
+                </div>
               </div>
             );
           })}
