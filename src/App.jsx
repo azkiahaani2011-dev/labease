@@ -1868,7 +1868,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             </div>
           )}
         </div>
-        <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
+        <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
           {filtered.length===0 && (
             <div style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",padding:48,textAlign:"center",color:"var(--muted)" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
@@ -1881,7 +1881,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const minPrice = displayPrice;
             return (
               <div key={l.id} className="hover-lift"
-                style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.06)",cursor:"pointer" }}
+                style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",cursor:"pointer" }}
                 onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
                 <div style={{ padding:"18px 16px 16px" }}>
 
