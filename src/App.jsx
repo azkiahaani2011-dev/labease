@@ -1881,88 +1881,78 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const minPrice = displayPrice;
             return (
               <div key={l.id} className="hover-lift"
-                style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)",cursor:"pointer" }}
+                style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.06)",cursor:"pointer" }}
                 onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
+                <div style={{ padding:"18px 16px 16px" }}>
 
-                <div style={{ display:"flex" }}>
-                  <div style={{ flex:1,padding:"16px 16px 14px" }}>
-                    <div style={{ display:"flex",gap:18,alignItems:"flex-start",flexWrap:"wrap" }}>
-                      <LabLogo lab={l} />
-                      <div style={{ flex:1,minWidth:180 }}>
-                        <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:5 }}>
-                          <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"var(--ink)",letterSpacing:"-.02em" }}>{l.name}</span>
-                          {l.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 9px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
-                        </div>
-                        <div style={{ display:"flex",alignItems:"center",gap:5,color:"var(--muted)",fontSize:".8rem",marginBottom:8,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>
-                          <svg style={{flexShrink:0}} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                          <span style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{l.area}, Bangalore &nbsp;·&nbsp; <strong style={{ color:"var(--ink)" }}>{l.dist} away</strong></span>
-                        </div>
-                        <div style={{ display:"flex",flexWrap:"wrap",gap:5,marginBottom:10 }}>
-                          {l.tags.map(t=>(
-                            <span key={t} style={{ background:"#F1F5F9",color:"#374151",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>{t}</span>
-                          ))}
-                          {l.homecoll && <span style={{ background:"#E0F2FE",color:"#0369A1",borderRadius:6,padding:"3px 9px",fontSize:".7rem",fontWeight:600 }}>🏠 Home Collection</span>}
-                        </div>
-                        <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                          <div style={{ display:"flex",alignItems:"center",gap:4,background:"#EEF4FF",borderRadius:7,padding:"3px 9px",fontSize:".75rem",fontWeight:800 }}>
-                            <span style={{ color:"#F59E0B" }}>★</span>
-                            <span style={{ color:"#0D1117" }}>{l.rating}</span>
-                          </div>
-                          <span style={{ fontSize:".75rem",color:"var(--muted)",fontWeight:500 }}>
-                            {l.rating>=4.8?"Excellent":l.rating>=4.6?"Very Good":"Good"} · {l.reviews.toLocaleString()} reviews
-                          </span>
-                        </div>
-                      </div>
-                      <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10,flexShrink:0 }}>
-                        <div style={{ textAlign:"right",whiteSpace:"nowrap" }}>
-                          <div style={{ fontSize:".7rem",color:"var(--muted)",fontWeight:500 }}>{selectedTest ? selectedTest.name : "Tests starting from"}</div>
-                          <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>{matchTest||!selectedTest ? `₹${minPrice}` : "Not available"}</div>
-                        </div>
-                        {selectedTest && !matchTest && (
-                          <span style={{ fontSize:".75rem",color:"#9CA3AF",fontWeight:600 }}>Not offered</span>
-                        )}
-                        {!selectedTest && (
-                          <>
-                            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",boxShadow:"0 2px 8px rgba(17,88,166,.25)" }}
-                              onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
-                              onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              Book
-                            </button>
-                            <a href="tel:+918000000000" onClick={e=>e.stopPropagation()}
-                              style={{ background:"#F0FDF4",color:"#16A34A",border:"1px solid #BBF7D0",borderRadius:9,padding:"9px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:6,textDecoration:"none",boxSizing:"border-box" }}
-                              onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
-                              onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                              Contact Lab
-                            </a>
-                          </>
-                        )}
-                      </div>
+                  {/* ROW 1: logo | name+price | badge */}
+                  <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:12 }}>
+                    {/* Logo */}
+                    <div style={{ width:68,height:68,borderRadius:10,overflow:"hidden",flexShrink:0,border:"1px solid #E5E7EB",background:"#F9FAFB" }}>
+                      {l.logoBase64
+                        ? <img src={l.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                        : <div style={{ width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",background:l.color||"#1158A6",color:"#fff",fontWeight:900,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif" }}>{l.name.charAt(0)}</div>
+                      }
                     </div>
-                    <div style={{ display:"flex",gap:20,marginTop:14,paddingTop:12,borderTop:"1px solid #F1F5F9",flexWrap:"wrap" }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".75rem",color:"var(--muted)" }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        {l.timing}
+                    {/* Name + price + badge */}
+                    <div style={{ flex:1,minWidth:0 }}>
+                      {/* Name row with price on right */}
+                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:5 }}>
+                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em" }}>{l.name}</span>
+                        <span style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"#0D1117",flexShrink:0,letterSpacing:"-.03em",whiteSpace:"nowrap" }}>
+                          ₹{minPrice.toLocaleString()}
+                        </span>
                       </div>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".75rem",color:"#065F46",fontWeight:600 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Reports in {l.reportTime || (l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}
-                      </div>
-                      <div style={{ fontSize:".75rem",color:"var(--muted)" }}>{l.tests.length}+ tests available</div>
-                      {l.nabl && <div style={{ fontSize:".75rem",color:"#1158A6",fontWeight:600 }}>NABL Accredited · Est. {l.founded}</div>}
+                      {/* Badge */}
+                      <span style={{ background:"#DBEAFE",color:"#1E40AF",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,display:"inline-block",lineHeight:1.5 }}>
+                        {selectedTest ? selectedTest.name : (l.tags && l.tags[0]) || "Diagnostics"}
+                      </span>
+                      {l.nabl && <span style={{ marginLeft:6,background:"#D1FAE5",color:"#065F46",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,display:"inline-block" }}>✓ NABL</span>}
                     </div>
-                    {selectedTest && matchTest && (
-                      <div style={{ paddingTop:12,borderTop:"1px solid #F1F5F9",marginTop:4 }}>
-                        <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
-                          style={{ display:"block",margin:"0 auto",background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"13px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",width:"60%",transition:"filter .15s",boxShadow:"0 4px 14px rgba(17,88,166,.3)",letterSpacing:"-.01em",textAlign:"center" }}
-                          onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
-                          onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                          Book
-                        </button>
-                      </div>
-                    )}
                   </div>
+
+                  {/* ROW 2: address (left) + Book Now (right) */}
+                  <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:14,marginBottom:12 }}>
+                    <div style={{ fontSize:".85rem",fontWeight:700,color:"#374151",lineHeight:1.6,flex:1 }}>
+                      {l.address || `${l.area || "Hyderabad"}, Telangana, India`}
+                    </div>
+                    {selectedTest && matchTest
+                      ? <button onClick={e=>{ e.stopPropagation(); addCart(l, matchTest); setCartOpen(true); }}
+                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                          Book Now
+                        </button>
+                      : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 10px rgba(17,88,166,.3)" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                          Book Now
+                        </button>
+                    }
+                  </div>
+
+                  {/* ROW 3: report time */}
+                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:7,fontSize:".83rem",color:"#374151" }}>
+                    <span style={{ fontSize:"1rem" }}>⌛</span>
+                    <span>{l.reportTime || (l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs")}</span>
+                  </div>
+
+                  {/* ROW 4: test count + View More */}
+                  <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:10,fontSize:".83rem",color:"#374151" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>{l.tests.length}</span>
+                    <span onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                      style={{ color:"#1158A6",fontWeight:600,cursor:"pointer",textDecoration:"underline" }}>(View More)</span>
+                  </div>
+
+                  {/* ROW 5: rating pill */}
+                  <div style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#DBEAFE",borderRadius:20,padding:"5px 13px" }}>
+                    <span style={{ color:"#F59E0B",fontSize:"1rem",lineHeight:1 }}>★</span>
+                    <span style={{ fontWeight:800,fontSize:".83rem",color:"#0D1117" }}>{l.rating}</span>
+                    <span style={{ fontSize:".78rem",color:"#374151" }}>({l.reviews} Reviews)</span>
+                  </div>
+
                 </div>
               </div>
             );
