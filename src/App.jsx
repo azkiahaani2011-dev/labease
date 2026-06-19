@@ -1912,14 +1912,16 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
                         {l.tests.length} Tests Available
                       </div>
-                      {/* Rating inline */}
-                      <div style={{ display:"inline-flex",alignItems:"center",gap:4,marginTop:6,background:"#FEF9C3",borderRadius:6,padding:"3px 8px" }}>
-                        <span style={{ color:"#F59E0B",fontSize:".9rem" }}>★</span>
-                        <span style={{ fontWeight:800,fontSize:".82rem",color:"#92400E" }}>{l.rating}</span>
-                        <span style={{ fontSize:".76rem",color:"#78350F" }}>({l.reviews} reviews)</span>
+                      {/* Rating — directly below tests */}
+                      <div style={{ display:"flex",alignItems:"center",gap:4,marginTop:5,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",alignSelf:"flex-start",width:"fit-content" }}>
+                        <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
+                        <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
+                        <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
                       </div>
                     </div>
                   </div>
+
+                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
 
                   {/* ── Row 2: Location + Price ── */}
                   <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
@@ -1931,6 +1933,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     ~₹{minPrice.toLocaleString()}
                     <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
                   </div>
+
+                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
 
                   {/* ── Row 4+5: time labels above buttons ── */}
                   <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>NEXT AVAILABLE AT</div>
