@@ -1932,37 +1932,37 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
                   </div>
 
-                  {/* ── Row 4: Available slots ── */}
-                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:7 }}>NEXT AVAILABLE AT</div>
-                  <div style={{ display:"flex",gap:20,marginBottom:16,fontSize:".82rem",color:"#374151",fontWeight:500 }}>
-                    <div style={{ display:"flex",alignItems:"center",gap:5 }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                      {reportTime}, Today
-                    </div>
-                    {l.homeCollection!==false && (
-                      <div style={{ display:"flex",alignItems:"center",gap:5 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        Home Collection
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── Row 5: Action buttons ── */}
+                  {/* ── Row 4+5: time labels above buttons ── */}
+                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>NEXT AVAILABLE AT</div>
                   <div style={{ display:"flex",gap:10 }}>
-                    <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                      style={{ flex:1,background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
-                      onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-                      onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
-                    {selectedTest && matchTest
-                      ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
-                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                      : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
-                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                    }
+                    {/* Left column: time → View Tests */}
+                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {reportTime}, Today
+                      </div>
+                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                        style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
+                        onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
+                        onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+                    </div>
+                    {/* Right column: home collection → Book Now */}
+                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        {l.homeCollection!==false ? "Home Collection" : "Walk-in Only"}
+                      </div>
+                      {selectedTest && matchTest
+                        ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                      }
+                    </div>
                   </div>
 
                 </div>
