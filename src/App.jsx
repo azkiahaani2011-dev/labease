@@ -4226,7 +4226,19 @@ export default function App() {
           </div>
         </div>
       </nav>
-      <div style={{height:64}}/>{/* spacer for fixed navbar */}
+      {/* ── Sticky trust bar ── */}
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"#1B3A6B",height:36,display:"flex",alignItems:"center",justifyContent:"center",gap:0 }}>
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          <span style={{ color:"#fff",fontSize:".72rem",fontWeight:700,letterSpacing:".06em",textTransform:"uppercase" }}>NABL Accredited Labs</span>
+        </div>
+        <div style={{ width:1,height:16,background:"rgba(255,255,255,.25)",margin:"0 20px" }}/>
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span style={{ color:"#fff",fontSize:".72rem",fontWeight:700,letterSpacing:".06em",textTransform:"uppercase" }}>Free Home Sample Collection</span>
+        </div>
+      </div>
+      <div style={{height:100}}/>{/* spacer for fixed navbar + trust bar */}
 
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
