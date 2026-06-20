@@ -3321,7 +3321,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(135deg,#0A1628 0%,#0F2147 50%,#0A1628 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
         {/* background geometric accents */}
         <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
