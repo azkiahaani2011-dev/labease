@@ -2028,7 +2028,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   return (
   <div style={{ minHeight:"80vh" }}>
     {/* sticky header */}
-    <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:108,zIndex:50 }}>
+    <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:102,zIndex:50 }}>
       <div style={{ ...T.wrap,padding:"10px 12px" }}>
         <div style={{ display:"flex",gap:12,alignItems:"center",marginBottom:8 }}>
           <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
@@ -4233,12 +4233,12 @@ export default function App() {
         </div>
       </nav>
       {/* ── Sticky trust bar ── */}
-      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:44,display:"flex",alignItems:"center",justifyContent:"center" }}>
-        <span style={{ color:"#fff",fontSize:".65rem",fontWeight:700,letterSpacing:".18em",textTransform:"uppercase",opacity:.9 }}>NABL Accredited Labs</span>
-        <div style={{ width:1,height:16,background:"rgba(255,255,255,.3)",margin:"0 20px",flexShrink:0 }}/>
-        <span style={{ color:"#fff",fontSize:".65rem",fontWeight:700,letterSpacing:".18em",textTransform:"uppercase",opacity:.9 }}>Free Home Sample Collection</span>
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:38,display:"flex",alignItems:"center",justifyContent:"center" }}>
+        <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>NABL Accredited Labs</span>
+        <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 18px",flexShrink:0 }}/>
+        <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>Free Home Sample Collection</span>
       </div>
-      <div style={{height:108}}/>{/* spacer for fixed navbar + trust bar */}
+      <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
 
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
