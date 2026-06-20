@@ -3571,34 +3571,29 @@ export default function App() {
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
       <section style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
-        {/* Subtle grid overlay */}
-        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
-        {/* Glow orbs */}
-        <div style={{ position:"absolute",top:"10%",left:"20%",width:320,height:320,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,.15),transparent 70%)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",bottom:"5%",right:"15%",width:260,height:260,borderRadius:"50%",background:"radial-gradient(circle,rgba(139,92,246,.1),transparent 70%)",pointerEvents:"none" }}/>
         <div style={{ position:"relative",zIndex:1,maxWidth:600,margin:"0 auto" }}>
-          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:22 }}>
-            <span style={{ width:6,height:6,borderRadius:"50%",background:"#4ADE80",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".7rem",fontWeight:700,color:"rgba(255,255,255,.7)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.15)",borderRadius:50,padding:"5px 16px",marginBottom:22 }}>
+            <span style={{ width:6,height:6,borderRadius:"50%",background:"#059669",flexShrink:0,display:"inline-block" }}/>
+            <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
           </div>
-          <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.8rem,4vw,2.8rem)",fontWeight:700,color:"#fff",marginBottom:14,lineHeight:1.18,letterSpacing:"-.01em" }}>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.8rem)",fontWeight:900,color:"#0A1628",marginBottom:14,lineHeight:1.18,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
           </h2>
-          <p style={{ color:"rgba(255,255,255,.6)",marginBottom:36,fontSize:".95rem",lineHeight:1.75,maxWidth:440,margin:"0 auto 36px" }}>
+          <p style={{ color:"#5A6478",marginBottom:36,fontSize:".95rem",lineHeight:1.75,maxWidth:440,margin:"0 auto 36px" }}>
             Transparent pricing · Free doorstep collection · Digital reports in hours. Trusted by 50,000+ patients.
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".92rem",boxShadow:"0 8px 32px rgba(0,0,0,.25)",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 14px 40px rgba(0,0,0,.3)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,.25)"; }}>
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".92rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#0F2D6B"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#1158A6"; }}>
               Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.25)",borderRadius:50,padding:"14px 32px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.borderColor="rgba(255,255,255,.5)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.25)"; }}>
+              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"14px 32px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#1158A6"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#1158A6"; }}>
               View Lab Packages
             </button>
           </div>
