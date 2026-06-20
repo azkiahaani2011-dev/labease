@@ -7,7 +7,7 @@ const G = () => (
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Manrope', sans-serif; background: #FAFAFA; color: #111; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Manrope', sans-serif; background: #EEF2FF; color: #111; -webkit-font-smoothing: antialiased; }
 
     :root {
       --teal: #1158A6;
@@ -396,10 +396,10 @@ const G = () => (
     /* ════════════════════════════════════════════════════════════════
        FAQ — accordion polish
     ════════════════════════════════════════════════════════════════ */
-    div[style*="background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF""] {
+    div[style*="background:"#EEF2FF",borderRadius:14,border:"1px solid #EEF2FF""] {
       transition: border-color .18s, box-shadow .18s !important;
     }
-    div[style*="background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF""]:hover {
+    div[style*="background:"#EEF2FF",borderRadius:14,border:"1px solid #EEF2FF""]:hover {
       border-color: #DBEAFE !important;
       box-shadow: 0 4px 16px rgba(17,88,166,.06) !important;
     }
@@ -1382,15 +1382,15 @@ const UploadPrescription = () => {
             </div>
 
             {/* security note */}
-            <div style={{ margin:"0 20px 8px",background:"#FAFAFA",borderRadius:12,padding:"10px 14px",display:"flex",alignItems:"center",gap:9,border:"1px solid #F1F5F9" }}>
+            <div style={{ margin:"0 20px 8px",background:"#EEF2FF",borderRadius:12,padding:"10px 14px",display:"flex",alignItems:"center",gap:9,border:"1px solid #F1F5F9" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               <span style={{ fontSize:".72rem",color:"#9CA3AF",lineHeight:1.4 }}>Your prescription is encrypted and shared only with your chosen lab</span>
             </div>
 
             <div style={{ padding:"4px 20px 28px" }}>
-              <button onClick={close} style={{ width:"100%",background:"#F3F4F6",border:"none",color:"#374151",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",padding:"13px",borderRadius:14,transition:"background .14s" }}
+              <button onClick={close} style={{ width:"100%",background:"#EEF2FF",border:"none",color:"#374151",fontWeight:700,fontSize:".88rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",padding:"13px",borderRadius:14,transition:"background .14s" }}
                 onMouseEnter={e=>e.currentTarget.style.background="#E5E7EB"}
-                onMouseLeave={e=>e.currentTarget.style.background="#F3F4F6"}>
+                onMouseLeave={e=>e.currentTarget.style.background="#EEF2FF"}>
                 Cancel
               </button>
             </div>
@@ -1417,7 +1417,7 @@ const UploadPrescription = () => {
 
               {/* image preview */}
               {preview ? (
-                <div style={{ borderRadius:14,overflow:"hidden",marginBottom:16,border:"1px solid #E5E7EB",background:"#F8FAFC",display:"flex",alignItems:"center",justifyContent:"center",minHeight:180 }}>
+                <div style={{ borderRadius:14,overflow:"hidden",marginBottom:16,border:"1px solid #E5E7EB",background:"#EEF2FF",display:"flex",alignItems:"center",justifyContent:"center",minHeight:180 }}>
                   <img src={preview} alt="Prescription" style={{ maxHeight:240,maxWidth:"100%",objectFit:"contain",display:"block" }}/>
                 </div>
               ) : (
@@ -1428,7 +1428,7 @@ const UploadPrescription = () => {
               )}
 
               {/* file chip */}
-              <div style={{ display:"flex",alignItems:"center",gap:12,background:"#F8FAFC",borderRadius:11,padding:"11px 14px",border:"1px solid #E9EEF2",marginBottom:16 }}>
+              <div style={{ display:"flex",alignItems:"center",gap:12,background:"#EEF2FF",borderRadius:11,padding:"11px 14px",border:"1px solid #E9EEF2",marginBottom:16 }}>
                 <div style={{ width:36,height:36,borderRadius:9,background:isPdf?"#FEE2E2":"#DBEAFE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                   {isPdf
                     ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -1756,7 +1756,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
       onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
       {/* top colour strip / logo */}
       {l.logoBase64
-        ? <div style={{ height:56,background:"#F9FAFB",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ maxHeight:44,maxWidth:120,objectFit:"contain" }}/></div>
+        ? <div style={{ height:56,background:"#EEF2FF",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ maxHeight:44,maxWidth:120,objectFit:"contain" }}/></div>
         : <div style={{ height:8,background:"#E5E7EB" }}/>
       }
       <div style={{ padding:22 }}>
@@ -1840,7 +1840,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     );
 
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#EEF2FF", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"32px 0 28px" }}>
@@ -1850,7 +1850,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       </div>
 
       {/* ── BODY: FULL WIDTH LAB LIST ── */}
-      <div style={{ background:"#F3F4F6", minHeight:"80vh", padding:"16px 0" }}>
+      <div style={{ background:"#EEF2FF", minHeight:"80vh", padding:"16px 0" }}>
         {/* Search + Sort row */}
         <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:10,marginBottom:16,alignItems:"center",maxWidth:580 }}>
@@ -2042,7 +2042,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
 
       {/* test table */}
       <div style={{ ...T.card,borderRadius:16,border:"1px solid var(--line)" }}>
-        <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr 100px 100px 110px",padding:"12px 20px",background:"#F8FAFC",borderBottom:"1px solid var(--line)",fontSize:".74rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:16,alignItems:"center" }}>
+        <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr 100px 100px 110px",padding:"12px 20px",background:"#EEF2FF",borderBottom:"1px solid var(--line)",fontSize:".74rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:16,alignItems:"center" }}>
           <span>Test Name</span>
           <span style={{ textAlign:"center" }}>Price</span>
           <span style={{ textAlign:"center" }}>MRP</span>
@@ -2087,7 +2087,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           );
         })}
         {filtTests.length > TESTS_LIMIT && (
-          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F8FAFC",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F8FAFC"}>
+          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#EEF2FF",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#EEF2FF"}>
             {showAllTests ? "Show Less ↑" : `Show ${filtTests.length - TESTS_LIMIT} More Tests ↓`}
           </button>
         )}
@@ -2137,7 +2137,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   });
 
   return (
-    <section style={{ padding:"18px 0 16px", background:"#F8FAFC", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
+    <section style={{ padding:"18px 0 16px", background:"#EEF2FF", borderTop:"1px solid #E2E8F0", borderBottom:"1px solid #E2E8F0" }}>
       <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:24, flexWrap:"wrap", gap:12 }}>
           <div style={{ textAlign:"left" }}>
@@ -2186,7 +2186,7 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
 /* ─── ALL SPECIALITIES / ALL TESTS PAGE ─────────────────────────────────── */
 function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F7FA", fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#EEF2FF", fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
           <button onClick={()=>navTo("home")} style={{ width:40,height:40,borderRadius:"50%",border:"1px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:6,transition:"all .18s",boxShadow:"0 1px 6px rgba(0,0,0,.07)" }} aria-label="Back">
@@ -2420,7 +2420,7 @@ function PaymentSelector({ total, onPay, onBack }) {
           <div style={{ display:"flex",gap:8 }}>
             <input value={upi} onChange={e=>setUpi(e.target.value)}
               placeholder="yourname@upi"
-              style={{ flex:1,border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",color:"#111",background:"#FAFAFA" }}
+              style={{ flex:1,border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",color:"#111",background:"#EEF2FF" }}
               onFocus={e=>e.target.style.borderColor="#1158A6"}
               onBlur={e=>e.target.style.borderColor="#DBEAFE"}
             />
@@ -2475,7 +2475,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
   return (
-    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#EEF2FF",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
 
         <button onClick={()=>navTo("lab")} style={{ width:40,height:40,borderRadius:"50%",border:"1px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,transition:"all .18s",boxShadow:"0 1px 6px rgba(0,0,0,.07)" }} aria-label="Back">
@@ -2575,7 +2575,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <div style={{ display:"flex",flexWrap:"wrap",gap:8 }}>
                   {TIME_SLOTS.map(s=>(
                     <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
+                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#EEF2FF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
                       {s}
                     </button>
                   ))}
@@ -2641,7 +2641,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
               {/* Address input */}
               {loc.mode==="home"&&(
-                <div style={{ background:"#F8FAFF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
+                <div style={{ background:"#EEF2FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
                   <label style={{ display:"flex",alignItems:"center",gap:7,fontWeight:700,fontSize:".82rem",color:"#1158A6",marginBottom:10 }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
@@ -2681,7 +2681,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 4 of 5</div>
                 </div>
               </div>
-              <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #EEF2FF" }}>
+              <div style={{ background:"#EEF2FF",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #EEF2FF" }}>
                 <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Booking Details</div>
                 {[["Patient",form.name],["Phone",form.phone],["Email",form.email],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Mode",form.mode==="home"?"Home Collection":"Visit Lab"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
                   <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
@@ -2690,7 +2690,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   </div>
                 ))}
               </div>
-              <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #EEF2FF" }}>
+              <div style={{ background:"#EEF2FF",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #EEF2FF" }}>
                 <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Selected Tests</div>
                 {cart.map(item=>(
                   <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:7,fontSize:".83rem" }}>
@@ -3268,7 +3268,7 @@ export default function App() {
   const T = {
     btn:(bg="var(--teal)",fg="#fff")=>({ background:bg,color:fg,border:"none",borderRadius:10,padding:"12px 26px",fontWeight:700,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",display:"inline-flex",alignItems:"center",gap:8 }),
     out:{ background:"transparent",color:"var(--teal)",border:"1.5px solid var(--teal)",borderRadius:10,padding:"11px 22px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" },
-    inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block" },
+    inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#EEF2FF",color:"#111",display:"block" },
     wrap:{ maxWidth:1600,margin:"0 auto",padding:"0 24px" },
     card:{ background:"#fff",borderRadius:18,boxShadow:"var(--card-shadow)" },
     serif:{ fontFamily:"'DM Serif Display',serif" },
@@ -3355,7 +3355,7 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#EEF2FF",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
@@ -3481,7 +3481,7 @@ export default function App() {
       <FeaturesCarousel/>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"18px 0",background:"#F8FAFF" }}>
+      <section style={{ padding:"18px 0",background:"#EEF2FF" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
@@ -3527,7 +3527,7 @@ export default function App() {
           </div>
           <div style={{ display:"grid",gap:8 }}>
             {FAQS.map((item,i)=>(
-              <div key={i} style={{ background:"#F8FAFF",borderRadius:14,border:"1px solid #EEF2FF",overflow:"hidden",transition:"all .18s" }}>
+              <div key={i} style={{ background:"#EEF2FF",borderRadius:14,border:"1px solid #EEF2FF",overflow:"hidden",transition:"all .18s" }}>
                 <button className="faq-q" onClick={()=>setFaq(faq===i?null:i)}
                   style={{ width:"100%",background:"none",border:"none",padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .18s" }}>
                   <span style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117",lineHeight:1.4,flex:1,marginRight:14 }}>{item.q}</span>
@@ -3666,7 +3666,7 @@ export default function App() {
 
   /* ─── POLICY PAGE ───────────────────────────────────────────── */
   const PolicyPage = ({ title, content, navTo }) => (
-    <div style={{ minHeight:"100vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"100vh",background:"#EEF2FF",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 0" }}>
         <div style={{ maxWidth:760,margin:"0 auto",padding:"0 20px" }}>
           <button onClick={()=>navTo("home")} style={{ width:40,height:40,borderRadius:"50%",border:"1px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:16,transition:"all .18s",boxShadow:"0 1px 6px rgba(0,0,0,.07)" }} aria-label="Back">
@@ -3722,7 +3722,7 @@ export default function App() {
   const CartPage = () => {
     const [prepOpen, setPrepOpen] = React.useState(false);
     return (
-      <div style={{ minHeight:"80vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
+      <div style={{ minHeight:"80vh",background:"#EEF2FF",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
           <button onClick={()=>navTo("home")} style={{ width:40,height:40,borderRadius:"50%",border:"1px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,transition:"all .18s",boxShadow:"0 1px 6px rgba(0,0,0,.07)" }} aria-label="Back">
@@ -3806,7 +3806,7 @@ export default function App() {
                 const isSpecial = prep.prep !== "No special requirement.";
                 return (
                   <div key={item.tid} style={{ marginBottom:14,borderRadius:14,border:"1px solid #E5E7EB",overflow:"hidden" }}>
-                    <div style={{ background:"#F9FAFB",padding:"11px 16px",borderBottom:"1px solid #E5E7EB" }}>
+                    <div style={{ background:"#EEF2FF",padding:"11px 16px",borderBottom:"1px solid #E5E7EB" }}>
                       <div style={{ fontWeight:700,fontSize:".88rem" }}>{item.tname}</div>
                       <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
                     </div>
@@ -3838,7 +3838,7 @@ export default function App() {
      CONFIRM PAGE
   ═══════════════════════════════════════════════════════════════ */
   const Confirm = () => (
-    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F8FAFF",fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#EEF2FF",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff",maxWidth:520,width:"100%",padding:"40px 36px",textAlign:"center",animation:"scaleIn .35s cubic-bezier(.34,1.56,.64,1)",borderRadius:24,border:"1.5px solid #EEF2FF",boxShadow:"0 8px 40px rgba(17,88,166,.1)" }}>
 
         {/* success icon */}
@@ -3856,7 +3856,7 @@ export default function App() {
         </div>
 
         {/* summary */}
-        <div style={{ background:"#F8FAFF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
+        <div style={{ background:"#EEF2FF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
           {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",`${done?.cart?.length} test(s)`],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
             <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
               <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
@@ -3867,9 +3867,9 @@ export default function App() {
 
         <div style={{ display:"flex",gap:10 }}>
           <button onClick={()=>{ navTo("labs"); setDone(null); }}
-            style={{ flex:1,background:"#F8FAFF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+            style={{ flex:1,background:"#EEF2FF",color:"#1158A6",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"12px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
             onMouseEnter={e=>{ e.currentTarget.style.background="#EEF4FF"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="#F8FAFF"; }}>
+            onMouseLeave={e=>{ e.currentTarget.style.background="#EEF2FF"; }}>
             Book More
           </button>
           <button onClick={()=>navTo("home")}
@@ -3914,7 +3914,7 @@ export default function App() {
     ];
 
     return (
-      <div style={{ minHeight:"100vh",background:"#F5F7FA",fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ minHeight:"100vh",background:"#EEF2FF",fontFamily:"'Manrope',sans-serif" }}>
         {/* ── page header ── */}
         <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",padding:"20px 0" }}>
           <div style={{ ...T.wrap }}>
@@ -4120,7 +4120,7 @@ export default function App() {
      NAV + SHELL
   ═══════════════════════════════════════════════════════════════ */
   return (
-    <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#FAFAFA" }}>
+    <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#EEF2FF" }}>
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
@@ -4163,7 +4163,7 @@ export default function App() {
             {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:180,zIndex:300,overflow:"hidden" }}>
               {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
               {!user&&[["Log In",()=>{ setProfileDrop(false); openAuth("login"); },"#374151"],["Sign Up",()=>{ setProfileDrop(false); openAuth("signup"); },"#1158A6"]].map(([lbl,fn,clr])=>(
-                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#F8FAFF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
+                <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:clr,textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#EEF2FF"} onMouseLeave={e=>e.currentTarget.style.background="none"}>{lbl}</button>
               ))}
               {user&&<div style={{ borderTop:"1px solid #F1F5F9" }}><button onClick={()=>{ setProfileDrop(false); handleLogout(); }} style={{ display:"block",width:"100%",padding:"11px 15px",background:"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".86rem",fontWeight:700,color:"#DC2626",textAlign:"left",minHeight:44 }} onMouseEnter={e=>e.currentTarget.style.background="#FEF2F2"} onMouseLeave={e=>e.currentTarget.style.background="none"}>Sign Out</button></div>}
             </div>}
@@ -4276,7 +4276,7 @@ export default function App() {
                   {/* Preparation Guide — separate section */}
                   <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
                     <button onClick={()=>setPrepGuideOpen(o=>!o)}
-                      style={{ width:"100%",background:prepGuideOpen?"#FFFBEB":"#F9FAFB",border:"none",borderBottom:prepGuideOpen?"1.5px solid #FDE68A":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:prepGuideOpen?"#92400E":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+                      style={{ width:"100%",background:prepGuideOpen?"#FFFBEB":"#EEF2FF",border:"none",borderBottom:prepGuideOpen?"1.5px solid #FDE68A":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:prepGuideOpen?"#92400E":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
                       📋 Preparation Guide <span style={{ fontSize:".75rem" }}>{prepGuideOpen?"▾":"▸"}</span>
                     </button>
                     {prepGuideOpen && (
@@ -4287,7 +4287,7 @@ export default function App() {
                           const isSpecial = prep.prep !== "No special requirement.";
                           return (
                             <div key={item.tid} style={{ borderRadius:9,overflow:"hidden",border:"1px solid #E5E7EB" }}>
-                              <div style={{ background:"#F9FAFB",padding:"8px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+                              <div style={{ background:"#EEF2FF",padding:"8px 12px",borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
                                 <span style={{ fontWeight:700,fontSize:".82rem" }}>{item.tname}</span>
                                 <span style={{ background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,padding:"2px 8px",fontSize:".68rem",fontWeight:600 }}>{sampleIcon} {prep.sample}</span>
                               </div>
@@ -4353,21 +4353,21 @@ export default function App() {
                 <>
                   <div style={{ marginBottom:14 }}>
                     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Full Name</label>
-                    <input value={authForm.name} onChange={e=>setAuthForm(f=>({...f,name:e.target.value}))} placeholder="Priya Sharma" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                    <input value={authForm.name} onChange={e=>setAuthForm(f=>({...f,name:e.target.value}))} placeholder="Priya Sharma" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#EEF2FF",color:"#111",display:"block",boxSizing:"border-box" }}/>
                   </div>
                   <div style={{ marginBottom:14 }}>
                     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Phone Number</label>
-                    <input value={authForm.phone} onChange={e=>setAuthForm(f=>({...f,phone:e.target.value}))} placeholder="+91 98765 43210" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                    <input value={authForm.phone} onChange={e=>setAuthForm(f=>({...f,phone:e.target.value}))} placeholder="+91 98765 43210" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#EEF2FF",color:"#111",display:"block",boxSizing:"border-box" }}/>
                   </div>
                 </>
               )}
               <div style={{ marginBottom:14 }}>
                 <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Email Address</label>
-                <input type="email" value={authForm.email} onChange={e=>setAuthForm(f=>({...f,email:e.target.value}))} placeholder="you@example.com" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                <input type="email" value={authForm.email} onChange={e=>setAuthForm(f=>({...f,email:e.target.value}))} placeholder="you@example.com" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#EEF2FF",color:"#111",display:"block",boxSizing:"border-box" }}/>
               </div>
               <div style={{ marginBottom:authErr?10:20 }}>
                 <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:6 }}>Password</label>
-                <input type="password" value={authForm.password} onChange={e=>setAuthForm(f=>({...f,password:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&handleAuth()} placeholder="Min 6 characters" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#FAFAFA",color:"#111",display:"block",boxSizing:"border-box" }}/>
+                <input type="password" value={authForm.password} onChange={e=>setAuthForm(f=>({...f,password:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&handleAuth()} placeholder="Min 6 characters" style={{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"11px 14px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#EEF2FF",color:"#111",display:"block",boxSizing:"border-box" }}/>
               </div>
 
               {authErr && (
