@@ -677,7 +677,7 @@ const G = () => (
     /* ════════════════════════════════════════════════════════════════
        HERO — mobile compact
     ════════════════════════════════════════════════════════════════ */
-    .hero-section { min-height: 340px; }
+    .hero-section { min-height: 0; }
     .hero-img-col { display: flex; }
     @media (max-width: 767px) {
       .hero-section { min-height: 0 !important; overflow: hidden !important; max-width: 100vw !important; }
@@ -3339,12 +3339,12 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"#1158A6", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"#1158A6", position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?14:22,paddingBottom:isMobile?14:22,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ width:"100%",boxSizing:"border-box",padding:isMobile?"16px 16px 20px":"28px 24px" }}>
+          <div style={{ maxWidth:560,margin:"0 auto",textAlign:"center" }}>
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2.2rem)",color:"#fff",lineHeight:1.2,marginBottom:16,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:isMobile?"1.25rem":"1.9rem",color:"#fff",lineHeight:1.25,marginBottom:12,fontWeight:900,letterSpacing:"-.02em" }}>
               Book Lab Tests from <span style={{ color:"#A5D8FF" }}>Trusted Labs Near You</span>
             </h1>
 
@@ -3352,13 +3352,11 @@ export default function App() {
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
             {/* swipeable popular chips */}
-            <div style={{ display:"flex",gap:8,marginTop:14,overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",paddingBottom:2,WebkitOverflowScrolling:"touch" }}>
-              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.5)",fontWeight:600,whiteSpace:"nowrap",alignSelf:"center" }}>Popular:</span>
-              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile","Liver Function","Kidney Function","HbA1c"].map(t=>(
+            <div style={{ display:"flex",gap:6,marginTop:10,overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch",paddingBottom:2 }}>
+              <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.5)",fontWeight:600,whiteSpace:"nowrap",alignSelf:"center",flexShrink:0 }}>Popular:</span>
+              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile","Liver Function","HbA1c"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",whiteSpace:"nowrap",flexShrink:0 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.22)"; e.currentTarget.style.borderColor="rgba(255,255,255,.4)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.12)"; e.currentTarget.style.borderColor="rgba(255,255,255,.2)"; }}>
+                  style={{ background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"4px 12px",fontSize:".68rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",flexShrink:0 }}>
                   {t}
                 </button>
               ))}
