@@ -1787,6 +1787,32 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
 }
   
 
+/* ─── SKELETON LOADER ─────────────────────────────────────────────────────── */
+function LabCardSkeleton() {
+  return (
+    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"22px 18px 20px" }}>
+      <style>{`@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}.sk{background:linear-gradient(90deg,#F1F5F9 25%,#E8EEF5 50%,#F1F5F9 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}`}</style>
+      <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
+        <div className="sk" style={{ width:86,height:86,borderRadius:10,flexShrink:0 }}/>
+        <div style={{ flex:1 }}>
+          <div className="sk" style={{ height:16,width:"70%",marginBottom:8 }}/>
+          <div className="sk" style={{ height:12,width:"40%",marginBottom:8 }}/>
+          <div className="sk" style={{ height:12,width:"55%",marginBottom:8 }}/>
+          <div className="sk" style={{ height:22,width:"30%",borderRadius:50 }}/>
+        </div>
+      </div>
+      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
+      <div className="sk" style={{ height:12,width:"60%",marginBottom:14 }}/>
+      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
+      <div style={{ display:"flex",gap:10 }}>
+        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
+        <div style={{ width:1,background:"#F1F5F9",margin:"0 4px" }}/>
+        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
+      </div>
+    </div>
+  );
+}
+
 function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -1794,7 +1820,13 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   const [filterNabl, setFilterNabl] = useState(false);
   const [searchQ,    setSearchQ]    = useState("");
   const [labSugOpen, setLabSugOpen] = useState(false);
+  const [loading,    setLoading]    = useState(true);
   const labSearchRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 900);
+    return () => clearTimeout(t);
+  }, []);
 
   React.useEffect(() => {
     const h = e => { if(labSearchRef.current && !labSearchRef.current.contains(e.target)) setLabSugOpen(false); };
@@ -1878,13 +1910,14 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         </div>
         </div>
         <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
-          {filtered.length===0 && (
+          {loading && [1,2,3,4].map(i=><LabCardSkeleton key={i}/>)}
+          {!loading && filtered.length===0 && (
             <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:48,textAlign:"center",color:"#9CA3AF" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
               No labs match your filters.
             </div>
           )}
-          {filtered.map(l => {
+          {!loading && filtered.map(l => {
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
             const minPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
             const satisfaction = Math.round(85 + (l.rating - 4) * 30);
@@ -3306,24 +3339,24 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"#0F2D6B", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.1)",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid rgba(255,255,255,.18)",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"rgba(255,255,255,.2)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"rgba(255,255,255,.85)",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#fff",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#7DC4FF 0%,#A5D8FF 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p style={{ color:"rgba(255,255,255,.65)",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -3339,12 +3372,12 @@ export default function App() {
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.5)",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+                  style={{ background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.22)"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="rgba(255,255,255,.35)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.12)"; e.currentTarget.style.color="rgba(255,255,255,.9)"; e.currentTarget.style.borderColor="rgba(255,255,255,.2)"; }}>
                   {t}
                 </button>
               ))}
@@ -3555,7 +3588,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"#0F2D6B",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         <div style={{ position:"relative",zIndex:1,maxWidth:600,margin:"0 auto" }}>
           <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.15)",borderRadius:50,padding:"5px 16px",marginBottom:22 }}>
             <span style={{ width:6,height:6,borderRadius:"50%",background:"#059669",flexShrink:0,display:"inline-block" }}/>
