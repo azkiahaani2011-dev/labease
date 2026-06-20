@@ -3765,7 +3765,7 @@ export default function App() {
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
             {/* Header */}
-            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
+            <div style={{ background:"#1158A6",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
               <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'DM Serif Display',serif" }}>Your Cart</div>
               <span style={{ marginLeft:"auto",background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 12px",fontWeight:700,fontSize:".82rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
@@ -4279,7 +4279,7 @@ export default function App() {
           <div onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ position:"fixed",inset:0,zIndex:4000,background:"rgba(0,0,0,.45)",backdropFilter:"blur(4px)",animation:"fadeIn .18s" }}/>
           <div style={{ position:"fixed",top:0,right:0,bottom:0,zIndex:4001,width:"min(420px,100vw)",background:"#fff",boxShadow:"-8px 0 40px rgba(0,0,0,.18)",display:"flex",flexDirection:"column",animation:"slideInRight .22s cubic-bezier(.34,1.2,.64,1)",fontFamily:"'Manrope',sans-serif",overflow:"hidden" }}>
             {/* Header */}
-            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
+            <div style={{ background:"#1158A6",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
               <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif",flex:1,letterSpacing:".01em" }}>Your Cart</span>
               <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
