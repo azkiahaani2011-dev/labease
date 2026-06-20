@@ -3521,7 +3521,7 @@ export default function App() {
       <FeaturesCarousel/>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"18px 0",background:"#F5F7FF" }}>
+      <section style={{ padding:"18px 0",background:"#EBF0FA" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
@@ -4235,7 +4235,7 @@ export default function App() {
       {/* ── Sticky trust bar ── */}
       <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:38,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
         <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>NABL Accredited Labs</span>
-        <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 18px",flexShrink:0 }}/>
+        <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 10px",flexShrink:0 }}/>
         <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>Free Home Sample Collection</span>
       </div>
       <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
