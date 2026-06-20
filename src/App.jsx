@@ -4227,10 +4227,10 @@ export default function App() {
         </div>
       </nav>
       {/* ── Sticky trust bar ── */}
-      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"#1B3A6B",height:36,display:"flex",alignItems:"center",justifyContent:"center",gap:0 }}>
-        <span style={{ color:"#fff",fontSize:".72rem",fontWeight:700,letterSpacing:".06em",textTransform:"uppercase" }}>NABL Accredited Labs</span>
-        <div style={{ width:1,height:16,background:"rgba(255,255,255,.25)",margin:"0 20px" }}/>
-        <span style={{ color:"#fff",fontSize:".72rem",fontWeight:700,letterSpacing:".06em",textTransform:"uppercase" }}>Free Home Sample Collection</span>
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 16px rgba(12,31,74,.4)" }}>
+        <span style={{ color:"#fff",fontSize:".66rem",fontWeight:700,letterSpacing:".22em",textTransform:"uppercase",opacity:.92 }}>NABL Accredited Labs</span>
+        <div style={{ width:4,height:4,borderRadius:"50%",background:"#60A5FA",margin:"0 20px",flexShrink:0,boxShadow:"0 0 6px #60A5FA" }}/>
+        <span style={{ color:"#fff",fontSize:".66rem",fontWeight:700,letterSpacing:".22em",textTransform:"uppercase",opacity:.92 }}>Free Home Sample Collection</span>
       </div>
       <div style={{height:100}}/>{/* spacer for fixed navbar + trust bar */}
 
