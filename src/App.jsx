@@ -3581,7 +3581,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"#0A1628",padding:"40px 24px",textAlign:"center" }}>
+      <section style={{ background:"#1158A6",padding:"40px 24px",textAlign:"center" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
             <span style={{ width:6,height:6,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
