@@ -2173,9 +2173,12 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
               </div>
             ))}
           </div>
-
-
-
+          <button onClick={()=>scroll(-1)} style={{...arrStyle(canLeft), left:0}} aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button onClick={()=>scroll(1)} style={{...arrStyle(canRight), right:0}} aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
         </div>
         <_CarouselDots trackRef={trackRef} total={POPULAR_CATS.length}/>
       </div>
@@ -2780,8 +2783,23 @@ function PromoCarousel({ navTo }) {
     return () => clearInterval(t);
   }, [idx]);
 
+  const arrBtn = (dir) => ({
+    position:"absolute", top:"50%", transform:"translateY(-50%)",
+    [dir<0?"left":"right"]: 8,
+    width:34, height:34, borderRadius:"50%", background:"rgba(255,255,255,.92)",
+    border:"1.5px solid #E0EAFF", boxShadow:"0 2px 10px rgba(17,88,166,.13)",
+    display:"flex", alignItems:"center", justifyContent:"center",
+    cursor:"pointer", zIndex:10, transition:"opacity .2s",
+  });
+
   return (
     <div style={{ position:"relative", marginBottom:10 }}>
+      <button onClick={()=>goTo(idx-1)} style={arrBtn(-1)} aria-label="Previous">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button onClick={()=>goTo(idx+1)} style={arrBtn(1)} aria-label="Next">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
       <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
         {/* Card 1 — Home Sample Pickup */}
         <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
@@ -3082,10 +3100,21 @@ function FeaturesCarousel() {
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#F5F7FF" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
-        <div style={{ height:220, overflow:"hidden", borderRadius:18 }}>
-          <div style={{ display:"flex", height:"100%", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
-            <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
-            <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideFeatures/></div>
+        <div style={{ position:"relative" }}>
+          <div style={{ height:220, overflow:"hidden", borderRadius:18 }}>
+            <div style={{ display:"flex", height:"100%", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
+              <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
+              <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideFeatures/></div>
+            </div>
+          </div>
+          <button onClick={()=>setSlide(s=>(s+1)%2*0 || (s-1+2)%2)} style={{ position:"absolute",top:"50%",left:8,transform:"translateY(-50%)",width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"1.5px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",zIndex:10,boxShadow:"0 2px 8px rgba(0,0,0,.10)" }} aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button onClick={()=>setSlide(s=>(s+1)%2)} style={{ position:"absolute",top:"50%",right:8,transform:"translateY(-50%)",width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"1.5px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",zIndex:10,boxShadow:"0 2px 8px rgba(0,0,0,.10)" }} aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:10 }}>
+            {[0,1].map(i=><div key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?20:6,height:6,borderRadius:3,background:i===slide?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>)}
           </div>
         </div>
       </div>
