@@ -1875,9 +1875,12 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
-      <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"32px 0 28px" }}>
-        <div style={{ ...T.wrap }}>
-          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.6rem,3.5vw,2.4rem)", color:"#0D1117", margin:0, letterSpacing:"-.03em" }}>Our Trusted Lab Partners</h1>
+      <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"12px 16px 12px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.15rem", color:"#0D1117", margin:0, letterSpacing:"-.02em" }}>Our Trusted Lab Partners</h1>
         </div>
       </div>
 
