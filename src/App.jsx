@@ -711,9 +711,9 @@ const G = () => (
       .trust-badges > div:nth-child(4) { display: none !important; }
       /* search bar compact */
       .hero-search-bar { border-radius: 14px !important; width: 100% !important; box-sizing: border-box !important; max-width: 100% !important; }
-      .hero-search-input-field { padding: 8px 6px 8px 0 !important; font-size: .78rem !important; min-width: 0 !important; }
-      .hero-search-icon { margin: 0 10px !important; flex-shrink: 0 !important; width:14px !important; height:14px !important; }
-      .hero-search-btn { padding: 7px 14px !important; font-size: .72rem !important; margin: 4px !important; border-radius: 50px !important; flex-shrink: 0 !important; }
+      .hero-search-input-field { padding: 6px 4px 6px 0 !important; font-size: .72rem !important; min-width: 0 !important; }
+      .hero-search-icon { margin: 0 8px !important; flex-shrink: 0 !important; width:12px !important; height:12px !important; }
+      .hero-search-btn { padding: 5px 12px !important; font-size: .68rem !important; margin: 3px !important; border-radius: 50px !important; flex-shrink: 0 !important; }
     }
     @media (max-width: 430px) {
       .hero-content { padding-top: 24px !important; padding-bottom: 20px !important; }
