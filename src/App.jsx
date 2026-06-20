@@ -1685,9 +1685,18 @@ function LabLogo({ lab, size=90, radius=18 }) {
   );
 }
 
-const LabsNearMeSection = ({ T, navTo }) => (
-  <section style={{ padding:"16px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
-    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
+const LabsNearMeSection = ({ T, navTo, setLab, setCatF, setTestQ }) => {
+  const labData = [
+    { id:1, name:"Apollo Diagnostics", area:"Banjara Hills", rating:4.9, reviews:2840, price:199, nabl:true, homecoll:true, time:"Same Day", color:"#005EB8" },
+    { id:2, name:"SRL / Agilus",       area:"Jubilee Hills", rating:4.7, reviews:1920, price:149, nabl:true, homecoll:true, time:"2–6 hrs",  color:"#E31837" },
+    { id:3, name:"Metropolis",         area:"Madhapur",      rating:4.8, reviews:3100, price:249, nabl:true, homecoll:true, time:"24 hrs",   color:"#0066CC" },
+    { id:4, name:"Dr. Lal PathLabs",   area:"Ameerpet",      rating:4.9, reviews:5200, price:179, nabl:true, homecoll:true, time:"Same Day", color:"#C8102E" },
+    { id:5, name:"Thyrocare",          area:"Secunderabad",  rating:4.6, reviews:980,  price:99,  nabl:true, homecoll:true, time:"24 hrs",   color:"#E67E22" },
+    { id:6, name:"Vijaya Diagnostics", area:"Himayatnagar",  rating:4.8, reviews:1560, price:199, nabl:false,homecoll:false,time:"Same Day", color:"#27AE60" },
+  ];
+  return (
+  <section style={{ padding:"32px 0 40px", background:"#F8FAFC", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
+    <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 20px", marginBottom:20 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
         <div>
           <p style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>VERIFIED PARTNERS</p>
@@ -1702,47 +1711,63 @@ const LabsNearMeSection = ({ T, navTo }) => (
       </div>
     </div>
 
-    {/* marquee track */}
-    <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110, paddingTop:32 }}>
-      <style>{`
-        @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; align-items:center; cursor:pointer; }
-        .marquee-labs-track.paused { animation-play-state: paused; }
-        .marquee-lab-logo img { height:64px; max-width:160px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
-        .marquee-lab-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:0 52px; flex-shrink:0; }
-        .marquee-lab-logo:hover img { filter:grayscale(0%); transform:scale(1.06); }
-        .marquee-lab-logo span { font-size:.78rem; font-weight:700; color:#64748B; font-family:'Manrope',sans-serif; white-space:nowrap; }
-      `}</style>
-
-      <div className="marquee-labs-track"
-        onClick={e=>e.currentTarget.classList.toggle("paused")}
-        onMouseLeave={e=>e.currentTarget.classList.remove("paused")}>
-        {[
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-        ].map((l,i)=>(
-          <div key={i} className="marquee-lab-logo">
-            <img src={l.b64||l.src} alt={l.name}
-              style={l.small ? {height:"40px",maxWidth:"110px"} : undefined}
-              onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
-            />
-            <span>{l.name}</span>
+    {/* Horizontal scroll cards */}
+    <div style={{ overflowX:"auto", paddingBottom:8, scrollbarWidth:"none" }}>
+      <style>{`.labs-home-scroll::-webkit-scrollbar{display:none}`}</style>
+      <div className="labs-home-scroll" style={{ display:"flex",gap:14,padding:"4px 20px 12px",width:"max-content" }}>
+        {labData.map(l=>(
+          <div key={l.id}
+            onClick={()=>navTo("labs")}
+            style={{ width:220,background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",cursor:"pointer",flexShrink:0,boxShadow:"0 2px 10px rgba(0,0,0,.06)",transition:"transform .18s,box-shadow .18s",fontFamily:"'Manrope',sans-serif" }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.10)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 10px rgba(0,0,0,.06)"; }}>
+            {/* Top color band */}
+            <div style={{ height:6,background:l.color }}/>
+            <div style={{ padding:"14px 14px 16px" }}>
+              {/* Logo + NABL */}
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10 }}>
+                <LabLogo lab={{id:l.id,name:l.name,color:l.color}} size={52} radius={8}/>
+                {l.nabl && (
+                  <span style={{ background:"#ECFDF5",color:"#059669",fontSize:".6rem",fontWeight:800,padding:"3px 7px",borderRadius:6,border:"1px solid #A7F3D0",letterSpacing:".04em" }}>NABL</span>
+                )}
+              </div>
+              {/* Name */}
+              <div style={{ fontWeight:900,fontSize:".9rem",color:"#0D1117",marginBottom:2,lineHeight:1.3 }}>{l.name}</div>
+              {/* Area */}
+              <div style={{ fontSize:".75rem",color:"#9CA3AF",marginBottom:10 }}>📍 {l.area}, Hyderabad</div>
+              {/* Divider */}
+              <div style={{ height:1,background:"#F1F5F9",margin:"0 -14px 10px" }}/>
+              {/* Stats row */}
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12 }}>
+                <div style={{ display:"flex",alignItems:"center",gap:4 }}>
+                  <span style={{ color:"#F59E0B",fontSize:".9rem" }}>★</span>
+                  <span style={{ fontWeight:800,fontSize:".82rem",color:"#0D1117" }}>{l.rating}</span>
+                  <span style={{ fontSize:".72rem",color:"#9CA3AF" }}>({l.reviews})</span>
+                </div>
+                <div style={{ fontSize:".72rem",color:"#6B7280",display:"flex",alignItems:"center",gap:4 }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {l.time}
+                </div>
+              </div>
+              {/* Price + Book */}
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+                <div>
+                  <div style={{ fontSize:".68rem",color:"#9CA3AF",fontWeight:600 }}>Starting at</div>
+                  <div style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117" }}>₹{l.price}</div>
+                </div>
+                <button onClick={e=>{ e.stopPropagation(); navTo("labs"); }}
+                  style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"7px 14px",fontWeight:700,fontSize:".76rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
+                  Book Now
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>
     </div>
   </section>
-)
+  );
+}
 
 
 /* ─── MODULE-LEVEL REPLACEMENTS FOR LabCard, LabsPage, LabDetail ────────────
@@ -3292,58 +3317,67 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
-        {/* background geometric accents */}
-        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
+      <section className="hero-section" style={{ background:"linear-gradient(135deg,#0A1628 0%,#0F2D6B 50%,#1158A6 100%)", minHeight:380, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+        {/* decorative circles */}
+        <div style={{ position:"absolute",right:-80,top:-80,width:420,height:420,borderRadius:"50%",background:"rgba(255,255,255,.04)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:-60,bottom:-60,width:280,height:280,borderRadius:"50%",background:"rgba(255,255,255,.03)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:"30%",top:40,width:6,height:6,borderRadius:"50%",background:"#60A5FA",opacity:.5,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:"20%",bottom:60,width:10,height:10,borderRadius:"50%",background:"#34D399",opacity:.35,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:"15%",top:60,width:8,height:8,borderRadius:"50%",background:"#FBBF24",opacity:.3,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:44,paddingBottom:isMobile?24:44,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box" }}>
+          <div style={{ maxWidth:isMobile?"100%":600,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.1)",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:16,border:"1px solid rgba(255,255,255,.15)",backdropFilter:"blur(8px)",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#34D399,#059669)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"rgba(255,255,255,.9)",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.9rem,4vw,2.9rem)",color:"#fff",lineHeight:1.14,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#60A5FA 0%,#34D399 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p style={{ color:"rgba(255,255,255,.72)",fontSize:".95rem",lineHeight:1.78,marginBottom:22,maxWidth:460,margin:"0 auto 22px" }}>
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
+            {/* feature strip */}
+            <div style={{ display:"flex",justifyContent:"center",gap:isMobile?12:24,marginBottom:22,flexWrap:"wrap" }}>
+              {[["✓","NABL Certified"],["⚡","6hr Reports"],["🏠","Free Home Collection"],["💳","No Hidden Charges"]].map(([ic,t])=>(
+                <div key={t} style={{ display:"flex",alignItems:"center",gap:5,fontSize:".75rem",fontWeight:700,color:"rgba(255,255,255,.8)" }}>
+                  <span style={{ color:"#34D399" }}>{ic}</span>{t}
+                </div>
+              ))}
+            </div>
+
             {/* location bar */}
-            <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#6B7280",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
+            <div style={{ display:"flex",alignItems:"center",gap:12,background:"rgba(255,255,255,.12)",borderRadius:50,border:"1px solid rgba(255,255,255,.18)",backdropFilter:"blur(8px)",overflow:"hidden",marginBottom:12,padding:"8px 8px 8px 20px" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"rgba(255,255,255,.85)",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
             </div>
 
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
-            {/* quick chips */}
+            {/* quick chips with prices */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
-              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
+              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.5)",fontWeight:600 }}>Popular:</span>
+              {[["CBC","₹199"],["Thyroid","₹349"],["Vitamin D","₹499"],["Diabetes","₹399"],["Lipid Profile","₹599"]].map(([t,p])=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
-                  {t}
+                  style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.18)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.85)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",backdropFilter:"blur(6px)" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.22)"; e.currentTarget.style.color="#fff"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.color="rgba(255,255,255,.85)"; }}>
+                  {t} <span style={{ color:"#34D399",fontWeight:800 }}>{p}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
-
       </section>
 
 
@@ -3632,10 +3666,11 @@ export default function App() {
             <div>
               <div style={{ fontSize:".72rem",fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",color:"#475569",marginBottom:18 }}>Support</div>
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
-                {["Help & Support","Contact Us","Privacy Policy","Terms of Service","Refund Policy"].map(l=>(
-                  <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                {[["Help & Support",null],["Contact Us",null],["Privacy Policy","privacy"],["Terms of Service","terms"],["Refund Policy","refund"]].map(([l,pg])=>(
+                  <div key={l} style={{ fontSize:".83rem",color:pg?"#93C5FD":"#64748B",cursor:"pointer",transition:"color .14s",textDecoration:pg?"underline":"none",textDecorationColor:"rgba(147,197,253,.4)" }}
+                    onClick={()=>pg&&navTo(pg)}
                     onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
-                    onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
+                    onMouseLeave={e=>e.currentTarget.style.color=pg?"#93C5FD":"#64748B"}>{l}</div>
                 ))}
               </div>
               {/* Contact info */}
@@ -3650,8 +3685,9 @@ export default function App() {
         <div style={{ maxWidth:1600,margin:"0 auto",padding:"18px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12 }}>
           <div style={{ fontSize:".73rem",color:"#334155" }}>© 2026 LabEase Diagnostics Pvt. Ltd. All rights reserved. · CIN: U85110KA2024PTC123456</div>
           <div style={{ display:"flex",gap:16,alignItems:"center" }}>
-            {["Privacy","Terms","Cookies"].map(l=>(
+            {[["Privacy","privacy"],["Terms","terms"],["Refund","refund"]].map(([l,pg])=>(
               <span key={l} style={{ fontSize:".73rem",color:"#334155",cursor:"pointer",transition:"color .14s" }}
+                onClick={()=>navTo(pg)}
                 onMouseEnter={e=>e.currentTarget.style.color="#94A3B8"}
                 onMouseLeave={e=>e.currentTarget.style.color="#334155"}>{l}</span>
             ))}
@@ -3661,6 +3697,33 @@ export default function App() {
     </div>
     );
   };
+
+  /* ─── POLICY PAGE ───────────────────────────────────────────── */
+  const PolicyPage = ({ title, content, navTo }) => (
+    <div style={{ minHeight:"100vh",background:"#F8FAFC",fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 0" }}>
+        <div style={{ maxWidth:760,margin:"0 auto",padding:"0 20px" }}>
+          <button onClick={()=>navTo("home")} style={{ width:40,height:40,borderRadius:"50%",border:"1px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:16,transition:"all .18s",boxShadow:"0 1px 6px rgba(0,0,0,.07)" }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <h1 style={{ fontWeight:900,fontSize:"clamp(1.4rem,3vw,1.9rem)",color:"#0D1117",letterSpacing:"-.03em",marginBottom:6 }}>{title}</h1>
+          <p style={{ fontSize:".84rem",color:"#9CA3AF" }}>Last updated: June 2026 · LabEase Diagnostics Pvt. Ltd.</p>
+        </div>
+      </div>
+      <div style={{ maxWidth:760,margin:"0 auto",padding:"32px 20px 60px" }}>
+        {content.map(([heading,body],i)=>(
+          <div key={i} style={{ marginBottom:28 }}>
+            <h2 style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,letterSpacing:"-.01em" }}>{i+1}. {heading}</h2>
+            <p style={{ fontSize:".9rem",color:"#374151",lineHeight:1.8,margin:0 }}>{body}</p>
+          </div>
+        ))}
+        <div style={{ marginTop:40,padding:"20px",background:"#EFF6FF",borderRadius:12,border:"1px solid #DBEAFE" }}>
+          <div style={{ fontWeight:700,color:"#1158A6",marginBottom:4 }}>Questions?</div>
+          <div style={{ fontSize:".86rem",color:"#374151" }}>Contact us at <strong>support@labease.in</strong> or call <strong>1800-103-0001</strong></div>
+        </div>
+      </div>
+    </div>
+  );
 
   /* ─── SHARED LAB CARD — shim ─────────────────────────────────── */
   const LabCard = ({ l }) => (
@@ -4178,6 +4241,30 @@ export default function App() {
       {page==="cart"    && <CartPage/>}
       {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>}
       {page==="confirm" && <Confirm/>}
+      {page==="privacy" && <PolicyPage title="Privacy Policy" navTo={navTo} content={[
+        ["Information We Collect","We collect your name, phone number, email address, and appointment details when you book a lab test through LabEase. We may also collect location data to show you nearby labs."],
+        ["How We Use Your Information","Your information is used to process lab test bookings, send appointment confirmations, share with partner labs for sample collection, and improve our services."],
+        ["Data Sharing","We share your booking details with the lab you select. We do not sell your personal data to third parties."],
+        ["Data Security","All data is encrypted in transit using TLS. We follow industry-standard security practices to protect your information."],
+        ["Your Rights","You may request deletion of your account and associated data at any time by contacting support@labease.in."],
+        ["Contact Us","For privacy-related queries, email us at privacy@labease.in or call 1800-103-0001."],
+      ]}/>}
+      {page==="terms" && <PolicyPage title="Terms of Service" navTo={navTo} content={[
+        ["Acceptance of Terms","By using LabEase, you agree to these Terms of Service. If you do not agree, please do not use our platform."],
+        ["Services","LabEase is a diagnostic test booking platform. We facilitate bookings between patients and NABL-certified labs. We are not a diagnostic laboratory ourselves."],
+        ["Bookings & Cancellations","Bookings can be cancelled up to 2 hours before the scheduled collection time. Cancellations after this window may not be eligible for a full refund."],
+        ["User Responsibilities","You agree to provide accurate personal and health information. LabEase is not liable for incorrect information provided during booking."],
+        ["Limitation of Liability","LabEase shall not be liable for any medical decisions made based on lab results. Always consult a qualified healthcare professional."],
+        ["Governing Law","These terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of courts in Hyderabad, Telangana."],
+      ]}/>}
+      {page==="refund" && <PolicyPage title="Refund Policy" navTo={navTo} content={[
+        ["Cancellation & Refunds","You may cancel your booking up to 2 hours before the scheduled sample collection time to receive a full refund."],
+        ["Late Cancellations","Cancellations made less than 2 hours before the scheduled time will be charged a 20% cancellation fee."],
+        ["No-Show Policy","If our phlebotomist arrives and the patient is unavailable, the booking will be treated as a no-show and no refund will be issued."],
+        ["Refund Timeline","Approved refunds are processed within 5–7 business days to the original payment method."],
+        ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
+        ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
+      ]}/>}
 
       {/* CART DRAWER */}
       {cartOpen && (
