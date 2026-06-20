@@ -3321,7 +3321,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(160deg,#0D4585 0%,#091E4A 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
         {/* background geometric accents */}
         <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
@@ -3576,7 +3576,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(160deg,#0D4585 0%,#091E4A 100%)",padding:"28px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
