@@ -711,9 +711,9 @@ const G = () => (
       .trust-badges > div:nth-child(4) { display: none !important; }
       /* search bar compact */
       .hero-search-bar { border-radius: 14px !important; width: 100% !important; box-sizing: border-box !important; max-width: 100% !important; }
-      .hero-search-input-field { padding: 11px 6px 11px 0 !important; font-size: .85rem !important; min-width: 0 !important; }
-      .hero-search-icon { margin: 0 12px !important; flex-shrink: 0 !important; }
-      .hero-search-btn { padding: 9px 16px !important; font-size: .78rem !important; margin: 5px !important; border-radius: 10px !important; flex-shrink: 0 !important; }
+      .hero-search-input-field { padding: 8px 6px 8px 0 !important; font-size: .78rem !important; min-width: 0 !important; }
+      .hero-search-icon { margin: 0 10px !important; flex-shrink: 0 !important; width:14px !important; height:14px !important; }
+      .hero-search-btn { padding: 7px 14px !important; font-size: .72rem !important; margin: 4px !important; border-radius: 50px !important; flex-shrink: 0 !important; }
     }
     @media (max-width: 430px) {
       .hero-content { padding-top: 24px !important; padding-bottom: 20px !important; }
@@ -3343,7 +3343,7 @@ export default function App() {
 
         <div style={{ width:"100%",boxSizing:"border-box",padding:"18px 16px 20px",overflowX:"hidden" }}>
           {/* headline */}
-          <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.45rem",color:"#fff",lineHeight:1.25,marginBottom:12,fontWeight:900,letterSpacing:"-.02em",textAlign:"center",margin:"0 0 14px" }}>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.8rem",color:"#fff",lineHeight:1.22,marginBottom:12,fontWeight:900,letterSpacing:"-.02em",textAlign:"center",margin:"0 0 14px" }}>
             Book Lab Tests from <span style={{ color:"#A5D8FF" }}>Trusted Labs Near You</span>
           </h1>
 
