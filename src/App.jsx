@@ -426,7 +426,7 @@ const G = () => (
       border-radius: 99px !important;
     }
     /* Active step connector */
-    div[style*="height:2,background:"#1158A6",flex:1"] {
+    div[style*="height:2,background:"#1A3A6B",flex:1"] {
       background: linear-gradient(90deg,#1158A6,#3B82F6) !important;
       border-radius: 99px !important;
     }
@@ -710,7 +710,7 @@ const G = () => (
       .trust-badges > div:nth-child(2) { display: none !important; } /* hide dividers */
       .trust-badges > div:nth-child(4) { display: none !important; }
       /* search bar compact */
-      .hero-search-bar { border-radius: 14px !important; width: 100% !important; box-sizing: border-box !important; }
+      .hero-search-bar { border-radius: 14px !important; width: 100% !important; box-sizing: border-box !important; max-width: 100% !important; }
       .hero-search-input-field { padding: 11px 6px 11px 0 !important; font-size: .85rem !important; min-width: 0 !important; }
       .hero-search-icon { margin: 0 12px !important; flex-shrink: 0 !important; }
       .hero-search-btn { padding: 9px 16px !important; font-size: .78rem !important; margin: 5px !important; border-radius: 10px !important; flex-shrink: 0 !important; }
@@ -2304,7 +2304,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
 
   return (
-    <div ref={wrapRef} style={{ position:"relative", width:"100%", boxSizing:"border-box" }}>
+    <div ref={wrapRef} style={{ position:"relative", width:"100%", maxWidth:"100%", boxSizing:"border-box", overflowX:"hidden" }}>
       {/* Search bar */}
       <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"1px solid #E5E7EB",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -3341,9 +3341,9 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"#1158A6", position:"relative", overflow:"hidden", width:"100%", boxSizing:"border-box" }}>
 
-        <div style={{ width:"100%",maxWidth:"100vw",boxSizing:"border-box",padding:"16px 16px 18px" }}>
+        <div style={{ width:"100%",boxSizing:"border-box",padding:"18px 16px 20px",overflowX:"hidden" }}>
           {/* headline */}
-          <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.15rem",color:"#fff",lineHeight:1.3,marginBottom:12,fontWeight:900,letterSpacing:"-.01em",textAlign:"center",margin:"0 0 12px" }}>
+          <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.45rem",color:"#fff",lineHeight:1.25,marginBottom:12,fontWeight:900,letterSpacing:"-.02em",textAlign:"center",margin:"0 0 14px" }}>
             Book Lab Tests from <span style={{ color:"#A5D8FF" }}>Trusted Labs Near You</span>
           </h1>
 
