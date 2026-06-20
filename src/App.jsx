@@ -3360,13 +3360,6 @@ export default function App() {
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
-            {/* location button */}
-            <div style={{ display:"inline-flex",alignItems:"center",gap:6,background:"rgba(17,88,166,.06)",border:"1px solid #DBEAFE",borderRadius:50,padding:"6px 14px 6px 10px",marginBottom:12,cursor:"pointer" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span style={{ fontSize:".78rem",fontWeight:700,color:"#1158A6" }}>Hyderabad</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </div>
-
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
