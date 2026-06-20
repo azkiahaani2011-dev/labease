@@ -2028,11 +2028,14 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   return (
   <div style={{ minHeight:"80vh" }}>
     {/* sticky header */}
-    <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:64,zIndex:50 }}>
-      <div style={{ ...T.wrap,padding:"18px 12px" }}>
-        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,padding:4 }} aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
+    <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:100,zIndex:50 }}>
+      <div style={{ ...T.wrap,padding:"10px 12px" }}>
+        <div style={{ display:"flex",gap:12,alignItems:"center",marginBottom:8 }}>
+          <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span style={{ fontSize:".78rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
+        </div>
         <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
           <LabLogo lab={lab} size={72} radius={14} />
           <div style={{ flex:1 }}>
