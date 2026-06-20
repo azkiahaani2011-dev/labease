@@ -2304,7 +2304,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
 
   return (
-    <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:0, paddingRight:0 }}>
+    <div ref={wrapRef} style={{ position:"relative", width:"100%", boxSizing:"border-box" }}>
       {/* Search bar */}
       <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"1px solid #E5E7EB",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -3339,28 +3339,26 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"#1158A6", position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"#1158A6", position:"relative", overflow:"hidden", width:"100%", boxSizing:"border-box" }}>
 
-        <div style={{ width:"100%",boxSizing:"border-box",padding:isMobile?"16px 16px 20px":"28px 24px" }}>
-          <div style={{ maxWidth:560,margin:"0 auto",textAlign:"center" }}>
-            {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:isMobile?"1.25rem":"1.9rem",color:"#fff",lineHeight:1.25,marginBottom:12,fontWeight:900,letterSpacing:"-.02em" }}>
-              Book Lab Tests from <span style={{ color:"#A5D8FF" }}>Trusted Labs Near You</span>
-            </h1>
+        <div style={{ width:"100%",maxWidth:"100vw",boxSizing:"border-box",padding:"16px 16px 18px" }}>
+          {/* headline */}
+          <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"1.15rem",color:"#fff",lineHeight:1.3,marginBottom:12,fontWeight:900,letterSpacing:"-.01em",textAlign:"center",margin:"0 0 12px" }}>
+            Book Lab Tests from <span style={{ color:"#A5D8FF" }}>Trusted Labs Near You</span>
+          </h1>
 
-            {/* search bar */}
-            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
+          {/* search bar */}
+          <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
-            {/* swipeable popular chips */}
-            <div style={{ display:"flex",gap:6,marginTop:10,overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch",paddingBottom:2 }}>
-              <span style={{ fontSize:".68rem",color:"rgba(255,255,255,.5)",fontWeight:600,whiteSpace:"nowrap",alignSelf:"center",flexShrink:0 }}>Popular:</span>
-              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile","Liver Function","HbA1c"].map(t=>(
-                <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"4px 12px",fontSize:".68rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",flexShrink:0 }}>
-                  {t}
-                </button>
-              ))}
-            </div>
+          {/* swipeable popular chips */}
+          <div style={{ display:"flex",gap:6,marginTop:10,overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch" }}>
+            <span style={{ fontSize:".65rem",color:"rgba(255,255,255,.5)",fontWeight:600,whiteSpace:"nowrap",alignSelf:"center",flexShrink:0 }}>Popular:</span>
+            {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile","Liver Function","HbA1c"].map(t=>(
+              <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
+                style={{ background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"4px 11px",fontSize:".65rem",fontWeight:700,color:"rgba(255,255,255,.9)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",flexShrink:0 }}>
+                {t}
+              </button>
+            ))}
           </div>
         </div>
 
