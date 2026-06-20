@@ -1967,7 +1967,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     <span style={{ color:"#D1D5DB",margin:"0 7px" }}>•</span>
                     <span>{l.name}</span>
                   </div>
-                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
+                  <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
                     ~₹{minPrice.toLocaleString()}
                     <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
                   </div>
@@ -4233,7 +4233,7 @@ export default function App() {
         </div>
       </nav>
       {/* ── Sticky trust bar ── */}
-      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:38,display:"flex",alignItems:"center",justifyContent:"center" }}>
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:38,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
         <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>NABL Accredited Labs</span>
         <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 18px",flexShrink:0 }}/>
         <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>Free Home Sample Collection</span>
