@@ -4228,9 +4228,9 @@ export default function App() {
       </nav>
       {/* ── Sticky trust bar ── */}
       <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 16px rgba(12,31,74,.4)" }}>
-        <span style={{ color:"#fff",fontSize:".66rem",fontWeight:700,letterSpacing:".22em",textTransform:"uppercase",opacity:.92 }}>NABL Accredited Labs</span>
-        <div style={{ width:4,height:4,borderRadius:"50%",background:"#60A5FA",margin:"0 20px",flexShrink:0,boxShadow:"0 0 6px #60A5FA" }}/>
-        <span style={{ color:"#fff",fontSize:".66rem",fontWeight:700,letterSpacing:".22em",textTransform:"uppercase",opacity:.92 }}>Free Home Sample Collection</span>
+        <span style={{ color:"#fff",fontSize:".55rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9 }}>NABL Accredited Labs</span>
+        <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 18px",flexShrink:0 }}/>
+        <span style={{ color:"#fff",fontSize:".55rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9 }}>Free Home Sample Collection</span>
       </div>
       <div style={{height:100}}/>{/* spacer for fixed navbar + trust bar */}
 
