@@ -3127,7 +3127,7 @@ function FeaturesCarousel() {
   );
 
   return (
-    <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#F5F7FF" }}>
+    <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#EBF0FA" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
         <div style={{ position:"relative" }}>
           <div style={{ height:220, overflow:"hidden", borderRadius:18 }}>
