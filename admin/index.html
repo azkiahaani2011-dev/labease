@@ -7,401 +7,712 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Manrope',sans-serif;background:#F3F4F6;color:#111827;}
-::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px;}
-input,select,button{font-family:inherit;}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#0D1117;display:flex;flex-direction:column;z-index:100;}
-.main{margin-left:240px;min-height:100vh;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;cursor:pointer;color:#9CA3AF;font-size:14px;font-weight:500;transition:all .15s;margin:2px 8px;}
-.nav-item:hover{background:#161B22;color:#E5E7EB;}
-.nav-item.active{background:#1158A6;color:#fff;}
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.07),0 0 1px rgba(0,0,0,.05);}
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;}
-.badge-blue{background:#EFF6FF;color:#1D4ED8;}.badge-yellow{background:#FFFBEB;color:#B45309;}
-.badge-green{background:#F0FDF4;color:#15803D;}.badge-red{background:#FEF2F2;color:#DC2626;}
-.badge-grey{background:#F3F4F6;color:#6B7280;}
-table{width:100%;border-collapse:collapse;}
-th{background:#F9FAFB;font-size:12px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left;}
-td{padding:13px 16px;font-size:13.5px;color:#374151;border-top:1px solid #F3F4F6;}
-tr:hover td{background:#FAFAFA;}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;}
-.btn-primary{background:#1158A6;color:#fff;}.btn-primary:hover{background:#0F4A8A;}
-.btn-outline{background:#fff;color:#374151;border:1px solid #E5E7EB;}.btn-outline:hover{background:#F9FAFB;}
-.btn-sm{padding:5px 11px;font-size:12px;}
-input[type=text],input[type=password],input[type=number],select{border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px;font-size:13.5px;outline:none;transition:border .15s;background:#fff;color:#111827;}
-input[type=text]:focus,input[type=password]:focus,input[type=number]:focus,select:focus{border-color:#1158A6;box-shadow:0 0 0 3px rgba(17,88,166,.1);}
-.progress-bar{height:6px;border-radius:3px;background:#E5E7EB;overflow:hidden;}
-.progress-fill{height:100%;border-radius:3px;transition:width .4s;}
-.pill-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #E5E7EB;background:#fff;color:#6B7280;transition:all .15s;}
-.pill-btn.active{background:#1158A6;color:#fff;border-color:#1158A6;}
-.pill-btn:hover:not(.active){background:#F3F4F6;}
-.lab-card{background:#fff;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:20px;}
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0D1117 0%,#161B22 100%);}
-.login-card{background:#fff;border-radius:20px;padding:40px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
-.top-bar{background:#fff;border-bottom:1px solid #F3F4F6;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;}
-#root{min-height:100vh;}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #111827; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+  input, select, button { font-family: inherit; }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #0D1117; display: flex; flex-direction: column; z-index: 100; }
+  .main { margin-left: 240px; min-height: 100vh; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; cursor: pointer; color: #9CA3AF; font-size: 14px; font-weight: 500; transition: all .15s; margin: 2px 8px; }
+  .nav-item:hover { background: #161B22; color: #E5E7EB; }
+  .nav-item.active { background: #1158A6; color: #fff; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 1px rgba(0,0,0,.05); }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-blue { background: #EFF6FF; color: #1D4ED8; }
+  .badge-yellow { background: #FFFBEB; color: #B45309; }
+  .badge-green { background: #F0FDF4; color: #15803D; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+  .badge-grey { background: #F3F4F6; color: #6B7280; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #F9FAFB; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: .04em; padding: 12px 16px; text-align: left; }
+  td { padding: 13px 16px; font-size: 13.5px; color: #374151; border-top: 1px solid #F3F4F6; }
+  tr:hover td { background: #FAFAFA; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary { background: #1158A6; color: #fff; }
+  .btn-primary:hover { background: #0F4A8A; }
+  .btn-outline { background: #fff; color: #374151; border: 1px solid #E5E7EB; }
+  .btn-outline:hover { background: #F9FAFB; }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+  input[type=text], input[type=password], input[type=number], select { border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 12px; font-size: 13.5px; outline: none; transition: border .15s; background: #fff; color: #111827; }
+  input[type=text]:focus, input[type=password]:focus, input[type=number]:focus, select:focus { border-color: #1158A6; box-shadow: 0 0 0 3px rgba(17,88,166,.1); }
+  .progress-bar { height: 6px; border-radius: 3px; background: #E5E7EB; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+  .pill-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid #E5E7EB; background: #fff; color: #6B7280; transition: all .15s; }
+  .pill-btn.active { background: #1158A6; color: #fff; border-color: #1158A6; }
+  .pill-btn:hover:not(.active) { background: #F3F4F6; }
+  .lab-card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.07); padding: 20px; }
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0D1117 0%, #161B22 100%); }
+  .login-card { background: #fff; border-radius: 20px; padding: 40px; width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+  .top-bar { background: #fff; border-bottom: 1px solid #F3F4F6; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script>
-// ── Tiny reactive framework ──────────────────────────────────────────────────
-let _renderFn = null;
-function setRender(fn){ _renderFn = fn; }
-function rerender(){ if(_renderFn) _renderFn(); }
+<script type="module">
+import { h, render } from 'https://esm.sh/preact@10';
+import { useState, useEffect } from 'https://esm.sh/preact@10/hooks';
+import htm from 'https://esm.sh/htm@3';
+const html = htm.bind(h);
 
-// ── State ────────────────────────────────────────────────────────────────────
-const state = {
-  authed: localStorage.getItem('le_auth') === '1',
-  page: 'dashboard',
-  bookings: loadBookings(),
-  labs: loadLabs(),
-  statusFilter: 'All',
-  search: '',
-  labFilter: 'All',
-  testSearch: '',
-  testLabFilter: 'All',
-  editingBookingId: null,
-};
+// Icons
+function IconDash() {
+  return html`<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><rect x=3 y=3 width=7 height=7/><rect x=14 y=3 width=7 height=7/><rect x=14 y=14 width=7 height=7/><rect x=3 y=14 width=7 height=7/></svg>`;
+}
+function IconBook() {
+  return html`<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`;
+}
+function IconLab() {
+  return html`<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11l-2 3h10l-2-3V3"/></svg>`;
+}
+function IconTest() {
+  return html`<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1=9 y1=13 x2=15 y2=13/><line x1=9 y1=17 x2=15 y2=17/></svg>`;
+}
+function IconLogout() {
+  return html`<svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1=21 y1=12 x2=9 y2=12/></svg>`;
+}
+function IconSearch() {
+  return html`<svg width=15 height=15 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><circle cx=11 cy=11 r=8/><line x1=21 y1=21 x2="16.65" y2="16.65"/></svg>`;
+}
+function IconEdit() {
+  return html`<svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+}
+function IconDownload() {
+  return html`<svg width=15 height=15 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1=12 y1=15 x2=12 y2=3/></svg>`;
+}
 
-function loadBookings(){
-  try{
-    const s = localStorage.getItem('le_bookings');
-    if(s){
-      const data = JSON.parse(s);
+// Data
+const PATIENTS = ['Rahul Sharma','Priya Patel','Arun Kumar','Sneha Reddy','Vikram Singh','Divya Nair','Karthik Rao','Ananya Joshi','Mohammed Ali','Sunita Verma'];
+const LAB_NAMES = ['Apollo Diagnostics','SRL Diagnostics','Metropolis Health','Dr Lal PathLabs','Thyrocare','Vijaya Diagnostics'];
+const TEST_NAMES = ['CBC','Lipid Profile','Thyroid Profile','HbA1c','Vitamin D','LFT','KFT','Urine Routine','Full Body Checkup','Dengue NS1'];
+const STATUSES = ['Confirmed','Sample Collected','Report Ready','Pending','Cancelled'];
+const PHONES = ['9876543210','9123456780','9988776655','9012345678','9871234560','9654321098','9543210987','9432109876','9321098765','9210987654'];
+const CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
+const MODES = ['Home','Clinic'];
+const CAT_OPTIONS = ['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'];
+const REPORT_OPTIONS = ['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'];
+
+function genBookings() {
+  const saved = localStorage.getItem('le_bookings');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
       // Remove old auto-generated demo entries (IDs LB1000–LB1027)
-      return data.filter(b => !/^LB10[012]\d$/.test(b.id));
-    }
-  }catch(e){}
+      const real = data.filter(b => !/^LB10[012]\d$/.test(b.id));
+      if (real.length !== data.length) {
+        localStorage.setItem('le_bookings', JSON.stringify(real));
+        return real;
+      }
+      return data;
+    } catch(e) {}
+  }
   return [];
 }
-function saveBookings(){ localStorage.setItem('le_bookings', JSON.stringify(state.bookings)); }
 
-function loadLabs(){
-  try{
-    const s = localStorage.getItem('le_labs');
-    if(s) return JSON.parse(s);
-  }catch(e){}
-  const LAB_NAMES = ['Apollo Diagnostics','SRL Diagnostics','Metropolis Health','Dr Lal PathLabs','Thyrocare','Vijaya Diagnostics'];
-  const CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
-  const phones = ['040-23456789','080-34567890','022-45678901','011-56789012','044-67890123','040-78901234'];
-  const ratings = [4.7,4.5,4.6,4.8,4.3,4.6];
-  const testCounts = [80,65,72,90,55,68];
-  const data = LAB_NAMES.map((name,i)=>({id:i+1,name,city:CITIES[i],rating:ratings[i],tests:testCounts[i],phone:phones[i],active:i!==4}));
+function genLabs() {
+  const saved = localStorage.getItem('le_labs');
+  if (saved) return JSON.parse(saved);
+  const ratings=[4.7,4.5,4.6,4.8,4.3,4.6], testCounts=[80,65,72,90,55,68];
+  const phones=['040-23456789','080-34567890','022-45678901','011-56789012','044-67890123','040-78901234'];
+  const data = LAB_NAMES.map((name,i) => ({id:i+1,name,city:CITIES[i],rating:ratings[i],tests:testCounts[i],phone:phones[i],active:i!==4}));
   localStorage.setItem('le_labs', JSON.stringify(data));
   return data;
 }
-function saveLabs(){ localStorage.setItem('le_labs', JSON.stringify(state.labs)); }
 
-const STATUSES = ['Confirmed','Sample Collected','Report Ready','Pending','Cancelled'];
-const LAB_NAMES = ['Apollo Diagnostics','SRL Diagnostics','Metropolis Health','Dr Lal PathLabs','Thyrocare','Vijaya Diagnostics'];
+const ALL_LAB_TESTS = [
+  {id:'a1',name:'Complete Blood Count (CBC)',labId:1,lab:'Apollo',cat:'Blood',price:299,mrp:499},
+  {id:'a2',name:'Lipid Profile',labId:1,lab:'Apollo',cat:'Blood',price:499,mrp:799},
+  {id:'a3',name:'Thyroid Profile (T3,T4,TSH)',labId:1,lab:'Apollo',cat:'Thyroid',price:649,mrp:999},
+  {id:'a4',name:'HbA1c (Diabetes)',labId:1,lab:'Apollo',cat:'Diabetes',price:399,mrp:599},
+  {id:'a5',name:'Liver Function Test',labId:1,lab:'Apollo',cat:'Liver',price:549,mrp:849},
+  {id:'a6',name:'Kidney Function Test',labId:1,lab:'Apollo',cat:'Kidney',price:549,mrp:849},
+  {id:'a7',name:'Vitamin D (25-OH)',labId:1,lab:'Apollo',cat:'Vitamins',price:899,mrp:1299},
+  {id:'a8',name:'Vitamin B12',labId:1,lab:'Apollo',cat:'Vitamins',price:699,mrp:999},
+  {id:'a9',name:'Full Body Checkup',labId:1,lab:'Apollo',cat:'Packages',price:1999,mrp:3499},
+  {id:'a10',name:'COVID Antibody Test',labId:1,lab:'Apollo',cat:'COVID',price:799,mrp:1199},
+  {id:'a11',name:'Iron Studies',labId:1,lab:'Apollo',cat:'Blood',price:449,mrp:699},
+  {id:'a12',name:'CRP (Inflammation)',labId:1,lab:'Apollo',cat:'Blood',price:349,mrp:599},
+  {id:'b1',name:'Complete Blood Count (CBC)',labId:2,lab:'SRL',cat:'Blood',price:279,mrp:499},
+  {id:'b2',name:'Blood Sugar Fasting',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b3',name:'Blood Sugar Post-Prandial',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b4',name:'Urine Routine & Microscopy',labId:2,lab:'SRL',cat:'Urine',price:149,mrp:299},
+  {id:'b5',name:'TSH (Thyroid Stimulating)',labId:2,lab:'SRL',cat:'Thyroid',price:299,mrp:499},
+  {id:'b6',name:'Iron Studies',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:699},
+  {id:'b7',name:'HbA1c',labId:2,lab:'SRL',cat:'Diabetes',price:349,mrp:599},
+  {id:'b8',name:'Dengue NS1 Antigen',labId:2,lab:'SRL',cat:'Infectious',price:699,mrp:999},
+  {id:'b9',name:'Comprehensive Health Package',labId:2,lab:'SRL',cat:'Packages',price:2499,mrp:4199},
+  {id:'b10',name:'Lipid Profile',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:799},
+  {id:'b11',name:'Urine Culture & Sensitivity',labId:2,lab:'SRL',cat:'Urine',price:499,mrp:799},
+  {id:'b12',name:'HIV 1 & 2 Antibody',labId:2,lab:'SRL',cat:'Infectious',price:299,mrp:549},
+  {id:'c1',name:'Complete Blood Count (CBC)',labId:3,lab:'Metropolis',cat:'Blood',price:259,mrp:499},
+  {id:'c2',name:'Liver Function Test',labId:3,lab:'Metropolis',cat:'Liver',price:499,mrp:849},
+  {id:'c3',name:'Kidney Function Test',labId:3,lab:'Metropolis',cat:'Kidney',price:499,mrp:849},
+  {id:'c4',name:'Thyroid Profile',labId:3,lab:'Metropolis',cat:'Thyroid',price:599,mrp:999},
+  {id:'c5',name:'Vitamin D3',labId:3,lab:'Metropolis',cat:'Vitamins',price:849,mrp:1299},
+  {id:'c6',name:'Vitamin B12',labId:3,lab:'Metropolis',cat:'Vitamins',price:649,mrp:999},
+  {id:'c7',name:'PSA Total (Prostate)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:799,mrp:1199},
+  {id:'c8',name:'CA-125 (Ovarian)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:1099,mrp:1699},
+  {id:'c9',name:'Wellness 360 Package',labId:3,lab:'Metropolis',cat:'Packages',price:2999,mrp:5499},
+  {id:'c10',name:'Allergy Panel (40 Allergens)',labId:3,lab:'Metropolis',cat:'Allergy',price:1999,mrp:3499},
+  {id:'c11',name:'Rheumatoid Arthritis Panel',labId:3,lab:'Metropolis',cat:'Autoimmune',price:899,mrp:1499},
+  {id:'c12',name:'ANA (Autoimmune Screen)',labId:3,lab:'Metropolis',cat:'Autoimmune',price:749,mrp:1199},
+  {id:'d1',name:'Complete Blood Count (CBC)',labId:4,lab:'Dr Lal',cat:'Blood',price:249,mrp:499},
+  {id:'d2',name:'Blood Sugar Random',labId:4,lab:'Dr Lal',cat:'Diabetes',price:79,mrp:199},
+  {id:'d3',name:'HbA1c',labId:4,lab:'Dr Lal',cat:'Diabetes',price:329,mrp:599},
+  {id:'d4',name:'Lipid Profile',labId:4,lab:'Dr Lal',cat:'Blood',price:399,mrp:799},
+  {id:'d5',name:'Urine Culture & Sensitivity',labId:4,lab:'Dr Lal',cat:'Urine',price:499,mrp:799},
+  {id:'d6',name:'Stool Examination',labId:4,lab:'Dr Lal',cat:'Stool',price:149,mrp:299},
+  {id:'d7',name:'Malaria Antigen Test',labId:4,lab:'Dr Lal',cat:'Infectious',price:399,mrp:699},
+  {id:'d8',name:'Widal Test (Typhoid)',labId:4,lab:'Dr Lal',cat:'Infectious',price:199,mrp:399},
+  {id:'d9',name:'Heart Health Package',labId:4,lab:'Dr Lal',cat:'Packages',price:1799,mrp:2999},
+  {id:'d10',name:'Senior Citizen Package',labId:4,lab:'Dr Lal',cat:'Packages',price:2299,mrp:3999},
+  {id:'d11',name:'Testosterone Total',labId:4,lab:'Dr Lal',cat:'Hormones',price:599,mrp:999},
+  {id:'d12',name:'Prolactin',labId:4,lab:'Dr Lal',cat:'Hormones',price:499,mrp:799},
+  {id:'e1',name:'Aarogyam 1.3 (Full Body)',labId:5,lab:'Thyrocare',cat:'Packages',price:999,mrp:2499},
+  {id:'e2',name:'Aarogyam C (Comprehensive)',labId:5,lab:'Thyrocare',cat:'Packages',price:1499,mrp:3499},
+  {id:'e3',name:'Thyroid Panel (T3,T4,TSH)',labId:5,lab:'Thyrocare',cat:'Thyroid',price:399,mrp:799},
+  {id:'e4',name:'Complete Blood Count',labId:5,lab:'Thyrocare',cat:'Blood',price:199,mrp:499},
+  {id:'e5',name:'Vitamin Panel (D3 + B12)',labId:5,lab:'Thyrocare',cat:'Vitamins',price:999,mrp:1799},
+  {id:'e6',name:'Hormone Panel',labId:5,lab:'Thyrocare',cat:'Hormones',price:1299,mrp:2299},
+  {id:'e7',name:'Fertility Panel (Female)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1999,mrp:3499},
+  {id:'e8',name:'Fertility Panel (Male)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1499,mrp:2499},
+  {id:'e9',name:'COVID RT-PCR',labId:5,lab:'Thyrocare',cat:'COVID',price:499,mrp:999},
+  {id:'e10',name:'Lipid Profile',labId:5,lab:'Thyrocare',cat:'Blood',price:349,mrp:799},
+  {id:'e11',name:'Cortisol (Stress Hormone)',labId:5,lab:'Thyrocare',cat:'Hormones',price:449,mrp:799},
+  {id:'e12',name:'DHEA-S',labId:5,lab:'Thyrocare',cat:'Hormones',price:549,mrp:899},
+  {id:'f1',name:'Complete Blood Count (CBC)',labId:6,lab:'Vijaya',cat:'Blood',price:269,mrp:499},
+  {id:'f2',name:'Liver Function Test',labId:6,lab:'Vijaya',cat:'Liver',price:519,mrp:849},
+  {id:'f3',name:'Kidney Panel',labId:6,lab:'Vijaya',cat:'Kidney',price:519,mrp:849},
+  {id:'f4',name:'2D Echo (Cardiac)',labId:6,lab:'Vijaya',cat:'Cardiac',price:1499,mrp:2499},
+  {id:'f5',name:'ECG (12-Lead)',labId:6,lab:'Vijaya',cat:'Cardiac',price:299,mrp:499},
+  {id:'f6',name:'X-Ray Chest (PA View)',labId:6,lab:'Vijaya',cat:'Radiology',price:399,mrp:699},
+  {id:'f7',name:'Ultrasound Abdomen',labId:6,lab:'Vijaya',cat:'Radiology',price:899,mrp:1499},
+  {id:'f8',name:'MRI Brain with Contrast',labId:6,lab:'Vijaya',cat:'Radiology',price:5999,mrp:9999},
+  {id:'f9',name:'CT Scan Chest',labId:6,lab:'Vijaya',cat:'Radiology',price:4499,mrp:7999},
+  {id:'f10',name:'Full Body Checkup Premium',labId:6,lab:'Vijaya',cat:'Packages',price:3499,mrp:5999},
+  {id:'f11',name:'Bone Density (DEXA Scan)',labId:6,lab:'Vijaya',cat:'Radiology',price:1299,mrp:2199},
+  {id:'f12',name:'PFT (Pulmonary Function)',labId:6,lab:'Vijaya',cat:'Cardiac',price:799,mrp:1399},
+];
 
-function fmt(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
-function statusBadge(s){
-  const cls = s==='Confirmed'?'badge-blue':s==='Sample Collected'?'badge-yellow':s==='Report Ready'?'badge-green':s==='Cancelled'?'badge-red':'badge-grey';
-  return `<span class="badge ${cls}">${s}</span>`;
+function genTests() {
+  var overrides={};
+  try{overrides=JSON.parse(localStorage.getItem('le_price_overrides')||'{}');}catch(e){}
+  return ALL_LAB_TESTS.map(t => { var ov=overrides[t.id]||{}; return Object.assign({},t,{price:ov.price!==undefined?ov.price:t.price,mrp:ov.mrp!==undefined?ov.mrp:t.mrp}); });
 }
 
-// ── SVG Icons ────────────────────────────────────────────────────────────────
-const ICO = {
-  dash: `<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
-  book: `<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
-  lab: `<svg width=18 height=18 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11l-2 3h10l-2-3V3"/></svg>`,
-  logout: `<svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
-  search: `<svg width=15 height=15 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
-  edit: `<svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
-  dl: `<svg width=15 height=15 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
-  star: `<svg width=13 height=13 viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
-};
-
-// ── Render helpers ───────────────────────────────────────────────────────────
-function sidebar(){
-  const items = [
-    {key:'dashboard',label:'Dashboard',ico:ICO.dash},
-    {key:'bookings',label:'Bookings',ico:ICO.book},
-    {key:'labs',label:'Labs',ico:ICO.lab},
-  ];
-  return `<div class="sidebar">
-    <div style="padding:24px 16px 12px">
-      <div style="font-family:'DM Serif Display';font-size:28px;color:#fff;letter-spacing:-0.3px">LabEase</div>
-      <div style="font-size:11px;color:#6B7280;font-weight:500;margin-top:2px;letter-spacing:.06em;text-transform:uppercase">Admin Panel</div>
-    </div>
-    <div style="height:1px;background:#161B22;margin:8px 16px"></div>
-    <nav style="flex:1;padding:8px 0">
-      ${items.map(it=>`<div class="nav-item${state.page===it.key?' active':''}" onclick="go('${it.key}')">${it.ico}<span>${it.label}</span></div>`).join('')}
-    </nav>
-    <div style="padding:12px 8px 24px">
-      <div class="nav-item" onclick="doLogout()" style="color:#EF4444">${ICO.logout}<span>Logout</span></div>
-    </div>
-  </div>`;
+function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+function statusBadgeClass(s) {
+  if(s==='Confirmed') return 'badge badge-blue';
+  if(s==='Sample Collected') return 'badge badge-yellow';
+  if(s==='Report Ready') return 'badge badge-green';
+  if(s==='Cancelled') return 'badge badge-red';
+  return 'badge badge-grey';
 }
 
-function topbar(){
-  const titles = {dashboard:'Dashboard',bookings:'Bookings',labs:'Labs'};
-  return `<div class="top-bar">
-    <div style="font-weight:700;font-size:15px;color:#0D1117">${titles[state.page]||''}</div>
-    <div style="font-size:13px;color:#6B7280;display:flex;align-items:center;gap:8px">
-      <div style="width:32px;height:32px;border-radius:50%;background:#1158A6;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px">A</div>
-      <span style="font-weight:500">Admin</span>
-    </div>
-  </div>`;
-}
-
-function pageLogin(){
-  return `<div class="login-wrap">
-    <div class="login-card">
-      <div style="text-align:center;margin-bottom:28px">
-        <div style="font-family:'DM Serif Display';font-size:34px;color:#0D1117;letter-spacing:-0.5px">LabEase</div>
-        <div style="color:#6B7280;font-size:13px;margin-top:4px;font-weight:500">Admin Panel — Sign in to continue</div>
+// Login
+function Login({onLogin}) {
+  const [user,setUser]=useState('');
+  const [pass,setPass]=useState('');
+  const [err,setErr]=useState('');
+  function submit(e) {
+    e.preventDefault();
+    if(user.trim()==='admin'&&pass.trim()==='labease2024'){onLogin();}
+    else setErr('Invalid credentials. Use admin / labease2024');
+  }
+  return html`
+    <div class="login-wrap">
+      <div class="login-card">
+        <div style="text-align:center;margin-bottom:28px">
+          <div style="font-family:'DM Serif Display';font-size:34px;color:#0D1117;letter-spacing:-0.5px">LabEase</div>
+          <div style="color:#6B7280;font-size:13px;margin-top:4px;font-weight:500">Admin Panel — Sign in to continue</div>
+        </div>
+        <form onSubmit=${submit}>
+          <div style="margin-bottom:14px">
+            <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px">Username</label>
+            <input type="text" style="width:100%" value=${user} onInput=${e=>setUser(e.target.value)} placeholder="admin" autoFocus />
+          </div>
+          <div style="margin-bottom:18px">
+            <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px">Password</label>
+            <input type="password" style="width:100%" value=${pass} onInput=${e=>setPass(e.target.value)} placeholder="••••••••" />
+          </div>
+          ${err&&html`<div style="background:#FEF2F2;color:#DC2626;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:14px;font-weight:500">${err}</div>`}
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:11px">Sign In</button>
+          <div style="text-align:center;margin-top:14px;font-size:12px;color:#9CA3AF">Default: <strong>admin</strong> / <strong>labease2024</strong></div>
+        </form>
       </div>
-      <form onsubmit="doLogin(event)">
-        <div style="margin-bottom:14px">
-          <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px">Username</label>
-          <input type="text" id="u" style="width:100%" placeholder="admin" autocomplete="username" />
-        </div>
-        <div style="margin-bottom:18px">
-          <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px">Password</label>
-          <input type="password" id="p" style="width:100%" placeholder="••••••••" autocomplete="current-password" />
-        </div>
-        <div id="lerr" style="display:none;background:#FEF2F2;color:#DC2626;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:14px;font-weight:500"></div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:11px">Sign In</button>
-        <div style="text-align:center;margin-top:14px;font-size:12px;color:#9CA3AF">Default: <strong>admin</strong> / <strong>labease2024</strong></div>
-      </form>
-    </div>
-  </div>`;
+    </div>`;
 }
 
-function pageDashboard(){
-  const bk = state.bookings;
-  const total = bk.length;
-  const active = bk.filter(b=>b.status==='Confirmed'||b.status==='Sample Collected').length;
-  const revenue = bk.filter(b=>b.status!=='Cancelled').reduce((s,b)=>s+(b.amount||0),0);
-  const sc = {}; STATUSES.forEach(s=>{ sc[s]=bk.filter(b=>b.status===s).length; });
-  const tc = {}; bk.forEach(b=>{ tc[b.test]=(tc[b.test]||0)+1; });
-  const topTests = Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxT = topTests.length>0?topTests[0][1]:1;
-  const recent = bk.slice().sort((a,b)=>(b.id||'').localeCompare(a.id||'')).slice(0,8);
-  const scol = {'Confirmed':'#3B82F6','Sample Collected':'#F59E0B','Report Ready':'#10B981','Pending':'#9CA3AF','Cancelled':'#EF4444'};
-  const stats = [
+// Sidebar
+function Sidebar({page,setPage,onLogout}) {
+  const items=[
+    {key:'dashboard',label:'Dashboard',icon:html`<${IconDash}/>`},
+    {key:'bookings',label:'Bookings',icon:html`<${IconBook}/>`},
+    {key:'labs',label:'Labs',icon:html`<${IconLab}/>`},
+    {key:'tests',label:'Tests & Pricing',icon:html`<${IconTest}/>`},
+  ];
+  return html`
+    <div class="sidebar">
+      <div style="padding:24px 16px 12px">
+        <div style="font-family:'DM Serif Display';font-size:28px;color:#fff;letter-spacing:-0.3px">LabEase</div>
+        <div style="font-size:11px;color:#6B7280;font-weight:500;margin-top:2px;letter-spacing:0.06em;text-transform:uppercase">Admin Panel</div>
+      </div>
+      <div style="height:1px;background:#161B22;margin:8px 16px"/>
+      <nav style="flex:1;padding:8px 0">
+        ${items.map(it=>html`
+          <div key=${it.key} class=${'nav-item'+(page===it.key?' active':'')} onClick=${()=>setPage(it.key)}>
+            ${it.icon}<span>${it.label}</span>
+          </div>`)}
+      </nav>
+      <div style="padding:12px 8px 24px">
+        <div class="nav-item" onClick=${onLogout} style="color:#EF4444"><${IconLogout}/><span>Logout</span></div>
+      </div>
+    </div>`;
+}
+
+// Dashboard
+function Dashboard({bookings,setBookings}) {
+  const total=bookings.length;
+  const active=bookings.filter(b=>b.status==='Confirmed'||b.status==='Sample Collected').length;
+  const revenue=bookings.filter(b=>b.status!=='Cancelled').reduce((s,b)=>s+b.amount,0);
+  const sc={};STATUSES.forEach(s=>{sc[s]=bookings.filter(b=>b.status===s).length;});
+  const tc={};bookings.forEach(b=>{tc[b.test]=(tc[b.test]||0)+1;});
+  const topTests=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxT=topTests.length>0?topTests[0][1]:1;
+  const recent=bookings.slice().sort((a,b)=>b.id.localeCompare(a.id)).slice(0,6);
+  const scol={'Confirmed':'#3B82F6','Sample Collected':'#F59E0B','Report Ready':'#10B981','Pending':'#9CA3AF','Cancelled':'#EF4444'};
+  const stats=[
     {label:'Total Bookings',value:total,bg:'#EFF6FF',emoji:'📋'},
     {label:'Active Bookings',value:active,bg:'#F0FDF4',emoji:'✅'},
     {label:'Total Revenue',value:fmt(revenue),bg:'#FFF7ED',emoji:'💰'},
     {label:'Total Labs',value:LAB_NAMES.length,bg:'#FDF4FF',emoji:'🏥'},
   ];
-  return `<div style="padding:28px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <div style="font-size:22px;font-weight:800;color:#0D1117">Dashboard</div>
-      <button class="btn btn-outline btn-sm" onclick="refreshBookings()" style="font-size:12px">↻ Refresh</button>
-    </div>
-    <div style="font-size:13.5px;color:#6B7280;margin-bottom:24px">Welcome back, Admin. Here's what's happening today.</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
-      ${stats.map(s=>`<div class="card" style="padding:20px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div style="font-size:12px;color:#6B7280;font-weight:600;margin-bottom:6px">${s.label}</div>
-            <div style="font-size:26px;font-weight:800;color:#0D1117">${s.value}</div>
-          </div>
-          <div style="width:44px;height:44px;border-radius:12px;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:20px">${s.emoji}</div>
+  return html`
+    <div style="padding:28px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:22px;font-weight:800;color:#0D1117">Dashboard</div>
+        <button class="btn btn-outline btn-sm" onClick=${()=>{try{const s=localStorage.getItem('le_bookings');if(s)setBookings(JSON.parse(s));}catch(e){}}} style="font-size:12px">↻ Refresh</button>
+      </div>
+      <div style="font-size:13.5px;color:#6B7280;margin-bottom:24px">Welcome back, Admin. Here's what's happening today.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+        ${stats.map(s=>html`
+          <div key=${s.label} class="card" style="padding:20px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font-size:12px;color:#6B7280;font-weight:600;margin-bottom:6px">${s.label}</div>
+                <div style="font-size:26px;font-weight:800;color:#0D1117">${s.value}</div>
+              </div>
+              <div style="width:44px;height:44px;border-radius:12px;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:20px">${s.emoji}</div>
+            </div>
+          </div>`)}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+        <div class="card" style="padding:22px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:18px;color:#0D1117">Booking Status Breakdown</div>
+          ${STATUSES.map(s=>html`
+            <div key=${s} style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:5px">
+                <span>${s}</span><span style="color:#6B7280">${sc[s]}</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${total?((sc[s]/total)*100):0}%;background:${scol[s]}"/></div>
+            </div>`)}
         </div>
-      </div>`).join('')}
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
-      <div class="card" style="padding:22px">
-        <div style="font-weight:700;font-size:15px;margin-bottom:18px;color:#0D1117">Booking Status Breakdown</div>
-        ${total===0?`<div style="color:#9CA3AF;font-size:13px;padding:8px 0">No bookings yet.</div>`
-          :STATUSES.map(s=>`<div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:5px">
-            <span>${s}</span><span style="color:#6B7280">${sc[s]||0}</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${total?((sc[s]||0)/total*100):0}%;background:${scol[s]}"></div></div>
-        </div>`).join('')}
+        <div class="card" style="padding:22px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:18px;color:#0D1117">Top 5 Booked Tests</div>
+          ${topTests.map(([name,cnt],i)=>html`
+            <div key=${name} style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:5px">
+                <span>${(i+1)+'. '+name}</span><span style="color:#6B7280">${cnt} bookings</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${((cnt/maxT)*100)}%;background:#1158A6"/></div>
+            </div>`)}
+        </div>
       </div>
-      <div class="card" style="padding:22px">
-        <div style="font-weight:700;font-size:15px;margin-bottom:18px;color:#0D1117">Top 5 Booked Tests</div>
-        ${topTests.length===0?`<div style="color:#9CA3AF;font-size:13px;padding:8px 0">No data yet.</div>`
-          :topTests.map(([name,cnt],i)=>`<div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:5px">
-            <span>${i+1}. ${name}</span><span style="color:#6B7280">${cnt} bookings</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${(cnt/maxT*100).toFixed(1)}%;background:#1158A6"></div></div>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div class="card">
-      <div style="padding:18px 20px 0;font-weight:700;font-size:15px;color:#0D1117">Recent Bookings</div>
-      ${recent.length===0
-        ?`<div style="padding:40px;text-align:center;color:#9CA3AF;font-size:13.5px">No bookings yet. Bookings from patients will appear here automatically.</div>`
-        :`<table>
+      <div class="card">
+        <div style="padding:18px 20px 0;font-weight:700;font-size:15px;color:#0D1117">Recent Bookings</div>
+        ${recent.length===0?html`<div style="padding:40px;text-align:center;color:#9CA3AF;font-size:13.5px">No bookings yet. Bookings from patients will appear here automatically.</div>`:html`
+        <table>
           <thead><tr><th>ID</th><th>Patient</th><th>Test</th><th>Lab</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
-          <tbody>${recent.map(b=>`<tr>
-            <td style="font-weight:600;color:#1158A6">${b.id||'—'}</td>
-            <td>${b.patient||'—'}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.test||'—'}</td>
-            <td>${b.lab||'—'}</td><td>${b.date||'—'}</td>
-            <td style="font-weight:600">${fmt(b.amount||0)}</td>
-            <td>${statusBadge(b.status||'Pending')}</td>
-          </tr>`).join('')}</tbody>
+          <tbody>
+            ${recent.map(b=>html`
+              <tr key=${b.id}>
+                <td style="font-weight:600;color:#1158A6">${b.id}</td>
+                <td>${b.patient}</td><td>${b.test}</td><td>${b.lab}</td><td>${b.date}</td>
+                <td style="font-weight:600">${fmt(b.amount)}</td>
+                <td><span class=${statusBadgeClass(b.status)}>${b.status}</span></td>
+              </tr>`)}
+          </tbody>
         </table>`}
-    </div>
-  </div>`;
+      </div>
+    </div>`;
 }
 
-function pageBookings(){
-  const q = (state.search||'').toLowerCase();
-  const f = state.statusFilter||'All';
-  const filtered = state.bookings.filter(b=>{
-    const mq = !q || (b.patient||'').toLowerCase().includes(q) || (b.id||'').toLowerCase().includes(q) || (b.test||'').toLowerCase().includes(q);
-    const mf = f==='All' || b.status===f;
-    return mq && mf;
-  }).sort((a,b)=>(b.id||'').localeCompare(a.id||''));
+// Bookings
+function Bookings({bookings,setBookings}) {
+  const [search,setSearch]=useState('');
+  const [filter,setFilter]=useState('All');
+  function dlXlsx(rows){
+    var data=rows.map(b=>({'Booking ID':b.id,'Patient Name':b.patient,'Phone':b.phone,'Test':b.test,'Lab':b.lab,'Date':b.date,'Mode':b.mode,'Amount (₹)':b.amount,'Status':b.status}));
+    var ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Bookings');
+    XLSX.writeFile(wb,'LabEase_Bookings_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  }
+  function updateStatus(id,status){
+    var next=bookings.map(b=>b.id===id?Object.assign({},b,{status}):b);
+    setBookings(next);localStorage.setItem('le_bookings',JSON.stringify(next));
+  }
+  var filtered=bookings.filter(b=>{
+    var q=search.toLowerCase();
+    var mq=!q||b.patient.toLowerCase().includes(q)||b.id.toLowerCase().includes(q)||b.test.toLowerCase().includes(q);
+    var mf=filter==='All'||b.status===filter;
+    return mq&&mf;
+  }).sort((a,b)=>b.id.localeCompare(a.id));
+  return html`
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div style="font-size:22px;font-weight:800;color:#0D1117">Bookings</div>
+        <button class="btn btn-outline" onClick=${()=>dlXlsx(filtered)}><${IconDownload}/> Download Excel</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <div style="position:relative;flex:1;min-width:220px">
+          <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9CA3AF"><${IconSearch}/></span>
+          <input type="text" style="width:100%;padding-left:32px" placeholder="Search by name, ID or test…" value=${search} onInput=${e=>setSearch(e.target.value)} />
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${['All'].concat(STATUSES).map(s=>html`<button key=${s} class=${'pill-btn'+(filter===s?' active':'')} onClick=${()=>setFilter(s)}>${s}</button>`)}
+        </div>
+      </div>
+      <div class="card" style="overflow:hidden">
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>ID</th><th>Patient</th><th>Phone</th><th>Test</th><th>Lab</th><th>Date</th><th>Mode</th><th>Amount</th><th>Status</th><th>Update Status</th></tr></thead>
+            <tbody>
+              ${filtered.length===0&&html`<tr><td colSpan=10 style="text-align:center;color:#9CA3AF;padding:32px">No bookings found.</td></tr>`}
+              ${filtered.map(b=>html`
+                <tr key=${b.id}>
+                  <td style="font-weight:600;color:#1158A6">${b.id}</td>
+                  <td style="font-weight:600">${b.patient}</td>
+                  <td style="color:#6B7280">${b.phone}</td>
+                  <td>${b.test}</td><td>${b.lab}</td><td>${b.date}</td>
+                  <td><span style="font-size:12px;font-weight:600;color:${b.mode==='Home'?'#7E22CE':'#0369A1'};background:${b.mode==='Home'?'#FDF4FF':'#F0F9FF'};padding:3px 8px;border-radius:6px">${b.mode}</span></td>
+                  <td style="font-weight:700">${fmt(b.amount)}</td>
+                  <td><span class=${statusBadgeClass(b.status)}>${b.status}</span></td>
+                  <td>
+                    <select value=${b.status} onChange=${e=>updateStatus(b.id,e.target.value)} style="font-size:12px;padding:5px 8px">
+                      ${STATUSES.map(s=>html`<option key=${s} value=${s}>${s}</option>`)}
+                    </select>
+                  </td>
+                </tr>`)}
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 20px;font-size:12px;color:#9CA3AF;border-top:1px solid #F3F4F6">
+          Showing ${filtered.length} of ${bookings.length} bookings
+        </div>
+      </div>
+    </div>`;
+}
 
-  return `<div style="padding:28px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <div style="font-size:22px;font-weight:800;color:#0D1117">Bookings</div>
-      <button class="btn btn-outline" onclick="dlBookings()" style="display:inline-flex;align-items:center;gap:6px">${ICO.dl} Download CSV</button>
-    </div>
-    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-      <div style="position:relative;flex:1;min-width:220px">
-        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9CA3AF;pointer-events:none">${ICO.search}</span>
-        <input type="text" id="bsearch" style="width:100%;padding-left:32px" placeholder="Search by name, ID or test…"
-          value="${(state.search||'').replace(/"/g,'&quot;')}" oninput="setSearch(this.value)" />
+// Labs
+function Labs({labs,setLabs}) {
+  const [editing,setEditing]=useState(null);
+  const [form,setForm]=useState({});
+  const [editTests,setEditTests]=useState([]);
+  const [addingLab,setAddingLab]=useState(false);
+  const [newLab,setNewLab]=useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+  const [newLabTests,setNewLabTests]=useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+
+  function startEdit(lab){
+    setEditing(lab.id);
+    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
+    var t=Array.isArray(lab.tests)?lab.tests.map(t=>({name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day'})):[];
+    setEditTests(t.length?t:[{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+  }
+  function saveEdit(id){
+    var ta=editTests.filter(t=>t.name&&t.name.trim()).map((t,i)=>({id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day'}));
+    var next=labs.map(l=>l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:ta.length?ta:l.tests}):l);
+    setLabs(next);localStorage.setItem('le_labs',JSON.stringify(next));
+    var extras=[];try{extras=JSON.parse(localStorage.getItem('le_extra_labs')||'[]');}catch(e){}
+    var upd=next.find(l=>l.id===id);var ki=new Set([1,2,3,4,5,6]);
+    if(!ki.has(id)&&upd){extras=extras.map(e=>e.id===id?upd:e);localStorage.setItem('le_extra_labs',JSON.stringify(extras));}
+    var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
+    lnov[id]=form.name;localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
+    setEditing(null);
+  }
+  function toggle(id){
+    var next=labs.map(l=>l.id===id?Object.assign({},l,{active:!l.active}):l);
+    setLabs(next);localStorage.setItem('le_labs',JSON.stringify(next));
+    var tog=next.find(l=>l.id===id);
+    if(tog){var lo={};try{lo=JSON.parse(localStorage.getItem('le_lab_overrides')||'{}');}catch(e){}lo[id]=tog.active;localStorage.setItem('le_lab_overrides',JSON.stringify(lo));}
+  }
+  function saveNewLab(){
+    if(!newLab.name.trim())return;
+    var maxId=labs.reduce((m,l)=>Math.max(m,l.id),0),labId=maxId+1;
+    var ta=newLabTests.filter(t=>t.name.trim()).map((t,i)=>({id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day'}));
+    if(!ta.length)ta=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
+    var lab={id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:ta,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    var next=labs.concat([lab]);setLabs(next);localStorage.setItem('le_labs',JSON.stringify(next));
+    var extras=[];try{extras=JSON.parse(localStorage.getItem('le_extra_labs')||'[]');}catch(e){}
+    extras.push(lab);localStorage.setItem('le_extra_labs',JSON.stringify(extras));
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+    setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+    setAddingLab(false);
+  }
+  function readImg(e,cb){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=ev=>cb(ev.target.result);r.readAsDataURL(file);}
+  const nlFields=[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing (e.g. 6:00 AM – 10:00 PM)'],['color','Button Color']];
+  const edFields=[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing'],['color','Button Color']];
+  const testRow=(t,i,setFn)=>html`
+    <div key=${i} style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:6px;margin-bottom:5px;align-items:center">
+      <input type="text" placeholder="e.g. CBC" style="width:100%" value=${t.name} onInput=${e=>{var v=e.target.value;setFn(a=>{var n=a.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+      <input type="number" placeholder="0" style="width:100%" value=${t.price} onInput=${e=>{var v=e.target.value;setFn(a=>{var n=a.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+      <input type="number" placeholder="0" style="width:100%" value=${t.mrp} onInput=${e=>{var v=e.target.value;setFn(a=>{var n=a.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+      <select style="width:100%;height:32px;border-radius:6px;border:1px solid #D1D5DB;font-size:12px;padding:0 4px" value=${t.cat} onChange=${e=>{var v=e.target.value;setFn(a=>{var n=a.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
+        ${CAT_OPTIONS.map(c=>html`<option key=${c} value=${c}>${c}</option>`)}
+      </select>
+      <button style="background:#FEE2E2;color:#DC2626;border:none;border-radius:5px;padding:3px 7px;cursor:pointer;font-weight:700;font-size:12px" onClick=${()=>setFn(a=>a.filter((_,j)=>j!==i))}>✕</button>
+    </div>`;
+  return html`
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div style="font-size:22px;font-weight:800;color:#0D1117">Labs</div>
+        <button class="btn btn-primary" onClick=${()=>setAddingLab(!addingLab)}>+ Add Lab</button>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${['All',...STATUSES].map(s=>`<button class="pill-btn${f===s?' active':''}" onclick="setStatusFilter('${s}')">${s}</button>`).join('')}
+      ${addingLab&&html`
+        <div class="card" style="padding:20px;margin-bottom:20px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:14px;color:#0D1117">Add New Lab</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
+            ${nlFields.map(([k,lbl])=>html`
+              <div key=${k}>
+                <label style="font-size:11px;font-weight:600;color:#6B7280;display:block;margin-bottom:3px">${lbl}</label>
+                <input type="text" style="width:100%" value=${newLab[k]} onInput=${e=>{var v=e.target.value;setNewLab(f=>Object.assign({},f,{[k]:v}));}} />
+              </div>`)}
+            <div>
+              <label style="font-size:11px;font-weight:600;color:#6B7280;display:block;margin-bottom:3px">Logo (upload image)</label>
+              <input type="file" accept="image/*" style="width:100%;font-size:12px" onChange=${e=>readImg(e,v=>setNewLab(f=>Object.assign({},f,{logoBase64:v})))} />
+              ${newLab.logoBase64&&html`<img src=${newLab.logoBase64} alt="preview" style="width:48px;height:48px;object-fit:contain;margin-top:4px;border-radius:6px;border:1px solid #E5E7EB"/>`}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="checkbox" id="nl-hc" checked=${newLab.homeCollection} onChange=${e=>{var v=e.target.checked;setNewLab(f=>Object.assign({},f,{homeCollection:v}));}} />
+              <label for="nl-hc" style="font-size:13px;font-weight:600;color:#374151">Home Collection</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="checkbox" id="nl-nabl" checked=${newLab.nabl} onChange=${e=>{var v=e.target.checked;setNewLab(f=>Object.assign({},f,{nabl:v}));}} />
+              <label for="nl-nabl" style="font-size:13px;font-weight:600;color:#374151">NABL Accredited</label>
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;color:#6B7280;display:block;margin-bottom:3px">Reports Ready In</label>
+              <select style="width:100%;height:34px;border-radius:6px;border:1px solid #D1D5DB;font-size:12px;padding:0 6px" value=${newLab.reportTime} onChange=${e=>{var v=e.target.value;setNewLab(f=>Object.assign({},f,{reportTime:v}));}}>
+                ${REPORT_OPTIONS.map(r=>html`<option key=${r} value=${r}>${r}</option>`)}
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px">Tests / Packages</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:3px">
+              <span style="font-size:10px;font-weight:600;color:#9CA3AF">Test Name</span>
+              <span style="font-size:10px;font-weight:600;color:#9CA3AF">Price (₹)</span>
+              <span style="font-size:10px;font-weight:600;color:#9CA3AF">MRP (₹)</span>
+              <span style="font-size:10px;font-weight:600;color:#9CA3AF">Category</span><span/>
+            </div>
+            ${newLabTests.map((t,i)=>testRow(t,i,setNewLabTests))}
+            <button class="btn btn-outline btn-sm" onClick=${()=>setNewLabTests(a=>a.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]))}>+ Add Test</button>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary btn-sm" onClick=${saveNewLab}>Save Lab</button>
+            <button class="btn btn-outline btn-sm" onClick=${()=>setAddingLab(false)}>Cancel</button>
+          </div>
+        </div>`}
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+        ${labs.map(lab=>html`
+          <div key=${lab.id} class="lab-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <div style="font-weight:700;font-size:15px;color:#0D1117;flex:1;padding-right:8px">${lab.name}</div>
+              <span class=${'badge '+(lab.active?'badge-green':'badge-red')} style="flex-shrink:0">${lab.active?'Active':'Inactive'}</span>
+            </div>
+            ${editing===lab.id?html`
+              <div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                  ${edFields.map(([k,lbl])=>html`
+                    <div key=${k}>
+                      <label style="font-size:10px;font-weight:600;color:#6B7280;display:block;margin-bottom:2px">${lbl}</label>
+                      <input type="text" style="width:100%" value=${form[k]||''} onInput=${e=>{var v=e.target.value;setForm(f=>Object.assign({},f,{[k]:v}));}} />
+                    </div>`)}
+                  <div>
+                    <label style="font-size:10px;font-weight:600;color:#6B7280;display:block;margin-bottom:2px">Logo (upload)</label>
+                    <input type="file" accept="image/*" style="width:100%;font-size:11px" onChange=${e=>readImg(e,v=>setForm(f=>Object.assign({},f,{logoBase64:v})))} />
+                    ${form.logoBase64&&html`<img src=${form.logoBase64} alt="logo" style="width:36px;height:36px;object-fit:contain;margin-top:3px;border-radius:4px;border:1px solid #E5E7EB"/>`}
+                  </div>
+                </div>
+                <div style="display:flex;gap:16px;margin-bottom:8px">
+                  <label style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;cursor:pointer">
+                    <input type="checkbox" checked=${!!form.homeCollection} onChange=${e=>{var v=e.target.checked;setForm(f=>Object.assign({},f,{homeCollection:v}));}} /> Home Collection
+                  </label>
+                  <label style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;cursor:pointer">
+                    <input type="checkbox" checked=${!!form.nabl} onChange=${e=>{var v=e.target.checked;setForm(f=>Object.assign({},f,{nabl:v}));}} /> NABL Accredited
+                  </label>
+                </div>
+                <div style="margin-bottom:8px">
+                  <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">Tests / Packages</div>
+                  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:6px;margin-bottom:3px">
+                    <span style="font-size:10px;font-weight:600;color:#9CA3AF">Test Name</span>
+                    <span style="font-size:10px;font-weight:600;color:#9CA3AF">Price (₹)</span>
+                    <span style="font-size:10px;font-weight:600;color:#9CA3AF">MRP (₹)</span>
+                    <span style="font-size:10px;font-weight:600;color:#9CA3AF">Category</span><span/>
+                  </div>
+                  ${editTests.map((t,i)=>testRow(t,i,setEditTests))}
+                  <button class="btn btn-outline btn-sm" onClick=${()=>setEditTests(a=>a.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]))}>+ Add Test</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:10px">
+                  <button class="btn btn-primary btn-sm" onClick=${()=>saveEdit(lab.id)}>Save</button>
+                  <button class="btn btn-outline btn-sm" onClick=${()=>setEditing(null)}>Cancel</button>
+                </div>
+              </div>`:html`
+              <div>
+                <div style="color:#6B7280;font-size:13px;margin-bottom:4px">📍 ${lab.city}</div>
+                <div style="color:#6B7280;font-size:13px;margin-bottom:4px">📞 ${lab.phone}</div>
+                <div style="display:flex;gap:16px;margin-bottom:14px;margin-top:10px">
+                  <div style="font-size:13px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" stroke-width="1" style="vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    ${' '}<span style="font-weight:600">${lab.rating}</span> <span style="color:#9CA3AF">rating</span>
+                  </div>
+                  <div style="font-size:13px;color:#6B7280"><strong style="color:#0D1117">${Array.isArray(lab.tests)?lab.tests.length:lab.tests}</strong> tests</div>
+                </div>
+                <div style="display:flex;gap:8px">
+                  <button class="btn btn-outline btn-sm" onClick=${()=>startEdit(lab)}><${IconEdit}/> Edit</button>
+                  <button class="btn btn-sm" onClick=${()=>toggle(lab.id)} style="background:${lab.active?'#FEF2F2':'#F0FDF4'};color:${lab.active?'#DC2626':'#15803D'};border:none;font-weight:600">
+                    ${lab.active?'Deactivate':'Activate'}
+                  </button>
+                </div>
+              </div>`}
+          </div>`)}
       </div>
-    </div>
-    <div class="card" style="overflow:hidden">
-      <div style="overflow-x:auto">
+    </div>`;
+}
+
+// Tests
+function Tests({tests,setTests}) {
+  const [search,setSearch]=useState('');
+  const [labFilter,setLabFilter]=useState('All');
+  const [editing,setEditing]=useState(null);
+  const [form,setForm]=useState({});
+  const labNames=['All','Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
+  function startEdit(t){setEditing(t.id);setForm({mrp:t.mrp,price:t.price,name:t.name});}
+  function saveEdit(id){
+    var np=parseInt(form.price),nm=parseInt(form.mrp),nn=form.name;
+    var next=tests.map(t=>t.id===id?Object.assign({},t,{price:np,mrp:nm,name:nn}):t);
+    setTests(next);
+    var ov={};try{ov=JSON.parse(localStorage.getItem('le_price_overrides')||'{}');}catch(e){}
+    ov[id]={price:np,mrp:nm};localStorage.setItem('le_price_overrides',JSON.stringify(ov));
+    var tnov={};try{tnov=JSON.parse(localStorage.getItem('le_test_name_overrides')||'{}');}catch(e){}
+    tnov[id]=nn;localStorage.setItem('le_test_name_overrides',JSON.stringify(tnov));
+    setEditing(null);
+  }
+  var filtered=tests.filter(t=>{
+    var mq=!search||t.name.toLowerCase().includes(search.toLowerCase())||t.cat.toLowerCase().includes(search.toLowerCase());
+    var ml=labFilter==='All'||t.lab===labFilter;
+    return mq&&ml;
+  });
+  return html`
+    <div style="padding:28px">
+      <div style="font-size:22px;font-weight:800;margin-bottom:6px;color:#0D1117">Tests & Pricing</div>
+      <div style="color:#6B7280;font-size:13px;margin-bottom:20px">Edit prices per lab — changes reflect instantly in the main app</div>
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <div style="position:relative;width:280px">
+          <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9CA3AF"><${IconSearch}/></span>
+          <input type="text" style="width:100%;padding-left:32px" placeholder="Search test or category…" value=${search} onInput=${e=>setSearch(e.target.value)} />
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${labNames.map(l=>html`<button key=${l} class=${'btn '+(labFilter===l?'btn-primary':'btn-outline')+' btn-sm'} onClick=${()=>setLabFilter(l)}>${l}</button>`)}
+        </div>
+      </div>
+      <div style="color:#6B7280;font-size:12px;margin-bottom:10px">${filtered.length} entries</div>
+      <div class="card" style="overflow:hidden">
         <table>
-          <thead><tr><th>ID</th><th>Patient</th><th>Phone</th><th>Test</th><th>Lab</th><th>Date</th><th>Mode</th><th>Amount</th><th>Status</th><th>Update</th></tr></thead>
+          <thead><tr><th>Test Name</th><th>Lab</th><th>Category</th><th>MRP</th><th>Offer Price</th><th>Discount</th><th>Action</th></tr></thead>
           <tbody>
-            ${filtered.length===0?`<tr><td colspan="10" style="text-align:center;color:#9CA3AF;padding:32px">No bookings found.</td></tr>`
-              :filtered.map(b=>`<tr>
-              <td style="font-weight:600;color:#1158A6">${b.id||'—'}</td>
-              <td style="font-weight:600">${b.patient||'—'}</td>
-              <td style="color:#6B7280">${b.phone||'—'}</td>
-              <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.test||'—'}</td>
-              <td>${b.lab||'—'}</td><td>${b.date||'—'}</td>
-              <td><span style="font-size:12px;font-weight:600;color:${b.mode==='Home'?'#7E22CE':'#0369A1'};background:${b.mode==='Home'?'#FDF4FF':'#F0F9FF'};padding:3px 8px;border-radius:6px">${b.mode||'—'}</span></td>
-              <td style="font-weight:700">${fmt(b.amount||0)}</td>
-              <td>${statusBadge(b.status||'Pending')}</td>
-              <td><select onchange="updateStatus('${b.id}',this.value)" style="font-size:12px;padding:5px 8px">
-                ${STATUSES.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s}</option>`).join('')}
-              </select></td>
-            </tr>`).join('')}
+            ${filtered.map(t=>{
+              var disc=Math.round((1-t.price/t.mrp)*100);
+              return html`
+                <tr key=${t.id}>
+                  <td style="font-weight:600;max-width:180px">${t.name}</td>
+                  <td><span style="font-size:12px;background:#EFF6FF;color:#1158A6;padding:3px 8px;border-radius:6px;font-weight:600;white-space:nowrap">${t.lab}</span></td>
+                  <td><span style="font-size:12px;background:#F3F4F6;color:#374151;padding:3px 8px;border-radius:6px;font-weight:600">${t.cat}</span></td>
+                  <td style="color:#9CA3AF;text-decoration:line-through">${fmt(t.mrp)}</td>
+                  <td style="font-weight:700;color:#15803D">${fmt(t.price)}</td>
+                  <td><span style="background:#FFF7ED;color:#C2410C;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">${disc}% off</span></td>
+                  <td>
+                    ${editing===t.id?html`
+                      <div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap">
+                        <div>
+                          <div style="font-size:11px;color:#9CA3AF;margin-bottom:2px">Test Name</div>
+                          <input type="text" style="width:160px;padding:4px 8px;font-size:12px" value=${form.name} onInput=${e=>{var v=e.target.value;setForm(f=>Object.assign({},f,{name:v}));}} />
+                        </div>
+                        <div>
+                          <div style="font-size:11px;color:#9CA3AF;margin-bottom:2px">MRP</div>
+                          <input type="number" style="width:76px;padding:4px 8px;font-size:12px" value=${form.mrp} onInput=${e=>{var v=e.target.value;setForm(f=>Object.assign({},f,{mrp:v}));}} />
+                        </div>
+                        <div>
+                          <div style="font-size:11px;color:#9CA3AF;margin-bottom:2px">Price</div>
+                          <input type="number" style="width:76px;padding:4px 8px;font-size:12px" value=${form.price} onInput=${e=>{var v=e.target.value;setForm(f=>Object.assign({},f,{price:v}));}} />
+                        </div>
+                        <div style="display:flex;gap:5px">
+                          <button class="btn btn-primary btn-sm" onClick=${()=>saveEdit(t.id)}>Save</button>
+                          <button class="btn btn-outline btn-sm" onClick=${()=>setEditing(null)}>✕</button>
+                        </div>
+                      </div>`:html`
+                      <button class="btn btn-outline btn-sm" onClick=${()=>startEdit(t)}><${IconEdit}/> Edit Price</button>`}
+                  </td>
+                </tr>`;
+            })}
           </tbody>
         </table>
       </div>
-      <div style="padding:12px 20px;font-size:12px;color:#9CA3AF;border-top:1px solid #F3F4F6">
-        Showing ${filtered.length} of ${state.bookings.length} bookings
+    </div>`;
+}
+
+// App
+function App() {
+  const [authed,setAuthed]=useState(()=>localStorage.getItem('le_auth')==='1');
+  const [page,setPage]=useState('dashboard');
+  const [bookings,setBookings]=useState(()=>genBookings());
+  const [labs,setLabs]=useState(()=>genLabs());
+  const [tests,setTests]=useState(()=>genTests());
+
+  useEffect(()=>{
+    function handler(e){if(e.key==='le_bookings'){try{setBookings(JSON.parse(e.newValue||'[]'));}catch(ex){}}}
+    function onFocus(){try{const s=localStorage.getItem('le_bookings');if(s)setBookings(JSON.parse(s));}catch(e){}}
+    window.addEventListener('storage',handler);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)onFocus();});
+    return ()=>window.removeEventListener('storage',handler);
+  },[]);
+
+  function login(){['le_admin_auth','labease_admin_auth'].forEach(k=>localStorage.removeItem(k));localStorage.setItem('le_auth','1');setAuthed(true);}
+  function logout(){localStorage.removeItem('le_auth');setAuthed(false);}
+
+  if(!authed)return html`<${Login} onLogin=${login}/>`;
+  const pt={dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing'};
+  return html`
+    <div>
+      <${Sidebar} page=${page} setPage=${setPage} onLogout=${logout}/>
+      <div class="main">
+        <div class="top-bar">
+          <div style="font-weight:700;font-size:15px;color:#0D1117">${pt[page]}</div>
+          <div style="font-size:13px;color:#6B7280;display:flex;align-items:center;gap:8px">
+            <div style="width:32px;height:32px;border-radius:50%;background:#1158A6;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px">A</div>
+            <span style="font-weight:500">Admin</span>
+          </div>
+        </div>
+        ${page==='dashboard'&&html`<${Dashboard} bookings=${bookings} setBookings=${setBookings}/>`}
+        ${page==='bookings'&&html`<${Bookings} bookings=${bookings} setBookings=${setBookings}/>`}
+        ${page==='labs'&&html`<${Labs} labs=${labs} setLabs=${setLabs}/>`}
+        ${page==='tests'&&html`<${Tests} tests=${tests} setTests=${setTests}/>`}
       </div>
-    </div>
-  </div>`;
+    </div>`;
 }
 
-function pageLabs(){
-  return `<div style="padding:28px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <div style="font-size:22px;font-weight:800;color:#0D1117">Labs</div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
-      ${state.labs.map(lab=>`<div class="lab-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-          <div style="font-weight:700;font-size:15px;color:#0D1117;flex:1;padding-right:8px">${lab.name}</div>
-          <span class="badge ${lab.active?'badge-green':'badge-red'}" style="flex-shrink:0">${lab.active?'Active':'Inactive'}</span>
-        </div>
-        <div style="color:#6B7280;font-size:13px;margin-bottom:4px">📍 ${lab.city||'—'}</div>
-        <div style="color:#6B7280;font-size:13px;margin-bottom:12px">📞 ${lab.phone||'—'}</div>
-        <div style="display:flex;gap:16px;margin-bottom:14px">
-          <div style="font-size:13px">${ICO.star} <span style="font-weight:600">${lab.rating||'—'}</span> <span style="color:#9CA3AF">rating</span></div>
-          <div style="font-size:13px;color:#6B7280"><strong style="color:#0D1117">${Array.isArray(lab.tests)?lab.tests.length:lab.tests}</strong> tests</div>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-sm" onclick="toggleLab(${lab.id})"
-            style="background:${lab.active?'#FEF2F2':'#F0FDF4'};color:${lab.active?'#DC2626':'#15803D'};border:none;font-weight:600">
-            ${lab.active?'Deactivate':'Activate'}
-          </button>
-        </div>
-      </div>`).join('')}
-    </div>
-  </div>`;
-}
-
-// ── Main render ──────────────────────────────────────────────────────────────
-function render(){
-  const root = document.getElementById('root');
-  if(!state.authed){
-    root.innerHTML = pageLogin();
-    setTimeout(()=>{ const el=document.getElementById('u'); if(el)el.focus(); },50);
-    return;
-  }
-  let content = '';
-  if(state.page==='dashboard') content = pageDashboard();
-  else if(state.page==='bookings') content = pageBookings();
-  else if(state.page==='labs') content = pageLabs();
-
-  root.innerHTML = `<div>${sidebar()}<div class="main">${topbar()}${content}</div></div>`;
-}
-setRender(render);
-
-// ── Actions ──────────────────────────────────────────────────────────────────
-window.go = function(p){ state.page=p; state.search=''; state.statusFilter='All'; render(); };
-window.doLogin = function(e){
-  e.preventDefault();
-  const u = document.getElementById('u').value.trim();
-  const p = document.getElementById('p').value.trim();
-  if(u==='admin' && p==='labease2024'){
-    localStorage.setItem('le_auth','1');
-    state.authed = true; render();
-  } else {
-    const el = document.getElementById('lerr');
-    el.style.display='block'; el.textContent='Invalid credentials. Use admin / labease2024';
-  }
-};
-window.doLogout = function(){ localStorage.removeItem('le_auth'); state.authed=false; render(); };
-window.refreshBookings = function(){ state.bookings=loadBookings(); render(); };
-window.setSearch = function(v){ state.search=v; render(); };
-window.setStatusFilter = function(v){ state.statusFilter=v; render(); };
-window.updateStatus = function(id,status){
-  state.bookings = state.bookings.map(b=>b.id===id?{...b,status}:b);
-  saveBookings(); render();
-};
-window.toggleLab = function(id){
-  state.labs = state.labs.map(l=>l.id===id?{...l,active:!l.active}:l);
-  saveLabs();
-  const lo={}; try{Object.assign(lo,JSON.parse(localStorage.getItem('le_lab_overrides')||'{}'));}catch(e){}
-  const lab=state.labs.find(l=>l.id===id); if(lab) lo[id]=lab.active;
-  localStorage.setItem('le_lab_overrides',JSON.stringify(lo));
-  render();
-};
-window.dlBookings = function(){
-  const q=(state.search||'').toLowerCase(), f=state.statusFilter||'All';
-  const rows = state.bookings.filter(b=>{
-    const mq=!q||(b.patient||'').toLowerCase().includes(q)||(b.id||'').toLowerCase().includes(q)||(b.test||'').toLowerCase().includes(q);
-    return mq&&(f==='All'||b.status===f);
-  });
-  const headers = ['Booking ID','Patient Name','Phone','Test','Lab','Date','Mode','Amount','Status'];
-  const csv = [headers.join(','), ...rows.map(b=>[b.id,b.patient,b.phone,`"${(b.test||'').replace(/"/g,'""')}"`,b.lab,b.date,b.mode,b.amount,b.status].join(','))].join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='LabEase_Bookings_'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();
-};
-
-// ── Listen for new bookings from main app ────────────────────────────────────
-window.addEventListener('storage', e=>{
-  if(e.key==='le_bookings' && state.authed){
-    try{ state.bookings=JSON.parse(e.newValue||'[]'); render(); }catch(ex){}
-  }
-});
-document.addEventListener('visibilitychange', ()=>{
-  if(!document.hidden && state.authed){ state.bookings=loadBookings(); render(); }
-});
-
-// ── Init ─────────────────────────────────────────────────────────────────────
-render();
+render(h(App,null),document.getElementById('root'));
 </script>
 </body>
 </html>
