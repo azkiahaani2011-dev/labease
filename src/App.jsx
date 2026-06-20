@@ -2278,7 +2278,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box", paddingLeft:0, paddingRight:0 }}>
       {/* Search bar */}
-      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden" }}>
+      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"1px solid #E5E7EB",overflow:"hidden" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
@@ -3332,7 +3332,7 @@ export default function App() {
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
@@ -3349,7 +3349,7 @@ export default function App() {
             </p>
 
             {/* location bar */}
-            <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,boxShadow:"0 4px 16px rgba(17,88,166,.12)",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
+            <div style={{ display:"flex",alignItems:"center",gap:12,background:"#fff",borderRadius:50,border:"1px solid #E5E7EB",overflow:"hidden",marginBottom:10,padding:"6px 6px 6px 20px" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               <span style={{ flex:1,fontSize:"1rem",fontWeight:700,color:"#6B7280",textAlign:"left",letterSpacing:"-.01em" }}>Hyderabad</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginRight:14 }}><path d="M6 9l6 6 6-6"/></svg>
@@ -4227,7 +4227,7 @@ export default function App() {
         </div>
       </nav>
       {/* ── Sticky trust bar ── */}
-      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 16px rgba(12,31,74,.4)" }}>
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center" }}>
         <span style={{ color:"#fff",fontSize:".55rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9 }}>NABL Accredited Labs</span>
         <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 18px",flexShrink:0 }}/>
         <span style={{ color:"#fff",fontSize:".55rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9 }}>Free Home Sample Collection</span>
