@@ -3453,7 +3453,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"20px 0 22px", background:"#F5F7FF", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards — auto-swipe carousel */}
