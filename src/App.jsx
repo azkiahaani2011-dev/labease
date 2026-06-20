@@ -3892,7 +3892,7 @@ export default function App() {
 
         {/* summary */}
         <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
-          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",`${done?.cart?.length} test(s)`],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
+          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",done?.cart?.map(t=>t.name).join(", ")],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
             <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
               <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
               <span style={{ fontWeight:700,color:"#0D1117" }}>{v}</span>
