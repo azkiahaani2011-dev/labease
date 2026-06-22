@@ -1,17 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-
-/* Scroll reveal hook */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
-    if (!els.length) return;
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); } });
-    }, { threshold: 0.1 });
-    els.forEach(el => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
+import React, { useState, useEffect, useRef } from "react";
 
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 const G = () => (
@@ -942,51 +929,6 @@ const G = () => (
       .nav-right-btns { gap: 6px !important; }
       .nav-right-btns .hide-tablet { display: none !important; }
     }
-
-    /* ════════════════════════════════════════════════════════════════
-       PREMIUM UI ENHANCEMENTS — 8 points
-    ════════════════════════════════════════════════════════════════ */
-
-    /* 2. SCROLL REVEAL */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
-    .revealed { opacity: 1; transform: translateY(0); }
-    .reveal-d1 { transition-delay: .08s; }
-    .reveal-d2 { transition-delay: .18s; }
-    .reveal-d3 { transition-delay: .28s; }
-    .reveal-d4 { transition-delay: .38s; }
-
-    /* 4. PREMIUM GRADIENT BUTTONS */
-    .btn-grad {
-      background: linear-gradient(135deg, #1158A6 0%, #2563EB 60%, #3B82F6 100%) !important;
-      color: #fff !important;
-      border: none !important;
-      box-shadow: 0 4px 18px rgba(17,88,166,.38), 0 1px 4px rgba(0,0,0,.12) !important;
-      border-radius: 50px !important;
-      font-weight: 700 !important;
-      transition: all .22s cubic-bezier(.34,1.2,.64,1) !important;
-    }
-    .btn-grad:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(17,88,166,.48), 0 2px 8px rgba(0,0,0,.14) !important; filter: brightness(1.06) !important; }
-    .btn-grad:active { transform: scale(.97) !important; }
-    .btn-outline-grad {
-      background: transparent !important;
-      border: 1.5px solid #1158A6 !important;
-      color: #1158A6 !important;
-      border-radius: 50px !important;
-      font-weight: 700 !important;
-      transition: all .2s !important;
-    }
-    .btn-outline-grad:hover { background: linear-gradient(135deg,#1158A6,#2563EB) !important; color: #fff !important; border-color: transparent !important; box-shadow: 0 4px 16px rgba(17,88,166,.3) !important; }
-
-    /* 7. ICON CONTAINER VARIANTS */
-    .icon-wrap { display:flex; align-items:center; justify-content:center; border-radius:16px; }
-    .icon-wrap-blue  { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); border:1px solid #BFDBFE; box-shadow:0 2px 8px rgba(17,88,166,.1); }
-    .icon-wrap-green { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); border:1px solid #BBF7D0; box-shadow:0 2px 8px rgba(22,163,74,.1); }
-    .icon-wrap-purple{ background:linear-gradient(135deg,#FAF5FF,#EDE9FE); border:1px solid #DDD6FE; box-shadow:0 2px 8px rgba(139,92,246,.1); }
-    .icon-wrap-amber { background:linear-gradient(135deg,#FFFBEB,#FEF3C7); border:1px solid #FDE68A; box-shadow:0 2px 8px rgba(245,158,11,.1); }
-    .icon-wrap-red   { background:linear-gradient(135deg,#FFF1F2,#FFE4E6); border:1px solid #FECDD3; box-shadow:0 2px 8px rgba(220,38,38,.1); }
-
-    /* 8. RICHER COLOR ACCENT LINE */
-    .section-accent { display:inline-block; width:40px; height:3px; border-radius:99px; background:linear-gradient(90deg,#1158A6,#3B82F6); margin:0 auto 14px; }
   `}</style>
 );
 
@@ -3398,7 +3340,6 @@ export default function App() {
       window.addEventListener("resize", h);
       return () => window.removeEventListener("resize", h);
     }, []);
-    useScrollReveal();
 
     return (
     <div>
@@ -3454,18 +3395,22 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"56px 0 52px",background:"linear-gradient(160deg,#F8FBFF 0%,#EEF5FF 50%,#F5F0FF 100%)",borderBottom:"1px solid #E8EFFE" }}>
-        <div className="reveal" style={T.wrap}>
+      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
+        <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
               <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
-              <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.6rem,3.5vw,2.2rem)",fontWeight:400,color:"#0D1117",marginBottom:6,letterSpacing:"-.01em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
-              <button onClick={()=>setPkgMsg(v=>!v)} className="btn-outline-grad"
-                style={{ padding:"12px 28px",fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:44,display:"flex",alignItems:"center",gap:8 }}>
+              <button onClick={()=>setPkgMsg(v=>!v)}
+                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
+                onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
+                onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
                 View All Packages →
               </button>
               {pkgMsg && <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600,background:"#F1F5F9",borderRadius:8,padding:"4px 12px",whiteSpace:"nowrap" }}>Only 6 packages available</span>}
@@ -3519,8 +3464,8 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 56px", background:"linear-gradient(180deg,#fff 0%,#F0F7FF 60%,#EAF2FF 100%)", borderBottom:"1px solid #E4EFFE" }}>
-        <div className="reveal" style={T.wrap}>
+      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+        <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards — auto-swipe carousel */}
           <PromoCarousel navTo={navTo}/>
@@ -3528,7 +3473,7 @@ export default function App() {
           {/* heading */}
           <div style={{ textAlign:"center", marginBottom:28, paddingTop:8 }}>
             <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
-            <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.6rem,3.5vw,2.2rem)",fontWeight:400,color:"#0D1117",letterSpacing:"-.01em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
@@ -3576,14 +3521,14 @@ export default function App() {
       <FeaturesCarousel/>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 56px",background:"linear-gradient(150deg,#EBF3FF 0%,#F0EBFF 50%,#EBF3FF 100%)" }}>
-        <div className="reveal" style={T.wrap}>
+      <section style={{ padding:"18px 0",background:"#EBF0FA" }}>
+        <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
-            <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.5rem,3.5vw,2rem)",fontWeight:400,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
@@ -3610,14 +3555,14 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 56px",background:"linear-gradient(180deg,#fff 0%,#F5F8FF 100%)" }}>
-        <div className="reveal" style={{ ...T.wrap,maxWidth:780 }}>
+      <section style={{ padding:"18px 0",background:"#fff" }}>
+        <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:18 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
             </div>
-            <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.5rem,3.5vw,2rem)",fontWeight:400,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:400,margin:"0 auto" }}>Everything you need to know before booking your first test.</p>
           </div>
           <div style={{ display:"grid",gap:8 }}>
@@ -3642,7 +3587,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 45%,#2563EB 75%,#1D3461 100%)",padding:"64px 24px",textAlign:"center" }}>
+      <section style={{ background:"#1158A6",padding:"40px 24px",textAlign:"center" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
             <span style={{ width:6,height:6,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
@@ -3656,9 +3601,9 @@ export default function App() {
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#0A1628",border:"none",borderRadius:50,padding:"15px 38px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(0,0,0,.2)" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(0,0,0,.28)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 20px rgba(0,0,0,.2)"; }}>
+              style={{ background:"#fff",color:"#0A1628",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#EEF2FF"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; }}>
               Book a Test Now
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#0A1628" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
