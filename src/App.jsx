@@ -923,6 +923,120 @@ const G = () => (
       .nav-right-btns { gap: 6px !important; }
       .nav-right-btns .hide-tablet { display: none !important; }
     }
+
+    /* PREMIUM: Section gradient upgrades */
+    .section-featured { background: linear-gradient(160deg,#F0F7FF 0%,#EBF4FF 40%,#F5F0FF 100%) !important; }
+    .section-hiw { background: linear-gradient(160deg,#FAFCFF 0%,#F0F6FF 60%,#FAFCFF 100%) !important; }
+    .section-why { background: linear-gradient(160deg,#F0F4FF 0%,#EEF6FF 50%,#F5F0FF 100%) !important; }
+    .section-faq { background: linear-gradient(180deg,#fff 0%,#F8FAFF 100%) !important; }
+
+    /* PREMIUM: Scroll reveal */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+    .reveal.revealed { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.1s !important; }
+    .reveal-delay-2 { transition-delay:.2s !important; }
+    .reveal-delay-3 { transition-delay:.3s !important; }
+    .reveal-delay-4 { transition-delay:.4s !important; }
+
+    /* PREMIUM: Typography hierarchy */
+    .section-heading {
+      font-family: 'DM Serif Display', serif !important;
+      font-size: clamp(1.55rem,3.2vw,2.1rem) !important;
+      font-weight: 400 !important;
+      letter-spacing: -.02em !important;
+      line-height: 1.18 !important;
+      color: #0A1628 !important;
+    }
+    .section-eyebrow {
+      font-size: .68rem !important;
+      font-weight: 800 !important;
+      letter-spacing: .14em !important;
+      text-transform: uppercase !important;
+      color: #1158A6 !important;
+    }
+
+    /* PREMIUM: CTA buttons */
+    .btn-primary-gradient {
+      background: linear-gradient(135deg, #1158A6 0%, #2563EB 100%) !important;
+      box-shadow: 0 4px 20px rgba(17,88,166,.35), inset 0 1px 0 rgba(255,255,255,.15) !important;
+      border-radius: 50px !important;
+      border: none !important;
+      color: #fff !important;
+      font-weight: 800 !important;
+      letter-spacing: .01em !important;
+      transition: all .22s cubic-bezier(.34,1.2,.64,1) !important;
+    }
+    .btn-primary-gradient:hover {
+      background: linear-gradient(135deg, #0F4A92 0%, #1D4ED8 100%) !important;
+      box-shadow: 0 8px 28px rgba(17,88,166,.45), inset 0 1px 0 rgba(255,255,255,.15) !important;
+      transform: translateY(-2px) !important;
+    }
+    .btn-ghost-blue {
+      background: transparent !important;
+      border: 1.5px solid #1158A6 !important;
+      color: #1158A6 !important;
+      border-radius: 50px !important;
+      font-weight: 700 !important;
+      transition: all .22s !important;
+    }
+    .btn-ghost-blue:hover {
+      background: #EFF6FF !important;
+      border-color: #2563EB !important;
+    }
+
+    /* PREMIUM: Generous section spacing */
+    .section-padding { padding: 80px 0 !important; }
+    @media (max-width: 768px) { .section-padding { padding: 52px 0 !important; } }
+    .section-header-mb { margin-bottom: 52px !important; }
+    @media (max-width: 768px) { .section-header-mb { margin-bottom: 36px !important; } }
+
+    /* PREMIUM: Enhanced micro-interactions */
+    .card-interactive {
+      transition: transform .28s cubic-bezier(.34,1.2,.64,1), box-shadow .28s ease, border-color .28s ease !important;
+      will-change: transform;
+    }
+    .card-interactive:hover {
+      transform: translateY(-6px) scale(1.01) !important;
+      box-shadow: 0 20px 50px rgba(17,88,166,.14) !important;
+    }
+    .tab-item {
+      transition: all .2s cubic-bezier(.34,1.2,.64,1) !important;
+      position: relative;
+    }
+    .tab-item::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%; right: 50%;
+      height: 2px; background: #1158A6; border-radius: 99px;
+      transition: left .2s, right .2s;
+    }
+    .tab-item.active::after, .tab-item:hover::after { left: 0; right: 0; }
+
+    /* PREMIUM: Icon containers */
+    .icon-container-teal { background: linear-gradient(135deg, #EFF6FF, #DBEAFE) !important; border: 1px solid rgba(17,88,166,.12) !important; box-shadow: 0 2px 10px rgba(17,88,166,.1) !important; }
+    .icon-container-green { background: linear-gradient(135deg, #ECFDF5, #D1FAE5) !important; border: 1px solid rgba(5,150,105,.12) !important; box-shadow: 0 2px 10px rgba(5,150,105,.1) !important; }
+    .icon-container-purple { background: linear-gradient(135deg, #FDF4FF, #F3E8FF) !important; border: 1px solid rgba(147,51,234,.12) !important; box-shadow: 0 2px 10px rgba(147,51,234,.1) !important; }
+    .icon-container-amber { background: linear-gradient(135deg, #FFFBEB, #FEF3C7) !important; border: 1px solid rgba(234,88,12,.12) !important; box-shadow: 0 2px 10px rgba(234,88,12,.1) !important; }
+    .icon-container-red { background: linear-gradient(135deg, #FFF1F2, #FFE4E6) !important; border: 1px solid rgba(220,38,38,.12) !important; box-shadow: 0 2px 10px rgba(220,38,38,.1) !important; }
+
+    /* PREMIUM: Extended color palette */
+    :root {
+      --accent-green: #059669;
+      --accent-purple: #9333EA;
+      --accent-amber: #C5973A;
+      --accent-red: #DC2626;
+      --accent-teal: #0D9488;
+      --gradient-brand: linear-gradient(135deg, #1158A6 0%, #2563EB 100%);
+      --gradient-dark: linear-gradient(135deg, #0A1628 0%, #1158A6 50%, #1D3461 100%);
+      --gradient-surface: linear-gradient(160deg, #F0F7FF 0%, #F5F0FF 100%);
+    }
+    /* Section accent lines */
+    .section-accent-line {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, #1158A6, #2563EB);
+      border-radius: 99px;
+      margin: 10px auto 0;
+    }
   `}</style>
 );
 
@@ -2775,6 +2889,19 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   );
 }
 
+/* ─── SCROLL REVEAL HOOK ─────────────────────────────────────────────────── */
+function useScrollReveal(ref) {
+  useEffect(() => {
+    if (!ref.current) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { ref.current.classList.add('revealed'); io.disconnect(); } },
+      { threshold: 0.12 }
+    );
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
+}
+
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
@@ -2921,7 +3048,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(160deg,#EDF4FF 0%,#E6F0FF 30%,#F0EBFF 75%,#EBF5FF 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
         {/* background geometric accents */}
         <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
         <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
@@ -2977,18 +3104,18 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" className="section-padding" style={{ background:"linear-gradient(160deg,#F0F7FF 0%,#EBF4FF 40%,#F5F0FF 100%)",borderBottom:"1px solid #E8EEFF" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
             <div style={{ textAlign:"left" }}>
               <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:8 }}>HEALTH PACKAGES</p>
-              <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:900,color:"#0D1117",marginBottom:6,letterSpacing:"-.03em",lineHeight:1.15 }}>Featured Health Checkups</h2>
+              <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.5rem,3vw,2rem)",fontWeight:400,color:"#0A1628",marginBottom:6,letterSpacing:"-.02em",lineHeight:1.15 }}>Featured Health Checkups</h2>
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
               <button onClick={()=>setPkgMsg(v=>!v)}
-                style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
+                className="btn-ghost-blue" style={{ padding:"12px 28px",fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
                 onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
                 onMouseDown={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.transform="scale(.97)"; }}
@@ -3032,7 +3159,7 @@ export default function App() {
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
                     <button onClick={e=>{ e.stopPropagation(); setSelectedTest({name:pkg.title, cat:pkg.badge}); navTo("labs"); }}
-                      style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
+                      className="btn-primary-gradient" style={{ border:"none",padding:gridCols===2?"5px 8px":"8px 18px",fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
                       Book Now
@@ -3046,7 +3173,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section className="section-padding" style={{ background:"linear-gradient(160deg,#FAFCFF 0%,#F0F6FF 60%,#FAFCFF 100%)", borderBottom:"1px solid #E8EEFF" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
@@ -3204,14 +3331,14 @@ export default function App() {
 
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"#F8FAFF" }}>
+      <section className="section-padding" style={{ background:"linear-gradient(160deg,#F0F4FF 0%,#EEF6FF 50%,#F5F0FF 100%)" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:48 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
+            <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:400,color:"#0A1628",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
@@ -3238,14 +3365,14 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"#fff" }}>
+      <section className="section-padding" style={{ background:"linear-gradient(180deg,#fff 0%,#F8FAFF 100%)" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:40 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
               <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
               <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>FAQ</span>
             </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily:"'DM Serif Display',serif",fontSize:"clamp(1.4rem,3vw,1.9rem)",fontWeight:400,color:"#0A1628",marginBottom:10,lineHeight:1.2 }}>Frequently Asked Questions</h2>
             <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:400,margin:"0 auto" }}>Everything you need to know before booking your first test.</p>
           </div>
           <div style={{ display:"grid",gap:8 }}>
@@ -3270,7 +3397,7 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(135deg,#0A1628 0%,#1158A6 50%,#1D3461 100%)",padding:"80px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg,#060E1F 0%,#0F2D6B 30%,#1158A6 60%,#1A2F5E 100%)",padding:"80px 24px",textAlign:"center",position:"relative",overflow:"hidden" }}>
         {/* Subtle grid overlay */}
         <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none" }}/>
         {/* Glow orbs */}
