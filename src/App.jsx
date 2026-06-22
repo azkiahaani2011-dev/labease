@@ -2301,14 +2301,26 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   // Build suggestions: default when empty, search results when typing
   const suggestions = q.trim().length < 1 ? DEFAULT_SUGGESTIONS : (() => {
     const qlo = q.toLowerCase();
-    const match = item => item.label.toLowerCase().includes(qlo);
-    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,4);
-    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,2);
-    const cats  = SEARCH_INDEX.filter(i=>i.type==="category" && match(i)).slice(0,1);
+    // Broad match: label contains any word of the query
+    const words = qlo.split(/\s+/).filter(Boolean);
+    const match = item => words.some(w => item.label.toLowerCase().includes(w));
+    // Get all matches, tests first then labs then categories
+    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,6);
+    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,3);
+    const cats  = SEARCH_INDEX.filter(i=>i.type==="category" && match(i)).slice(0,2);
     const picked = new Set([...tests,...labs,...cats].map(x=>x.label));
-    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,7-tests.length-labs.length-cats.length);
-    const results = [...tests,...labs,...cats,...extra].slice(0,7);
-    return results.length >= 5 ? results : [...results, ...DEFAULT_SUGGESTIONS.filter(d=>!picked.has(d.label))].slice(0,7);
+    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,5);
+    const results = [...tests,...labs,...cats,...extra].slice(0,8);
+    // Always pad up to 5 with popular defaults if not enough results
+    if (results.length < 5) {
+      const padded = [...results];
+      for (const d of DEFAULT_SUGGESTIONS) {
+        if (padded.length >= 5) break;
+        if (!padded.find(r=>r.label===d.label)) padded.push(d);
+      }
+      return padded;
+    }
+    return results;
   })();
 
   // Close on outside click
