@@ -326,75 +326,12 @@ const G = () => (
     }
 
     /* ════════════════════════════════════════════════════════════════
-       HERO — dark premium
+       HERO — premium depth & atmosphere
     ════════════════════════════════════════════════════════════════ */
-    .hero-dark-section {
-      background: linear-gradient(135deg,#060D1F 0%,#0A1628 40%,#0F2558 70%,#1158A6 100%);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      min-height: 560px;
-      width: 100%;
-    }
-    .hero-dark-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+    /* Subtle noise texture on hero using pseudo-element */
+    section[style*="linear-gradient(135deg,#EBF3FB"] {
       background:
-        radial-gradient(ellipse 60% 60% at 70% 50%, rgba(37,99,235,.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(17,88,166,.22) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .hero-dark-orb-1 {
-      position: absolute; width: 520px; height: 520px; border-radius: 50%;
-      background: radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%);
-      top: -160px; right: -80px; pointer-events: none; animation: orb1 12s ease-in-out infinite;
-    }
-    .hero-dark-orb-2 {
-      position: absolute; width: 360px; height: 360px; border-radius: 50%;
-      background: radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);
-      bottom: -120px; left: -60px; pointer-events: none; animation: orb2 15s ease-in-out infinite;
-    }
-    /* grid lines texture */
-    .hero-dark-section::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-    }
-    /* hero image frame */
-    .hero-img-frame {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 32px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08);
-    }
-    .hero-img-frame::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom right, rgba(255,255,255,.06), transparent);
-      pointer-events: none;
-      z-index: 1;
-      border-radius: inherit;
-    }
-    /* hero floating badge cards */
-    .hero-float-card {
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 10px 14px;
-      color: #fff;
-      position: absolute;
-      z-index: 10;
-      box-shadow: 0 8px 32px rgba(0,0,0,.3);
+        linear-gradient(135deg,#EAF2FB 0%,#EFF7FF 55%,#E6F3FA 100%) !important;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2984,28 +2921,30 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-dark-section hero-section">
-        <div className="hero-dark-orb-1"/>
-        <div className="hero-dark-orb-2"/>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#F0F6FF 0%,#EBF3FB 45%,#E8F0FA 100%)", minHeight:520, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+        {/* background geometric accents */}
+        <div style={{ position:"absolute",right:-120,top:-120,width:480,height:480,borderRadius:"50%",background:"rgba(17,88,166,.05)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:-60,bottom:-80,width:320,height:320,borderRadius:"50%",background:"rgba(17,88,166,.04)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:180,top:30,width:14,height:14,borderRadius:"50%",background:"#1158A6",opacity:.12,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:240,top:80,width:8,height:8,borderRadius:"50%",background:"#1158A6",opacity:.1,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:80,top:50,width:10,height:10,borderRadius:"50%",background:"#059669",opacity:.15,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?36:80,paddingBottom:isMobile?36:80,paddingLeft:isMobile?16:40,paddingRight:isMobile?16:40,width:"100%",maxWidth:1280,boxSizing:"border-box",display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",alignItems:"center",gap:isMobile?32:64 }}>
-
-          {/* LEFT: text */}
-          <div className="hero-content" style={{ textAlign:"left",maxWidth:580 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?28:72,paddingBottom:isMobile?24:72,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
+          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.08)",backdropFilter:"blur(12px)",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,border:"1px solid rgba(255,255,255,.15)",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#3B82F6,#60A5FA)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"rgba(255,255,255,.85)",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:24,boxShadow:"0 2px 14px rgba(17,88,166,.1)",border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2rem,4vw,3.2rem)",color:"#FFFFFF",lineHeight:1.12,marginBottom:16,fontWeight:900,letterSpacing:"-.035em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#60A5FA 0%,#34D399 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"rgba(255,255,255,.65)",fontSize:".96rem",lineHeight:1.78,marginBottom:32,maxWidth:460 }}>
+            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:32,maxWidth:460,margin:"0 auto 32px" }}>
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -3013,74 +2952,20 @@ export default function App() {
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
             {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.45)",fontWeight:600 }}>Popular:</span>
+            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
+              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"rgba(255,255,255,.8)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",backdropFilter:"blur(8px)" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.18)"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="rgba(255,255,255,.4)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.08)"; e.currentTarget.style.color="rgba(255,255,255,.8)"; e.currentTarget.style.borderColor="rgba(255,255,255,.2)"; }}>
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
                 </button>
               ))}
             </div>
-
-            {/* trust badges */}
-            <div className="trust-badges" style={{ display:"flex",gap:20,marginTop:32,flexWrap:"wrap",alignItems:"center" }}>
-              {[["🏆","50,000+","Tests Done"],["🔬","NABL","Certified"],["⚡","2 Hr","Home Visit"]].map(([icon,bold,sub])=>(
-                <div key={bold} style={{ display:"flex",alignItems:"center",gap:8 }}>
-                  <span style={{ fontSize:"1.1rem" }}>{icon}</span>
-                  <div>
-                    <div style={{ fontWeight:800,fontSize:".82rem",color:"#fff",lineHeight:1 }}>{bold}</div>
-                    <div style={{ fontSize:".68rem",color:"rgba(255,255,255,.5)",fontWeight:600 }}>{sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-
-          {/* RIGHT: image column */}
-          <div className="hero-img-col" style={{ display:"flex",alignItems:"center",justifyContent:"center",position:"relative" }}>
-            <div className="hero-img-frame" style={{ width:"100%",maxWidth:440,aspectRatio:"4/3" }}>
-              <img
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=90&auto=format&fit=crop"
-                alt="Lab technician at work"
-                style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }}
-                onError={e=>{ e.target.style.display="none"; e.target.parentNode.style.background="linear-gradient(135deg,#1158A6,#0A1628)"; }}
-              />
-              {/* image overlay gradient */}
-              <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(6,13,31,.5) 0%,transparent 50%)",borderRadius:"inherit",pointerEvents:"none" }}/>
-            </div>
-
-            {/* floating stat card — top left */}
-            <div className="hero-float-card" style={{ top:-16,left:-20,animation:"floatA 5s ease-in-out infinite" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                <div style={{ width:36,height:36,borderRadius:10,background:"linear-gradient(135deg,#3B82F6,#1D4ED8)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",flexShrink:0 }}>🧪</div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:".88rem",color:"#fff",lineHeight:1 }}>500+</div>
-                  <div style={{ fontSize:".65rem",color:"rgba(255,255,255,.6)",fontWeight:600 }}>Tests Available</div>
-                </div>
-              </div>
-            </div>
-
-            {/* floating stat card — bottom right */}
-            <div className="hero-float-card" style={{ bottom:-12,right:-16,animation:"floatB 6s ease-in-out infinite" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:8 }}>
-                <div style={{ width:36,height:36,borderRadius:10,background:"linear-gradient(135deg,#10B981,#059669)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",flexShrink:0 }}>✅</div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:".88rem",color:"#fff",lineHeight:1 }}>NABL</div>
-                  <div style={{ fontSize:".65rem",color:"rgba(255,255,255,.6)",fontWeight:600 }}>Accredited Labs</div>
-                </div>
-              </div>
-            </div>
-
-            {/* floating report ready pill */}
-            <div className="hero-float-card" style={{ top:"50%",right:-28,transform:"translateY(-50%)",animation:"floatC 7s ease-in-out infinite" }}>
-              <div style={{ fontSize:".7rem",fontWeight:700,color:"rgba(255,255,255,.85)",whiteSpace:"nowrap" }}>📋 Report Ready in 2 hrs</div>
-            </div>
-          </div>
-
         </div>
+
       </section>
 
 
@@ -3092,7 +2977,7 @@ export default function App() {
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"64px 0 60px",background:"linear-gradient(180deg,#F0F6FF 0%,#EBF3FB 100%)",borderBottom:"1px solid #DBEAFE" }}>
+      <section id="packages-section" style={{ padding:"64px 0 60px",background:"#F8FAFC",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:12 }}>
@@ -3161,7 +3046,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"60px 0 68px", background:"linear-gradient(180deg,#F8FBFF 0%,#EDF4FF 100%)", borderBottom:"1px solid #DBEAFE" }}>
+      <section style={{ padding:"60px 0 68px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards */}
@@ -3269,8 +3154,8 @@ export default function App() {
 
           {/* heading */}
           <div style={{ textAlign:"center", marginBottom:56, paddingTop:8 }}>
-            <p style={{ fontSize:".72rem",fontWeight:700,color:"#2563EB",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0A1628",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
+            <p style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".12em",textTransform:"uppercase",marginBottom:10 }}>HOW IT WORKS</p>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.5rem,3.2vw,2rem)",fontWeight:900,color:"#0D1117",letterSpacing:"-.03em",lineHeight:1.15,marginBottom:10 }}>The LabEase Process</h2>
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
@@ -3319,33 +3204,33 @@ export default function App() {
 
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"linear-gradient(135deg,#0A1628 0%,#0F2558 50%,#1158A6 100%)",position:"relative",overflow:"hidden" }}>
+      <section style={{ padding:"56px 0",background:"#F8FAFF" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:48 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.18)",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
-              <span style={{ width:6,height:6,borderRadius:"50%",background:"#60A5FA",flexShrink:0,display:"inline-block" }}/>
-              <span style={{ fontSize:".7rem",fontWeight:800,color:"rgba(255,255,255,.85)",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
+              <span style={{ width:6,height:6,borderRadius:"50%",background:"#1158A6",flexShrink:0,display:"inline-block" }}/>
+              <span style={{ fontSize:".7rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>Why LabEase</span>
             </div>
-            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#fff",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
-            <p style={{ color:"rgba(255,255,255,.6)",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
+            <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.35rem,3vw,1.7rem)",fontWeight:800,color:"#0D1117",marginBottom:10,lineHeight:1.2 }}>Built Around Your Wellbeing</h2>
+            <p style={{ color:"#6B7280",fontSize:".88rem",maxWidth:440,margin:"0 auto" }}>Every feature is designed to make diagnostics transparent, accessible, and stress-free.</p>
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
-              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"rgba(59,130,246,.15)"},
-              {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"rgba(234,88,12,.15)"},
-              {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"rgba(220,38,38,.15)"},
-              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"rgba(17,88,166,.2)"},
-              {Icon:ILock,      t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"rgba(147,51,234,.15)"},
-              {Icon:IHeadset,   t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"rgba(13,148,136,.15)"},
+              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
+              {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
+              {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FEF2F2",ic:"#DC2626"},
+              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#EFF6FF",ic:"#1158A6"},
+              {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
+              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#0D9488"},
             ].map(w=>(
-              <div key={w.t} style={{ background:"rgba(255,255,255,.06)",backdropFilter:"blur(12px)",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid rgba(255,255,255,.1)",boxShadow:"0 4px 24px rgba(0,0,0,.2)",transition:"all .22s",textAlign:"center" }}
-                onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.12)"; e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.borderColor="rgba(255,255,255,.2)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.06)"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor="rgba(255,255,255,.1)"; }}>
-                <div style={{ width:gridCols===2?44:60,height:gridCols===2?44:60,borderRadius:gridCols===2?11:16,background:w.color,border:"1px solid rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
+              <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
+                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
+                <div style={{ width:gridCols===2?44:60,height:gridCols===2?44:60,borderRadius:gridCols===2?11:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
                   <w.Icon s={gridCols===2?24:36}/>
                 </div>
-                <div style={{ fontWeight:800,color:"#fff",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
-                <div style={{ color:"rgba(255,255,255,.55)",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
+                <div style={{ fontWeight:800,color:"#0D1117",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
+                <div style={{ color:"#9CA3AF",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
               </div>
             ))}
           </div>
@@ -3353,7 +3238,7 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"56px 0",background:"linear-gradient(180deg,#F0F6FF 0%,#fff 100%)" }}>
+      <section style={{ padding:"56px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:40 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
