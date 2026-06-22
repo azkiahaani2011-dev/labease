@@ -71,8 +71,9 @@ const G = () => (
 
     input:focus, textarea:focus {
       outline: none;
-      border-color: var(--teal) !important;
-      box-shadow: 0 0 0 3px rgba(17,88,166,.12) !important;
+    }
+    .hero-search-bar:focus-within {
+      box-shadow: 0 6px 32px rgba(17,88,166,.22), 0 2px 8px rgba(0,0,0,.08) !important;
     }
     html, body { overflow-x: hidden; }
     button { min-height: 44px; }
@@ -2286,17 +2287,28 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   const [open, setOpen] = React.useState(false);
   const wrapRef = React.useRef(null);
 
-  // Build up to 5 suggestions: prioritise tests, then labs, then categories
-  const suggestions = q.trim().length < 1 ? [] : (() => {
+  // Default suggestions shown when input is empty
+  const DEFAULT_SUGGESTIONS = [
+    { label:"Full Body Checkup",   type:"test" },
+    { label:"CBC (Blood Count)",    type:"test" },
+    { label:"Thyroid Profile",      type:"test" },
+    { label:"Diabetes (HbA1c)",     type:"test" },
+    { label:"Vitamin D",            type:"test" },
+    { label:"Lipid Profile",        type:"test" },
+    { label:"Liver Function Test",  type:"test" },
+  ];
+
+  // Build suggestions: default when empty, search results when typing
+  const suggestions = q.trim().length < 1 ? DEFAULT_SUGGESTIONS : (() => {
     const qlo = q.toLowerCase();
     const match = item => item.label.toLowerCase().includes(qlo);
-    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,3);
-    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,1);
+    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,4);
+    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,2);
     const cats  = SEARCH_INDEX.filter(i=>i.type==="category" && match(i)).slice(0,1);
-    // Fill remaining slots up to 5 from any type not yet included
     const picked = new Set([...tests,...labs,...cats].map(x=>x.label));
-    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,5-tests.length-labs.length-cats.length);
-    return [...tests,...labs,...cats,...extra].slice(0,5);
+    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,7-tests.length-labs.length-cats.length);
+    const results = [...tests,...labs,...cats,...extra].slice(0,7);
+    return results.length >= 5 ? results : [...results, ...DEFAULT_SUGGESTIONS.filter(d=>!picked.has(d.label))].slice(0,7);
   })();
 
   // Close on outside click
@@ -2308,11 +2320,16 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
   const go = (text) => { if(!text.trim()) return; setQ(text); setLabQ(text); setOpen(false); navTo("labs"); };
 
+  const typeIcon = (type) => {
+    if (type === "lab") return "🏥";
+    if (type === "category") return "📋";
+    return "🔬";
+  };
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
-      {/* Search bar */}
-      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"1px solid #E5E7EB",overflow:"hidden" }}>
+      {/* Search bar — no border lines, just shadow */}
+      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"none",overflow:"hidden",boxShadow:"0 4px 24px rgba(17,88,166,.14), 0 1px 6px rgba(0,0,0,.06)" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
@@ -2341,22 +2358,33 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
         </button>
       </div>
 
-      {/* Dropdown */}
-      {open && suggestions.length > 0 && (
-        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,minWidth:"min(100vw - 32px, 580px)",background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 32px rgba(0,0,0,.12)",zIndex:500,overflow:"hidden" }}>
+      {/* Dropdown — always shows 5+ suggestions on focus */}
+      {open && (
+        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,border:"none",boxShadow:"0 12px 40px rgba(0,0,0,.14), 0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden" }}>
+          {q.trim().length < 1 && (
+            <div style={{ padding:"10px 18px 6px",fontSize:".72rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".08em",textTransform:"uppercase" }}>
+              Popular Searches
+            </div>
+          )}
           {suggestions.map((s, i) => (
             <button key={i} onClick={()=>go(s.label)}
-              style={{ display:"block",width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F3F4F6":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"background .1s" }}
+              style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",transition:"background .12s" }}
               onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"}
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              {s.label}
+              <span style={{ fontSize:".88rem", flexShrink:0 }}>{typeIcon(s.type)}</span>
+              <span style={{ flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+              {s.type === "lab" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Lab</span>}
+              {s.type === "category" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#7C3AED",background:"#F5F3FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Category</span>}
             </button>
           ))}
-          <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6" }}>
-            <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0 }}>
-              See all results for &ldquo;{q}&rdquo; →
-            </button>
-          </div>
+          {q.trim().length > 0 && (
+            <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
+              <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
+                See all results for &ldquo;{q}&rdquo;
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
