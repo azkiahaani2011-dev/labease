@@ -1084,7 +1084,7 @@ const ICONS = { Blood:IBlood, Thyroid:IThyroid, Diabetes:IDiabetes, Cardiac:ICar
 
 /* ─── DATA ───────────────────────────────────────────────────────────────── */
 const LABS = [
-  { id:1, name:"Apollo Diagnostics", rating:4.8, reviews:2340, city:"Bangalore", address:"12 MG Road, Bangalore", distance:"1.2 km", timing:"6:00 AM – 10:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"2001",
+  { id:1, name:"Apollo Diagnostics", rating:4.8, reviews:2340, city:"Bangalore", area:"MG Road", address:"12 MG Road, Bangalore", distance:"1.2 km", timing:"6:00 AM – 10:00 PM", reportTime:"4–6 hrs", homeCollection:true, nabl:true, color:"#1158A6", founded:"2001",
     tests:[
       {id:"a1",name:"Complete Blood Count (CBC)",price:299,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"a2",name:"Lipid Profile",price:499,mrp:799,cat:"Blood",time:"Same Day"},
@@ -1099,7 +1099,7 @@ const LABS = [
       {id:"a11",name:"Iron Studies",price:449,mrp:699,cat:"Blood",time:"Same Day"},
       {id:"a12",name:"CRP (Inflammation)",price:349,mrp:599,cat:"Blood",time:"Same Day"},
     ]},
-  { id:2, name:"SRL Diagnostics", rating:4.7, reviews:1890, city:"Mumbai", address:"45 Park Street, Mumbai", distance:"0.8 km", timing:"7:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1995",
+  { id:2, name:"SRL Diagnostics", rating:4.7, reviews:1890, city:"Mumbai", area:"Park Street", address:"45 Park Street, Mumbai", distance:"0.8 km", timing:"7:00 AM – 9:00 PM", reportTime:"2–6 hrs", homeCollection:true, nabl:true, color:"#1158A6", founded:"1995",
     tests:[
       {id:"b1",name:"Complete Blood Count (CBC)",price:279,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"b2",name:"Blood Sugar Fasting",price:99,mrp:199,cat:"Diabetes",time:"2 hrs"},
@@ -1114,7 +1114,7 @@ const LABS = [
       {id:"b11",name:"Urine Culture & Sensitivity",price:499,mrp:799,cat:"Urine",time:"48 hrs"},
       {id:"b12",name:"HIV 1 & 2 Antibody",price:299,mrp:549,cat:"Infectious",time:"Same Day"},
     ]},
-  { id:3, name:"Metropolis Healthcare", rating:4.9, reviews:3102, city:"Hyderabad", address:"78 Jubilee Hills, Hyderabad", distance:"2.1 km", timing:"5:30 AM – 11:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1980",
+  { id:3, name:"Metropolis Healthcare", rating:4.9, reviews:3102, city:"Hyderabad", area:"Jubilee Hills", address:"78 Jubilee Hills, Hyderabad", distance:"2.1 km", timing:"5:30 AM – 11:00 PM", reportTime:"6–8 hrs", homeCollection:true, nabl:true, color:"#1158A6", founded:"1980",
     tests:[
       {id:"c1",name:"Complete Blood Count (CBC)",price:259,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"c2",name:"Liver Function Test",price:499,mrp:849,cat:"Liver",time:"Same Day"},
@@ -1129,7 +1129,7 @@ const LABS = [
       {id:"c11",name:"Rheumatoid Arthritis Panel",price:899,mrp:1499,cat:"Autoimmune",time:"24 hrs"},
       {id:"c12",name:"ANA (Autoimmune Screen)",price:749,mrp:1199,cat:"Autoimmune",time:"48 hrs"},
     ]},
-  { id:4, name:"Dr. Lal PathLabs", rating:4.6, reviews:4210, city:"Delhi", address:"22 Connaught Place, Delhi", distance:"0.5 km", timing:"6:00 AM – 9:00 PM", homeCollection:true, nabl:true, color:"#1158A6", founded:"1949",
+  { id:4, name:"Dr. Lal PathLabs", rating:4.6, reviews:4210, city:"Delhi", area:"Connaught Place", address:"22 Connaught Place, Delhi", distance:"0.5 km", timing:"6:00 AM – 9:00 PM", reportTime:"3–5 hrs", homeCollection:true, nabl:true, color:"#1158A6", founded:"1949",
     tests:[
       {id:"d1",name:"Complete Blood Count (CBC)",price:249,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"d2",name:"Blood Sugar Random",price:79,mrp:199,cat:"Diabetes",time:"2 hrs"},
@@ -1144,7 +1144,7 @@ const LABS = [
       {id:"d11",name:"Testosterone Total",price:599,mrp:999,cat:"Hormones",time:"24 hrs"},
       {id:"d12",name:"Prolactin",price:499,mrp:799,cat:"Hormones",time:"24 hrs"},
     ]},
-  { id:5, name:"Thyrocare Technologies", rating:4.5, reviews:1560, city:"Chennai", address:"5 Anna Salai, Chennai", distance:"3.4 km", timing:"7:00 AM – 8:00 PM", homeCollection:true, nabl:false, color:"#1158A6", founded:"1996",
+  { id:5, name:"Thyrocare Technologies", rating:4.5, reviews:1560, city:"Chennai", area:"Anna Salai", address:"5 Anna Salai, Chennai", distance:"3.4 km", timing:"7:00 AM – 8:00 PM", reportTime:"12–24 hrs", homeCollection:true, nabl:false, color:"#1158A6", founded:"1996",
     tests:[
       {id:"e1",name:"Aarogyam 1.3 (Full Body)",price:999,mrp:2499,cat:"Packages",time:"48 hrs"},
       {id:"e2",name:"Aarogyam C (Comprehensive)",price:1499,mrp:3499,cat:"Packages",time:"48 hrs"},
@@ -1159,7 +1159,7 @@ const LABS = [
       {id:"e11",name:"Cortisol (Stress Hormone)",price:449,mrp:799,cat:"Hormones",time:"24 hrs"},
       {id:"e12",name:"DHEA-S",price:549,mrp:899,cat:"Hormones",time:"24 hrs"},
     ]},
-  { id:6, name:"Vijaya Diagnostics", rating:4.7, reviews:987, city:"Hyderabad", address:"33 Banjara Hills, Hyderabad", distance:"1.9 km", timing:"6:30 AM – 10:30 PM", homeCollection:false, nabl:true, color:"#1158A6", founded:"1981",
+  { id:6, name:"Vijaya Diagnostics", rating:4.7, reviews:987, city:"Hyderabad", area:"Banjara Hills", address:"33 Banjara Hills, Hyderabad", distance:"1.9 km", timing:"6:30 AM – 10:30 PM", reportTime:"8–12 hrs", homeCollection:false, nabl:true, color:"#1158A6", founded:"1981",
     tests:[
       {id:"f1",name:"Complete Blood Count (CBC)",price:269,mrp:499,cat:"Blood",time:"Same Day"},
       {id:"f2",name:"Liver Function Test",price:519,mrp:849,cat:"Liver",time:"Same Day"},
@@ -1964,9 +1964,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 
                   {/* ── Row 2: Location + Price ── */}
                   <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
-                    <span style={{ fontWeight:700 }}>{l.area||"Hyderabad"}</span>
-                    <span style={{ color:"#D1D5DB",margin:"0 7px" }}>•</span>
-                    <span>{l.name}</span>
+                    <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
+                    <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
+                    <span style={{ color:"#6B7280" }}>{l.city}</span>
                   </div>
                   <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
                     ~₹{minPrice.toLocaleString()}
@@ -1982,7 +1982,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                     <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
                       <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        {reportTime}, Today
+                        {reportTime==="Same Day" ? "Reports: Same Day" : `Reports in ${reportTime}`}
                       </div>
                       <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
                         style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
