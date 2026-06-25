@@ -1641,18 +1641,25 @@ const LAB_META = [
     srcs:["https://logo.clearbit.com/vijayadiagnostic.com?size=200","https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com"] },
 ];
 
-function LabLogo({ lab, size=90, radius=18 }) {
+function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const meta = LAB_META.find(m => m.id === lab.id);
   const [idx, setIdx] = React.useState(0);
+
+  const containerStyle = banner
+    ? { width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", background:"#fff" }
+    : { width:size, height:size, borderRadius:radius, flexShrink:0, background:"#fff", overflow:"hidden",
+        boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
+        display:"flex", alignItems:"center", justifyContent:"center" };
+
+  const imgStyle = banner
+    ? { maxWidth:"80%", maxHeight:"80%", objectFit:"contain", display:"block" }
+    : { width: size * 0.82, height: size * 0.82, objectFit:"contain", display:"block" };
 
   // admin-uploaded logo takes priority
   const uploadedLogo = lab.logoBase64 || lab.logoUrl || '';
   if (uploadedLogo) return (
-    <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
-      background:"#fff", overflow:"hidden",
-      boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
-      display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <img src={uploadedLogo} alt={lab.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+    <div style={containerStyle}>
+      <img src={uploadedLogo} alt={lab.name} style={banner ? imgStyle : { width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
     </div>
   );
 
@@ -1661,28 +1668,16 @@ function LabLogo({ lab, size=90, radius=18 }) {
   const srcs = embedded ? [embedded, ...(meta?.srcs||[])] : (meta?.srcs||[]);
 
   if (idx < srcs.length) return (
-    <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
-      background:"#fff", overflow:"hidden",
-      boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
-      display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <img
-        key={srcs[idx]}
-        src={srcs[idx]}
-        alt={lab.name}
-        onError={() => setIdx(i => i + 1)}
-        style={{ width: size * 0.82, height: size * 0.82, objectFit:"contain", display:"block" }}
-      />
+    <div style={containerStyle}>
+      <img key={srcs[idx]} src={srcs[idx]} alt={lab.name} onError={() => setIdx(i => i + 1)} style={imgStyle}/>
     </div>
   );
 
   const accent = meta?.accent || "#1158A6";
   const bg = meta?.bg || "#EEF4FF";
   return (
-    <div style={{ width:size, height:size, borderRadius:radius, flexShrink:0,
-      background:bg, display:"flex", flexDirection:"column",
-      alignItems:"center", justifyContent:"center",
-      boxShadow:"0 4px 16px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.05)" }}>
-      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:size*.34, color:accent, lineHeight:1 }}>
+    <div style={{ ...(banner ? { width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center" } : { width:size,height:size,borderRadius:radius,flexShrink:0,boxShadow:"0 4px 16px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.05)" }), background:bg, flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:banner?48:size*.34, color:accent, lineHeight:1 }}>
         {(meta?.short || lab.name).slice(0,2)}
       </span>
     </div>
@@ -1952,90 +1947,75 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           {!loading && filtered.map(l => {
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
             const minPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
-            const satisfaction = Math.round(85 + (l.rating - 4) * 30);
             const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
+            const fullAddr = [l.area, l.address, l.city].filter(Boolean).join(", ");
+            const rating = l.rating || 4.5;
+            const fullStars = Math.floor(rating);
+            const halfStar = rating - fullStars >= 0.5;
             return (
-              <div key={l.id} style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
-                <div style={{ padding:"20px 18px 18px" }}>
+              <div key={l.id} style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",margin:"0 12px 16px",overflow:"hidden",fontFamily:"'Manrope',sans-serif",boxShadow:"0 1px 6px rgba(0,0,0,.06)" }}>
 
-                  {/* ── Row 1: Logo + Info + Checkmark ── */}
-                  <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
-                    {/* Logo */}
-                    <div style={{ flexShrink:0 }}>
-                      <LabLogo lab={l} size={86} radius={10} />
-                    </div>
+                {/* ── Logo banner ── */}
+                <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:"14px 14px 0 0",overflow:"hidden",height:200,display:"flex",alignItems:"center",justifyContent:"center",margin:12,marginBottom:0,borderRadius:12 }}>
+                  <LabLogo lab={l} size={160} radius={0} banner={true} />
+                </div>
 
-                    {/* Text block */}
-                    <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:6 }}>
-                        <span style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em" }}>{l.name}</span>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0,marginTop:1 }}>
-                          <circle cx="12" cy="12" r="10" stroke="#9CA3AF" strokeWidth="1.5"/>
-                          <polyline points="8 12 11 15 16 9" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <div style={{ padding:"16px 16px 18px" }}>
+                  {/* ── Name ── */}
+                  <div style={{ fontWeight:900,fontSize:"1.25rem",color:"#0D1117",lineHeight:1.25,marginBottom:8,letterSpacing:"-.02em" }}>{l.name}</div>
+
+                  {/* ── Rating row ── */}
+                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
+                    <span style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                    <div style={{ display:"flex",gap:2 }}>
+                      {Array.from({length:5},(_,i)=>(
+                        <svg key={i} width="18" height="18" viewBox="0 0 24 24">
+                          {i < fullStars
+                            ? <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1"/>
+                            : i === fullStars && halfStar
+                              ? <><defs><linearGradient id={`hg${l.id}`}><stop offset="50%" stopColor="#F59E0B"/><stop offset="50%" stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#hg${l.id})`} stroke="#F59E0B" strokeWidth="1"/></>
+                              : <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="#D1D5DB" strokeWidth="1"/>
+                          }
                         </svg>
-                      </div>
-                      <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5,marginTop:1 }}>Diagnostic Lab</div>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A" }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-                        {l.tests.length} Tests Available
-                      </div>
-                      {/* Rating — directly below tests */}
-                      <div style={{ display:"flex",alignItems:"center",gap:4,marginTop:5,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",alignSelf:"flex-start",width:"fit-content" }}>
-                        <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
-                        <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
-                        <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
-                      </div>
+                      ))}
+                    </div>
+                    <span style={{ fontWeight:700,fontSize:".92rem",color:"#1158A6" }}>{(l.reviews||0).toLocaleString()} Reviews</span>
+                  </div>
+
+                  {/* ── Address ── */}
+                  <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.5,marginBottom:14 }}>{fullAddr||l.city||"—"}</div>
+
+                  <div style={{ height:1,background:"#F1F5F9",marginBottom:14 }}/>
+
+                  {/* ── Timing + Tests grid ── */}
+                  <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:16 }}>
+                    <div>
+                      <div style={{ fontSize:".78rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Timing</div>
+                      <div style={{ fontSize:".92rem",fontWeight:700,color:"#0D1117" }}>{l.timing||"6AM – 10PM"}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:".78rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Tests</div>
+                      <div style={{ fontSize:".92rem",fontWeight:700,color:"#0D1117" }}>{l.tests.length}</div>
                     </div>
                   </div>
 
-                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-
-                  {/* ── Row 2: Location + Price ── */}
-                  <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
-                    <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
-                    <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
-                    <span style={{ color:"#6B7280" }}>{l.city}</span>
-                  </div>
-                  <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
-                    ~₹{minPrice.toLocaleString()}
-                    <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
-                  </div>
-
-                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-
-                  {/* ── Row 4+5: time labels above buttons ── */}
-                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>NEXT AVAILABLE AT</div>
+                  {/* ── Action buttons ── */}
                   <div style={{ display:"flex",gap:10 }}>
-                    {/* Left column: time → View Tests */}
-                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        {reportTime==="Same Day" ? "Reports: Same Day" : `Reports in ${reportTime}`}
-                      </div>
-                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                        style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
-                        onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-                        onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
-                    </div>
-                    {/* Right column: home collection → Book Now */}
-                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        {l.homeCollection!==false ? "Home Collection" : "Walk-in Only"}
-                      </div>
-                      {selectedTest && matchTest
-                        ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                      }
-                    </div>
+                    <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                      style={{ flex:1,background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
+                      onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
+                      onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+                    {selectedTest && matchTest
+                      ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
+                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                      : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
+                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                    }
                   </div>
-
                 </div>
               </div>
             );
