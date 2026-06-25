@@ -1894,10 +1894,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:10,marginBottom:16,alignItems:"center",maxWidth:580 }}>
         <div style={{ position:"relative", flex:1 }} ref={labSearchRef}>
-          <svg style={{ position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-          <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs by name…" style={{ paddingLeft:38,paddingRight:16,paddingTop:11,paddingBottom:11,border:"1.5px solid #E5E7EB",borderRadius:50,fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:"100%",background:"#fff",color:"#111",boxShadow:"none",transition:"border .18s,box-shadow .18s" }}
-            onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; setLabSugOpen(true); }}
-            onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
+          <svg style={{ position:"absolute",left:16,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
+          <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs by name…" style={{ paddingLeft:42,paddingRight:16,paddingTop:13,paddingBottom:13,border:"2px solid #E5E7EB",borderRadius:14,fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:"100%",background:"#fff",color:"#111",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s",boxSizing:"border-box" }}
+            onFocus={e=>{ e.target.style.border="2px solid #1158A6"; e.target.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; setLabSugOpen(true); }}
+            onBlur={e=>{ e.target.style.border="2px solid #E5E7EB"; e.target.style.boxShadow="0 2px 12px rgba(17,88,166,.08)"; }}/>
           {labSugOpen && searchQ.trim().length>0 && labSuggestions.length>0 && (
             <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.1)",zIndex:200,overflow:"hidden" }}>
               {labSuggestions.map((l,i)=>(
@@ -2041,7 +2041,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif",marginBottom:0 }}>
       <div>
         {/* Logo card button */}
-        <div style={{ margin:"14px 16px 0",height:100,border:"1.5px solid #E5E7EB",borderRadius:14,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#F9FAFB",boxShadow:"0 2px 8px rgba(0,0,0,.07)" }}>
+        <div style={{ margin:"14px 16px 0",height:100,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
           <LabLogo lab={lab} size={80} radius={0} banner={true}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
@@ -2101,8 +2101,8 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     <div style={{ padding:"16px 0" }}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440,padding:"0 12px" }}>
-        <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
-        <input style={{ ...T.inp,paddingLeft:36,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:".9rem",transition:"border .18s,box-shadow .18s" }}
+        <svg style={{ position:"absolute",left:25,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
+        <input style={{ ...T.inp,paddingLeft:46,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:".9rem",transition:"border .18s,box-shadow .18s" }}
           placeholder="Search tests…" value={testQ} onChange={e=>setTestQ(e.target.value)}
           onFocus={e=>{ e.target.style.border="1.5px solid #1158A6"; e.target.style.boxShadow="0 0 0 3px rgba(17,88,166,.1)"; }}
           onBlur={e=>{ e.target.style.border="1.5px solid #E5E7EB"; e.target.style.boxShadow="none"; }}/>
