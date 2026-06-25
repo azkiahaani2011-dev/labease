@@ -1649,7 +1649,7 @@ function LabLogo({ lab, size=90, radius=18 }) {
       background:"#fff", overflow:"hidden",
       boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
       display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <img src={uploadedLogo} alt={lab.name} style={{ width:size*0.82, height:size*0.82, objectFit:"contain", display:"block" }}/>
+      <img src={uploadedLogo} alt={lab.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
     </div>
   );
 
