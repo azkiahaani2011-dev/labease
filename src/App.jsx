@@ -4360,7 +4360,7 @@ export default function App() {
           {/* ☰ hamburger — only visible on mobile via CSS */}
           <button className="ham-btn" aria-label="Open menu" onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }}
             style={{ display:"none",width:44,height:44,background:"none",border:"none",cursor:"pointer",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5,padding:0,flexShrink:0 }}>
-            {[0,1,2].map(i=><span key={i} style={{ display:"block",width:20,height:2.5,borderRadius:99,background:"#374151",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,5.5px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-5.5px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
+            {[0,1,2].map(i=><span key={i} style={{ display:"block",width:20,height:2.5,borderRadius:99,background:"#0A1628",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,5.5px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-5.5px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
           </button>
           {/* Logo */}
           <div onClick={()=>{ navTo("home"); setSideMenu(false); setProfileDrop(false); }} style={{ cursor:"pointer",display:"flex",alignItems:"baseline",gap:1 }}>
@@ -4370,7 +4370,7 @@ export default function App() {
           </div>
         </div>
         {/* Right: person icon + menu button */}
-        <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
+        <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:10 }}>
           {isMobile
             ? <button aria-label="Open cart" onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
                 <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke={cart.length>0?"#D97706":"#0A1628"} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
@@ -4388,7 +4388,7 @@ export default function App() {
               onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
               {user
                 ? <div style={{ width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#1158A6,#2563EB)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontWeight:800,fontSize:".74rem" }}>{user.name.charAt(0).toUpperCase()}</span></div>
-                : <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
+                : <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0A1628" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
             </button>
             {profileDrop&&<div style={{ position:"absolute",top:"calc(100% + 8px)",right:0,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:180,zIndex:300,overflow:"hidden" }}>
               {user&&<div style={{ padding:"12px 15px",background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderBottom:"1px solid #DBEAFE" }}><div style={{ fontWeight:800,fontSize:".85rem",color:"#0D1117" }}>{user.name}</div><div style={{ fontSize:".72rem",color:"#64748B",marginTop:2 }}>{user.email}</div></div>}
@@ -4403,7 +4403,7 @@ export default function App() {
             <button aria-label="Open menu" onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }} style={{ width:44,height:44,background:"none",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5.5,transition:"opacity .15s",padding:0 }}
               onMouseEnter={e=>e.currentTarget.style.opacity=".7"}
               onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-              {[0,1,2].map(i=><span key={i} style={{ display:"block",width:22,height:2.5,borderRadius:99,background:"#374151",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,8px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-8px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
+              {[0,1,2].map(i=><span key={i} style={{ display:"block",width:22,height:2.5,borderRadius:99,background:"#0A1628",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,8px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-8px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
             </button>
             {sideMenu&&<div style={{ position:"fixed",top:72,right:20,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:220,zIndex:300,overflow:"hidden",animation:"slideUp .18s" }}>
               {[
