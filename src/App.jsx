@@ -3468,22 +3468,13 @@ export default function App() {
 
         {/* ── decorative background layer ── */}
         <div aria-hidden="true" style={{ position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:0 }}>
-          {/* subtle dot grid */}
-          <svg style={{ position:"absolute",inset:0,width:"100%",height:"100%",opacity:.18 }} xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="hero-dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-                <circle cx="1.5" cy="1.5" r="1.5" fill="#1158A6"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hero-dots)"/>
-          </svg>
           {/* large thin circle — top-right corner */}
-          <svg style={{ position:"absolute",top:-100,right:-100,opacity:.12 }} width="420" height="420" viewBox="0 0 420 420" fill="none">
-            <circle cx="210" cy="210" r="200" stroke="#1158A6" strokeWidth="1"/>
+          <svg style={{ position:"absolute",top:-120,right:-120,opacity:.13 }} width="460" height="460" viewBox="0 0 460 460" fill="none">
+            <circle cx="230" cy="230" r="220" stroke="#1158A6" strokeWidth="1.2"/>
           </svg>
           {/* medium thin circle — bottom-left corner */}
-          <svg style={{ position:"absolute",bottom:-80,left:-80,opacity:.1 }} width="320" height="320" viewBox="0 0 320 320" fill="none">
-            <circle cx="160" cy="160" r="150" stroke="#2563EB" strokeWidth="1"/>
+          <svg style={{ position:"absolute",bottom:-90,left:-90,opacity:.1 }} width="360" height="360" viewBox="0 0 360 360" fill="none">
+            <circle cx="180" cy="180" r="170" stroke="#2563EB" strokeWidth="1.2"/>
           </svg>
         </div>
 
@@ -4391,16 +4382,16 @@ export default function App() {
         </div>
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
-          {cart.length>0&&(isMobile
+          {isMobile
             ? <button aria-label="Open cart" onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
                 <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-                <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
+                {cart.length>0&&<span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>}
               </button>
             : <button aria-label="Open cart" onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-                Cart ({cart.length})
+                Cart{cart.length>0?` (${cart.length})`:""}
               </button>
-          )}
+          }
           {/* Person icon */}
           <div style={{ position:"relative" }}>
             <button aria-label="Account" onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
