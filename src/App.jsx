@@ -2022,7 +2022,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   if (!lab) return null;
   const cats = ["All",...new Set(lab.tests.map(t=>t.cat))];
   const [showAllTests, setShowAllTests] = React.useState(false);
-  const TESTS_LIMIT = 6;
+  const TESTS_LIMIT = 10;
   React.useEffect(()=>{ setShowAllTests(false); }, [catF, testQ]);
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
@@ -2034,16 +2034,14 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
         <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
-        <span style={{ color:"#D1D5DB",margin:"0 4px" }}>·</span>
-        <span style={{ fontSize:".84rem",fontWeight:800,color:"#0D1117",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{lab.name}</span>
       </div>
     </div>
 
     {/* Lab info section — full width, no card box */}
     <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif",marginBottom:0 }}>
       <div>
-        {/* Full-width logo banner */}
-        <div style={{ height:110,borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
+        {/* Logo card button */}
+        <div style={{ margin:"14px 16px 0",height:100,border:"1.5px solid #E5E7EB",borderRadius:14,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#F9FAFB",boxShadow:"0 2px 8px rgba(0,0,0,.07)" }}>
           <LabLogo lab={lab} size={80} radius={0} banner={true}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
@@ -2100,9 +2098,9 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    <div style={{ ...T.wrap,padding:"16px 12px" }}>
+    <div style={{ padding:"16px 0" }}>
       {/* search */}
-      <div style={{ position:"relative",marginBottom:14,maxWidth:440 }}>
+      <div style={{ position:"relative",marginBottom:14,maxWidth:440,padding:"0 12px" }}>
         <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
         <input style={{ ...T.inp,paddingLeft:36,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:".9rem",transition:"border .18s,box-shadow .18s" }}
           placeholder="Search tests…" value={testQ} onChange={e=>setTestQ(e.target.value)}
@@ -2111,7 +2109,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
 
       {/* category chips */}
-      <div style={{ display:"flex",gap:8,overflowX:"auto",paddingBottom:10,marginBottom:20 }}>
+      <div style={{ display:"flex",gap:8,overflowX:"auto",paddingBottom:10,marginBottom:20,padding:"0 12px 10px" }}>
         {cats.map(c=>{
           const Icon=c==="All" ? null : (ICONS[c]||IGeneral);
           return (
@@ -2125,7 +2123,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
 
       {/* test table */}
-      <div style={{ ...T.card,borderRadius:16,border:"1px solid var(--line)" }}>
+      <div style={{ ...T.card,borderRadius:0,border:"none",borderTop:"1px solid var(--line)" }}>
         <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr 100px 100px 110px",padding:"12px 20px",background:"#F5F7FF",borderBottom:"1px solid var(--line)",fontSize:".74rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:16,alignItems:"center" }}>
           <span>Test Name</span>
           <span style={{ textAlign:"center" }}>Price</span>
