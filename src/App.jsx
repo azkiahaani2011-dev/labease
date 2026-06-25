@@ -133,7 +133,8 @@ const G = () => (
     }
 
     /* ── SECTIONS — precise rhythm ───────────────────────────────── */
-    section { position: relative; overflow: hidden; }
+    section { position: relative; overflow: visible; }
+    section:not(.hero-section) { overflow: hidden; }
 
     /* ── CARDS ───────────────────────────────────────────────────── */
     .hover-lift {
@@ -681,7 +682,7 @@ const G = () => (
     .hero-section { min-height: 340px; }
     .hero-img-col { display: flex; }
     @media (max-width: 767px) {
-      .hero-section { min-height: 0 !important; overflow: hidden !important; max-width: 100vw !important; }
+      .hero-section { min-height: 0 !important; overflow: visible !important; max-width: 100vw !important; }
       .hero-img-col { display: none !important; }
       .hero-content {
         padding-top: 32px !important;
@@ -2366,7 +2367,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
       {/* Search bar + separate button row */}
-      <div className="hero-search-bar" style={{ display:"flex",gap:10,alignItems:"center" }}>
+      <div className="hero-search-bar" style={{ display:"flex",gap:6,alignItems:"center" }}>
         {/* Input box */}
         <div style={{ flex:1,background:"#fff",borderRadius:14,display:"flex",alignItems:"center",border:"2px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s" }}
           onFocusCapture={e=>{ e.currentTarget.style.border="2px solid #1158A6"; e.currentTarget.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; }}
@@ -3428,7 +3429,7 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
