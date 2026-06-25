@@ -3244,9 +3244,18 @@ export default function App() {
     } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
   })();
   // Apply price/name overrides to LABS on every render
+  const adminLabLogos = (() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const map = {};
+      saved.forEach(l => { if(l.logo) map[l.id] = l.logo; });
+      return map;
+    } catch(e) { return {}; }
+  })();
   LABS.forEach(lab => {
     if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
     if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
+    if (adminLabLogos[lab.id])                   lab.logoBase64 = adminLabLogos[lab.id];
     lab.tests.forEach(t => {
       const po = adminOv.prices[t.id];
       if (po) {
@@ -3338,6 +3347,7 @@ export default function App() {
     homeCollection: el.homeCollection || false,
     nabl: el.nabl || false,
     color: el.color || '#1158A6',
+    logoBase64: el.logo || el.logoBase64 || '',
     founded: el.founded || new Date().getFullYear().toString(),
     reportTime: el.reportTime || 'Same Day',
     tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
