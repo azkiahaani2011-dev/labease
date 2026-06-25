@@ -1238,7 +1238,7 @@ const Modal = ({ children, onClose }) => (
 );
 
 const Toast = ({ msg, onDone }) => {
-  useEffect(() => { const t = setTimeout(onDone, 2600); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(onDone, Math.max(2600, msg.length * 60)); return () => clearTimeout(t); }, []);
   return (
     <div style={{ position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",background:"var(--teal)",color:"#fff",borderRadius:50,padding:"12px 24px",fontWeight:700,fontSize:".86rem",zIndex:9999,boxShadow:"0 8px 28px rgba(17,88,166,.38)",animation:"slideUp .25s",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:10,fontFamily:"'Manrope',sans-serif" }}>
       <span style={{ width:20,height:20,borderRadius:"50%",background:"#60A5FA",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".72rem",flexShrink:0 }}>✓</span>
@@ -1264,6 +1264,8 @@ const UploadPrescription = () => {
 
   const ingest = f => {
     if (!f) return;
+    const allowed = ['image/jpeg','image/png','image/jpg','application/pdf'];
+    if (!allowed.includes(f.type)) { alert('Only JPG, PNG, or PDF files are allowed.'); return; }
     if (f.size > MAX_MB * 1024 * 1024) { alert(`File must be under ${MAX_MB} MB.`); return; }
     setFile(f);
     setPct(0); setStatus("idle");
@@ -2578,7 +2580,7 @@ const BookingField = ({ label, req, ...p }) => (
 function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
   const [loc, setLoc] = useState(form);
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
-  const ok1 = loc.name && loc.phone.length>=10 && loc.email.includes("@");
+  const ok1 = loc.name.trim().length>=2 && /^(\+91[\s\-]?)?[6-9]\d{9}$/.test(loc.phone.replace(/\s/g,'')) && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
   const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
@@ -3218,11 +3220,30 @@ function FeaturesCarousel() {
   );
 }
 
+/* ─── ERROR BOUNDARY ────────────────────────────────────────────────────── */
+export class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false }; }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  render() {
+    if (this.state.hasError) return (
+      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'Manrope',sans-serif",gap:16,padding:24,textAlign:"center" }}>
+        <div style={{ fontSize:"3rem" }}>⚠️</div>
+        <h2 style={{ color:"#111",fontSize:"1.4rem",fontWeight:800 }}>Something went wrong</h2>
+        <p style={{ color:"#6B7280",fontSize:".95rem" }}>Please refresh the page to continue.</p>
+        <button onClick={()=>window.location.reload()} style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px 28px",fontWeight:700,cursor:"pointer",fontSize:".9rem" }}>Refresh Page</button>
+      </div>
+    );
+    return this.props.children;
+  }
+}
+
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
   const [lab,    setLab]    = useState(null);
-  const [cart,   setCart]   = useState([]);
+  const [cart,   setCart]   = useState(() => {
+    try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
+  });
   const [catF,   setCatF]   = useState("All");
   const [testQ,  setTestQ]  = useState("");
   const [labQ,   setLabQ]   = useState("");
@@ -3317,17 +3338,20 @@ export default function App() {
   };
   const delCart = tid => setCart(c=>c.filter(x=>x.tid!==tid));
   const has     = tid => !!cart.find(x=>x.tid===tid);
+  useEffect(() => {
+    try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
+  }, [cart]);
   const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
   const handleAuth = () => {
     const { name, email, phone, password } = authForm;
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) { setAuthErr("Please enter a valid email address."); return; }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { setAuthErr("Please enter a valid email address."); return; }
     if (!password || password.length < 6) { setAuthErr("Password must be at least 6 characters."); return; }
     if (authMode === "signup") {
       if (!name.trim()) { setAuthErr("Please enter your full name."); return; }
-      if (!phone.trim() || !/^\+?[\d\s\-]{7,15}$/.test(phone)) { setAuthErr("Please enter a valid phone number."); return; }
+      if (!phone.trim() || !/^(\+91[\s\-]?)?[6-9]\d{9}$/.test(phone.replace(/\s/g,''))) { setAuthErr("Please enter a valid Indian phone number (10 digits)."); return; }
     }
     setAuthLoading(true);
     setTimeout(() => {
@@ -4045,7 +4069,8 @@ export default function App() {
         {/* Download Receipt PDF */}
         <button onClick={()=>{
           const tests = done?.cart?.map((t,i)=>`<tr><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px">${i+1}. ${t.tname}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;color:#6B7280;text-decoration:line-through">₹${t.mrp?.toLocaleString()}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;font-weight:700;color:#15803D">₹${t.price?.toLocaleString()}</td></tr>`).join('');
-          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${done?.id}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${done?.id}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${done?.name}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${done?.email||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${done?.phone||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${lab?.name}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${done?.date} at ${done?.slot}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · NABL Accredited Labs · Free Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
+          const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${esc(done?.id)}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${esc(done?.id)}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${esc(done?.name)}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${esc(done?.email)||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${esc(done?.phone)||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${esc(lab?.name)}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${esc(done?.date)} at ${esc(done?.slot)}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · NABL Accredited Labs · Free Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
           const w = window.open('','_blank','width=800,height=900');
           w.document.write(html);
           w.document.close();
@@ -4321,7 +4346,7 @@ export default function App() {
         {/* Left zone: hamburger (mobile only) + logo */}
         <div style={{ display:"flex",alignItems:"center",gap:4,flexShrink:0 }}>
           {/* ☰ hamburger — only visible on mobile via CSS */}
-          <button className="ham-btn" onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }}
+          <button className="ham-btn" aria-label="Open menu" onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }}
             style={{ display:"none",width:44,height:44,background:"none",border:"none",cursor:"pointer",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5,padding:0,flexShrink:0 }}>
             {[0,1,2].map(i=><span key={i} style={{ display:"block",width:20,height:2.5,borderRadius:99,background:"#374151",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,5.5px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-5.5px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
           </button>
@@ -4335,18 +4360,18 @@ export default function App() {
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
           {cart.length>0&&(isMobile
-            ? <button onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
+            ? <button aria-label="Open cart" onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
                 <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 <span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>
               </button>
-            : <button onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+            : <button aria-label="Open cart" onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 Cart ({cart.length})
               </button>
           )}
           {/* Person icon */}
           <div style={{ position:"relative" }}>
-            <button onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
+            <button aria-label="Account" onClick={()=>{ setProfileDrop(o=>!o); setSideMenu(false); }} style={{ width:44,height:44,background:"none",border:"none",borderRadius:50,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"opacity .15s" }}
               onMouseEnter={e=>e.currentTarget.style.opacity=".7"}
               onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
               {user
@@ -4363,7 +4388,7 @@ export default function App() {
           </div>
           {/* Menu (hamburger) button */}
           <div style={{ position:"relative" }}>
-            <button onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }} style={{ width:44,height:44,background:"none",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5.5,transition:"opacity .15s",padding:0 }}
+            <button aria-label="Open menu" onClick={()=>{ setSideMenu(o=>!o); setProfileDrop(false); }} style={{ width:44,height:44,background:"none",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5.5,transition:"opacity .15s",padding:0 }}
               onMouseEnter={e=>e.currentTarget.style.opacity=".7"}
               onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
               {[0,1,2].map(i=><span key={i} style={{ display:"block",width:22,height:2.5,borderRadius:99,background:"#374151",transition:"transform .25s,opacity .2s",transform:sideMenu&&i===0?"rotate(45deg) translate(5px,8px)":sideMenu&&i===2?"rotate(-45deg) translate(5px,-8px)":"none",opacity:sideMenu&&i===1?0:1 }}/>)}
