@@ -3466,12 +3466,6 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        {/* ── background circles ── */}
-        <div aria-hidden="true" style={{ position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:0 }}>
-          <div style={{ position:"absolute",top:"50%",right:"-28%",transform:"translateY(-50%)",width:"70vw",height:"70vw",maxWidth:520,maxHeight:520,borderRadius:"50%",background:"rgba(175,210,245,.45)" }}/>
-          <div style={{ position:"absolute",top:"-30%",left:"-12%",width:"55vw",height:"55vw",maxWidth:400,maxHeight:400,borderRadius:"50%",background:"rgba(175,210,245,.35)" }}/>
-          <div style={{ position:"absolute",bottom:"-20%",right:"10%",width:"30vw",height:"30vw",maxWidth:220,maxHeight:220,borderRadius:"50%",background:"rgba(175,210,245,.3)" }}/>
-        </div>
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
