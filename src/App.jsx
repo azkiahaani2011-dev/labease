@@ -4329,8 +4329,8 @@ export default function App() {
             {sideMenu&&<div style={{ position:"fixed",top:72,right:20,background:"#fff",borderRadius:16,border:"1px solid #E8EEFF",boxShadow:"0 12px 40px rgba(0,0,0,.14)",minWidth:220,zIndex:300,overflow:"hidden",animation:"slideUp .18s" }}>
               {[
                 ["Home",()=>{ navTo("home"); setSideMenu(false); }],
-                ["Tests",()=>{ navTo("labs"); setSideMenu(false); }],
-                ["Labs",()=>{ navTo("nearme"); setSideMenu(false); }],
+                ["Tests",()=>{ navTo("alltests"); setSideMenu(false); }],
+                ["Labs",()=>{ navTo("labs"); setSideMenu(false); }],
                 ["Health Packages",()=>{ setSideMenu(false); if(page==="home"){ setTimeout(()=>document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}),80); } else { navTo("home"); setTimeout(()=>document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}),350); } }],
                 ["Reports",()=>{ setSideMenu(false); navTo("confirm"); }],
                 ["About Us",()=>{ setSideMenu(false); if(page==="home"){ setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),80); } else { navTo("home"); setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),350); } }],
