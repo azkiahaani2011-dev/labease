@@ -3374,6 +3374,7 @@ export default function App() {
     const [q,setQ]       = useState("");
     const [faq,setFaq]   = useState(null);
     const [pkgMsg, setPkgMsg] = useState(false);
+    const [selectedPkg, setSelectedPkg] = useState(null);
     const [gridCols, setGridCols] = useState(window.innerWidth <= 600 ? 2 : 3);
     useEffect(() => {
       const h = () => setGridCols(window.innerWidth <= 600 ? 2 : 3);
@@ -3457,19 +3458,65 @@ export default function App() {
             </div>
           </div>
 
+          {/* Package detail modal */}
+          {selectedPkg && (
+            <div onClick={()=>setSelectedPkg(null)} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:9000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
+              <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:20,width:"100%",maxWidth:560,maxHeight:"88vh",overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:"0 24px 80px rgba(0,0,0,.25)" }}>
+                {/* Modal header */}
+                <div style={{ background:`linear-gradient(135deg,${selectedPkg.badgeColor}ee,${selectedPkg.badgeColor}99)`,padding:"20px 22px 16px",position:"relative",flexShrink:0 }}>
+                  <button onClick={()=>setSelectedPkg(null)} style={{ position:"absolute",top:12,right:14,background:"rgba(255,255,255,.25)",border:"none",borderRadius:"50%",width:30,height:30,fontSize:18,cursor:"pointer",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>×</button>
+                  <div style={{ fontSize:".65rem",fontWeight:800,color:"rgba(255,255,255,.8)",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>{selectedPkg.badge}</div>
+                  <div style={{ fontSize:"1.25rem",fontWeight:900,color:"#fff",marginBottom:4 }}>{selectedPkg.title}</div>
+                  <div style={{ fontSize:".75rem",color:"rgba(255,255,255,.85)",fontWeight:600 }}>{selectedPkg.sub}</div>
+                  <div style={{ display:"flex",alignItems:"baseline",gap:6,marginTop:10 }}>
+                    <span style={{ fontSize:"1.35rem",fontWeight:900,color:"#fff" }}>₹{selectedPkg.price.toLocaleString()}</span>
+                    <span style={{ fontSize:".8rem",color:"rgba(255,255,255,.65)",textDecoration:"line-through" }}>₹{selectedPkg.mrp.toLocaleString()}</span>
+                    <span style={{ background:"rgba(255,255,255,.25)",color:"#fff",borderRadius:6,padding:"2px 8px",fontSize:".7rem",fontWeight:800 }}>{selectedPkg.off}% OFF</span>
+                  </div>
+                </div>
+                {/* Tests list */}
+                <div style={{ overflowY:"auto",flex:1,padding:"16px 22px" }}>
+                  <div style={{ fontSize:".72rem",fontWeight:700,color:"#6B7280",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12 }}>Tests Included ({selectedPkg.tests.length})</div>
+                  <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 10px" }}>
+                    {selectedPkg.tests.map((t,i)=>(
+                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:7,padding:"7px 10px",background:"#F8FAFC",borderRadius:10,border:"1px solid #EEF2F7" }}>
+                        <span style={{ color:"#1158A6",fontSize:"1rem",flexShrink:0,lineHeight:1 }}>✓</span>
+                        <span style={{ fontSize:".78rem",fontWeight:600,color:"#374151",lineHeight:1.35 }}>{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Footer */}
+                <div style={{ padding:"14px 22px",borderTop:"1px solid #F1F5F9",display:"flex",gap:10,flexShrink:0 }}>
+                  <button onClick={()=>setSelectedPkg(null)} style={{ flex:1,background:"#F3F4F6",color:"#374151",border:"none",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".85rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Close</button>
+                  <button onClick={()=>{ setSelectedPkg(null); setSelectedTest({name:selectedPkg.title,cat:selectedPkg.badge}); navTo("labs"); }}
+                    style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".85rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
+                    Book This Package →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 6-card grid */}
           <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:16 }}>
             {[
-              { title:"Full Body Checkup",  sub:"65+ Tests · NABL Certified",   price:1999, mrp:3499, off:43, badge:"Most Popular",  badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop" },
-              { title:"Diabetes Care",      sub:"12 Tests · NABL Certified",    price:399,  mrp:899,  off:56, badge:"55% OFF",       badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700" },
-              { title:"Heart Health",       sub:"22 Tests · NABL Certified",    price:1799, mrp:2999, off:40, badge:"Cardiology",    badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700" },
-              { title:"Thyroid Profile",    sub:"T3, T4, TSH · NABL Certified", price:399,  mrp:799,  off:50, badge:"NABL",          badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop" },
-              { title:"Women's Wellness",   sub:"40+ Tests · NABL Certified",   price:2299, mrp:3999, off:43, badge:"For Women",     badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop" },
-              { title:"Senior Citizen",     sub:"55+ Tests · NABL Certified",   price:2499, mrp:4499, off:44, badge:"45% OFF",       badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop" },
+              { title:"Full Body Checkup", sub:"65+ Tests · NABL Certified", price:1999, mrp:3499, off:43, badge:"Most Popular", badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop",
+                tests:["Complete Blood Count (CBC)","Haemoglobin (Hb)","Total WBC Count","Platelet Count","RBC Count","PCV / Haematocrit","MCV, MCH, MCHC","Fasting Blood Sugar","Post Prandial Sugar","HbA1c (Diabetes)","Urea (BUN)","Creatinine","Uric Acid","Calcium","Phosphorus","Sodium","Potassium","Chloride","Bilirubin Total","Bilirubin Direct","SGOT (AST)","SGPT (ALT)","Alkaline Phosphatase","GGT","Total Protein","Albumin","Globulin","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL","TSH (Thyroid)","T3 (Triiodothyronine)","T4 (Thyroxine)","Vitamin D (25-OH)","Vitamin B12","Iron","TIBC","Ferritin","PSA (Males)","Urine Routine","Urine Microscopy","ESR","CRP (C-Reactive Protein)","RA Factor","ASO Titre","LDH","Amylase","Lipase","Urine Sugar","Urine Protein","Urine Ketones","24-Hr Urine Creatinine","ECG","Chest X-Ray","BMI & Body Composition","Blood Pressure","SpO2","Opthalmologist Check","Dental Check","Diet Counselling","Physician Consultation"] },
+              { title:"Diabetes Care", sub:"12 Tests · NABL Certified", price:399, mrp:899, off:56, badge:"55% OFF", badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700",
+                tests:["Fasting Blood Sugar (FBS)","Post Prandial Blood Sugar (PPBS)","HbA1c (Glycated Haemoglobin)","Urea","Creatinine","eGFR (Kidney Function)","Urine Microalbumin","Urine Creatinine Ratio","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol"] },
+              { title:"Heart Health", sub:"22 Tests · NABL Certified", price:1799, mrp:2999, off:40, badge:"Cardiology", badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700",
+                tests:["Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL Cholesterol","LDL/HDL Ratio","Total/HDL Ratio","Non-HDL Cholesterol","Complete Blood Count (CBC)","Fasting Blood Sugar","HbA1c","Creatinine","eGFR","Sodium","Potassium","Magnesium","CRP (hs-CRP)","Homocysteine","Lipoprotein(a)","TSH (Thyroid)","Vitamin D","ECG (Resting 12-Lead)"] },
+              { title:"Thyroid Profile", sub:"T3, T4, TSH · NABL Certified", price:399, mrp:799, off:50, badge:"NABL", badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop",
+                tests:["TSH (Thyroid Stimulating Hormone)","T3 (Total Triiodothyronine)","T4 (Total Thyroxine)","Free T3 (FT3)","Free T4 (FT4)","Anti-TPO Antibody","Anti-Thyroglobulin Antibody","Thyroglobulin","Complete Blood Count","Fasting Blood Sugar","Cholesterol Total","Calcium"] },
+              { title:"Women's Wellness", sub:"40+ Tests · NABL Certified", price:2299, mrp:3999, off:43, badge:"For Women", badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop",
+                tests:["Complete Blood Count (CBC)","Haemoglobin","Iron","TIBC","Ferritin","Fasting Blood Sugar","HbA1c","TSH (Thyroid)","T3","T4","FSH (Follicle Stimulating Hormone)","LH (Luteinising Hormone)","Oestradiol (E2)","Prolactin","Progesterone","AMH (Ovarian Reserve)","DHEA-Sulphate","Testosterone (Total)","Cortisol","Vitamin D (25-OH)","Vitamin B12","Folic Acid","Calcium","Phosphorus","Magnesium","Urea","Creatinine","Uric Acid","SGOT","SGPT","Alkaline Phosphatase","Cholesterol Total","Triglycerides","HDL","LDL","Urine Routine","Urine Microscopy","Pap Smear (Cervical)","CA-125 (Ovarian Marker)","CRP (hs-CRP)","Blood Pressure & BMI"] },
+              { title:"Senior Citizen", sub:"55+ Tests · NABL Certified", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
+                tests:["Complete Blood Count (CBC)","ESR","CRP (hs-CRP)","Fasting Blood Sugar","Post Prandial Sugar","HbA1c","Urea","Creatinine","eGFR","Uric Acid","Sodium","Potassium","Calcium","Phosphorus","Magnesium","SGOT","SGPT","Alkaline Phosphatase","GGT","Bilirubin Total","Total Protein","Albumin","Cholesterol Total","Triglycerides","HDL","LDL","VLDL","TSH","Free T3","Free T4","Vitamin D (25-OH)","Vitamin B12","Iron","Ferritin","PSA Total (Males)","CA-125 (Females)","Urine Routine","Urine Microscopy","ECG (Resting)","Chest X-Ray","Bone Density (DEXA)","FOBT (Stool Blood)","Opthalmologist Review","Audiometry","Blood Pressure & Pulse","SpO2","BMI & Body Weight","Physician Consultation","Dietitian Consultation","Physiotherapy Assessment","Dental Review","Spirometry (Lung Function)","Carotid Doppler","Ankle-Brachial Index"] },
             ].map((pkg,i)=>(
               <div key={pkg.title}
                 style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
-                onClick={()=>navTo("labs")}
+                onClick={()=>setSelectedPkg(pkg)}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
                 <div style={{ position:"relative",height:gridCols===2?95:160,overflow:"hidden",flexShrink:0 }}>
