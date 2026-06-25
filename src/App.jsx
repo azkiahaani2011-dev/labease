@@ -2043,12 +2043,12 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     <div style={{ ...T.wrap,padding:"16px 12px 0" }}>
       <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:16,overflow:"hidden",fontFamily:"'Manrope',sans-serif",boxShadow:"0 1px 6px rgba(0,0,0,.06)",marginBottom:20 }}>
         {/* Full-width logo banner */}
-        <div style={{ height:200,border:"1px solid #E5E7EB",margin:12,borderRadius:12,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
-          <LabLogo lab={lab} size={160} radius={0} banner={true}/>
+        <div style={{ height:130,border:"1px solid #E5E7EB",margin:10,borderRadius:10,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
+          <LabLogo lab={lab} size={110} radius={0} banner={true}/>
         </div>
-        <div style={{ padding:"4px 16px 18px" }}>
+        <div style={{ padding:"4px 14px 14px" }}>
           {/* Name */}
-          <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#0D1117",lineHeight:1.25,marginBottom:8,letterSpacing:"-.02em" }}>{lab.name}</div>
+          <div style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",lineHeight:1.25,marginBottom:6,letterSpacing:"-.02em" }}>{lab.name}</div>
           {/* Rating */}
           {(()=>{
             const rating = lab.rating||4.5;
