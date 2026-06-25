@@ -1892,7 +1892,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       <div style={{ background:"#F5F7FF", minHeight:"80vh", padding:"16px 0" }}>
         {/* Search + Sort row */}
         <div style={{ padding:"0 16px" }}>
-        <div style={{ display:"flex",gap:10,marginBottom:16,alignItems:"center",maxWidth:580 }}>
+        <div style={{ display:"flex",gap:4,marginBottom:16,alignItems:"center",maxWidth:580 }}>
         <div style={{ position:"relative", flex:1 }} ref={labSearchRef}>
           <svg style={{ position:"absolute",left:16,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
           <input className="labs-search-input" value={searchQ} onChange={e=>{ setSearchQ(e.target.value); setLabSugOpen(true); }} placeholder="Search labs by name…" style={{ paddingLeft:42,paddingRight:16,paddingTop:13,paddingBottom:13,border:"2px solid #E5E7EB",borderRadius:14,fontSize:".9rem",fontFamily:"'Manrope',sans-serif",outline:"none",width:"100%",background:"#fff",color:"#111",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s",boxSizing:"border-box" }}
@@ -2027,22 +2027,19 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
   <div style={{ minHeight:"80vh" }}>
-    {/* sticky back bar */}
-    <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:102,zIndex:50 }}>
-      <div style={{ ...T.wrap,padding:"10px 12px",display:"flex",gap:10,alignItems:"center" }}>
-        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
-      </div>
-    </div>
-
-    {/* Lab info section — full width, no card box */}
-    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif",marginBottom:0 }}>
+    {/* Lab info section — includes back button */}
+    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
       <div>
-        {/* Logo card button */}
-        <div style={{ margin:"14px 16px 0",height:100,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
-          <LabLogo lab={lab} size={80} radius={0} banner={true}/>
+        {/* Back button row inside the section */}
+        <div style={{ display:"flex",gap:8,alignItems:"center",padding:"10px 16px 0" }}>
+          <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
+        </div>
+        {/* Logo card */}
+        <div style={{ margin:"10px 16px 0",height:120,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
+          <LabLogo lab={lab} size={160} radius={0} banner={true}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
           {/* Name */}
