@@ -3466,17 +3466,6 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        {/* ── decorative background layer ── */}
-        <div aria-hidden="true" style={{ position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:0 }}>
-          {/* large thin circle — top-right corner */}
-          <svg style={{ position:"absolute",top:-120,right:-120,opacity:.13 }} width="460" height="460" viewBox="0 0 460 460" fill="none">
-            <circle cx="230" cy="230" r="220" stroke="#1158A6" strokeWidth="1.2"/>
-          </svg>
-          {/* medium thin circle — bottom-left corner */}
-          <svg style={{ position:"absolute",bottom:-90,left:-90,opacity:.1 }} width="360" height="360" viewBox="0 0 360 360" fill="none">
-            <circle cx="180" cy="180" r="170" stroke="#2563EB" strokeWidth="1.2"/>
-          </svg>
-        </div>
 
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
@@ -3776,30 +3765,30 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"#EBF0FA",padding:"40px 24px",textAlign:"center" }}>
+      <section style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"40px 24px",textAlign:"center" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
-          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.15)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
+          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
             <span style={{ width:6,height:6,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+            <span style={{ fontSize:".7rem",fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
           </div>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:900,color:"#0D1117",marginBottom:12,lineHeight:1.18,letterSpacing:"-.03em" }}>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:900,color:"#fff",marginBottom:12,lineHeight:1.18,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
           </h2>
-          <p style={{ color:"#374151",marginBottom:32,fontSize:".93rem",lineHeight:1.75,maxWidth:420,margin:"0 auto 32px" }}>
+          <p style={{ color:"rgba(255,255,255,.6)",marginBottom:32,fontSize:".93rem",lineHeight:1.75,maxWidth:420,margin:"0 auto 32px" }}>
             Transparent pricing · Free doorstep collection · Digital reports in hours. Trusted by 50,000+ patients.
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#0e479a"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#1158A6"; }}>
+              style={{ background:"#fff",color:"#0F2D6B",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#EEF2FF"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; }}>
               Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#0F2D6B" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid rgba(17,88,166,.35)",borderRadius:50,padding:"13px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(17,88,166,.08)"; e.currentTarget.style.borderColor="rgba(17,88,166,.6)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(17,88,166,.35)"; }}>
+              style={{ background:"transparent",color:"rgba(255,255,255,.85)",border:"1.5px solid rgba(255,255,255,.3)",borderRadius:50,padding:"13px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.borderColor="rgba(255,255,255,.55)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.3)"; }}>
               View Lab Packages
             </button>
           </div>
@@ -4384,10 +4373,10 @@ export default function App() {
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:18 }}>
           {isMobile
             ? <button aria-label="Open cart" onClick={()=>setCartOpen(true)} style={{ position:"relative",width:36,height:36,background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0 }}>
-                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
+                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke={cart.length>0?"#D97706":"#0A1628"} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 {cart.length>0&&<span style={{ position:"absolute",top:-2,right:-4,minWidth:15,height:15,background:"#F59E0B",borderRadius:99,fontSize:".52rem",fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px" }}>{cart.length}</span>}
               </button>
-            : <button aria-label="Open cart" onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...T.btn("#F59E0B"),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
+            : <button aria-label="Open cart" onClick={()=>setCartOpen(true)} className="btn-anim" style={{ ...(cart.length>0?T.btn("#F59E0B"):{background:"#0A1628",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:700}),borderRadius:50,padding:"8px 16px",fontSize:".84rem",display:"flex",alignItems:"center",gap:7 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
                 Cart{cart.length>0?` (${cart.length})`:""}
               </button>
