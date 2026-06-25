@@ -3375,6 +3375,7 @@ export default function App() {
     const [faq,setFaq]   = useState(null);
     const [pkgMsg, setPkgMsg] = useState(false);
     const [selectedPkg, setSelectedPkg] = useState(null);
+    const [customSelected, setCustomSelected] = useState(new Set());
     const [gridCols, setGridCols] = useState(window.innerWidth <= 600 ? 2 : 3);
     useEffect(() => {
       const h = () => setGridCols(window.innerWidth <= 600 ? 2 : 3);
@@ -3458,40 +3459,52 @@ export default function App() {
             </div>
           </div>
 
-          {/* Package detail modal */}
+          {/* Create Your Own Package modal (for non-full-body packages) */}
           {selectedPkg && (
-            <div onClick={()=>setSelectedPkg(null)} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:9000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
-              <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:20,width:"100%",maxWidth:560,maxHeight:"88vh",overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:"0 24px 80px rgba(0,0,0,.25)" }}>
-                {/* Modal header */}
-                <div style={{ background:`linear-gradient(135deg,${selectedPkg.badgeColor}ee,${selectedPkg.badgeColor}99)`,padding:"20px 22px 16px",position:"relative",flexShrink:0 }}>
-                  <button onClick={()=>setSelectedPkg(null)} style={{ position:"absolute",top:12,right:14,background:"rgba(255,255,255,.25)",border:"none",borderRadius:"50%",width:30,height:30,fontSize:18,cursor:"pointer",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>×</button>
-                  <div style={{ fontSize:".65rem",fontWeight:800,color:"rgba(255,255,255,.8)",letterSpacing:".12em",textTransform:"uppercase",marginBottom:4 }}>{selectedPkg.badge}</div>
-                  <div style={{ fontSize:"1.25rem",fontWeight:900,color:"#fff",marginBottom:4 }}>{selectedPkg.title}</div>
-                  <div style={{ fontSize:".75rem",color:"rgba(255,255,255,.85)",fontWeight:600 }}>{selectedPkg.sub}</div>
-                  <div style={{ display:"flex",alignItems:"baseline",gap:6,marginTop:10 }}>
-                    <span style={{ fontSize:"1.35rem",fontWeight:900,color:"#fff" }}>₹{selectedPkg.price.toLocaleString()}</span>
-                    <span style={{ fontSize:".8rem",color:"rgba(255,255,255,.65)",textDecoration:"line-through" }}>₹{selectedPkg.mrp.toLocaleString()}</span>
-                    <span style={{ background:"rgba(255,255,255,.25)",color:"#fff",borderRadius:6,padding:"2px 8px",fontSize:".7rem",fontWeight:800 }}>{selectedPkg.off}% OFF</span>
+            <div onClick={()=>{ setSelectedPkg(null); setCustomSelected(new Set()); }} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:9000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
+              <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:20,width:"100%",maxWidth:500,maxHeight:"90vh",overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:"0 24px 80px rgba(0,0,0,.3)" }}>
+                {/* Header */}
+                <div style={{ padding:"18px 20px 14px",borderBottom:"1px solid #F1F5F9",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0 }}>
+                  <div>
+                    <div style={{ fontSize:"1.05rem",fontWeight:900,color:"#0D1117" }}>Create Your Own Package</div>
+                    <div style={{ fontSize:".75rem",color:"#64748B",marginTop:2,fontWeight:500 }}>{selectedPkg.title} — select the tests you need</div>
                   </div>
+                  <button onClick={()=>{ setSelectedPkg(null); setCustomSelected(new Set()); }} style={{ background:"#F3F4F6",border:"none",borderRadius:"50%",width:32,height:32,fontSize:18,cursor:"pointer",color:"#374151",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,flexShrink:0 }}>×</button>
                 </div>
                 {/* Tests list */}
-                <div style={{ overflowY:"auto",flex:1,padding:"16px 22px" }}>
-                  <div style={{ fontSize:".72rem",fontWeight:700,color:"#6B7280",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12 }}>Tests Included ({selectedPkg.tests.length})</div>
-                  <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 10px" }}>
-                    {selectedPkg.tests.map((t,i)=>(
-                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:7,padding:"7px 10px",background:"#F8FAFC",borderRadius:10,border:"1px solid #EEF2F7" }}>
-                        <span style={{ color:"#1158A6",fontSize:"1rem",flexShrink:0,lineHeight:1 }}>✓</span>
-                        <span style={{ fontSize:".78rem",fontWeight:600,color:"#374151",lineHeight:1.35 }}>{t}</span>
+                <div style={{ overflowY:"auto",flex:1,padding:"8px 0" }}>
+                  {selectedPkg.tests.map((t,i)=>{
+                    const added = customSelected.has(t);
+                    return (
+                      <div key={i} style={{ display:"flex",alignItems:"center",justifyContent:"space-between",padding:"13px 20px",borderBottom:"1px solid #F8FAFC" }}>
+                        <span style={{ fontSize:".88rem",fontWeight:600,color:"#1F2937",flex:1,paddingRight:12,lineHeight:1.35 }}>{t}</span>
+                        <button
+                          onClick={()=>{ setCustomSelected(prev=>{ const n=new Set(prev); added?n.delete(t):n.add(t); return n; }); }}
+                          style={{ background:added?"#16A34A":"#22C55E",color:"#fff",border:"none",borderRadius:50,padding:"8px 20px",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",flexShrink:0,minWidth:72,transition:"background .15s" }}>
+                          {added?"✓ Added":"Add"}
+                        </button>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
                 {/* Footer */}
-                <div style={{ padding:"14px 22px",borderTop:"1px solid #F1F5F9",display:"flex",gap:10,flexShrink:0 }}>
-                  <button onClick={()=>setSelectedPkg(null)} style={{ flex:1,background:"#F3F4F6",color:"#374151",border:"none",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".85rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Close</button>
-                  <button onClick={()=>{ setSelectedPkg(null); setSelectedTest({name:selectedPkg.title,cat:selectedPkg.badge}); navTo("labs"); }}
-                    style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"11px",fontWeight:700,fontSize:".85rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
-                    Book This Package →
+                <div style={{ padding:"14px 20px",borderTop:"1px solid #F1F5F9",flexShrink:0 }}>
+                  {customSelected.size>0 && (
+                    <div style={{ fontSize:".78rem",color:"#16A34A",fontWeight:700,marginBottom:8 }}>
+                      {customSelected.size} test{customSelected.size>1?"s":""} selected
+                    </div>
+                  )}
+                  <button
+                    disabled={customSelected.size===0}
+                    onClick={()=>{
+                      const name = customSelected.size===selectedPkg.tests.length ? selectedPkg.title : "Custom "+selectedPkg.title+" Package";
+                      setSelectedPkg(null);
+                      setCustomSelected(new Set());
+                      setSelectedTest({name, cat:selectedPkg.badge});
+                      navTo("labs");
+                    }}
+                    style={{ width:"100%",background:customSelected.size===0?"#D1D5DB":"#22C55E",color:"#fff",border:"none",borderRadius:12,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:customSelected.size===0?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}>
+                    {customSelected.size===0?"Select at least one test to proceed":"Proceed →"}
                   </button>
                 </div>
               </div>
@@ -3516,7 +3529,7 @@ export default function App() {
             ].map((pkg,i)=>(
               <div key={pkg.title}
                 style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
-                onClick={()=>setSelectedPkg(pkg)}
+                onClick={()=>{ if(pkg.title==="Full Body Checkup"){ setSelectedTest({name:"Full Body Checkup",cat:"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
                 <div style={{ position:"relative",height:gridCols===2?95:160,overflow:"hidden",flexShrink:0 }}>
@@ -3536,7 +3549,7 @@ export default function App() {
                       <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
-                    <button onClick={e=>{ e.stopPropagation(); setSelectedTest({name:pkg.title, cat:pkg.badge}); navTo("labs"); }}
+                    <button onClick={e=>{ e.stopPropagation(); if(pkg.title==="Full Body Checkup"){ setSelectedTest({name:"Full Body Checkup",cat:"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
                       style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
