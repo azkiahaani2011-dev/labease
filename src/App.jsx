@@ -2283,7 +2283,7 @@ const SEARCH_INDEX = (() => {
   return items;
 })();
 
-function HeroSearch({ q, setQ, setLabQ, navTo, T, location = "Hyderabad" }) {
+function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   const [open, setOpen] = React.useState(false);
   const wrapRef = React.useRef(null);
 
@@ -2341,8 +2341,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T, location = "Hyderabad" }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
       {/* Search bar — no border lines, just shadow */}
-      <div className="hero-search-bar" style={{ borderRadius:14,background:"#fff",boxShadow:"0 8px 40px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.1)",display:"flex",alignItems:"center",border:"none",overflow:"hidden" }}>
-        {/* Search icon */}
+      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"none",overflow:"hidden",boxShadow:"0 4px 24px rgba(17,88,166,.14), 0 1px 6px rgba(0,0,0,.06)" }}>
         <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
@@ -2354,7 +2353,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T, location = "Hyderabad" }) {
           onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
           placeholder="Search tests, packages or labs…"
           className="hero-search-input-field"
-          style={{ flex:1,border:"none",outline:"none",padding:"0 12px",height:52,fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
+          style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
           autoComplete="off"
         />
         {q && (
@@ -2364,7 +2363,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T, location = "Hyderabad" }) {
           </button>
         )}
         <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:10,padding:"12px 28px",height:42,flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
+          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
           Search
@@ -3388,23 +3387,45 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(135deg,#040D1F 0%,#071428 50%,#0A1A35 100%)",position:"relative",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",width:"100%",minHeight:0 }}>
-        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"28px 28px" }}/>
-        <div style={{ position:"absolute",top:"-40%",right:"-5%",width:500,height:500,background:"radial-gradient(circle,rgba(37,99,235,.15) 0%,transparent 70%)",pointerEvents:"none" }}/>
-        <div style={{ position:"relative",zIndex:2,width:"100%",padding:isMobile?"32px 16px":"56px 24px",boxSizing:"border-box" }}>
-          <div style={{ maxWidth:680,margin:"0 auto",display:"flex",flexDirection:"column",gap:12 }}>
-            {/* Location bar */}
-            <div style={{ background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.14)",borderRadius:12,display:"flex",alignItems:"center",gap:10,padding:"0 18px",height:52,cursor:"pointer",transition:"background .15s",backdropFilter:"blur(6px)" }}
-              onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.13)"}
-              onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span style={{ fontSize:".92rem",fontWeight:700,color:"#fff",flex:1 }}>Hyderabad</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
+          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+            {/* eyebrow pill */}
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
-            {/* Search bar */}
+
+            {/* headline */}
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+              Book Lab Tests from<br/>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+            </h1>
+
+            {/* sub */}
+            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
+            </p>
+
+            {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
+
+            {/* quick chips */}
+            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
+              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
+                <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+
       </section>
 
 
