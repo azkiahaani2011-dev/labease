@@ -3466,6 +3466,42 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
+        {/* ── decorative background layer ── */}
+        <div aria-hidden="true" style={{ position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:0 }}>
+          {/* dot-grid SVG pattern */}
+          <svg style={{ position:"absolute",inset:0,width:"100%",height:"100%",opacity:.28 }} xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="hero-dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="1.5" fill="#1158A6"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-dots)"/>
+          </svg>
+
+          {/* large blurred orb — top-right */}
+          <div style={{ position:"absolute",top:"-80px",right:"-60px",width:380,height:380,borderRadius:"50%",background:"radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%)",animation:"blobPulse 8s ease-in-out infinite" }}/>
+          {/* medium orb — bottom-left */}
+          <div style={{ position:"absolute",bottom:"-60px",left:"-40px",width:280,height:280,borderRadius:"50%",background:"radial-gradient(circle,rgba(17,88,166,.14) 0%,transparent 70%)",animation:"blobPulse 10s ease-in-out infinite reverse" }}/>
+          {/* small accent orb — center-left */}
+          <div style={{ position:"absolute",top:"30%",left:"8%",width:120,height:120,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,.22) 0%,transparent 70%)",animation:"floatY 6s ease-in-out infinite" }}/>
+
+          {/* thin arc ring — top-left */}
+          <svg style={{ position:"absolute",top:-40,left:-40,opacity:.18,animation:"floatY 9s ease-in-out infinite" }} width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="130" cy="130" r="115" stroke="#1158A6" strokeWidth="1.5" strokeDasharray="8 10"/>
+          </svg>
+          {/* thin arc ring — bottom-right */}
+          <svg style={{ position:"absolute",bottom:-50,right:-30,opacity:.13,animation:"floatY 12s ease-in-out infinite reverse" }} width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="110" cy="110" r="95" stroke="#2563EB" strokeWidth="1.2" strokeDasharray="6 12"/>
+          </svg>
+
+          {/* floating mini circles */}
+          <div style={{ position:"absolute",top:"18%",right:"14%",width:14,height:14,borderRadius:"50%",background:"rgba(17,88,166,.25)",animation:"floatY 5s ease-in-out infinite" }}/>
+          <div style={{ position:"absolute",top:"62%",right:"22%",width:9,height:9,borderRadius:"50%",background:"rgba(37,99,235,.3)",animation:"floatY 7s ease-in-out infinite 1s" }}/>
+          <div style={{ position:"absolute",top:"40%",left:"18%",width:11,height:11,borderRadius:"50%",background:"rgba(17,88,166,.2)",animation:"floatY 6s ease-in-out infinite 2s" }}/>
+          <div style={{ position:"absolute",bottom:"20%",left:"30%",width:7,height:7,borderRadius:"50%",background:"rgba(96,165,250,.4)",animation:"floatY 8s ease-in-out infinite .5s" }}/>
+          <div style={{ position:"absolute",top:"12%",left:"42%",width:10,height:10,borderRadius:"50%",background:"rgba(17,88,166,.18)",animation:"floatY 9s ease-in-out infinite 3s" }}/>
+        </div>
+
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
