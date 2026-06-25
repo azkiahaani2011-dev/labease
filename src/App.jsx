@@ -2397,7 +2397,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:14,padding:"14px 26px",flexShrink:0,fontSize:".9rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",whiteSpace:"nowrap" }}
           onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.45)"; }}
           onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.35)"; }}>
-          🔍 Search
+          Search
         </button>
       </div>
 
