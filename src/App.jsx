@@ -3680,9 +3680,9 @@ export default function App() {
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 4px 0", position:"relative", zIndex:1 }}>
-                <div style={{ width:110,height:110,borderRadius:20,background:s.bg,border:`1.5px solid ${s.accent}20`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12,boxShadow:`0 8px 28px ${s.accent}14`,transition:"transform .2s,box-shadow .2s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.accent}28`; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 28px ${s.accent}14`; }}>
+                <div style={{ marginBottom:12, transition:"transform .2s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; }}>
                   {s.icon}
                 </div>
                 <div style={{ fontSize:".68rem",fontWeight:800,color:s.accent,letterSpacing:".1em",marginBottom:4,textTransform:"uppercase" }}>Step {s.n}</div>
@@ -3778,9 +3778,9 @@ export default function App() {
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#0e479a"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#1158A6"; }}>
+              style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#d97706"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#F59E0B"; }}>
               Book a Test Now
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
