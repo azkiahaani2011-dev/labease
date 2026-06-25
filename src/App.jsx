@@ -3718,7 +3718,7 @@ export default function App() {
       </section>
 
       {/* ── PREMIUM FOOTER ───────────────────────────────────────── */}
-      <footer style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
+      <footer id="footer-section" style={{ background:"#0A0F1E",color:"#94A3B8",fontFamily:"'Manrope',sans-serif" }}>
         {/* Top band */}
         <div style={{ borderBottom:"1px solid rgba(255,255,255,.07)",padding:"36px 0 32px" }}>
           <div className="footer-grid" style={{ maxWidth:1600,margin:"0 auto",padding:"0 24px" }}>
@@ -4330,20 +4330,16 @@ export default function App() {
               {[
                 ["Home",()=>{ navTo("home"); setSideMenu(false); }],
                 ["Tests",()=>{ navTo("labs"); setSideMenu(false); }],
-                ["Labs",()=>{ navTo("labs"); setSideMenu(false); }],
-                ["Health Packages",()=>{ navTo("labs"); setSideMenu(false); }],
-                ["Reports",()=>{ setSideMenu(false); }],
-                ["About Us",()=>{ setSideMenu(false); }],
-                ["Contact Us",()=>{ setSideMenu(false); }],
+                ["Labs",()=>{ navTo("nearme"); setSideMenu(false); }],
+                ["Health Packages",()=>{ setSideMenu(false); if(page==="home"){ setTimeout(()=>document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}),80); } else { navTo("home"); setTimeout(()=>document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}),350); } }],
+                ["Reports",()=>{ setSideMenu(false); navTo("confirm"); }],
+                ["About Us",()=>{ setSideMenu(false); if(page==="home"){ setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),80); } else { navTo("home"); setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),350); } }],
+                ["Contact Us",()=>{ setSideMenu(false); if(page==="home"){ setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),80); } else { navTo("home"); setTimeout(()=>document.getElementById("footer-section")?.scrollIntoView({behavior:"smooth"}),350); } }],
               ].map(([lbl,fn])=>(
                 <button key={lbl} onClick={fn} style={{ display:"block",width:"100%",padding:"13px 20px",background:"none",border:"none",borderBottom:"1px solid #F8FAFC",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",fontWeight:600,color:"#1F2937",textAlign:"left",minHeight:46 }} onMouseEnter={e=>{ e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.color="#1158A6"; }} onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#1F2937"; }}>
                   {lbl}
                 </button>
               ))}
-              <div style={{ padding:"10px 16px",borderTop:"1px solid #E5E7EB",display:"flex",gap:8 }}>
-                <button onClick={()=>{ setSideMenu(false); openAuth("login"); }} style={{ flex:1,background:"transparent",border:"1.5px solid #BFDBFE",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>Log In</button>
-                <button onClick={()=>{ setSideMenu(false); openAuth("signup"); }} style={{ flex:1,background:"#1158A6",border:"none",borderRadius:50,padding:"8px",fontWeight:700,fontSize:".8rem",color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Sign Up</button>
-              </div>
             </div>}
           </div>
         </div>
