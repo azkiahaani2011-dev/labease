@@ -2039,14 +2039,14 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    {/* Lab info card — matching screenshot layout */}
-    <div style={{ ...T.wrap,padding:"16px 12px 0" }}>
-      <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:16,overflow:"hidden",fontFamily:"'Manrope',sans-serif",boxShadow:"0 1px 6px rgba(0,0,0,.06)",marginBottom:20 }}>
+    {/* Lab info section — full width, no card box */}
+    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif",marginBottom:0 }}>
+      <div>
         {/* Full-width logo banner */}
-        <div style={{ height:130,border:"1px solid #E5E7EB",margin:10,borderRadius:10,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
-          <LabLogo lab={lab} size={110} radius={0} banner={true}/>
+        <div style={{ height:110,borderBottom:"1px solid #E5E7EB",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
+          <LabLogo lab={lab} size={80} radius={0} banner={true}/>
         </div>
-        <div style={{ padding:"4px 14px 14px" }}>
+        <div style={{ padding:"12px 16px 14px" }}>
           {/* Name */}
           <div style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",lineHeight:1.25,marginBottom:6,letterSpacing:"-.02em" }}>{lab.name}</div>
           {/* Rating */}
@@ -2100,7 +2100,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    <div style={{ ...T.wrap,padding:"26px 12px" }}>
+    <div style={{ ...T.wrap,padding:"16px 12px" }}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440 }}>
         <svg style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
