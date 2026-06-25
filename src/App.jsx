@@ -44,7 +44,7 @@ const G = () => (
     .hero-stat-card { transition: transform .2s; }
     @media (max-width: 600px) { .hero-stat-card { display: none !important; } }
     @keyframes shimmer  { 0%,100%{opacity:.5} 50%{opacity:1} }
-    @keyframes marquee  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes marquee  { from{transform:translateX(-50%)} to{transform:translateX(0)} }
     @keyframes orb1     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,15px)} }
     @keyframes orb2     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-25px,20px)} 66%{transform:translate(20px,-10px)} }
     @keyframes countIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
@@ -1704,7 +1704,7 @@ const LabsNearMeSection = ({ T, navTo }) => (
     {/* marquee track */}
     <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110, paddingTop:32 }}>
       <style>{`
-        @keyframes marquee-labs { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes marquee-labs { from { transform: translateX(-50%); } to { transform: translateX(0); } }
         .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; align-items:center; cursor:pointer; }
         .marquee-labs-track.paused { animation-play-state: paused; }
         .marquee-lab-logo img { height:64px; max-width:160px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
@@ -3764,30 +3764,30 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"#1158A6",padding:"40px 24px",textAlign:"center" }}>
+      <section style={{ background:"#EBF0FA",padding:"40px 24px",textAlign:"center" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
-          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
+          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(17,88,166,.08)",border:"1px solid rgba(17,88,166,.15)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
             <span style={{ width:6,height:6,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".7rem",fontWeight:700,color:"rgba(255,255,255,.7)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+            <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
           </div>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:900,color:"#fff",marginBottom:12,lineHeight:1.18,letterSpacing:"-.03em" }}>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:900,color:"#0D1117",marginBottom:12,lineHeight:1.18,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
           </h2>
-          <p style={{ color:"rgba(255,255,255,.55)",marginBottom:32,fontSize:".93rem",lineHeight:1.75,maxWidth:420,margin:"0 auto 32px" }}>
+          <p style={{ color:"#374151",marginBottom:32,fontSize:".93rem",lineHeight:1.75,maxWidth:420,margin:"0 auto 32px" }}>
             Transparent pricing · Free doorstep collection · Digital reports in hours. Trusted by 50,000+ patients.
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#0A1628",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#EEF2FF"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; }}>
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#0e479a"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#1158A6"; }}>
               Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#0A1628" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"transparent",color:"rgba(255,255,255,.8)",border:"1.5px solid rgba(255,255,255,.25)",borderRadius:50,padding:"13px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.08)"; e.currentTarget.style.borderColor="rgba(255,255,255,.5)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.25)"; }}>
+              style={{ background:"transparent",color:"#1158A6",border:"1.5px solid rgba(17,88,166,.35)",borderRadius:50,padding:"13px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(17,88,166,.08)"; e.currentTarget.style.borderColor="rgba(17,88,166,.6)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(17,88,166,.35)"; }}>
               View Lab Packages
             </button>
           </div>
