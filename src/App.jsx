@@ -1816,6 +1816,8 @@ function LabCardSkeleton() {
 
 function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs }) {
   const [sortBy,     setSortBy]     = useState("rating");
+  const [sortOpen,   setSortOpen]   = useState(false);
+  const sortRef = React.useRef(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHome, setFilterHome] = useState(false);
   const [filterNabl, setFilterNabl] = useState(false);
@@ -1830,7 +1832,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   }, []);
 
   React.useEffect(() => {
-    const h = e => { if(labSearchRef.current && !labSearchRef.current.contains(e.target)) setLabSugOpen(false); };
+    const h = e => {
+      if(labSearchRef.current && !labSearchRef.current.contains(e.target)) setLabSugOpen(false);
+      if(sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+    };
     document.addEventListener("mousedown",h);
     return ()=>document.removeEventListener("mousedown",h);
   },[]);
@@ -1906,11 +1911,31 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             </div>
           )}
         </div>
-        <button onClick={()=>setSortBy(s=>s==="rating"?"price":s==="price"?"dist":"rating")}
-          title={`Sort by: ${sortBy}`}
-          style={{ width:46,height:46,borderRadius:12,border:"1.5px solid #E5E7EB",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="8" cy="6" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="16" cy="12" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="10" cy="18" r="2" fill="#1158A6" stroke="#1158A6"/></svg>
-        </button>
+        <div ref={sortRef} style={{ position:"relative",flexShrink:0 }}>
+          <button onClick={()=>setSortOpen(o=>!o)}
+            style={{ height:46,borderRadius:12,border:"1.5px solid "+(sortOpen?"#1158A6":"#E5E7EB"),background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:"0 14px",fontFamily:"'Manrope',sans-serif",fontSize:".85rem",fontWeight:700,color:"#1158A6",whiteSpace:"nowrap" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="8" cy="6" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="16" cy="12" r="2" fill="#1158A6" stroke="#1158A6"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="10" cy="18" r="2" fill="#1158A6" stroke="#1158A6"/></svg>
+            Sort
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          {sortOpen && (
+            <div style={{ position:"absolute",top:"calc(100% + 6px)",right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:300,minWidth:180,overflow:"hidden" }}>
+              {[
+                {key:"rating", label:"⭐ Rating (High → Low)"},
+                {key:"price",  label:"💰 Price (Low → High)"},
+                {key:"dist",   label:"📍 Distance (Nearest)"},
+              ].map(opt=>(
+                <button key={opt.key} onClick={()=>{ setSortBy(opt.key); setSortOpen(false); }}
+                  style={{ display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",padding:"11px 16px",background:sortBy===opt.key?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F3F4F6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:sortBy===opt.key?700:500,color:sortBy===opt.key?"#1158A6":"#374151",transition:"background .1s" }}
+                  onMouseEnter={e=>{ if(sortBy!==opt.key) e.currentTarget.style.background="#F9FAFB"; }}
+                  onMouseLeave={e=>{ if(sortBy!==opt.key) e.currentTarget.style.background="none"; }}>
+                  {opt.label}
+                  {sortBy===opt.key && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         </div>
         </div>
         <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
