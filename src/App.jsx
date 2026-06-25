@@ -1948,73 +1948,64 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
             const minPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
             const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
-            const fullAddr = [l.area, l.address, l.city].filter(Boolean).join(", ");
-            const rating = l.rating || 4.5;
-            const fullStars = Math.floor(rating);
-            const halfStar = rating - fullStars >= 0.5;
             return (
-              <div key={l.id} style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",margin:"0 12px 16px",overflow:"hidden",fontFamily:"'Manrope',sans-serif",boxShadow:"0 1px 6px rgba(0,0,0,.06)" }}>
-
-                {/* ── Logo banner ── */}
-                <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:"14px 14px 0 0",overflow:"hidden",height:200,display:"flex",alignItems:"center",justifyContent:"center",margin:12,marginBottom:0,borderRadius:12 }}>
-                  <LabLogo lab={l} size={160} radius={0} banner={true} />
-                </div>
-
-                <div style={{ padding:"16px 16px 18px" }}>
-                  {/* ── Name ── */}
-                  <div style={{ fontWeight:900,fontSize:"1.25rem",color:"#0D1117",lineHeight:1.25,marginBottom:8,letterSpacing:"-.02em" }}>{l.name}</div>
-
-                  {/* ── Rating row ── */}
-                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                    <span style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
-                    <div style={{ display:"flex",gap:2 }}>
-                      {Array.from({length:5},(_,i)=>(
-                        <svg key={i} width="18" height="18" viewBox="0 0 24 24">
-                          {i < fullStars
-                            ? <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1"/>
-                            : i === fullStars && halfStar
-                              ? <><defs><linearGradient id={`hg${l.id}`}><stop offset="50%" stopColor="#F59E0B"/><stop offset="50%" stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#hg${l.id})`} stroke="#F59E0B" strokeWidth="1"/></>
-                              : <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="#D1D5DB" strokeWidth="1"/>
-                          }
-                        </svg>
-                      ))}
-                    </div>
-                    <span style={{ fontWeight:700,fontSize:".92rem",color:"#1158A6" }}>{(l.reviews||0).toLocaleString()} Reviews</span>
-                  </div>
-
-                  {/* ── Address ── */}
-                  <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.5,marginBottom:14 }}>{fullAddr||l.city||"—"}</div>
-
-                  <div style={{ height:1,background:"#F1F5F9",marginBottom:14 }}/>
-
-                  {/* ── Timing + Tests grid ── */}
-                  <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:16 }}>
-                    <div>
-                      <div style={{ fontSize:".78rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Timing</div>
-                      <div style={{ fontSize:".92rem",fontWeight:700,color:"#0D1117" }}>{l.timing||"6AM – 10PM"}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize:".78rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Tests</div>
-                      <div style={{ fontSize:".92rem",fontWeight:700,color:"#0D1117" }}>{l.tests.length}</div>
+              <div key={l.id} style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
+                <div style={{ padding:"20px 18px 18px" }}>
+                  <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
+                    <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
+                    <div style={{ flex:1,minWidth:0 }}>
+                      <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
+                      <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5 }}>Diagnostic Lab</div>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A",marginBottom:5 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+                        {l.tests.length} Tests Available
+                      </div>
+                      <div style={{ display:"flex",alignItems:"center",gap:4,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",width:"fit-content" }}>
+                        <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
+                        <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
+                        <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
+                      </div>
                     </div>
                   </div>
-
-                  {/* ── Action buttons ── */}
+                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
+                  <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
+                    <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
+                    <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
+                    <span style={{ color:"#6B7280" }}>{l.city}</span>
+                  </div>
+                  <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
+                    ~₹{minPrice.toLocaleString()}
+                    <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
+                  </div>
+                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
+                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
                   <div style={{ display:"flex",gap:10 }}>
-                    <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                      style={{ flex:1,background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
-                      onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-                      onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
-                    {selectedTest && matchTest
-                      ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
-                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                      : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-                          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s" }}
-                          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                    }
+                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {l.timing||"6AM – 10PM"}
+                      </div>
+                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                        style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
+                        onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
+                        onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+                    </div>
+                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
+                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
+                      </div>
+                      {selectedTest && matchTest
+                        ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2036,30 +2027,75 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
   <div style={{ minHeight:"80vh" }}>
-    {/* sticky header */}
+    {/* sticky back bar */}
     <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",position:"sticky",top:102,zIndex:50 }}>
-      <div style={{ ...T.wrap,padding:"10px 12px" }}>
-        <div style={{ display:"flex",gap:12,alignItems:"center",marginBottom:8 }}>
-          <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <span style={{ fontSize:".78rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
+      <div style={{ ...T.wrap,padding:"10px 12px",display:"flex",gap:10,alignItems:"center" }}>
+        <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
+        <span style={{ color:"#D1D5DB",margin:"0 4px" }}>·</span>
+        <span style={{ fontSize:".84rem",fontWeight:800,color:"#0D1117",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{lab.name}</span>
+      </div>
+    </div>
+
+    {/* Lab info card — matching screenshot layout */}
+    <div style={{ ...T.wrap,padding:"16px 12px 0" }}>
+      <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:16,overflow:"hidden",fontFamily:"'Manrope',sans-serif",boxShadow:"0 1px 6px rgba(0,0,0,.06)",marginBottom:20 }}>
+        {/* Full-width logo banner */}
+        <div style={{ height:200,border:"1px solid #E5E7EB",margin:12,borderRadius:12,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff" }}>
+          <LabLogo lab={lab} size={160} radius={0} banner={true}/>
         </div>
-        <div style={{ display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap" }}>
-          <LabLogo lab={lab} size={72} radius={14} />
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4 }}>
-              <h1 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.35rem",color:"var(--ink)",letterSpacing:"-.03em" }}>{lab.name}</h1>
-              {lab.nabl && <Pill>✓ NABL</Pill>}
+        <div style={{ padding:"4px 16px 18px" }}>
+          {/* Name */}
+          <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#0D1117",lineHeight:1.25,marginBottom:8,letterSpacing:"-.02em" }}>{lab.name}</div>
+          {/* Rating */}
+          {(()=>{
+            const rating = lab.rating||4.5;
+            const full = Math.floor(rating);
+            const half = rating - full >= 0.5;
+            return (
+              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
+                <span style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                <div style={{ display:"flex",gap:2 }}>
+                  {Array.from({length:5},(_,i)=>(
+                    <svg key={i} width="18" height="18" viewBox="0 0 24 24">
+                      {i < full
+                        ? <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1"/>
+                        : i === full && half
+                          ? <><defs><linearGradient id="hgd"><stop offset="50%" stopColor="#F59E0B"/><stop offset="50%" stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="url(#hgd)" stroke="#F59E0B" strokeWidth="1"/></>
+                          : <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="#D1D5DB" strokeWidth="1"/>
+                      }
+                    </svg>
+                  ))}
+                </div>
+                <span style={{ fontWeight:700,fontSize:".92rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
+              </div>
+            );
+          })()}
+          {/* Address */}
+          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.5,marginBottom:14 }}>
+            {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
+          </div>
+          <div style={{ height:1,background:"#F1F5F9",marginBottom:14 }}/>
+          {/* Timing + Tests grid */}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:0 }}>
+            <div>
+              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Timing</div>
+              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.timing||"6AM – 10PM"}</div>
+            </div>
+            <div>
+              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Tests</div>
+              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.tests.length}</div>
+            </div>
+          </div>
+          {/* Badges */}
+          {(lab.nabl || lab.homeCollection) && (
+            <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap" }}>
+              {lab.nabl && <Pill>✓ NABL Accredited</Pill>}
               {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
             </div>
-            <div style={{ display:"flex",gap:6,alignItems:"center",marginBottom:3 }}>
-              <Stars r={lab.rating}/>
-              <b style={{ fontSize:".84rem" }}>{lab.rating}</b>
-              <span style={{ color:"#9CA3AF",fontSize:".75rem" }}>({lab.reviews.toLocaleString()} reviews)</span>
-            </div>
-            <div style={{ color:"var(--muted)",fontSize:".79rem" }}>📍 {lab.address} · {lab.distance} &nbsp;|&nbsp; 🕐 {lab.timing}</div>
-          </div>
+          )}
         </div>
       </div>
     </div>
