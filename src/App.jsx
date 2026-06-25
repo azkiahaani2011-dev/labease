@@ -2365,33 +2365,39 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
-      {/* Search bar — no border lines, just shadow */}
-      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"none",overflow:"hidden",boxShadow:"0 4px 24px rgba(17,88,166,.14), 0 1px 6px rgba(0,0,0,.06)" }}>
-        <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
-          <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
-          <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
-        </svg>
-        <input
-          value={q}
-          onChange={e=>{ setQ(e.target.value); setOpen(true); }}
-          onFocus={()=>setOpen(true)}
-          onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
-          placeholder="Search tests, packages or labs…"
-          className="hero-search-input-field"
-          style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
-          autoComplete="off"
-        />
-        {q && (
-          <button onClick={()=>{ setQ(""); setOpen(false); }}
-            style={{ background:"none",border:"none",cursor:"pointer",padding:"0 8px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
-            ✕
-          </button>
-        )}
+      {/* Search bar + separate button row */}
+      <div className="hero-search-bar" style={{ display:"flex",gap:10,alignItems:"center" }}>
+        {/* Input box */}
+        <div style={{ flex:1,background:"#fff",borderRadius:14,display:"flex",alignItems:"center",border:"2px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s" }}
+          onFocusCapture={e=>{ e.currentTarget.style.border="2px solid #1158A6"; e.currentTarget.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; }}
+          onBlurCapture={e=>{ e.currentTarget.style.border="2px solid #E5E7EB"; e.currentTarget.style.boxShadow="0 2px 12px rgba(17,88,166,.08)"; }}>
+          <svg style={{ flexShrink:0,margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
+            <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
+            <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+          <input
+            value={q}
+            onChange={e=>{ setQ(e.target.value); setOpen(true); }}
+            onFocus={()=>setOpen(true)}
+            onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
+            placeholder="Search tests, packages or labs…"
+            className="hero-search-input-field"
+            style={{ flex:1,border:"none",outline:"none",padding:"14px 8px 14px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
+            autoComplete="off"
+          />
+          {q && (
+            <button onClick={()=>{ setQ(""); setOpen(false); }}
+              style={{ background:"none",border:"none",cursor:"pointer",padding:"0 12px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
+              ✕
+            </button>
+          )}
+        </div>
+        {/* Separate Search button */}
         <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
-          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
-          Search
+          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:14,padding:"14px 26px",flexShrink:0,fontSize:".9rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",whiteSpace:"nowrap" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.45)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.35)"; }}>
+          🔍 Search
         </button>
       </div>
 
