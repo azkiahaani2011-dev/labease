@@ -1757,7 +1757,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
       onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
       {/* top colour strip / logo */}
       {l.logoBase64
-        ? <div style={{ height:56,background:"#F5F7FF",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ maxHeight:44,maxWidth:120,objectFit:"contain" }}/></div>
+        ? <div style={{ height:90,overflow:"hidden",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"cover" }}/></div>
         : <div style={{ height:8,background:"#E5E7EB" }}/>
       }
       <div style={{ padding:22 }}>
