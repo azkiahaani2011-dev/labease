@@ -2283,7 +2283,7 @@ const SEARCH_INDEX = (() => {
   return items;
 })();
 
-function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
+function HeroSearch({ q, setQ, setLabQ, navTo, T, location = "Hyderabad" }) {
   const [open, setOpen] = React.useState(false);
   const wrapRef = React.useRef(null);
 
@@ -2341,8 +2341,15 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
       {/* Search bar — no border lines, just shadow */}
-      <div className="hero-search-bar" style={{ background:"#fff",borderRadius:50,display:"flex",alignItems:"center",border:"none",overflow:"hidden",boxShadow:"0 4px 24px rgba(17,88,166,.14), 0 1px 6px rgba(0,0,0,.06)" }}>
-        <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 18px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <div className="hero-search-bar" style={{ borderRadius:14,background:"#fff",boxShadow:"0 8px 40px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.1)",display:"flex",alignItems:"center",border:"none",overflow:"hidden" }}>
+        {/* Location pill */}
+        <div style={{ padding:"0 16px",fontSize:".85rem",fontWeight:700,color:"#0A1628",display:"flex",alignItems:"center",gap:6,cursor:"pointer",height:52,flexShrink:0,whiteSpace:"nowrap" }}>
+          📍 {location} <span style={{ fontSize:".7rem" }}>▾</span>
+        </div>
+        {/* Divider */}
+        <div style={{ width:1,height:28,background:"#E5E7EB",flexShrink:0,margin:"0 2px" }}/>
+        {/* Search icon */}
+        <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 14px" }} width="18" height="18" viewBox="0 0 20 20" fill="none">
           <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
           <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
         </svg>
@@ -2353,7 +2360,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
           placeholder="Search tests, packages or labs…"
           className="hero-search-input-field"
-          style={{ flex:1,border:"none",outline:"none",padding:"15px 8px 15px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
+          style={{ flex:1,border:"none",outline:"none",padding:"0 12px",height:52,fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
           autoComplete="off"
         />
         {q && (
@@ -2363,7 +2370,7 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
           </button>
         )}
         <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:50,padding:"11px 28px",flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
+          style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:10,padding:"12px 28px",height:42,flexShrink:0,fontSize:".86rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s" }}
           onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
           onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
           Search
@@ -3387,45 +3394,60 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", width:"100%" }}>
+      <section className="hero-section" style={{ background:"linear-gradient(135deg,#040D1F 0%,#071428 45%,#0A1A35 100%)",minHeight:420,position:"relative",overflow:"hidden",display:"flex",alignItems:"center",width:"100%" }}>
+        {/* Dot grid overlay */}
+        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle, rgba(255,255,255,.045) 1px, transparent 1px)",backgroundSize:"28px 28px",zIndex:1 }}/>
+        {/* Glow blobs */}
+        <div style={{ position:"absolute",top:"-30%",left:"60%",width:480,height:480,background:"radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%)",zIndex:1,pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",bottom:"-20%",left:"-5%",width:360,height:360,background:"radial-gradient(circle,rgba(96,165,250,.1) 0%,transparent 70%)",zIndex:1,pointerEvents:"none" }}/>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
-            {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
-            </div>
-
-            {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
-              Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
-            </h1>
-
-            {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
-              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
+        <div style={{ position:"relative",zIndex:2,paddingTop:isMobile?48:80,paddingBottom:isMobile?48:80,width:"100%",boxSizing:"border-box" }}>
+          <div style={T.wrap}>
+            {/* Eyebrow */}
+            <p style={{ textAlign:"center",fontSize:".65rem",fontWeight:700,color:"rgba(255,255,255,.45)",letterSpacing:".18em",textTransform:"uppercase",marginBottom:24 }}>
+              NABL CERTIFIED &nbsp;·&nbsp; FREE HOME COLLECTION &nbsp;·&nbsp; REPORTS IN 4 HRS
             </p>
 
-            {/* search bar */}
-            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
+            {/* Main heading */}
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2.2rem,5vw,3.4rem)",fontWeight:900,color:"#fff",lineHeight:1.1,marginBottom:2,letterSpacing:"-.04em",textAlign:"center" }}>
+              Book Your Lab Test
+            </h1>
+            <p style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2.2rem,5vw,3.4rem)",fontWeight:900,background:"linear-gradient(90deg,#60A5FA 0%,#93C5FD 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",lineHeight:1.15,marginBottom:32,letterSpacing:"-.04em",textAlign:"center" }}>
+              at the Best Price
+            </p>
 
-            {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+            {/* Search bar */}
+            <div style={{ maxWidth:640,margin:"0 auto 16px",width:"100%",boxSizing:"border-box" }}>
+              <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T} location="Hyderabad"/>
+            </div>
+
+            {/* Popular chips */}
+            <div style={{ display:"flex",gap:8,marginTop:16,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
+              <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.45)",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+                  style={{ background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.18)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.22)"}
+                  onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.1)"}>
                   {t}
                 </button>
               ))}
             </div>
+
+            {/* Stats row */}
+            <div style={{ marginTop:32,paddingTop:24,borderTop:"1px solid rgba(255,255,255,.1)",display:"flex",justifyContent:"center",alignItems:"center",flexWrap:"wrap",gap:0 }}>
+              {[["6+","NABL Labs"],["500+","Tests Available"],["₹199","Starting Price"],["Free","Home Collection"]].map(([num,lbl],i)=>(
+                <div key={i} style={{ display:"flex",alignItems:"center" }}>
+                  <div style={{ textAlign:"center",padding:isMobile?"0 14px":"0 28px" }}>
+                    <div style={{ fontSize:"1.25rem",fontWeight:800,color:"#fff",lineHeight:1 }}>{num}</div>
+                    <div style={{ fontSize:".6rem",color:"rgba(255,255,255,.45)",letterSpacing:".1em",textTransform:"uppercase",marginTop:4 }}>{lbl}</div>
+                  </div>
+                  {i<3&&<div style={{ width:1,height:32,background:"rgba(255,255,255,.15)",flexShrink:0 }}/>}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
       </section>
 
 
