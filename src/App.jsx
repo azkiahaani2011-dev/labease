@@ -2124,42 +2124,38 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp);
           return (
-            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,padding:"14px 16px",marginBottom:10,fontFamily:"'Manrope',sans-serif" }}>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,padding:"12px 14px",marginBottom:8,fontFamily:"'Manrope',sans-serif" }}>
               {/* Top row: name + price */}
-              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:5 }}>
-                <div style={{ fontWeight:800,color:"#0D1117",fontSize:".97rem",lineHeight:1.3,flex:1 }}>{t.name}</div>
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:4 }}>
+                <div style={{ fontWeight:800,color:"#0D1117",fontSize:".9rem",lineHeight:1.3,flex:1 }}>{t.name}</div>
                 <div style={{ flexShrink:0,textAlign:"right" }}>
-                  <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.05rem",letterSpacing:"-.01em" }}>₹{t.price}</div>
+                  <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1rem" }}>₹{t.price}</div>
                   <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:1 }}>
-                    <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".73rem" }}>₹{t.mrp}</span>
-                    <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".6rem",fontWeight:700 }}>{d}% off</span>
+                    <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".7rem" }}>₹{t.mrp}</span>
+                    <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 4px",fontSize:".58rem",fontWeight:700 }}>{d}% off</span>
                   </div>
                 </div>
               </div>
               {/* Category chip */}
-              <div style={{ marginBottom:10 }}>
-                <span style={{ background:`${lab.color}18`,color:lab.color,borderRadius:20,padding:"2px 9px",fontSize:".68rem",fontWeight:700 }}>{t.cat}</span>
+              <div style={{ marginBottom:8 }}>
+                <span style={{ background:`${lab.color}18`,color:lab.color,borderRadius:20,padding:"2px 8px",fontSize:".65rem",fontWeight:700 }}>{t.cat}</span>
               </div>
               {/* 2-column info — plain, no box */}
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"2px 0",marginBottom:8 }}>
-                <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Sample Type</div>
-                <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>TAT</div>
-                <div style={{ fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
-                <div style={{ fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>{t.time||"24 - 48 hours"}</div>
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1px 0",marginBottom:10 }}>
+                <div style={{ fontSize:".7rem",color:"#9CA3AF" }}>Sample Type</div>
+                <div style={{ fontSize:".7rem",color:"#9CA3AF" }}>TAT</div>
+                <div style={{ fontSize:".78rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
+                <div style={{ fontSize:".78rem",fontWeight:700,color:"#0D1117" }}>{t.time||"24 - 48 hours"}</div>
               </div>
-              {/* View More */}
-              <div style={{ marginBottom:10 }}>
-                <span style={{ color:"#1158A6",fontSize:".78rem",fontWeight:600,cursor:"pointer",textDecoration:"underline" }}>View More</span>
-              </div>
-              {/* Add / Added button — left aligned */}
+              {/* Add / Added button — left aligned, blue */}
               {added ? (
-                <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"9px 22px",fontWeight:800,cursor:"pointer",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"7px 18px",fontWeight:700,cursor:"pointer",fontSize:".78rem",fontFamily:"'Manrope',sans-serif" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                   Added
                 </button>
               ) : (
-                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#16A34A",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,cursor:"pointer",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"7px 18px",fontWeight:700,cursor:"pointer",fontSize:".78rem",fontFamily:"'Manrope',sans-serif" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                   Add To Cart
                 </button>
               )}
