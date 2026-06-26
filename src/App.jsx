@@ -3481,23 +3481,22 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?24:44,paddingBottom:isMobile?24:44,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?20:40 }}>
+          <div style={{ maxWidth:isMobile?"100%":600,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?20:0,paddingRight:isMobile?20:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"6px 18px 6px 8px",marginBottom:16,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box",boxShadow:"0 2px 12px rgba(17,88,166,.1)" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".65rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".78rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2rem,4.2vw,3.1rem)",color:"#0A1628",lineHeight:1.14,marginBottom:16,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p style={{ color:"#4A5568",fontSize:"1rem",lineHeight:1.8,marginBottom:22,maxWidth:480,margin:"0 auto 22px",fontWeight:500 }}>
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -3506,14 +3505,24 @@ export default function App() {
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+              <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"6px 16px",fontSize:".76rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",boxShadow:"0 1px 4px rgba(17,88,166,.08)" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
                 </button>
+              ))}
+            </div>
+
+            {/* trust stats */}
+            <div style={{ display:"flex",gap:isMobile?16:28,justifyContent:"center",marginTop:24,flexWrap:"wrap" }}>
+              {[["50,000+","Patients Served"],["200+","Partner Labs"],["6 Hrs","Fastest Report"]].map(([val,lbl])=>(
+                <div key={lbl} style={{ textAlign:"center" }}>
+                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.1rem":"1.3rem",color:"#1158A6",lineHeight:1.1 }}>{val}</div>
+                  <div style={{ fontSize:".68rem",color:"#64748B",fontWeight:600,marginTop:2 }}>{lbl}</div>
+                </div>
               ))}
             </div>
           </div>
@@ -3671,7 +3680,7 @@ export default function App() {
           </div>
 
           {/* 4-step row — 2 per row, no gap */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:20, position:"relative" }}>
 
             {[
               {
@@ -3726,12 +3735,12 @@ export default function App() {
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
-              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#EEF4FF",ic:"#1158A6"},
-              {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FFF7ED",ic:"#EA580C"},
-              {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FEF2F2",ic:"#DC2626"},
-              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#EFF6FF",ic:"#1158A6"},
-              {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#FDF4FF",ic:"#9333EA"},
-              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#ECFDF5",ic:"#059669"},
+              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
+              {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FED7AA",ic:"#EA580C"},
+              {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
+              {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#BFDBFE",ic:"#1158A6"},
+              {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#E9D5FF",ic:"#9333EA"},
+              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#A7F3D0",ic:"#059669"},
             ].map(w=>(
               <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
@@ -3780,30 +3789,33 @@ export default function App() {
       </section>
 
       {/* ── CTA BANNER ────────────────────────────────────────────── */}
-      <section style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"40px 24px",textAlign:"center" }}>
-        <div style={{ maxWidth:560,margin:"0 auto" }}>
-          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:50,padding:"5px 16px",marginBottom:20 }}>
-            <span style={{ width:6,height:6,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".7rem",fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+      <section style={{ background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"48px 24px",textAlign:"center" }}>
+        <div style={{ maxWidth:580,margin:"0 auto" }}>
+          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.15)",borderRadius:50,padding:"6px 18px",marginBottom:22 }}>
+            <span style={{ width:7,height:7,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
+            <span style={{ fontSize:".72rem",fontWeight:700,color:"rgba(255,255,255,.9)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
           </div>
-          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:900,color:"#fff",marginBottom:12,lineHeight:1.18,letterSpacing:"-.03em" }}>
+          <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.9rem,4vw,2.7rem)",fontWeight:900,color:"#fff",marginBottom:14,lineHeight:1.15,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
           </h2>
-          <p style={{ color:"rgba(255,255,255,.6)",marginBottom:32,fontSize:".93rem",lineHeight:1.75,maxWidth:420,margin:"0 auto 32px" }}>
-            Transparent pricing · Free doorstep collection · Digital reports in hours. Trusted by 50,000+ patients.
+          <p style={{ color:"rgba(255,255,255,.72)",marginBottom:12,fontSize:".95rem",lineHeight:1.78,maxWidth:440,margin:"0 auto 12px" }}>
+            Transparent pricing · Free doorstep collection · Digital reports in hours.
+          </p>
+          <p style={{ color:"rgba(255,255,255,.9)",fontWeight:800,fontSize:"1.05rem",marginBottom:32 }}>
+            Trusted by <span style={{ color:"#FCD34D" }}>50,000+</span> patients across India
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#fff",color:"#0F2D6B",border:"none",borderRadius:50,padding:"13px 34px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#EEF2FF"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; }}>
+              style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(245,158,11,.4)" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#d97706"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#F59E0B"; }}>
               Book a Test Now
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#0F2D6B" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"transparent",color:"rgba(255,255,255,.85)",border:"1.5px solid rgba(255,255,255,.3)",borderRadius:50,padding:"13px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".9rem",transition:"all .2s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.borderColor="rgba(255,255,255,.55)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.3)"; }}>
+              style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.4)",borderRadius:50,padding:"14px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.borderColor="rgba(255,255,255,.65)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="rgba(255,255,255,.4)"; }}>
               View Lab Packages
             </button>
           </div>
@@ -3996,8 +4008,8 @@ export default function App() {
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".83rem",marginBottom:4 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#1158A6",fontSize:".83rem",marginBottom:10,fontWeight:700 }}>
-                    <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#16A34A",fontSize:".83rem",marginBottom:10,fontWeight:700,background:"#F0FDF4",borderRadius:8,padding:"6px 10px" }}>
+                    <span>🎉 You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1.1rem",marginBottom:20 }}>
                     <span>Total</span><span style={{ color:"var(--ink)",fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",letterSpacing:"-.03em" }}>₹{total.toLocaleString()}</span>
@@ -4439,10 +4451,13 @@ export default function App() {
         </div>
       </nav>
       {/* ── Sticky trust bar ── */}
-      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:38,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
-        <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>NABL Accredited Labs</span>
-        <div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 10px",flexShrink:0 }}/>
-        <span style={{ color:"#fff",fontSize:".58rem",fontWeight:700,letterSpacing:".2em",textTransform:"uppercase",opacity:.9,whiteSpace:"nowrap" }}>Free Home Sample Collection</span>
+      <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
+        {[["✓ NABL Accredited Labs"],["✓ Free Home Collection"],["✓ Reports in 6 Hours"]].map(([txt],i,arr)=>(
+          <React.Fragment key={txt}>
+            <span style={{ color:"#fff",fontSize:".68rem",fontWeight:700,letterSpacing:".08em",opacity:1,whiteSpace:"nowrap" }}>{txt}</span>
+            {i<arr.length-1&&<div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 12px",flexShrink:0 }}/>}
+          </React.Fragment>
+        ))}
       </div>
       <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
 
