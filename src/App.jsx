@@ -2018,6 +2018,93 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 };
 
 
+const TEST_SUBTITLES = {
+  "CBC":"Complete Blood Count – RBC, WBC, Platelets & Hemoglobin",
+  "Complete Blood Count":"Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin",
+  "Complete Blood Count (CBC)":"Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin",
+  "Hemoglobin":"Hemoglobin (Hb) – Anemia & Oxygen Carrying Capacity",
+  "LFT":"Liver Function Test – SGOT, SGPT, Bilirubin & Alkaline Phosphatase",
+  "Liver Function Test":"Liver Function Test (LFT) – SGOT, SGPT, Bilirubin & Alkaline Phosphatase",
+  "Liver Function Test (LFT)":"Liver Function Test (LFT) – SGOT, SGPT, Bilirubin & Alkaline Phosphatase",
+  "KFT":"Kidney Function Test – Creatinine, Urea, Uric Acid & Electrolytes",
+  "Kidney Function Test":"Kidney Function Test (KFT) – Creatinine, Urea, Uric Acid & Electrolytes",
+  "Kidney Function Test (KFT)":"Kidney Function Test (KFT) – Creatinine, Urea, Uric Acid & Electrolytes",
+  "Thyroid Profile":"Thyroid Profile – Total T3, T4 & Thyroid Stimulating Hormone (TSH)",
+  "Thyroid Profile Total":"Thyroid Profile Total – T3, T4 & TSH",
+  "TSH":"Thyroid Stimulating Hormone (TSH) – Thyroid Function Screening",
+  "T3 T4 TSH":"Thyroid Profile – Free T3, Free T4 & TSH",
+  "Lipid Profile":"Lipid Profile – Total Cholesterol, HDL, LDL, VLDL & Triglycerides",
+  "Cholesterol":"Total Cholesterol – Cardiovascular Risk Assessment",
+  "Blood Sugar Fasting":"Fasting Blood Glucose (FBG) – Diabetes Screening",
+  "Blood Sugar PP":"Post-Prandial Blood Glucose (PPBS) – Post-Meal Diabetes Check",
+  "Blood Sugar Random":"Random Blood Sugar (RBS) – Spot Glucose Measurement",
+  "HbA1c":"Glycated Hemoglobin (HbA1c) – 3-Month Average Blood Sugar",
+  "Vitamin D":"Vitamin D (25-Hydroxy) – Bone Health & Immunity Panel",
+  "Vitamin D3":"Vitamin D3 (Cholecalciferol) – Bone Density & Immunity",
+  "Vitamin B12":"Vitamin B12 (Cobalamin) – Nerve & Red Blood Cell Health",
+  "Iron Studies":"Iron Studies – Serum Iron, TIBC & Ferritin",
+  "Ferritin":"Serum Ferritin – Iron Storage & Deficiency Screening",
+  "Urine Routine":"Urine Routine & Microscopy – Kidney & Bladder Health Panel",
+  "Urine Analysis":"Urinalysis – Physical, Chemical & Microscopic Examination",
+  "HBsAg":"Hepatitis B Surface Antigen (HBsAg) – Hepatitis B Screening",
+  "HIV":"HIV 1 & 2 Antibody Test – Retroviral Infection Screening",
+  "Dengue NS1":"Dengue NS1 Antigen – Early Dengue Fever Detection",
+  "Malaria":"Malaria Antigen Test – P. vivax & P. falciparum Detection",
+  "Typhoid":"Widal Test / Typhoid Antibody – Typhoid Fever Screening",
+  "CRP":"C-Reactive Protein (CRP) – Inflammation & Infection Marker",
+  "ESR":"Erythrocyte Sedimentation Rate (ESR) – Inflammation Screening",
+  "Calcium":"Serum Calcium – Bone, Nerve & Muscle Function Panel",
+  "Phosphorus":"Serum Phosphorus – Bone Metabolism & Kidney Function",
+  "Uric Acid":"Serum Uric Acid – Gout & Kidney Stone Risk Assessment",
+  "Creatinine":"Serum Creatinine – Kidney Function & Filtration Rate",
+  "Blood Urea":"Blood Urea Nitrogen (BUN) – Kidney Waste Filtration Check",
+  "SGOT":"SGOT (AST) – Liver & Heart Muscle Enzyme Level",
+  "SGPT":"SGPT (ALT) – Liver Cell Damage & Hepatitis Marker",
+  "Bilirubin Total":"Bilirubin Total – Liver Function & Jaundice Screening",
+  "Prolactin":"Serum Prolactin – Hormonal & Fertility Assessment",
+  "FSH":"Follicle Stimulating Hormone (FSH) – Fertility Panel",
+  "LH":"Luteinizing Hormone (LH) – Ovulation & Hormone Balance",
+  "Testosterone":"Serum Testosterone – Male Hormonal Health Panel",
+  "PSA":"Prostate Specific Antigen (PSA) – Prostate Cancer Screening",
+  "CA 125":"Cancer Antigen 125 (CA-125) – Ovarian Cancer Marker",
+  "CEA":"Carcinoembryonic Antigen (CEA) – Colorectal Cancer Marker",
+  "AFP":"Alpha Fetoprotein (AFP) – Liver & Testicular Cancer Marker",
+  "Prothrombin Time":"Prothrombin Time (PT/INR) – Blood Clotting Function Test",
+  "APTT":"Activated Partial Thromboplastin Time – Clotting Disorder Screen",
+  "Platelet Count":"Platelet Count – Bleeding & Clotting Disorder Screening",
+  "Dengue":"Dengue Fever Panel – NS1 Antigen, IgM & IgG Antibodies",
+  "Stool Routine":"Stool Routine & Microscopy – Gut Infection & Parasite Screen",
+  "Throat Swab":"Throat Swab Culture – Bacterial Infection & Sensitivity",
+  "Sputum AFB":"Sputum AFB Smear – Tuberculosis (TB) Detection",
+  "ECG":"Electrocardiogram (ECG) – Heart Rhythm & Electrical Activity",
+  "Echo":"Echocardiogram – Heart Structure & Function Assessment",
+  "Chest X-Ray":"Chest X-Ray – Lung, Heart & Rib Cage Imaging",
+  "Ultrasound Abdomen":"Ultrasound Abdomen – Liver, Kidney & Abdominal Organ Scan",
+  "Basic Health Checkup":"Basic Health Checkup – CBC, LFT, KFT, Blood Sugar & Lipid Profile",
+  "Comprehensive Health Checkup":"Comprehensive Health Checkup – Full Body Organ Function Panel",
+  "Aarogyam Basic":"Aarogyam Basic – 38 Wellness Parameters for Complete Body Health",
+  "Aarogyam 1.3":"Aarogyam 1.3 – 72 Tests Including Vitamins, Hormones & Organ Function",
+  "Full Body Checkup":"Full Body Checkup – 80+ Parameters Covering All Major Organ Systems",
+  "Women Health Checkup":"Women's Health Checkup – Hormones, Thyroid, Vitamins & Blood Panel",
+  "Men Health Checkup":"Men's Health Checkup – Testosterone, PSA, Heart & Organ Function",
+  "Senior Citizen Checkup":"Senior Citizen Checkup – Bones, Heart, Kidney, Thyroid & Diabetes Panel",
+  "Diabetes Package":"Diabetes Care Package – HbA1c, FBG, PPBS, Kidney & Lipid Profile",
+  "Heart Package":"Cardiac Risk Package – Lipid Profile, ECG, CRP & Homocysteine",
+  "Arthritis Package":"Arthritis Panel – RA Factor, CRP, ESR, Uric Acid & Calcium",
+  "PCOD Package":"PCOD / PCOS Hormonal Panel – LH, FSH, Testosterone & Insulin",
+  "Anemia Package":"Anemia Profile – CBC, Iron Studies, Ferritin, B12 & Folate",
+};
+function getTestSubtitle(name) {
+  if (!name) return "";
+  if (TEST_SUBTITLES[name]) return TEST_SUBTITLES[name];
+  // fuzzy: check if any key is contained in the name
+  const lower = name.toLowerCase();
+  for (const [key, val] of Object.entries(TEST_SUBTITLES)) {
+    if (lower.includes(key.toLowerCase()) && key.length > 4) return val;
+  }
+  return name;
+}
+
 function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen }) {
   if (!lab) return null;
   const cats = ["All",...new Set(lab.tests.map(t=>t.cat))];
@@ -2122,12 +2209,15 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
         ) : visibleTests.map(t=>{
-          const added=has(t.id); const d=pct(t.price,t.mrp);
+          const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=getTestSubtitle(t.name);
           return (
             <div key={t.id} style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"16px 0",fontFamily:"'Manrope',sans-serif" }}>
               {/* Top row: name + price */}
-              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:10 }}>
-                <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,flex:1,textAlign:"left" }}>{t.name}</div>
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:6 }}>
+                <div style={{ flex:1,textAlign:"left" }}>
+                  <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,marginBottom:5 }}>{t.name}</div>
+                  <span style={{ display:"inline-block",background:"#F1F5F9",color:"#1E3A6E",borderRadius:8,padding:"3px 10px",fontSize:".72rem",fontWeight:700,lineHeight:1.4 }}>{subtitle}</span>
+                </div>
                 <div style={{ flexShrink:0,textAlign:"right" }}>
                   <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.15rem" }}>₹{t.price}</div>
                   <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
