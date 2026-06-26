@@ -3881,11 +3881,11 @@ export default function App() {
           </p>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
-              style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(245,158,11,.4)" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#d97706"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#F59E0B"; }}>
+              style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(0,0,0,.15)" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.background="#f0f4ff"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; }}>
               Book a Test Now
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
             <button onClick={()=>navTo("labs")} className="btn-anim"
               style={{ background:"transparent",color:"#fff",border:"1.5px solid rgba(255,255,255,.4)",borderRadius:50,padding:"14px 30px",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s" }}
@@ -4527,7 +4527,7 @@ export default function App() {
       </nav>
       {/* ── Sticky trust bar ── */}
       <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
-        {[["✓ NABL Accredited Labs"],["✓ Free Home Collection"],["✓ Reports in 6 Hours"]].map(([txt],i,arr)=>(
+        {[["NABL Accredited Labs"],["Free Home Collection"],["Reports in 6 Hours"]].map(([txt],i,arr)=>(
           <React.Fragment key={txt}>
             <span style={{ color:"#fff",fontSize:".68rem",fontWeight:700,letterSpacing:".08em",opacity:1,whiteSpace:"nowrap" }}>{txt}</span>
             {i<arr.length-1&&<div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 12px",flexShrink:0 }}/>}
