@@ -2026,7 +2026,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   React.useEffect(()=>{ setShowAllTests(false); }, [catF, testQ]);
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
-  <div style={{ minHeight:"80vh" }}>
+  <div style={{ minHeight:"80vh",background:"#fff" }}>
     {/* Lab info section — includes back button */}
     <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
       <div>
@@ -2116,7 +2116,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
 
       {/* test cards */}
-      <div style={{ padding:"0 12px" }}>
+      <div style={{ padding:"0 16px" }}>
         {filtTests.length===0 ? (
           <div style={{ padding:48,textAlign:"center",color:"#94A3B8" }}>
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
@@ -2124,10 +2124,10 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp);
           return (
-            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,padding:"16px",marginBottom:10,fontFamily:"'Manrope',sans-serif" }}>
+            <div key={t.id} style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"16px 0",fontFamily:"'Manrope',sans-serif" }}>
               {/* Top row: name + price */}
               <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:10 }}>
-                <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,flex:1 }}>{t.name}</div>
+                <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,flex:1,textAlign:"left" }}>{t.name}</div>
                 <div style={{ flexShrink:0,textAlign:"right" }}>
                   <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.15rem" }}>₹{t.price}</div>
                   <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
