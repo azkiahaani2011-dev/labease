@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { supabase } from './lib/supabase';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart } from './lib/db';
 
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 const G = () => (
@@ -3437,6 +3439,29 @@ export default function App() {
   const [authErr,  setAuthErr]  = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
+  // ── Supabase auth listener ──
+  useEffect(() => {
+    if (!supabase) return;
+    // restore session on load
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        getProfile(session.user.id).then(profile => {
+          setUser({ id: session.user.id, email: session.user.email, name: profile?.name || session.user.email });
+        });
+      }
+    });
+    const unsub = onAuthChange(session => {
+      if (session?.user) {
+        getProfile(session.user.id).then(profile => {
+          setUser({ id: session.user.id, email: session.user.email, name: profile?.name || session.user.email });
+        });
+      } else {
+        setUser(null);
+      }
+    });
+    return unsub;
+  }, []);
+
   const sf = (k,v) => setForm(f => ({...f,[k]:v}));
   const total    = cart.reduce((s,x) => s+x.price,0);
   const mrpTotal = cart.reduce((s,x) => s+x.mrp,0);
@@ -3456,7 +3481,7 @@ export default function App() {
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
-  const handleAuth = () => {
+  const handleAuth = async () => {
     const { name, email, phone, password } = authForm;
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { setAuthErr("Please enter a valid email address."); return; }
     if (!password || password.length < 6) { setAuthErr("Password must be at least 6 characters."); return; }
@@ -3465,37 +3490,85 @@ export default function App() {
       if (!phone.trim() || !/^(\+91[\s\-]?)?[6-9]\d{9}$/.test(phone.replace(/\s/g,''))) { setAuthErr("Please enter a valid Indian phone number (10 digits)."); return; }
     }
     setAuthLoading(true);
-    setTimeout(() => {
-      setAuthLoading(false);
+    setAuthErr("");
+    if (supabase) {
       if (authMode === "login") {
-        const saved = JSON.parse(localStorage.getItem("le_user") || "null");
-        if (!saved || saved.email !== email || saved.password !== password) { setAuthErr("Invalid email or password."); return; }
-        setUser(saved); closeAuth(); setToast(`Welcome back, ${saved.name}!`);
+        const { data, error } = await signIn(email, password);
+        setAuthLoading(false);
+        if (error) { setAuthErr(error.message || "Invalid email or password."); return; }
+        const profile = await getProfile(data.user.id);
+        const u = { id: data.user.id, email: data.user.email, name: profile?.name || email };
+        setUser(u); closeAuth(); setToast(`Welcome back, ${u.name}!`);
       } else {
-        const newUser = { name, email, phone, password };
-        localStorage.setItem("le_user", JSON.stringify(newUser));
-        setUser(newUser); closeAuth(); setToast(`Account created! Welcome, ${name}!`);
+        const { data, error } = await signUp(email, password, name);
+        setAuthLoading(false);
+        if (error) { setAuthErr(error.message || "Could not create account."); return; }
+        if (data.user) {
+          // update profile with phone
+          if (supabase) await supabase.from('profiles').upsert({ id: data.user.id, name, email, phone });
+          setUser({ id: data.user.id, email, name });
+          closeAuth(); setToast(`Account created! Welcome, ${name}!`);
+        } else {
+          closeAuth(); setToast("Check your email to confirm your account!");
+        }
       }
-    }, 900);
+    } else {
+      // localStorage fallback (offline mode)
+      setTimeout(() => {
+        setAuthLoading(false);
+        if (authMode === "login") {
+          const saved = JSON.parse(localStorage.getItem("le_user") || "null");
+          if (!saved || saved.email !== email || saved.password !== password) { setAuthErr("Invalid email or password."); return; }
+          setUser(saved); closeAuth(); setToast(`Welcome back, ${saved.name}!`);
+        } else {
+          const newUser = { name, email, phone, password };
+          localStorage.setItem("le_user", JSON.stringify(newUser));
+          setUser(newUser); closeAuth(); setToast(`Account created! Welcome, ${name}!`);
+        }
+      }, 900);
+    }
   };
-  const handleLogout = () => { setUser(null); setToast("Signed out successfully."); };
+  const handleLogout = async () => {
+    if (supabase) await signOut();
+    setUser(null);
+    setToast("Signed out successfully.");
+  };
 
-  const confirm = () => {
+  const confirm = async () => {
     const id = "LB"+Math.random().toString(36).slice(2,8).toUpperCase();
     setDone({...form,id,cart:[...cart],total,saving});
-    // Save booking to localStorage so admin panel picks it up
+    const booking = {
+      id,
+      patient: form.name,
+      phone: form.phone,
+      test: cart.map(c => c.tname).join(', '),
+      lab: cart[0]?.lname || '',
+      date: form.date,
+      mode: form.mode === 'home' ? 'Home' : 'Clinic',
+      amount: total,
+      status: 'Confirmed',
+    };
+    // Save to Supabase if connected
+    if (supabase) {
+      await createBooking({
+        user_id: user?.id || null,
+        lab_id: cart[0]?.lid || null,
+        lab_name: cart[0]?.lname || '',
+        patient_name: form.name,
+        patient_phone: form.phone,
+        patient_age: form.age,
+        patient_gender: form.gender || '',
+        address: form.address,
+        slot_date: form.date || null,
+        slot_time: form.slot || '',
+        collection: form.mode,
+        status: 'confirmed',
+        total,
+        items: cart,
+      });
+    }
+    // Always save to localStorage as backup (admin panel uses it)
     try {
-      const booking = {
-        id,
-        patient: form.name,
-        phone: form.phone,
-        test: cart.map(c => c.tname).join(', '),
-        lab: cart[0]?.lname || '',
-        date: form.date,
-        mode: form.mode === 'home' ? 'Home' : 'Clinic',
-        amount: total,
-        status: 'Confirmed',
-      };
       const existing = JSON.parse(localStorage.getItem('le_bookings') || '[]');
       existing.push(booking);
       localStorage.setItem('le_bookings', JSON.stringify(existing));
