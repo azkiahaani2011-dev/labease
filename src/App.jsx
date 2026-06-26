@@ -2119,54 +2119,59 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         })}
       </div>
 
-      {/* test table */}
-      <div style={{ ...T.card,borderRadius:0,border:"none",borderTop:"1px solid var(--line)" }}>
-        <div className="test-header" style={{ display:"grid",gridTemplateColumns:"1fr 100px 100px 110px",padding:"12px 20px",background:"#F5F7FF",borderBottom:"1px solid var(--line)",fontSize:".74rem",fontWeight:700,color:"var(--muted)",letterSpacing:".07em",textTransform:"uppercase",gap:16,alignItems:"center" }}>
-          <span>Test Name</span>
-          <span style={{ textAlign:"center" }}>Price</span>
-          <span style={{ textAlign:"center" }}>MRP</span>
-          <span style={{ textAlign:"center" }}>Action</span>
-        </div>
-
+      {/* test cards */}
+      <div style={{ padding:"0 12px" }}>
         {filtTests.length===0 ? (
           <div style={{ padding:48,textAlign:"center",color:"#94A3B8" }}>
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
         ) : visibleTests.map(t=>{
-          const added=has(t.id); const d=pct(t.price,t.mrp); const Icon=ICONS[t.cat]||IGeneral;
+          const added=has(t.id); const d=pct(t.price,t.mrp);
           return (
-            <div key={t.id} className="test-row" style={{ display:"grid",gridTemplateColumns:"1fr auto auto auto",padding:"12px 16px",borderBottom:"1px solid #F9FAFB",alignItems:"center",gap:12,transition:"background .14s" }}>
-              {/* Test name + cat */}
-              <div style={{ display:"flex",alignItems:"center",gap:8,minWidth:0 }}>
-                {Icon && <Icon s={26}/>}
-                <div style={{ minWidth:0 }}>
-                  <div style={{ fontWeight:700,color:"var(--ink)",fontSize:".92rem",marginBottom:3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{t.name}</div>
-                  <div style={{ display:"flex",alignItems:"center",gap:6,flexWrap:"wrap" }}>
-                    <span style={{ background:`${lab.color}18`,color:lab.color,borderRadius:20,padding:"1px 7px",fontSize:".62rem",fontWeight:700,whiteSpace:"nowrap" }}>{t.cat}</span>
-                    <span style={{ fontSize:".62rem",color:"var(--muted)",whiteSpace:"nowrap" }}>{t.time}</span>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,padding:"16px",marginBottom:12,fontFamily:"'Manrope',sans-serif" }}>
+              {/* Top row: name + price */}
+              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:8 }}>
+                <div style={{ fontWeight:800,color:"#0D1117",fontSize:".97rem",lineHeight:1.35,flex:1 }}>{t.name}</div>
+                <div style={{ flexShrink:0,textAlign:"right" }}>
+                  <div style={{ fontWeight:900,color:"#1158A6",fontSize:"1.1rem",letterSpacing:"-.02em" }}>₹{t.price}</div>
+                  <div style={{ display:"flex",alignItems:"center",gap:5,justifyContent:"flex-end",marginTop:2 }}>
+                    <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".75rem" }}>₹{t.mrp}</span>
+                    <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
                   </div>
                 </div>
               </div>
-              {/* Price */}
-              <div style={{ textAlign:"center",fontWeight:900,color:"var(--teal)",fontSize:"1.05rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.03em",whiteSpace:"nowrap" }}>₹{t.price}</div>
-              {/* MRP + discount stacked */}
-              <div style={{ textAlign:"center",whiteSpace:"nowrap" }}>
-                <div style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".76rem" }}>₹{t.mrp}</div>
-                <div style={{ color:"#2563EB",fontSize:".62rem",fontWeight:700 }}>{d}% off</div>
+              {/* Category chip */}
+              <div style={{ marginBottom:12 }}>
+                <span style={{ background:`${lab.color}18`,color:lab.color,borderRadius:20,padding:"3px 10px",fontSize:".68rem",fontWeight:700 }}>{t.cat}</span>
               </div>
-              {/* Add / Added */}
-              <div style={{ textAlign:"center" }}>
-                {added ? (
-                  <button onClick={()=>delCart(t.id)} style={{ background:"#FEF3C7",color:"#B45309",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>✓ Added</button>
-                ) : (
-                  <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ background:lab.color,color:"#fff",border:"none",borderRadius:8,padding:"7px 10px",fontWeight:700,cursor:"pointer",fontSize:".73rem",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",minHeight:36 }}>+ Add</button>
-                )}
+              {/* 2-column info grid */}
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 0",marginBottom:14,background:"#F9FAFB",borderRadius:8,padding:"10px 14px" }}>
+                <div>
+                  <div style={{ fontSize:".65rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>Sample Type</div>
+                  <div style={{ fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
+                </div>
+                <div>
+                  <div style={{ fontSize:".65rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>TAT</div>
+                  <div style={{ fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>{t.time||"24 - 48 hours"}</div>
+                </div>
               </div>
+              {/* Add / Added button */}
+              {added ? (
+                <button onClick={()=>delCart(t.id)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"11px 0",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  Added
+                </button>
+              ) : (
+                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",background:"#16A34A",color:"#fff",border:"none",borderRadius:50,padding:"11px 0",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                  Add To Cart
+                </button>
+              )}
             </div>
           );
         })}
         {filtTests.length > TESTS_LIMIT && (
-          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#F5F7FF",border:"none",borderTop:"1px solid var(--line)",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#F5F7FF"}>
+          <button onClick={()=>setShowAllTests(v=>!v)} style={{ display:"block",width:"100%",padding:"14px 20px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",marginBottom:12,transition:"background .14s" }} onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
             {showAllTests ? "Show Less ↑" : `Show ${filtTests.length - TESTS_LIMIT} More Tests ↓`}
           </button>
         )}
