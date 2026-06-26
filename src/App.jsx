@@ -2211,7 +2211,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=getTestSubtitle(t.name);
           return (
-            <div key={t.id} style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"16px 0",fontFamily:"'Manrope',sans-serif" }}>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,padding:"16px",marginBottom:10,boxShadow:"0 1px 4px rgba(0,0,0,.04)",fontFamily:"'Manrope',sans-serif" }}>
               {/* Top row: name + price */}
               <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:6 }}>
                 <div style={{ flex:1,textAlign:"left" }}>
