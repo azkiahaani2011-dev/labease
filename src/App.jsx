@@ -2173,6 +2173,21 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
+    {/* ── Sticky Book Now bar — shows when cart has items ── */}
+    {cart.length > 0 && (
+      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",boxShadow:"0 -4px 24px rgba(17,88,166,.3)",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
+        <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
+          <span style={{ color:"rgba(255,255,255,.75)",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} added</span>
+          <span style={{ color:"#fff",fontWeight:800,fontSize:"1rem" }}>₹{total.toLocaleString()}</span>
+        </div>
+        <button onClick={()=>setCartOpen(true)} className="btn-anim"
+          style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0,boxShadow:"0 4px 16px rgba(245,158,11,.4)" }}>
+          Book a Test Now
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    )}
+
   </div>
   );
 };
