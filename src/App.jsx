@@ -1752,7 +1752,7 @@ const LabsNearMeSection = ({ T, navTo }) => (
 function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
   return (
     <div className="hover-lift" style={{ ...T.card,border:"1px solid var(--line)",cursor:"pointer",overflow:"hidden" }}
-      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}>
+      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}>
       {/* top colour strip / logo */}
       {l.logoBase64
         ? <div style={{ height:90,overflow:"hidden",borderBottom:"1px solid #E5E7EB" }}><img src={l.logoBase64} alt={l.name} style={{ width:"100%",height:"100%",objectFit:"cover" }}/></div>
@@ -1985,7 +1985,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         {l.timing||"6AM – 10PM"}
                       </div>
-                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}
                         style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
                         onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
                         onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
@@ -2000,7 +2000,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
                             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
                             onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                             onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}
                             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
                             onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                             onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
@@ -2173,9 +2173,9 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
       </div>
     </div>
 
-    {/* ── Sticky Book Now bar — shows when cart has items ── */}
-    {cart.length > 0 && (
-      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
+    {/* ── Sticky Book Now bar — always visible ── */}
+    <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
+      {cart.length > 0 ? (
         <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
           <span style={{ color:"rgba(255,255,255,.75)",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} selected</span>
           <div style={{ display:"flex",alignItems:"center",gap:8 }}>
@@ -2183,13 +2183,15 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             {(()=>{ const mrp=cart.reduce((s,i)=>s+(i.mrp||i.price),0); const saved=mrp-total; return saved>0?<span style={{ background:"#16A34A",color:"#fff",borderRadius:50,padding:"1px 8px",fontSize:".65rem",fontWeight:800 }}>Save ₹{saved.toLocaleString()}</span>:null; })()}
           </div>
         </div>
-        <button onClick={()=>setCartOpen(true)} className="btn-anim"
-          style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
-          Book a Test Now
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </button>
-      </div>
-    )}
+      ) : (
+        <span style={{ color:"rgba(255,255,255,.75)",fontSize:".84rem",fontWeight:600 }}>Add tests to get started</span>
+      )}
+      <button onClick={()=>cart.length>0?setCartOpen(true):null} className="btn-anim"
+        style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:cart.length>0?"pointer":"default",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0,opacity:cart.length>0?1:.7 }}>
+        Book a Test Now
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+    </div>
 
   </div>
   );
