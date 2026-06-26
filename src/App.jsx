@@ -7,7 +7,7 @@ const G = () => (
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Manrope', sans-serif; background: #F5F7FF; color: #111; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Manrope', sans-serif; background: #F5F7FF; color: #111; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.7; }
 
     :root {
       --teal: #1158A6;
@@ -2177,8 +2177,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     {cart.length > 0 && (
       <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"linear-gradient(160deg,#1158A6 0%,#0F2D6B 100%)",boxShadow:"0 -4px 24px rgba(17,88,166,.3)",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
         <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
-          <span style={{ color:"rgba(255,255,255,.75)",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} added</span>
-          <span style={{ color:"#fff",fontWeight:800,fontSize:"1rem" }}>₹{total.toLocaleString()}</span>
+          <span style={{ color:"rgba(255,255,255,.75)",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} selected</span>
+          <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+            <span style={{ color:"#fff",fontWeight:900,fontSize:"1.05rem" }}>₹{total.toLocaleString()}</span>
+            {(()=>{ const mrp=cart.reduce((s,i)=>s+(i.mrp||i.price),0); const saved=mrp-total; return saved>0?<span style={{ background:"#16A34A",color:"#fff",borderRadius:50,padding:"1px 8px",fontSize:".65rem",fontWeight:800 }}>Save ₹{saved.toLocaleString()}</span>:null; })()}
+          </div>
         </div>
         <button onClick={()=>setCartOpen(true)} className="btn-anim"
           style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:50,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0,boxShadow:"0 4px 16px rgba(245,158,11,.4)" }}>
@@ -2633,10 +2636,10 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
           {steps.map((l,i)=>(
             <div key={l} style={{ display:"flex",alignItems:"center",flex:i<4?1:"none" }}>
               <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:5 }}>
-                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#1158A6":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 3px 10px rgba(17,88,166,.3)":"none" }}>
-                  {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
+                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#16A34A":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 0 0 4px rgba(17,88,166,.18), 0 3px 10px rgba(17,88,166,.3)":step>i+1?"0 2px 8px rgba(22,163,74,.3)":"none" }}>
+                  {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
                 </div>
-                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#1158A6":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
+                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#16A34A":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
               </div>
               {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
             </div>
@@ -3481,22 +3484,22 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?24:44,paddingBottom:isMobile?24:44,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?20:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":600,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?20:0,paddingRight:isMobile?20:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
+          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"6px 18px 6px 8px",marginBottom:16,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box",boxShadow:"0 2px 12px rgba(17,88,166,.1)" }}>
-              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".65rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"#1158A6",fontSize:".78rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2rem,4.2vw,3.1rem)",color:"#0A1628",lineHeight:1.14,marginBottom:16,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#4A5568",fontSize:"1rem",lineHeight:1.8,marginBottom:22,maxWidth:480,margin:"0 auto 22px",fontWeight:500 }}>
+            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
               Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -3505,24 +3508,14 @@ export default function App() {
 
             {/* quick chips */}
             <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600 }}>Popular:</span>
+              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
               {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
                 <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"6px 16px",fontSize:".76rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s",boxShadow:"0 1px 4px rgba(17,88,166,.08)" }}
+                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
                   {t}
                 </button>
-              ))}
-            </div>
-
-            {/* trust stats */}
-            <div style={{ display:"flex",gap:isMobile?16:28,justifyContent:"center",marginTop:24,flexWrap:"wrap" }}>
-              {[["50,000+","Patients Served"],["200+","Partner Labs"],["6 Hrs","Fastest Report"]].map(([val,lbl])=>(
-                <div key={lbl} style={{ textAlign:"center" }}>
-                  <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:isMobile?"1.1rem":"1.3rem",color:"#1158A6",lineHeight:1.1 }}>{val}</div>
-                  <div style={{ fontSize:".68rem",color:"#64748B",fontWeight:600,marginTop:2 }}>{lbl}</div>
-                </div>
               ))}
             </div>
           </div>
@@ -3680,7 +3673,7 @@ export default function App() {
           </div>
 
           {/* 4-step row — 2 per row, no gap */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:20, position:"relative" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
 
             {[
               {
