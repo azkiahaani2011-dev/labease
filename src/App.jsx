@@ -2141,20 +2141,22 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>Sample Type</div>
                 <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>TAT</div>
                 <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
-                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>{t.time||"24 - 48 hours"}</div>
+                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>12 - 48 hours</div>
               </div>
-              {/* Add / Added button — left aligned */}
+              {/* Add / Added button — fully left aligned */}
+              <div style={{ display:"flex",justifyContent:"flex-start" }}>
               {added ? (
                 <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                   Added
                 </button>
               ) : (
-                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#16A34A",color:"#fff",border:"none",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
+                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                   Add To Cart
                 </button>
               )}
+              </div>
             </div>
           );
         })}
