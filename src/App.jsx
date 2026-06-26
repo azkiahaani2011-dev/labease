@@ -2174,19 +2174,19 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     </div>
 
     {/* ── Sticky Book Now bar ── */}
-    <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"#fff",borderTop:"1px solid #E5E7EB",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:cart.length>0?"space-between":"center",gap:12,fontFamily:"'Manrope',sans-serif" }}>
-      {cart.length > 0 && (
+    {cart.length > 0 && (
+      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"#fff",borderTop:"1px solid #E5E7EB",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
         <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
           <span style={{ color:"#6B7280",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} selected</span>
           <span style={{ color:"#0D1117",fontWeight:900,fontSize:"1.05rem" }}>₹{total.toLocaleString()}</span>
         </div>
-      )}
-      <button onClick={()=>cart.length>0?setCartOpen(true):null} className="btn-anim"
-        style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:12,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
-        Book a Test Now
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </button>
-    </div>
+        <button onClick={()=>setCartOpen(true)} className="btn-anim"
+          style={{ background:"#F59E0B",color:"#fff",border:"none",borderRadius:12,padding:"13px 28px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
+          Book a Test Now
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    )}
 
   </div>
   );
