@@ -2205,7 +2205,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                   Added
                 </button>
               ) : (
-                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
+                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                   Add To Cart
                 </button>
