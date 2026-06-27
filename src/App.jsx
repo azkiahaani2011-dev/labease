@@ -1751,11 +1751,11 @@ const LabsNearMeSection = ({ T, navTo }) => (
    render. This fixes Add/Book buttons losing click handlers on cart updates.
 ────────────────────────────────────────────────────────────────────────── */
 
-function LabCardML({ l, T, setLab, setCatF, setTestQ, navTo }) {
+function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) {
   const minPrice = l.tests?.length ? Math.min(...l.tests.map(t=>t.price)) : null;
   return (
     <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}
-      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}>
+      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
       {/* Main info row */}
       <div style={{ padding:"16px 16px 12px" }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8 }}>
@@ -1953,73 +1953,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               No labs match your filters.
             </div>
           )}
-          {!loading && filtered.map(l => {
-            const matchTest = selectedTest ? l.tests.find(t=>t.name===selectedTest.name||t.cat===selectedTest.cat) : null;
-            const minPrice = matchTest ? matchTest.price : Math.min(...l.tests.map(t=>t.price));
-            const reportTime = l.reportTime||(l.id===1?"Same Day":l.id===2?"2–6 hrs":"24 hrs");
-            return (
-              <div key={l.id} style={{ background:"#fff",borderRadius:0,borderBottom:"1px solid #E5E7EB",overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
-                <div style={{ padding:"20px 18px 18px" }}>
-                  <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
-                    <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
-                    <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
-                      <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5 }}>Diagnostic Lab</div>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A",marginBottom:5 }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-                        {l.tests.length} Tests Available
-                      </div>
-                      <div style={{ display:"flex",alignItems:"center",gap:4,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",width:"fit-content" }}>
-                        <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
-                        <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
-                        <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-                  <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
-                    <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
-                    <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
-                    <span style={{ color:"#6B7280" }}>{l.city}</span>
-                  </div>
-                  <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
-                    ~₹{minPrice.toLocaleString()}
-                    <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
-                  </div>
-                  <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
-                  <div style={{ display:"flex",gap:10 }}>
-                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        {l.timing||"6AM – 10PM"}
-                      </div>
-                      <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}
-                        style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
-                        onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-                        onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
-                    </div>
-                    <div style={{ flex:1,display:"flex",flexDirection:"column",gap:6 }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
-                      </div>
-                      {selectedTest && matchTest
-                        ? <button onClick={e=>{ e.stopPropagation(); addCart(l,matchTest); setCartOpen(true); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                        : <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); setSelectedTest(null); navTo("lab"); }}
-                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-                            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-                      }
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {!loading && filtered.map(l => (
+            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo}/>
+          ))}
         </div>
       </div>
     </div>
