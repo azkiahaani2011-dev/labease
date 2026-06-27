@@ -11,6 +11,7 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #111827; }
@@ -111,6 +112,50 @@ const STATUSES = ['Confirmed','Sample Collected','Report Ready','Pending','Cance
 const PHONES = ['9876543210','9123456780','9988776655','9012345678','9871234560','9654321098','9543210987','9432109876','9321098765','9210987654'];
 const CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
 const MODES = ['Home','Clinic'];
+
+// Supabase client (uses same env vars as main app, injected at build time or fallback)
+var SUPA_URL = typeof VITE_SUPABASE_URL !== 'undefined' ? VITE_SUPABASE_URL : '';
+var SUPA_KEY = typeof VITE_SUPABASE_ANON_KEY !== 'undefined' ? VITE_SUPABASE_ANON_KEY : '';
+// Try reading from meta tags injected by the server, or hardcode for admin use
+(function() {
+  var metas = document.querySelectorAll('meta[name^="supabase"]');
+  metas.forEach(function(m) {
+    if (m.name === 'supabase-url') SUPA_URL = m.content;
+    if (m.name === 'supabase-key') SUPA_KEY = m.content;
+  });
+})();
+var sb = (SUPA_URL && SUPA_KEY && window.supabase) ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+
+async function loadBookingsFromSupabase() {
+  if (!sb) return null;
+  try {
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending: false});
+    if (res.error) return null;
+    return res.data.map(function(b) {
+      var items = b.items || [];
+      return {
+        id: b.id,
+        patient: b.patient_name,
+        phone: b.patient_phone,
+        test: items.length ? items.map(function(i){return i.name;}).join(', ') : '—',
+        lab: b.lab_name || '—',
+        date: b.slot_date || b.created_at.slice(0,10),
+        mode: b.collection === 'home' ? 'Home' : 'Clinic',
+        amount: b.total,
+        status: b.status.charAt(0).toUpperCase() + b.status.slice(1),
+        raw: b,
+      };
+    });
+  } catch(e) { return null; }
+}
+
+async function updateBookingStatusInSupabase(id, status) {
+  if (!sb) return false;
+  try {
+    var res = await sb.from('bookings').update({status: status.toLowerCase()}).eq('id', id);
+    return !res.error;
+  } catch(e) { return false; }
+}
 
 function genBookings() {
   const saved = localStorage.getItem('le_bookings');
@@ -447,6 +492,7 @@ function Bookings(props) {
     var next = props.bookings.map(function(b){return b.id===id?Object.assign({},b,{status:status}):b;});
     props.setBookings(next);
     localStorage.setItem('le_bookings', JSON.stringify(next));
+    updateBookingStatusInSupabase(id, status); // sync to Supabase
   }
   var filtered = props.bookings.filter(function(b) {
     var q = search.toLowerCase();
@@ -752,6 +798,8 @@ function Tests(props) {
     try { ov = JSON.parse(localStorage.getItem('le_price_overrides')||'{}'); } catch(e){}
     ov[id] = {price:newPrice, mrp:newMrp};
     localStorage.setItem('le_price_overrides', JSON.stringify(ov));
+    // Sync price override to Supabase
+    if (sb) { sb.from('price_overrides').upsert({test_id: id, price: newPrice}).then(function(){}); }
     // Write to le_test_name_overrides so main UI picks up name change
     var tnov = {};
     try { tnov = JSON.parse(localStorage.getItem('le_test_name_overrides')||'{}'); } catch(e){}
@@ -847,6 +895,11 @@ function App() {
   const [tests, setTests] = useState(function(){return genTests();});
 
   useEffect(function() {
+    // Load real bookings from Supabase if available
+    loadBookingsFromSupabase().then(function(data) {
+      if (data && data.length > 0) setBookings(data);
+    });
+    // Also listen for localStorage changes (fallback)
     function handler(e) {
       if (e.key === 'le_bookings') {
         try { setBookings(JSON.parse(e.newValue || '[]')); } catch(ex) {}
