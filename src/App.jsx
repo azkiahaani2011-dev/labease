@@ -1814,6 +1814,25 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
 }
   
 
+/* ─── LAB BANNER (background-image avoids overflow/border-radius clipping bugs) ── */
+function LabBanner({ lab }) {
+  const meta = LAB_META.find(m => m.id === lab.id);
+  const embedded = LAB_LOGOS_B64[lab.id];
+  const src = lab.logoBase64 || lab.logoUrl || embedded || (meta?.srcs?.[0]) || '';
+  const accent = meta?.accent || "#1158A6";
+  const bg = meta?.bg || "#EEF4FF";
+  if (src) return (
+    <div style={{ width:"100%", height:"100%", backgroundImage:`url(${src})`, backgroundSize:"cover", backgroundPosition:"center", backgroundRepeat:"no-repeat", borderRadius:12 }}/>
+  );
+  return (
+    <div style={{ width:"100%", height:"100%", background:bg, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:12 }}>
+      <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:56, color:accent, lineHeight:1 }}>
+        {(meta?.short || lab.name).slice(0,2)}
+      </span>
+    </div>
+  );
+}
+
 /* ─── SKELETON LOADER ─────────────────────────────────────────────────────── */
 function LabCardSkeleton() {
   return (
@@ -2089,8 +2108,8 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
         </div>
         {/* Logo card */}
-        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",background:"#fff",isolation:"isolate" }}>
-          <LabLogo lab={lab} size={200} radius={6} banner={true}/>
+        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,background:"#fff",overflow:"hidden" }}>
+          <LabBanner lab={lab}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
           {/* Name */}
