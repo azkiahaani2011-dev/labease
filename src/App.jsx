@@ -1654,7 +1654,7 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
         display:"flex", alignItems:"center", justifyContent:"center" };
 
   const imgStyle = banner
-    ? { maxWidth:"90%", maxHeight:"90%", objectFit:"contain", display:"block" }
+    ? { width:"96%", height:"96%", objectFit:"contain", display:"block" }
     : { width: size * 0.82, height: size * 0.82, objectFit:"contain", display:"block" };
 
   // admin-uploaded logo takes priority
