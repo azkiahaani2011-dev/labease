@@ -2089,7 +2089,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
         </div>
         {/* Logo card */}
-        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",background:"#fff",padding:8 }}>
+        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",background:"#fff",padding:16 }}>
           <LabLogo lab={lab} size={200} radius={6} banner={true}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
