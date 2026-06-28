@@ -1648,13 +1648,13 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const [idx, setIdx] = React.useState(0);
 
   const containerStyle = banner
-    ? { width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", background:"#fff" }
+    ? { width:"100%", height:"100%", display:"flex", alignItems:"stretch", justifyContent:"center", background:"#fff" }
     : { width:size, height:size, borderRadius:radius, flexShrink:0, background:"#fff", overflow:"hidden",
         boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
         display:"flex", alignItems:"center", justifyContent:"center" };
 
   const imgStyle = banner
-    ? { width:"96%", height:"96%", objectFit:"contain", display:"block" }
+    ? { width:"100%", height:"100%", objectFit:"cover", borderRadius:6, display:"block" }
     : { width: size * 0.82, height: size * 0.82, objectFit:"contain", display:"block" };
 
   // admin-uploaded logo takes priority
@@ -2089,8 +2089,8 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
         </div>
         {/* Logo card */}
-        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",background:"#fff" }}>
-          <LabLogo lab={lab} size={200} radius={0} banner={true}/>
+        <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,overflow:"hidden",background:"#fff",padding:8 }}>
+          <LabLogo lab={lab} size={200} radius={6} banner={true}/>
         </div>
         <div style={{ padding:"12px 16px 14px" }}>
           {/* Name */}
