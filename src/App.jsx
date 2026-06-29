@@ -1810,16 +1810,16 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
           </div>
         </div>
       </div>
-      {/* Premium buttons */}
-      <div style={{ padding:"14px 16px 16px",background:"#F8FAFF",borderTop:"1px solid #E5E7EB",display:"flex",gap:10 }}>
+      {/* Buttons — full width, flat, edge-to-edge like reference */}
+      <div style={{ display:"flex",borderTop:"1px solid #E5E7EB" }}>
         <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-          style={{ flex:1,background:"#fff",color:"#1158A6",border:"2px solid #1158A6",borderRadius:50,padding:"12px 0",fontWeight:800,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",transition:"all .18s",letterSpacing:".02em" }}
-          onMouseEnter={e=>{e.currentTarget.style.background="#EFF6FF";}}
-          onMouseLeave={e=>{e.currentTarget.style.background="#fff";}}>View Tests</button>
+          style={{ flex:1,background:"#fff",color:"#1158A6",border:"none",borderRight:"1px solid #E5E7EB",padding:"15px 0",fontWeight:700,cursor:"pointer",fontSize:".95rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#F0F4FF"}
+          onMouseLeave={e=>e.currentTarget.style.background="#fff"}>View Tests</button>
         <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-          style={{ flex:1,background:"linear-gradient(135deg,#1158A6,#2563EB)",color:"#fff",border:"none",borderRadius:50,padding:"12px 0",fontWeight:800,cursor:"pointer",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.45)",transition:"all .18s",letterSpacing:".02em" }}
-          onMouseEnter={e=>e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.6)"}
-          onMouseLeave={e=>e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.45)"}>Book Now</button>
+          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",padding:"15px 0",fontWeight:700,cursor:"pointer",fontSize:".95rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#0D3F85"}
+          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
       </div>
     </div>
   );
