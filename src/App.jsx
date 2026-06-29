@@ -2110,92 +2110,87 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
   <div style={{ minHeight:"80vh",background:"#fff" }}>
-    {/* Lab info section — includes back button */}
+    {/* Lab info section */}
     <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
-      <div>
-        {/* Back button row inside the section */}
-        <div style={{ display:"flex",gap:8,alignItems:"center",padding:"10px 16px 0" }}>
-          <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
-          </button>
-        </div>
-        {/* Logo card */}
-        {(()=>{ const meta=LAB_META.find(m=>m.id===lab.id); const src=lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||''; return src ? (
-          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,overflow:"hidden",border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center" }}>
-            <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain",display:"block" }}/>
-          </div>
-        ) : (
-          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,border:"1px solid #E5E7EB",background:meta?.bg||"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden" }}>
-            <span style={{ fontFamily:"Manrope,sans-serif",fontWeight:900,fontSize:56,color:meta?.accent||"#1158A6" }}>{(meta?.short||lab.name).slice(0,2)}</span>
-          </div>
-        ); })()}
-        <div style={{ padding:"12px 16px 14px" }}>
-          {/* Name */}
-          <div style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",lineHeight:1.25,marginBottom:6,letterSpacing:"-.02em" }}>{lab.name}</div>
-          {/* Rating */}
-          {(()=>{
-            const rating = lab.rating||4.5;
-            const full   = Math.floor(rating);
-            const pct    = Math.round((rating - full) * 100); // partial % for last star
-            const gid    = `sg-${lab.id}`;
-            return (
+      {(()=>{
+        const meta = LAB_META.find(m=>m.id===lab.id);
+        const src  = lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||'';
+        const accent = meta?.accent||"#1158A6";
+        const rating = lab.rating||4.5;
+        const full   = Math.floor(rating);
+        const partial= Math.round((rating-full)*100);
+        const gid    = `sg-${lab.id}`;
+        return (
+          <div>
+            {/* Banner with gradient + back button */}
+            <div style={{ position:"relative",height:160,background:`linear-gradient(135deg,${accent}ee 0%,${accent}99 100%)`,overflow:"hidden" }}>
+              {/* subtle pattern */}
+              <svg style={{ position:"absolute",bottom:0,right:0,opacity:.08 }} width="220" height="160" viewBox="0 0 220 160"><circle cx="160" cy="80" r="100" fill="#fff"/><circle cx="220" cy="20" r="60" fill="#fff"/></svg>
+              {/* back button */}
+              <button onClick={()=>navTo("labs")} style={{ position:"absolute",top:12,left:12,background:"rgba(255,255,255,.18)",backdropFilter:"blur(6px)",border:"1px solid rgba(255,255,255,.3)",borderRadius:50,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer" }} aria-label="Back">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+              </button>
+              {/* logo floated bottom-left */}
+              <div style={{ position:"absolute",bottom:-28,left:16,width:72,height:72,borderRadius:16,background:"#fff",border:"2px solid #E5E7EB",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden" }}>
+                {src
+                  ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                  : <span style={{ fontWeight:900,fontSize:26,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
+                }
+              </div>
+            </div>
+
+            {/* Info below banner */}
+            <div style={{ padding:"38px 16px 16px" }}>
+              {/* Name */}
+              <div style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",lineHeight:1.25,marginBottom:5,letterSpacing:"-.02em" }}>{lab.name}</div>
+              {/* Rating row */}
               <div style={{ display:"flex",alignItems:"center",gap:6,marginBottom:8 }}>
-                <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
                 <div style={{ display:"flex",gap:1 }}>
                   {Array.from({length:5},(_,i)=>{
-                    const starId = `${gid}-${i}`;
-                    if(i < full) return (
-                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
-                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/>
-                      </svg>
-                    );
-                    if(i === full && pct > 0) return (
-                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
-                        <defs>
-                          <linearGradient id={starId} x1="0" y1="0" x2="1" y2="0">
-                            <stop offset={`${pct}%`} stopColor="#F59E0B"/>
-                            <stop offset={`${pct}%`} stopColor="#D1D5DB"/>
-                          </linearGradient>
-                        </defs>
-                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${starId})`} stroke="none"/>
-                      </svg>
-                    );
-                    return (
-                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
-                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/>
-                      </svg>
-                    );
+                    const sid=`${gid}-${i}`;
+                    if(i<full) return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                    if(i===full&&partial>0) return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${partial}%`} stopColor="#F59E0B"/><stop offset={`${partial}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                    return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
                   })}
                 </div>
-                <span style={{ fontWeight:700,fontSize:".85rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
+                <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
               </div>
-            );
-          })()}
-          {/* Address */}
-          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.5,marginBottom:14 }}>
-            {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
+              {/* Address */}
+              <div style={{ display:"flex",alignItems:"flex-start",gap:5,fontSize:".84rem",color:"#6B7280",lineHeight:1.5,marginBottom:14 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:2 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
+              </div>
+
+              {/* Stats row */}
+              <div style={{ display:"flex",gap:0,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden",marginBottom:14 }}>
+                <div style={{ flex:1,padding:"10px 14px",borderRight:"1px solid #E5E7EB" }}>
+                  <div style={{ fontSize:".68rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>Timing</div>
+                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117" }}>{lab.timing||"6AM – 10PM"}</div>
+                </div>
+                <div style={{ flex:1,padding:"10px 14px" }}>
+                  <div style={{ fontSize:".68rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>Tests</div>
+                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117" }}>{lab.tests.length}</div>
+                </div>
+              </div>
+
+              {/* Badges */}
+              {(lab.nabl||lab.homeCollection) && (
+                <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
+                  {lab.nabl && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#F0FDF4",color:"#15803D",border:"1px solid #BBF7D0",borderRadius:50,padding:"5px 12px",fontSize:".75rem",fontWeight:700 }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#15803D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    Verified Partner
+                  </span>}
+                  {lab.homeCollection && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",color:"#1158A6",border:"1px solid #BFDBFE",borderRadius:50,padding:"5px 12px",fontSize:".75rem",fontWeight:700 }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Home Collection
+                  </span>}
+                </div>
+              )}
+            </div>
           </div>
-          <div style={{ height:1,background:"#F1F5F9",marginBottom:14 }}/>
-          {/* Timing + Tests grid */}
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:0 }}>
-            <div>
-              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Timing</div>
-              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.timing||"6AM – 10PM"}</div>
-            </div>
-            <div>
-              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Tests</div>
-              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.tests.length}</div>
-            </div>
-          </div>
-          {/* Badges */}
-          {(lab.nabl || lab.homeCollection) && (
-            <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap" }}>
-              {lab.nabl && <Pill>✓ Verified Partner</Pill>}
-              {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
-            </div>
-          )}
-        </div>
-      </div>
+        );
+      })()}
     </div>
 
     <div style={{ padding:"16px 0" }}>
