@@ -1282,7 +1282,11 @@ function slotsFromTiming(timing) {
   if (!s || !e) return TIME_SLOTS;
   let sp = s.period, ep = e.period;
   if (!sp && !ep) { sp = 'AM'; ep = 'PM'; }
-  else if (!sp && ep) { sp = 'AM'; }
+  else if (!sp && ep) {
+    // Try same period as end first; if gives valid range, use it (e.g. "4 to 5pm" → 4PM–5PM)
+    const trySame = to24(s.h, ep) * 60 + s.min < to24(e.h, ep) * 60 + e.min;
+    sp = trySame ? ep : (ep === 'AM' ? 'PM' : 'AM');
+  }
   else if (sp && !ep) { ep = 'PM'; }
   const startMin = to24(s.h, sp) * 60 + s.min;
   const endMin   = to24(e.h, ep) * 60 + e.min;
