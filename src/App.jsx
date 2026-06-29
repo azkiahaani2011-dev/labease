@@ -1261,25 +1261,24 @@ const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM
 // Parse "6:00 AM – 10:00 PM" → hourly slot strings within that range
 function slotsFromTiming(timing) {
   if (!timing) return TIME_SLOTS;
-  // normalise dashes and extract two time tokens
-  const parts = timing.replace(/[–—]/g, '-').split('-').map(s => s.trim());
-  if (parts.length < 2) return TIME_SLOTS;
-  function parse12(str) {
-    const m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
-    if (!m) return null;
-    let h = parseInt(m[1], 10);
-    const min = parseInt(m[2] || '0', 10);
-    const period = m[3].toUpperCase();
+  // Use regex to extract two time tokens directly — avoids split-on-hyphen ambiguity
+  const tokens = [...timing.matchAll(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/gi)];
+  if (tokens.length < 2) return TIME_SLOTS;
+  function toMin(tok) {
+    let h = parseInt(tok[1], 10);
+    const min = parseInt(tok[2] || '0', 10);
+    const period = tok[3].toUpperCase();
     if (period === 'PM' && h !== 12) h += 12;
     if (period === 'AM' && h === 12) h = 0;
     return h * 60 + min;
   }
-  const startMin = parse12(parts[0]);
-  const endMin   = parse12(parts[1]);
-  if (startMin === null || endMin === null) return TIME_SLOTS;
+  const startMin = toMin(tokens[0]);
+  const endMin   = toMin(tokens[1]);
+  if (endMin <= startMin) return TIME_SLOTS;
+  // Start at the first full hour that is >= opening time
+  const firstSlot = Math.ceil(startMin / 60) * 60;
   const slots = [];
-  // generate one slot per hour from open time up to (but not including) close time
-  for (let m = startMin; m < endMin; m += 60) {
+  for (let m = firstSlot; m < endMin; m += 60) {
     const h24 = Math.floor(m / 60);
     const period = h24 < 12 ? 'AM' : 'PM';
     const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
@@ -2242,17 +2241,41 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
 
               {/* Stats row */}
               <div style={{ display:"flex" }}>
-                {[
-                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Timing", value:lab.timing||"6AM–10PM" },
-                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>, label:"Tests", value:`${lab.tests.length} available` },
-                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
-                ].map(({icon,label,value},i)=>(
-                  <div key={i} style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:i<2?"1px solid #F1F5F9":"none" }}>
-                    <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>{icon}</div>
-                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>{label}</div>
-                    <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{value}</div>
+                {/* Timing cell — shows weekday + Sunday if available */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:"1px solid #F1F5F9" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   </div>
-                ))}
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:3 }}>Timing</div>
+                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
+                    {lab.sunday_timing ? (
+                      <>
+                        <div style={{ fontSize:".62rem",color:"#6B7280",fontWeight:600,marginBottom:1 }}>Mon–Sat</div>
+                        <div>{lab.timing||"6AM–10PM"}</div>
+                        <div style={{ fontSize:".62rem",color:"#6B7280",fontWeight:600,marginTop:4,marginBottom:1 }}>Sunday</div>
+                        <div>{lab.sunday_timing}</div>
+                      </>
+                    ) : (
+                      lab.timing||"6AM–10PM"
+                    )}
+                  </div>
+                </div>
+                {/* Tests cell */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:"1px solid #F1F5F9" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>
+                  </div>
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>Tests</div>
+                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{lab.tests.length} available</div>
+                </div>
+                {/* Collection cell */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+                  </div>
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>Collection</div>
+                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only"}</div>
+                </div>
               </div>
             </div>
 

@@ -508,7 +508,7 @@ function LabsPage() {
 
   function startEdit(lab) {
     setEditing(lab)
-    setForm({ name: lab.name || '', address: lab.address || '', timing: lab.timing || '', report_timing: lab.report_timing || '', rating: lab.rating || '', nabl: lab.nabl || 0, home_collection: lab.home_collection || 0 })
+    setForm({ name: lab.name || '', address: lab.address || '', timing: lab.timing || '', sunday_timing: lab.sunday_timing || '', report_timing: lab.report_timing || '', rating: lab.rating || '', nabl: lab.nabl || 0, home_collection: lab.home_collection || 0 })
   }
 
   async function saveEdit() {
@@ -534,7 +534,8 @@ function LabsPage() {
               </div>
             </div>
             <div style={{ fontSize: 13, color: C.muted }}>{lab.address}</div>
-            <div style={{ fontSize: 13, color: C.muted }}>⏰ {lab.timing}</div>
+            <div style={{ fontSize: 13, color: C.muted }}>⏰ Mon–Sat: {lab.timing}</div>
+            {lab.sunday_timing && <div style={{ fontSize: 13, color: C.muted }}>⏰ Sunday: {lab.sunday_timing}</div>}
             {lab.report_timing && <div style={{ fontSize: 13, color: C.muted }}>📄 Report: {lab.report_timing}</div>}
             <div style={{ fontSize: 13, color: C.muted }}>⭐ {lab.rating}</div>
             <button onClick={() => startEdit(lab)} style={{ ...btn.ghost, marginTop: 8, alignSelf: 'flex-start', padding: '6px 14px', fontSize: 13 }}>Edit</button>
@@ -545,7 +546,7 @@ function LabsPage() {
 
       {editing && (
         <Modal title={`Edit Lab: ${editing.name}`} onClose={() => setEditing(null)}>
-          {[{ key: 'name', label: 'Name' }, { key: 'address', label: 'Address' }, { key: 'timing', label: 'Lab Timing', hint: 'e.g. 6:00 AM – 10:00 PM' }, { key: 'report_timing', label: 'Report Delivery Timing', hint: 'e.g. 4–6 hrs, Same day, 24–48 hrs' }, { key: 'rating', label: 'Rating', type: 'number' }].map(f => (
+          {[{ key: 'name', label: 'Name' }, { key: 'address', label: 'Address' }, { key: 'timing', label: 'Weekday Timing (Mon–Sat)', hint: 'e.g. 6:00 AM – 10:00 PM' }, { key: 'sunday_timing', label: 'Sunday Timing', hint: 'e.g. 8:00 AM – 6:00 PM (leave blank if closed)' }, { key: 'report_timing', label: 'Report Delivery Timing', hint: 'e.g. 4–6 hrs, Same day, 24–48 hrs' }, { key: 'rating', label: 'Rating', type: 'number' }].map(f => (
             <div key={f.key} style={{ marginBottom: 14 }}>
               <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 4 }}>{f.label}</label>
               <input type={f.type || 'text'} value={form[f.key] || ''} onChange={e => setForm(x => ({ ...x, [f.key]: e.target.value }))} style={inputStyle} placeholder={f.hint || ''} />
