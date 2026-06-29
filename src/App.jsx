@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { supabase } from './lib/supabase';
 import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart } from './lib/db';
 
-// True only on the very first page load of the session
-const _isFirstLoad = !sessionStorage.getItem('le_app_init');
-if (_isFirstLoad) sessionStorage.setItem('le_app_init', '1');
+// True on every fresh page load (refresh/new tab), false after first SPA navigation
+let _isFirstLoad = true;
+setTimeout(() => { _isFirstLoad = false; }, 2500);
 
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 const G = () => (
