@@ -2666,160 +2666,245 @@ function PaymentSelector({ total, onPay, onBack }) {
 }
 
 /* ─── BOOKING FIELD (top-level so it never remounts on parent re-render) ─── */
-// ─── Location cache (module-level, survives re-renders) ─────────────────────
-const _locCache = { coords: null, address: null, ts: 0 };
-const LOC_TTL = 5 * 60 * 1000; // 5 minutes
+// ─── Location cache ───────────────────────────────────────────────────────────
+const _locCache = { lat: null, lng: null, address: null, accuracy: null, ts: 0 };
+const LOC_TTL   = 3 * 60 * 1000; // 3 min cache
+const ACC_GOOD  = 50;             // metres — accept GPS fix below this
+const ACC_MAX   = 200;            // metres — give up improving above this after timeout
 
+// ─── Reverse geocoding ────────────────────────────────────────────────────────
+async function _nominatim(lat, lng, zoom) {
+  const r = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=${zoom}`,
+    { headers: { "User-Agent": "LabEase/1.0" } }
+  );
+  if (!r.ok) throw new Error("nominatim");
+  return r.json();
+}
+
+async function _bigdata(lat, lng) {
+  const r = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+  );
+  if (!r.ok) throw new Error("bigdata");
+  return r.json();
+}
+
+async function reverseGeocodeAll(lat, lng) {
+  // Run all three in parallel — zoom=18 for building/road, zoom=14 for postcode, bigdata for locality
+  const [fine, coarse, bd] = await Promise.allSettled([
+    _nominatim(lat, lng, 18),
+    _nominatim(lat, lng, 14),
+    _bigdata(lat, lng),
+  ]);
+
+  const fineA   = fine.status   === "fulfilled" ? fine.value.address   || {} : {};
+  const coarseA = coarse.status === "fulfilled" ? coarse.value.address || {} : {};
+  const bdV     = bd.status     === "fulfilled" ? bd.value              : {};
+
+  // Merge: fine wins for building/road, coarse wins for postcode, bigdata fills gaps
+  const house    = fineA.house_number || fineA.building || "";
+  const road     = fineA.road || fineA.residential || fineA.pedestrian || fineA.footway
+                || coarseA.road || bdV.locality || "";
+  const locality = fineA.neighbourhood || fineA.suburb || fineA.quarter
+                || coarseA.neighbourhood || coarseA.suburb
+                || bdV.localityInfo?.administrative?.find(x => x.order === 8)?.name || "";
+  const city     = fineA.city || fineA.town || coarseA.city || coarseA.town
+                || bdV.city || bdV.principalSubdivision?.split(",")[0]?.trim() || "";
+  const state    = fineA.state || coarseA.state || bdV.principalSubdivision || "";
+  // Postcode: prefer coarse nominatim, fallback bigdata
+  const pin      = coarseA.postcode || fineA.postcode || bdV.postcode || "";
+
+  return { house, road, locality, city, state, pin };
+}
+
+function buildAddressString({ house, road, locality, city, state, pin }) {
+  const line1 = [house, road].filter(Boolean).join(", ");
+  return [line1, locality, city, state, pin ? `PIN - ${pin}` : ""].filter(Boolean).join("\n");
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 function AddressDetector({ value, onChange }) {
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error | manual
-  const [errMsg, setErrMsg] = useState("");
-  const [detecting, setDetecting] = useState(false);
+  const [phase,    setPhase]    = useState("idle");    // idle|locking|geocoding|success|error
+  const [accuracy, setAccuracy] = useState(null);      // metres
+  const [errMsg,   setErrMsg]   = useState("");
+  const watchIdRef              = useRef(null);
+  const bestPosRef              = useRef(null);         // best GPS fix so far
+  const timerRef                = useRef(null);
 
-  // Two calls: zoom=18 for building/street, zoom=14 for postcode (more reliable)
-  async function reverseGeocode(lat, lng) {
-    const base = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en`;
-    const [fine, coarse] = await Promise.all([
-      fetch(`${base}&lat=${lat}&lon=${lng}&zoom=18`).then(r => r.json()),
-      fetch(`${base}&lat=${lat}&lon=${lng}&zoom=14`).then(r => r.json()),
-    ]);
-    // merge: prefer fine-grained for street/building, coarse for postcode
-    const a = { ...coarse.address, ...fine.address };
-    // postcode from coarse is often more reliable in India
-    if (coarse.address?.postcode) a.postcode = coarse.address.postcode;
-    return a;
+  // Clean up watchPosition on unmount
+  useEffect(() => () => _cleanup(), []);
+
+  function _cleanup() {
+    if (watchIdRef.current != null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    clearTimeout(timerRef.current);
   }
 
-  function buildAddress(a) {
-    const house    = a.house_number || a.building || "";
-    const road     = a.road || a.residential || a.pedestrian || a.footway || a.path || "";
-    const locality = a.neighbourhood || a.suburb || a.quarter || a.village || a.hamlet || "";
-    const city     = a.city || a.town || a.municipality || a.county || a.state_district || "";
-    const state    = a.state || "";
-    const pin      = a.postcode || "";
-
-    const line1 = [house, road].filter(Boolean).join(", ");
-    const parts = [line1, locality, city, state, pin ? `PIN: ${pin}` : ""].filter(Boolean);
-    return parts.join("\n");
+  async function _geocodeAndFinish(pos) {
+    _cleanup();
+    setPhase("geocoding");
+    const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
+    try {
+      const parts = await reverseGeocodeAll(lat, lng);
+      const addr  = buildAddressString(parts);
+      _locCache.lat = lat; _locCache.lng = lng;
+      _locCache.address = addr; _locCache.accuracy = acc; _locCache.ts = Date.now();
+      onChange(addr);
+      setAccuracy(Math.round(acc));
+      setPhase("success");
+    } catch {
+      // Geocoding failed — let user type
+      setErrMsg("Could not fetch address. Please type it manually.");
+      setPhase("error");
+    }
   }
 
   async function detect() {
-    if (detecting) return; // prevent duplicate requests
+    if (phase === "locking" || phase === "geocoding") return;
 
-    // Serve from cache if fresh
+    // Fresh cache hit
     if (_locCache.address && Date.now() - _locCache.ts < LOC_TTL) {
       onChange(_locCache.address);
-      setStatus("success");
+      setAccuracy(_locCache.accuracy);
+      setPhase("success");
       return;
     }
 
     if (!navigator.geolocation) {
-      setStatus("error");
-      setErrMsg("GPS not supported on this device. Please type your address.");
+      setErrMsg("GPS not supported on this browser. Please type your address.");
+      setPhase("error");
       return;
     }
 
-    setDetecting(true);
-    setStatus("loading");
+    setPhase("locking");
     setErrMsg("");
+    setAccuracy(null);
+    bestPosRef.current = null;
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const { latitude: lat, longitude: lng } = pos.coords;
-          const addrObj = await reverseGeocode(lat, lng);
-          const addr = buildAddress(addrObj);
-          _locCache.coords = { lat, lng };
-          _locCache.address = addr;
-          _locCache.ts = Date.now();
-          onChange(addr);
-          setStatus("success");
-        } catch {
-          setStatus("error");
-          setErrMsg("Could not get your address. Please type it manually.");
-        } finally {
-          setDetecting(false);
+    // watchPosition keeps getting updates — we accept the first fix ≤ ACC_GOOD,
+    // or the best fix we've seen after ACC_MAX ms timeout.
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const acc = pos.coords.accuracy;
+        setAccuracy(Math.round(acc));
+        // Keep best (most accurate) fix seen so far
+        if (!bestPosRef.current || acc < bestPosRef.current.coords.accuracy) {
+          bestPosRef.current = pos;
         }
+        if (acc <= ACC_GOOD) {
+          // Good enough — use immediately
+          _geocodeAndFinish(pos);
+        }
+        // else: keep watching — timer will fire and use best available
       },
       (err) => {
-        setDetecting(false);
-        setStatus("error");
+        _cleanup();
         const msgs = {
-          1: "Location permission denied. Please type your address or enable location in browser settings.",
-          2: "Location unavailable. Please type your address.",
-          3: "Location request timed out. Please type your address.",
+          1: "Location permission denied. Enable it in your browser settings, then try again.",
+          2: "GPS signal unavailable. Try moving near a window or outdoors.",
+          3: "Location timed out. GPS signal may be weak — please type your address.",
         };
         setErrMsg(msgs[err.code] || "Location error. Please type your address.");
+        setPhase("error");
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: LOC_TTL }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
+
+    // Hard deadline: after 10s use best fix we have, even if > ACC_GOOD
+    timerRef.current = setTimeout(() => {
+      if (bestPosRef.current) {
+        _geocodeAndFinish(bestPosRef.current);
+      } else {
+        _cleanup();
+        setErrMsg("GPS signal too weak. Try moving outdoors or type your address.");
+        setPhase("error");
+      }
+    }, 10000);
   }
+
+  const isWorking = phase === "locking" || phase === "geocoding";
+
+  const phaseLabel = phase === "locking"
+    ? (accuracy ? `Locking GPS… ±${accuracy}m` : "Requesting GPS…")
+    : phase === "geocoding"
+    ? "Fetching address…"
+    : "Use Current Location";
 
   return (
     <div>
-      {/* Auto-detect button */}
-      {status !== "success" && (
-        <button
-          type="button"
-          onClick={detect}
-          disabled={detecting}
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-            width: "100%", padding: "11px 16px", marginBottom: 10,
-            border: "1.5px dashed #1158A6", borderRadius: 10, background: detecting ? "#EEF4FF" : "#F5F7FF",
-            color: "#1158A6", fontWeight: 700, fontSize: ".83rem", cursor: detecting ? "not-allowed" : "pointer",
-            fontFamily: "'Manrope',sans-serif", transition: "all .15s",
-          }}
-        >
-          {detecting ? (
-            <>
-              <svg style={{ animation: "spin 1s linear infinite" }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-              </svg>
-              Detecting your location…
-            </>
+      {/* Detect button — hidden after success */}
+      {phase !== "success" && (
+        <button type="button" onClick={detect} disabled={isWorking}
+          style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",
+            padding:"11px 16px",marginBottom:10,border:"1.5px dashed #1158A6",borderRadius:10,
+            background:isWorking?"#EEF4FF":"#F5F7FF",color:"#1158A6",fontWeight:700,
+            fontSize:".83rem",cursor:isWorking?"not-allowed":"pointer",
+            fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+          {isWorking ? (
+            <><svg style={{animation:"spin 1s linear infinite"}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>{phaseLabel}</>
           ) : (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
-              </svg>
-              Use Current Location
-            </>
+            <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Use Current Location</>
           )}
         </button>
       )}
 
+
+      {/* Accuracy bar — visible while locking */}
+      {phase === "locking" && accuracy && (
+        <div style={{ marginBottom:8,fontSize:".73rem",color:"#6B7280",fontWeight:600,display:"flex",alignItems:"center",gap:8 }}>
+          <div style={{ flex:1,height:4,background:"#E5E7EB",borderRadius:2,overflow:"hidden" }}>
+            <div style={{ height:"100%",borderRadius:2,transition:"width .4s",
+              width:`${Math.max(5,Math.min(100,100-(accuracy/3)))}%`,
+              background: accuracy<=ACC_GOOD?"#16A34A":accuracy<=100?"#F59E0B":"#EF4444" }}/>
+          </div>
+          <span style={{color:accuracy<=ACC_GOOD?"#16A34A":accuracy<=100?"#D97706":"#DC2626"}}>±{accuracy}m</span>
+          {accuracy > ACC_GOOD && <span style={{color:"#9CA3AF",fontWeight:500}}>Improving…</span>}
+        </div>
+      )}
+
+      {/* Weak signal hint */}
+      {phase === "locking" && accuracy && accuracy > ACC_MAX && (
+        <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:8,padding:"8px 12px",marginBottom:8,fontSize:".75rem",color:"#92400E",fontWeight:600 }}>
+          📡 Weak GPS signal. Move near a window or step outside for better accuracy.
+        </div>
+      )}
+
       {/* Error banner */}
-      {status === "error" && (
-        <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 8, padding: "9px 13px", marginBottom: 10, fontSize: ".78rem", color: "#DC2626", fontWeight: 600, display: "flex", gap: 7, alignItems: "flex-start" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      {phase === "error" && (
+        <div style={{ background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:8,padding:"9px 13px",marginBottom:10,fontSize:".78rem",color:"#DC2626",fontWeight:600,display:"flex",gap:7,alignItems:"flex-start" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           {errMsg}
         </div>
       )}
 
-      {/* Success pill */}
-      {status === "success" && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-          <div style={{ background: "#DCFCE7", color: "#16A34A", fontSize: ".73rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20, display: "flex", alignItems: "center", gap: 5 }}>
+      {/* Success pill + accuracy badge */}
+      {phase === "success" && (
+        <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap" }}>
+          <div style={{ background:"#DCFCE7",color:"#16A34A",fontSize:".73rem",fontWeight:700,padding:"3px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:5 }}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             Location detected
           </div>
-          <button type="button" onClick={() => { setStatus("idle"); onChange(""); }}
-            style={{ background: "none", border: "none", color: "#9CA3AF", fontSize: ".73rem", cursor: "pointer", fontFamily: "'Manrope',sans-serif", fontWeight: 600, padding: 0 }}>
+          {accuracy && <span style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>±{accuracy}m accuracy</span>}
+          <button type="button" onClick={()=>{ setPhase("idle"); setAccuracy(null); onChange(""); }}
+            style={{ background:"none",border:"none",color:"#9CA3AF",fontSize:".73rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:600,padding:0,marginLeft:"auto" }}>
             Re-detect
           </button>
         </div>
       )}
 
-      {/* Editable address textarea */}
-      <textarea
-        rows={6}
-        style={{ width: "100%", border: "1.5px solid #DBEAFE", borderRadius: 10, padding: "11px 14px", fontSize: ".87rem", fontFamily: "'Manrope',sans-serif", background: "#fff", color: "#111", outline: "none", resize: "vertical", boxSizing: "border-box", transition: "border-color .15s", lineHeight: 1.6 }}
-        placeholder={"House/Building, Street\nArea/Locality\nCity\nState\nPIN: 000000"}
-
+      {/* Always-visible editable textarea */}
+      <textarea rows={6}
+        style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",
+          fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",
+          outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s",lineHeight:1.7 }}
+        placeholder={"House/Building, Street\nArea / Locality\nCity\nState\nPIN - 000000"}
         value={value}
-        onChange={e => onChange(e.target.value)}
-        onFocus={e => e.target.style.borderColor = "#1158A6"}
-        onBlur={e => e.target.style.borderColor = "#DBEAFE"}
+        onChange={e=>onChange(e.target.value)}
+        onFocus={e=>e.target.style.borderColor="#1158A6"}
+        onBlur={e=>e.target.style.borderColor="#DBEAFE"}
       />
     </div>
   );
