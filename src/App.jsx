@@ -46,6 +46,7 @@ const G = () => (
     .hero-stat-card { transition: transform .2s; }
     @media (max-width: 600px) { .hero-stat-card { display: none !important; } }
     @keyframes shimmer  { 0%,100%{opacity:.5} 50%{opacity:1} }
+    @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     @keyframes marquee  { from{transform:translateX(-50%)} to{transform:translateX(0)} }
     @keyframes orb1     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,15px)} }
     @keyframes orb2     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-25px,20px)} 66%{transform:translate(20px,-10px)} }
@@ -3770,6 +3771,22 @@ export default function App() {
   });
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [navCity, setNavCity] = useState("Detect Location");
+  const [navLocLoading, setNavLocLoading] = useState(false);
+  function detectNavLocation() {
+    if(!navigator.geolocation) return;
+    setNavLocLoading(true);
+    navigator.geolocation.getCurrentPosition(async pos=>{
+      try{
+        const {latitude:lat,longitude:lng}=pos.coords;
+        const r=await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+        const d=await r.json();
+        const city=d.city||d.locality||d.principalSubdivision||"Your Location";
+        setNavCity(city);
+      }catch(e){ setNavCity("Your Location"); }
+      finally{ setNavLocLoading(false); }
+    },()=>{ setNavLocLoading(false); },{timeout:10000,enableHighAccuracy:true});
+  }
   const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
   const [user,     setUser]     = useState(null);
   const [authForm, setAuthForm] = useState({ name:"", email:"", phone:"", password:"" });
@@ -4881,6 +4898,17 @@ export default function App() {
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
         </div>
+        {/* Center: Location pill */}
+        <button onClick={detectNavLocation} style={{ display:"flex",alignItems:"center",gap:6,background:"#F0F4FF",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"7px 14px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".82rem",color:"#1158A6",transition:"all .18s",flexShrink:0,maxWidth:180,overflow:"hidden" }}
+          onMouseEnter={e=>{e.currentTarget.style.background="#DBEAFE";e.currentTarget.style.borderColor="#93C5FD";}}
+          onMouseLeave={e=>{e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#DBEAFE";}}>
+          {navLocLoading
+            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin 1s linear infinite" }}><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          }
+          <span style={{ overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{navLocLoading?"Detecting…":navCity}</span>
+          {!navLocLoading&&<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>}
+        </button>
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:10 }}>
           {isMobile
