@@ -2163,7 +2163,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           {/* Badges */}
           {(lab.nabl || lab.homeCollection) && (
             <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap" }}>
-              {lab.nabl && <Pill>✓ NABL Accredited</Pill>}
+              {lab.nabl && <Pill>✓ Verified Partner</Pill>}
               {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
             </div>
           )}
@@ -3443,7 +3443,7 @@ const FEATURE_SLIDES = [
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Home Collection", desc:"Phlebotomist at your doorstep" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Fast Reports", desc:"Results in as little as 6 hours" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>, label:"Digital Reports", desc:"WhatsApp & email delivery" },
-      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"NABL Certified", desc:"All partner labs accredited" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"Verified Partner", desc:"All partner labs accredited" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>, label:"Best Prices", desc:"Transparent, no hidden fees" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0891B2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>, label:"24/7 Support", desc:"Expert help round the clock" },
     ]
@@ -3606,7 +3606,7 @@ function FeaturesCarousel() {
         {[
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
-          { Ic:IBadgeCheck, t1:"Verified & NABL",      t2:"Accredited Labs" },
+          { Ic:IBadgeCheck, t1:"Verified",              t2:"Partner Labs" },
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
@@ -3966,7 +3966,7 @@ export default function App() {
 
             {/* sub */}
             <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
-              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
+              Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
             {/* search bar */}
@@ -4075,17 +4075,17 @@ export default function App() {
           {/* 6-card grid */}
           <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:16 }}>
             {[
-              { title:"Full Body Checkup", sub:"65+ Tests · NABL Certified", price:1999, mrp:3499, off:43, badge:"Most Popular", badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop",
+              { title:"Full Body Checkup", sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular", badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","Haemoglobin (Hb)","Total WBC Count","Platelet Count","RBC Count","PCV / Haematocrit","MCV, MCH, MCHC","Fasting Blood Sugar","Post Prandial Sugar","HbA1c (Diabetes)","Urea (BUN)","Creatinine","Uric Acid","Calcium","Phosphorus","Sodium","Potassium","Chloride","Bilirubin Total","Bilirubin Direct","SGOT (AST)","SGPT (ALT)","Alkaline Phosphatase","GGT","Total Protein","Albumin","Globulin","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL","TSH (Thyroid)","T3 (Triiodothyronine)","T4 (Thyroxine)","Vitamin D (25-OH)","Vitamin B12","Iron","TIBC","Ferritin","PSA (Males)","Urine Routine","Urine Microscopy","ESR","CRP (C-Reactive Protein)","RA Factor","ASO Titre","LDH","Amylase","Lipase","Urine Sugar","Urine Protein","Urine Ketones","24-Hr Urine Creatinine","ECG","Chest X-Ray","BMI & Body Composition","Blood Pressure","SpO2","Opthalmologist Check","Dental Check","Diet Counselling","Physician Consultation"] },
-              { title:"Diabetes Care", sub:"12 Tests · NABL Certified", price:399, mrp:899, off:56, badge:"55% OFF", badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700",
+              { title:"Diabetes Care", sub:"12 Tests · Verified Partner", price:399, mrp:899, off:56, badge:"55% OFF", badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700",
                 tests:["Fasting Blood Sugar (FBS)","Post Prandial Blood Sugar (PPBS)","HbA1c (Glycated Haemoglobin)","Urea","Creatinine","eGFR (Kidney Function)","Urine Microalbumin","Urine Creatinine Ratio","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol"] },
-              { title:"Heart Health", sub:"22 Tests · NABL Certified", price:1799, mrp:2999, off:40, badge:"Cardiology", badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700",
+              { title:"Heart Health", sub:"22 Tests · Verified Partner", price:1799, mrp:2999, off:40, badge:"Cardiology", badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700",
                 tests:["Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL Cholesterol","LDL/HDL Ratio","Total/HDL Ratio","Non-HDL Cholesterol","Complete Blood Count (CBC)","Fasting Blood Sugar","HbA1c","Creatinine","eGFR","Sodium","Potassium","Magnesium","CRP (hs-CRP)","Homocysteine","Lipoprotein(a)","TSH (Thyroid)","Vitamin D","ECG (Resting 12-Lead)"] },
-              { title:"Thyroid Profile", sub:"T3, T4, TSH · NABL Certified", price:399, mrp:799, off:50, badge:"NABL", badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop",
+              { title:"Thyroid Profile", sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified", badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop",
                 tests:["TSH (Thyroid Stimulating Hormone)","T3 (Total Triiodothyronine)","T4 (Total Thyroxine)","Free T3 (FT3)","Free T4 (FT4)","Anti-TPO Antibody","Anti-Thyroglobulin Antibody","Thyroglobulin","Complete Blood Count","Fasting Blood Sugar","Cholesterol Total","Calcium"] },
-              { title:"Women's Wellness", sub:"40+ Tests · NABL Certified", price:2299, mrp:3999, off:43, badge:"For Women", badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop",
+              { title:"Women's Wellness", sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women", badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","Haemoglobin","Iron","TIBC","Ferritin","Fasting Blood Sugar","HbA1c","TSH (Thyroid)","T3","T4","FSH (Follicle Stimulating Hormone)","LH (Luteinising Hormone)","Oestradiol (E2)","Prolactin","Progesterone","AMH (Ovarian Reserve)","DHEA-Sulphate","Testosterone (Total)","Cortisol","Vitamin D (25-OH)","Vitamin B12","Folic Acid","Calcium","Phosphorus","Magnesium","Urea","Creatinine","Uric Acid","SGOT","SGPT","Alkaline Phosphatase","Cholesterol Total","Triglycerides","HDL","LDL","Urine Routine","Urine Microscopy","Pap Smear (Cervical)","CA-125 (Ovarian Marker)","CRP (hs-CRP)","Blood Pressure & BMI"] },
-              { title:"Senior Citizen", sub:"55+ Tests · NABL Certified", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
+              { title:"Senior Citizen", sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","ESR","CRP (hs-CRP)","Fasting Blood Sugar","Post Prandial Sugar","HbA1c","Urea","Creatinine","eGFR","Uric Acid","Sodium","Potassium","Calcium","Phosphorus","Magnesium","SGOT","SGPT","Alkaline Phosphatase","GGT","Bilirubin Total","Total Protein","Albumin","Cholesterol Total","Triglycerides","HDL","LDL","VLDL","TSH","Free T3","Free T4","Vitamin D (25-OH)","Vitamin B12","Iron","Ferritin","PSA Total (Males)","CA-125 (Females)","Urine Routine","Urine Microscopy","ECG (Resting)","Chest X-Ray","Bone Density (DEXA)","FOBT (Stool Blood)","Opthalmologist Review","Audiometry","Blood Pressure & Pulse","SpO2","BMI & Body Weight","Physician Consultation","Dietitian Consultation","Physiotherapy Assessment","Dental Review","Spirometry (Lung Function)","Carotid Doppler","Ankle-Brachial Index"] },
             ].map((pkg,i)=>(
               <div key={pkg.title}
@@ -4144,7 +4144,7 @@ export default function App() {
             {[
               {
                 n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
-                desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
+                desc:"Browse tests and packages. Compare prices across 6 verified partner labs instantly.",
                 icon:( <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
@@ -4194,7 +4194,7 @@ export default function App() {
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
-              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
+              {Icon:IAutoimmune,t:"Verified Partner",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FED7AA",ic:"#EA580C"},
               {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
               {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#BFDBFE",ic:"#1158A6"},
@@ -4252,7 +4252,7 @@ export default function App() {
         <div style={{ maxWidth:580,margin:"0 auto" }}>
           <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.15)",borderRadius:50,padding:"6px 18px",marginBottom:22 }}>
             <span style={{ width:7,height:7,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".72rem",fontWeight:700,color:"rgba(255,255,255,.9)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+            <span style={{ fontSize:".72rem",fontWeight:700,color:"rgba(255,255,255,.9)",letterSpacing:".1em",textTransform:"uppercase" }}>Verified Partner · Available 24/7</span>
           </div>
           <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.9rem,4vw,2.7rem)",fontWeight:900,color:"#fff",marginBottom:14,lineHeight:1.15,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
@@ -4294,11 +4294,11 @@ export default function App() {
                 <sup style={{ fontSize:".5rem",color:"#4B5563",fontWeight:600,marginLeft:2 }}>™</sup>
               </div>
               <p style={{ fontSize:".84rem",lineHeight:1.75,color:"#64748B",marginBottom:20,maxWidth:240 }}>
-                India's most transparent diagnostic booking platform. Compare prices across NABL-certified labs and book in under 2 minutes.
+                India's most transparent diagnostic booking platform. Compare prices across verified partner labs and book in under 2 minutes.
               </p>
               {/* Badges */}
               <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-                {[["✓","NABL Accredited"],["✓","ISO 15189"]].map(([ic,t])=>(
+                {[["✓","Verified Partner"],["✓","ISO 15189"]].map(([ic,t])=>(
                   <span key={t} style={{ display:"inline-flex",alignItems:"center",gap:5,background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.09)",borderRadius:6,padding:"4px 10px",fontSize:".68rem",fontWeight:700,color:"#94A3B8" }}>
                     <span style={{ color:"#4ADE80" }}>{ic}</span>{t}
                   </span>
@@ -4568,7 +4568,7 @@ export default function App() {
         <button onClick={()=>{
           const tests = done?.cart?.map((t,i)=>`<tr><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px">${i+1}. ${t.tname}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;color:#6B7280;text-decoration:line-through">₹${t.mrp?.toLocaleString()}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;font-weight:700;color:#15803D">₹${t.price?.toLocaleString()}</td></tr>`).join('');
           const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${esc(done?.id)}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${esc(done?.id)}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${esc(done?.name)}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${esc(done?.email)||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${esc(done?.phone)||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${esc(lab?.name)}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${esc(done?.date)} at ${esc(done?.slot)}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · NABL Accredited Labs · Free Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
+          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${esc(done?.id)}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${esc(done?.id)}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${esc(done?.name)}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${esc(done?.email)||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${esc(done?.phone)||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${esc(lab?.name)}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${esc(done?.date)} at ${esc(done?.slot)}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · Verified Partner Labs · Free Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
           const w = window.open('','_blank','width=800,height=900');
           w.document.write(html);
           w.document.close();
@@ -4682,7 +4682,7 @@ export default function App() {
               <div style={{ fontWeight:800,fontSize:".85rem",color:"var(--ink)",marginBottom:12 }}>Accreditation</div>
               <label style={{ display:"flex",alignItems:"center",gap:9,cursor:"pointer" }}>
                 <input type="checkbox" checked={filterNabl} onChange={e=>setFilterNabl(e.target.checked)} style={{ accentColor:"var(--teal)",width:15,height:15 }}/>
-                <span style={{ fontSize:".84rem",fontWeight:600,color:filterNabl?"var(--teal)":"var(--muted)" }}>NABL Accredited</span>
+                <span style={{ fontSize:".84rem",fontWeight:600,color:filterNabl?"var(--teal)":"var(--muted)" }}>Verified Partner</span>
               </label>
             </div>
 
@@ -4750,7 +4750,7 @@ export default function App() {
                           {/* name + badges */}
                           <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5 }}>
                             <span style={{ fontWeight:800,fontSize:"1rem",color:"var(--ink)" }}>{l.name}</span>
-                            {l.full?.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
+                            {l.full?.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ Verified</span>}
                             <span style={{ fontSize:".64rem",fontWeight:700,padding:"2px 8px",borderRadius:20,background:l.open?"#DCFCE7":"#FEE2E2",color:l.open?"#15803D":"#DC2626" }}>
                               {l.open?"● Open Now":"● Closed"}
                             </span>
@@ -4911,7 +4911,7 @@ export default function App() {
       </nav>
       {/* ── Sticky trust bar ── */}
       <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
-        {[["NABL Accredited Labs"],["Free Home Collection"]].map(([txt],i,arr)=>(
+        {[["Verified Partner Labs"],["Free Home Collection"]].map(([txt],i,arr)=>(
           <React.Fragment key={txt}>
             <span style={{ color:"#fff",fontSize:".68rem",fontWeight:700,letterSpacing:".08em",opacity:1,whiteSpace:"nowrap" }}>{txt}</span>
             {i<arr.length-1&&<div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 12px",flexShrink:0 }}/>}
@@ -4938,7 +4938,7 @@ export default function App() {
       ]}/>}
       {page==="terms" && <PolicyPage title="Terms of Service" navTo={navTo} content={[
         ["Acceptance of Terms","By using LabEase, you agree to these Terms of Service. If you do not agree, please do not use our platform."],
-        ["Services","LabEase is a diagnostic test booking platform. We facilitate bookings between patients and NABL-certified labs. We are not a diagnostic laboratory ourselves."],
+        ["Services","LabEase is a diagnostic test booking platform. We facilitate bookings between patients and verified partner labs. We are not a diagnostic laboratory ourselves."],
         ["Bookings & Cancellations","Bookings can be cancelled up to 2 hours before the scheduled collection time. Cancellations after this window may not be eligible for a full refund."],
         ["User Responsibilities","You agree to provide accurate personal and health information. LabEase is not liable for incorrect information provided during booking."],
         ["Limitation of Liability","LabEase shall not be liable for any medical decisions made based on lab results. Always consult a qualified healthcare professional."],

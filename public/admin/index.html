@@ -654,7 +654,7 @@ function Labs(props) {
             </div>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
               <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
-              <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>NABL Accredited</label>
+              <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Verified Partner</label>
             </div>
             <div>
               <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In</label>
@@ -720,7 +720,7 @@ function Labs(props) {
                       <input type="checkbox" checked={!!form.homeCollection} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{homeCollection:v});});}} /> Home Collection
                     </label>
                     <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}}>
-                      <input type="checkbox" checked={!!form.nabl} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});});}} /> NABL Accredited
+                      <input type="checkbox" checked={!!form.nabl} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});});}} /> Verified Partner
                     </label>
                   </div>
                   <div style={{marginBottom:8}}>
