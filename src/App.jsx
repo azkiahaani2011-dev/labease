@@ -1812,10 +1812,16 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
             </div>
-            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+            <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
+              <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+                style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
+                onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
+                onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+              <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+                style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+                onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2221,7 +2227,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
         ) : visibleTests.map(t=>{
-          const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=getTestSubtitle(t.name);
+          const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=t.subtitle||getTestSubtitle(t.name);
           return (
             <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,padding:"16px",marginBottom:10,boxShadow:"0 1px 4px rgba(0,0,0,.04)",fontFamily:"'Manrope',sans-serif" }}>
               {/* Top row: name + price */}

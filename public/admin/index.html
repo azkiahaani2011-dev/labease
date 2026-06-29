@@ -578,11 +578,11 @@ function Labs(props) {
   function startEdit(lab) {
     setEditing(lab.id);
     setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
-    var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day'};}) : [];
+    var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};}) : [];
     setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   }
   function saveEdit(id) {
-    var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day'};});
+    var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:testsArr.length?testsArr:l.tests}):l;});
     props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
     // update extra_labs too
@@ -611,7 +611,7 @@ function Labs(props) {
     if (!newLab.name.trim()) return;
     var maxId = props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
     var labId = maxId+1;
-    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day'};});
+    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
     if(testsArr.length===0) testsArr=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
     var lab = {id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
     var next = props.labs.concat([lab]);
@@ -673,17 +673,23 @@ function Labs(props) {
               <span/>
             </div>
             {newLabTests.map(function(t,i){return (
-              <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:6,alignItems:'center'}}>
-                <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                  {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
-                </select>
-                <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+              <div key={i} style={{marginBottom:8,background:'#F9FAFB',borderRadius:8,padding:'8px',border:'1px solid #E5E7EB'}}>
+                <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:5,alignItems:'center'}}>
+                  <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                  <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                  <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                  <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
+                    {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                  </select>
+                  <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <span style={{fontSize:10,fontWeight:700,color:'#6B7280',whiteSpace:'nowrap'}}>Blue Label:</span>
+                  <input type="text" placeholder="e.g. Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin" style={{width:'100%',fontSize:11,padding:'4px 8px',borderRadius:6,border:'1px solid #BFDBFE',background:'#EFF6FF',color:'#1D4ED8'}} value={t.subtitle||''} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{subtitle:v});return n;});}} />
+                </div>
               </div>
             );})}
-            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
+            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day',subtitle:''}]);});}}>+ Add Test</button>
           </div>
           <div style={{display:'flex',gap:8}}>
             <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
@@ -733,17 +739,23 @@ function Labs(props) {
                       <span/>
                     </div>
                     {editTests.map(function(t,i){return (
-                      <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}}>
-                        <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
-                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
-                        <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
-                        <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
-                          {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
-                        </select>
-                        <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                      <div key={i} style={{marginBottom:8,background:'#F9FAFB',borderRadius:8,padding:'8px',border:'1px solid #E5E7EB'}}>
+                        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}}>
+                          <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                          <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                          <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                          <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
+                            {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                          </select>
+                          <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center',gap:6}}>
+                          <span style={{fontSize:10,fontWeight:700,color:'#6B7280',whiteSpace:'nowrap'}}>Blue Label:</span>
+                          <input type="text" placeholder="e.g. Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin" style={{width:'100%',fontSize:11,padding:'4px 8px',borderRadius:6,border:'1px solid #BFDBFE',background:'#EFF6FF',color:'#1D4ED8'}} value={t.subtitle||''} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{subtitle:v});return n;});}} />
+                        </div>
                       </div>
                     );})}
-                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);});}}>+ Add Test</button>
+                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day',subtitle:''}]);});}}>+ Add Test</button>
                   </div>
                   <div style={{display:'flex',gap:8,marginTop:10}}>
                     <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(lab.id);}}>Save</button>
