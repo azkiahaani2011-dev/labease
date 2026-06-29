@@ -1767,11 +1767,25 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
               {l.tests.length} Tests Available
             </div>
-            <div style={{ display:"flex",alignItems:"center",gap:4,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",width:"fit-content" }}>
-              <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
-              <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
-              <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
-            </div>
+            {(()=>{
+              const rating = l.rating||4.5;
+              const full = Math.floor(rating);
+              const pct  = Math.round((rating - full)*100);
+              const gid  = `lsg-${l.id}`;
+              return (
+                <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                  <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                  <div style={{ display:"flex",gap:1 }}>
+                    {Array.from({length:5},(_,i)=>{
+                      const sid=`${gid}-${i}`;
+                      if(i<full) return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                      if(i===full&&pct>0) return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${pct}%`} stopColor="#F59E0B"/><stop offset={`${pct}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                      return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
         <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
