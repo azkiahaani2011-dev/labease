@@ -4309,9 +4309,7 @@ export default function App() {
           <p style={{ color:"rgba(255,255,255,.72)",marginBottom:12,fontSize:".95rem",lineHeight:1.78,maxWidth:440,margin:"0 auto 12px" }}>
             Transparent pricing · Free doorstep collection · Digital reports in hours.
           </p>
-          <p style={{ color:"rgba(255,255,255,.9)",fontWeight:800,fontSize:"1.05rem",marginBottom:32 }}>
-            Trusted by <span style={{ color:"#FCD34D" }}>50,000+</span> patients across India
-          </p>
+
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
               style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(0,0,0,.15)" }}
