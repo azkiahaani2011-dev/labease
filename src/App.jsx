@@ -2247,17 +2247,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   </div>
                   <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:3 }}>Timing</div>
-                  <div style={{ fontSize:".7rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
-                    {lab.sunday_timing ? (
-                      <>
-                        <div style={{ fontSize:".62rem",color:"#6B7280",fontWeight:600,marginBottom:1 }}>Mon–Sat</div>
-                        <div>{lab.timing||"6AM–10PM"}</div>
-                        <div style={{ fontSize:".62rem",color:"#6B7280",fontWeight:600,marginTop:4,marginBottom:1 }}>Sunday</div>
-                        <div>{lab.sunday_timing}</div>
-                      </>
-                    ) : (
-                      lab.timing||"6AM–10PM"
-                    )}
+                  <div style={{ fontSize:".68rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
+                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Mon–Sat</div>
+                    <div style={{ marginBottom:5 }}>{lab.timing||"6AM–10PM"}</div>
+                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Sunday</div>
+                    <div style={{ color:lab.sunday_timing?"#0D1117":"#EF4444" }}>{lab.sunday_timing||"Closed"}</div>
                   </div>
                 </div>
                 {/* Tests cell */}
