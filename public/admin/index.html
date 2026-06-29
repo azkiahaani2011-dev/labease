@@ -118,6 +118,10 @@ var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzIxNjcsImV4cCI6MjA2NjM0ODE2N30.0Q_1tkBdvJBygfwB01rAVMHqrQ7s89L2ZWHGpGqFM3k';
 var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function weekAgoStr(){var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10);}
+function monthAgoStr(){var d=new Date();d.setDate(d.getDate()-30);return d.toISOString().slice(0,10);}
+
 async function loadBookingsFromSupabase() {
   if (!sb) return null;
   try {
@@ -357,6 +361,12 @@ function Dashboard(props) {
   const total = bookings.length;
   const active = bookings.filter(function(b){return b.status==='Confirmed'||b.status==='Sample Collected';}).length;
   const revenue = bookings.filter(function(b){return b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const today = todayStr();
+  const todayRev = bookings.filter(function(b){return b.date===today&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const weekRev = bookings.filter(function(b){return b.date>=weekAgoStr()&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const monthStart = new Date(); monthStart.setDate(1);
+  const msStr = monthStart.toISOString().slice(0,10);
+  const monthRev = bookings.filter(function(b){return b.date>=msStr&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
   const statusCounts = {};
   STATUSES.forEach(function(s){statusCounts[s]=bookings.filter(function(b){return b.status===s;}).length;});
   const testCount = {};
@@ -368,14 +378,17 @@ function Dashboard(props) {
   const stats = [
     {label:'Total Bookings',value:total,bg:'#EFF6FF',emoji:'📋'},
     {label:'Active Bookings',value:active,bg:'#F0FDF4',emoji:'✅'},
+    {label:"Today's Revenue",value:fmt(todayRev),bg:'#FFF7ED',emoji:'📅'},
+    {label:'This Week',value:fmt(weekRev),bg:'#FDF4FF',emoji:'📊'},
+    {label:'This Month',value:fmt(monthRev),bg:'#F0FDF4',emoji:'📈'},
     {label:'Total Revenue',value:fmt(revenue),bg:'#FFF7ED',emoji:'💰'},
-    {label:'Total Labs',value:LAB_NAMES.length,bg:'#FDF4FF',emoji:'🏥'},
+    {label:'Total Labs',value:LAB_NAMES.length,bg:'#EFF6FF',emoji:'🏥'},
   ];
   return (
     <div style={{padding:28}}>
       <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Dashboard</div>
       <div style={{fontSize:13.5,color:'#6B7280',marginBottom:24}}>Welcome back, Admin. Here's what's happening today.</div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:24}}>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:24,gridAutoRows:'auto'}}>
         {stats.map(function(s) {
           return (
             <div key={s.label} className="card" style={{padding:20}}>
