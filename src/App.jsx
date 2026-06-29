@@ -2703,39 +2703,46 @@ async function _nominatimCoarse(lat, lng) {
 }
 
 async function reverseGeocodeAll(lat, lng) {
-  // BigDataCloud runs in parallel with the fine Nominatim call (different server, no rate limit)
   const [fine, bd] = await Promise.allSettled([
     _nominatimFine(lat, lng),
     _bigdata(lat, lng),
   ]);
-  // Coarse Nominatim runs after, respecting 1 req/sec
   const coarseResult = await Promise.allSettled([_nominatimCoarse(lat, lng)]);
   const coarse = coarseResult[0];
 
-  const fA = fine.status   === "fulfilled" ? fine.value.address   || {} : {};
-  const cA = coarse.status === "fulfilled" ? coarse.value.address || {} : {};
-  const bd_ = bd.status    === "fulfilled" ? bd.value              : {};
+  const fV  = fine.status   === "fulfilled" ? fine.value            : {};
+  const fA  = fV.address || {};
+  const cA  = coarse.status === "fulfilled" ? (coarse.value.address || {}) : {};
+  const bd_ = bd.status     === "fulfilled" ? bd.value              : {};
 
-  // ── Field extraction — prioritised for Indian addresses ──────────────────
-  const house    = fA.house_number || fA.building || fA.amenity || "";
-  const road     = fA.road || fA.residential || fA.pedestrian
-                || fA.footway || fA.path || cA.road || "";
-  const locality = fA.neighbourhood || fA.suburb || fA.quarter || fA.village
-                || cA.neighbourhood || cA.suburb
-                || bd_.locality || bd_.city || "";
-  const city     = fA.city || fA.city_district || fA.town
-                || cA.city || cA.town || cA.county
-                || bd_.principalSubdivision?.split(" ")[0] || "";
+  // POI/landmark — Nominatim puts the name of the nearest named place at zoom=18
+  const landmark = (fV.name && fV.name !== fA.road) ? fV.name : "";
+  const house    = fA.house_number || "";
+  const building = fA.building || fA.amenity || fA.shop || fA.office || "";
+  const road     = fA.road || fA.residential || fA.pedestrian || fA.footway || cA.road || "";
+  const area     = fA.neighbourhood || fA.suburb || fA.quarter || fA.village
+                 || cA.neighbourhood || cA.suburb || bd_.locality || "";
+  const city     = fA.city || fA.city_district || fA.town || cA.city || cA.town || bd_.city || "";
   const state    = fA.state || cA.state || bd_.principalSubdivision || "";
-  // Postcode: BigDataCloud has better India pin coverage than OSM
   const pin      = bd_.postcode || cA.postcode || fA.postcode || "";
 
-  return { house, road, locality, city, state, pin };
+  return { house, building, landmark, road, area, city, state, pin };
 }
 
-function buildAddressString({ house, road, locality, city, state, pin }) {
-  const line1 = [house, road].filter(Boolean).join(", ");
-  return [line1, locality, city, state, pin ? `PIN - ${pin}` : ""].filter(Boolean).join("\n");
+function buildAddressString({ house, building, landmark, road, area, city, state, pin }) {
+  // Format: House No, Building, Landmark, Road, Area, City, State PIN
+  // — exactly like Google Maps / Swiggy / Zomato single-line format
+  const parts = [
+    house    ? `Door No ${house}` : "",
+    building,
+    landmark,
+    road,
+    area     ? `near ${area}` : "",
+    city,
+    state,
+    pin      ? pin : "",
+  ].filter(Boolean);
+  return parts.join(", ");
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -2908,11 +2915,11 @@ function AddressDetector({ value, onChange }) {
       )}
 
       {/* Always-visible editable textarea */}
-      <textarea rows={6}
+      <textarea rows={3}
         style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",
           fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",
-          outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s",lineHeight:1.7 }}
-        placeholder={"House/Building, Street\nArea / Locality\nCity\nState\nPIN - 000000"}
+          outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s",lineHeight:1.6 }}
+        placeholder="Door No 24, Afif Plaza, Fire Station Rd, near Moghalpura, Hyderabad, Telangana 500002"
         value={value}
         onChange={e=>onChange(e.target.value)}
         onFocus={e=>e.target.style.borderColor="#1158A6"}
