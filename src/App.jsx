@@ -51,6 +51,20 @@ const G = () => (
     @keyframes orb1     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,15px)} }
     @keyframes orb2     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-25px,20px)} 66%{transform:translate(20px,-10px)} }
     @keyframes countIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes revealUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Scroll-reveal: sections start hidden, JS adds .visible */
+    .reveal { opacity:0; transform:translateY(36px); transition:opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.08s; }
+    .reveal-delay-2 { transition-delay:.16s; }
+    .reveal-delay-3 { transition-delay:.24s; }
+    /* Hero content fades in on load (no scroll needed) */
+    .hero-content { animation: revealUp .7s cubic-bezier(.22,1,.36,1) both; }
+    .hero-content-delay-1 { animation-delay:.1s; }
+    .hero-content-delay-2 { animation-delay:.2s; }
+    .hero-content-delay-3 { animation-delay:.32s; }
+    .hero-content-delay-4 { animation-delay:.44s; }
 
     /* Interactions */
     .hover-lift { transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s; }
@@ -3750,48 +3764,7 @@ export class ErrorBoundary extends React.Component {
 }
 
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
-function SplashScreen({ onDone }) {
-  const [fade, setFade] = useState(false);
-  useEffect(() => {
-    const t1 = setTimeout(() => setFade(true), 1800);
-    const t2 = setTimeout(() => onDone(), 2300);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
-  return (
-    <div style={{
-      position:"fixed", inset:0, zIndex:99999,
-      background:"linear-gradient(160deg,#0A1628 0%,#1158A6 60%,#0F2D6B 100%)",
-      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-      transition:"opacity .5s ease", opacity: fade ? 0 : 1, pointerEvents: fade ? "none" : "all",
-    }}>
-      {/* Subtle radial glow */}
-      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse at 50% 40%, rgba(37,99,235,.35) 0%, transparent 70%)", pointerEvents:"none" }}/>
-      {/* Logo */}
-      <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:28, zIndex:1 }}>
-        <span style={{ fontFamily:"'DM Serif Display',serif", fontSize:"2.6rem", color:"#fff", letterSpacing:"-.02em" }}>Lab</span>
-        <span style={{ fontFamily:"'DM Serif Display',serif", fontSize:"2.6rem", color:"#60A5FA", letterSpacing:"-.02em" }}>Ease</span>
-        <span style={{ fontSize:".55rem", color:"rgba(255,255,255,.45)", fontFamily:"'Manrope',sans-serif", fontWeight:700, marginLeft:3, alignSelf:"flex-start", marginTop:8, letterSpacing:".05em" }}>TM</span>
-      </div>
-      {/* Tagline */}
-      <div style={{ color:"rgba(255,255,255,.55)", fontFamily:"'Manrope',sans-serif", fontWeight:500, fontSize:".88rem", letterSpacing:".12em", textTransform:"uppercase", marginBottom:44, zIndex:1 }}>
-        Book. Test. Trust.
-      </div>
-      {/* Animated loader bar */}
-      <div style={{ width:120, height:3, background:"rgba(255,255,255,.15)", borderRadius:99, overflow:"hidden", zIndex:1 }}>
-        <div style={{ height:"100%", background:"linear-gradient(90deg,#60A5FA,#fff)", borderRadius:99, animation:"splashBar 1.8s ease forwards" }}/>
-      </div>
-      <style>{`
-        @keyframes splashBar {
-          from { width:0%; }
-          to   { width:100%; }
-        }
-      `}</style>
-    </div>
-  );
-}
-
 export default function App() {
-  const [splashDone, setSplashDone] = useState(false);
   const [page,   setPage]   = useState("home");
   const [lab,    setLab]    = useState(null);
   const [cart,   setCart]   = useState(() => {
@@ -3816,6 +3789,18 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
+  // Scroll-reveal: watch .reveal elements and add .visible when they enter viewport
+  useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(el => { if (el.isIntersecting) { el.target.classList.add("visible"); io.unobserve(el.target); } });
+    }, { threshold: 0.08 });
+    const attach = () => document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    attach();
+    const mo = new MutationObserver(attach);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => { io.disconnect(); mo.disconnect(); };
+  }, []);
+
   // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
   useEffect(() => {
@@ -4098,25 +4083,25 @@ export default function App() {
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* location indicator */}
-            <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               <span>Hyderabad</span>
             </div>
 
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
               Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -4143,13 +4128,13 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
+      <div className="reveal"><LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/></div>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
-      <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
+      <div className="reveal"><PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/></div>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" className="reveal" style={{ padding:"22px 0 20px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
@@ -4276,7 +4261,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section className="reveal" style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards — auto-swipe carousel */}
@@ -4330,10 +4315,10 @@ export default function App() {
         </div>
       </section>
 
-      <FeaturesCarousel/>
+      <div className="reveal"><FeaturesCarousel/></div>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section style={{ padding:"18px 0",background:"#EBF0FA" }}>
+      <section className="reveal" style={{ padding:"18px 0",background:"#EBF0FA" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
@@ -4367,7 +4352,7 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section style={{ padding:"18px 0",background:"#fff" }}>
+      <section className="reveal" style={{ padding:"18px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:18 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
@@ -4986,7 +4971,6 @@ export default function App() {
   ═══════════════════════════════════════════════════════════════ */
   return (
     <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
-      {!splashDone && <SplashScreen onDone={()=>setSplashDone(true)}/>}
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
