@@ -330,6 +330,7 @@ function Sidebar(props) {
     {key:'bookings',label:'Bookings',icon:React.createElement(IconBook,null)},
     {key:'labs',label:'Labs',icon:React.createElement(IconLab,null)},
     {key:'tests',label:'Tests & Pricing',icon:React.createElement(IconTest,null)},
+    {key:'settings',label:'Settings',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('circle',{cx:12,cy:12,r:3}),React.createElement('path',{d:'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'}))},
   ];
   return (
     <div className="sidebar">
@@ -645,9 +646,7 @@ function Labs(props) {
               );
             })}
             <div>
-              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Logo (upload image)</label>
-              <input type="file" accept="image/*" style={{width:'100%',fontSize:12}} onChange={function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){setNewLab(function(f){return Object.assign({},f,{logoBase64:ev.target.result});});};reader.readAsDataURL(file);}} />
-              {newLab.logoBase64 && <img src={newLab.logoBase64} alt="preview" style={{width:48,height:48,objectFit:'contain',marginTop:4,borderRadius:6,border:'1px solid #E5E7EB'}} />}
+              <LogoEditor logo={newLab.logoBase64||''} onChangeLogo={function(v){setNewLab(function(f){return Object.assign({},f,{logoBase64:v});});}} />
             </div>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
               <input type="checkbox" id="nl-hc" checked={newLab.homeCollection} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.homeCollection=v;return n;});}} />
@@ -713,9 +712,7 @@ function Labs(props) {
                       );
                     })}
                     <div>
-                      <label style={{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}}>Logo (upload)</label>
-                      <input type="file" accept="image/*" style={{width:'100%',fontSize:11}} onChange={function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){setForm(function(f){return Object.assign({},f,{logoBase64:ev.target.result});});};reader.readAsDataURL(file);}} />
-                      {form.logoBase64 && <img src={form.logoBase64} alt="logo" style={{width:36,height:36,objectFit:'contain',marginTop:3,borderRadius:4,border:'1px solid #E5E7EB'}} />}
+                      <LogoEditor logo={form.logoBase64||''} onChangeLogo={function(v){setForm(function(f){return Object.assign({},f,{logoBase64:v});});}} />
                     </div>
                   </div>
                   <div style={{display:'flex',gap:16,marginBottom:8}}>
@@ -892,6 +889,137 @@ function Tests(props) {
   );
 }
 
+function LogoEditor(props) {
+  var logo=props.logo, onChangeLogo=props.onChangeLogo;
+  var CSIZE=200;
+  var sr=React.useState(null),rawSrc=sr[0],setRawSrc=sr[1];
+  var sox=React.useState(0),offX=sox[0],setOffX=sox[1];
+  var soy=React.useState(0),offY=soy[0],setOffY=soy[1];
+  var sz=React.useState(1),zoom=sz[0],setZoom=sz[1];
+  var sed=React.useState(false),editing=sed[0],setEditing=sed[1];
+  var sdg=React.useState(null),drag=sdg[0],setDrag=sdg[1];
+  function onFileChange(ev){
+    var file=ev.target.files[0]; if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(e2){setRawSrc(e2.target.result);setOffX(0);setOffY(0);setZoom(1);setEditing(true);};
+    reader.readAsDataURL(file);
+  }
+  function apply(){
+    var canvas=document.createElement('canvas');
+    canvas.width=CSIZE; canvas.height=CSIZE;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,CSIZE,CSIZE);
+    var img=new Image();
+    img.onload=function(){
+      ctx.save();
+      ctx.translate(CSIZE/2+offX,CSIZE/2+offY);
+      ctx.scale(zoom,zoom);
+      ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+      ctx.restore();
+      onChangeLogo(canvas.toDataURL('image/jpeg',0.88));
+      setEditing(false); setRawSrc(null);
+    };
+    img.src=rawSrc;
+  }
+  function onMD(ev){ev.preventDefault();setDrag({sx:ev.clientX,sy:ev.clientY,ox:offX,oy:offY});}
+  function onMM(ev){if(!drag)return;setOffX(drag.ox+ev.clientX-drag.sx);setOffY(drag.oy+ev.clientY-drag.sy);}
+  function onMU(){setDrag(null);}
+  function onTD(ev){var t=ev.touches[0];setDrag({sx:t.clientX,sy:t.clientY,ox:offX,oy:offY});}
+  function onTM(ev){if(!drag)return;ev.preventDefault();var t=ev.touches[0];setOffX(drag.ox+t.clientX-drag.sx);setOffY(drag.oy+t.clientY-drag.sy);}
+  function clampZ(v){return Math.min(1,Math.max(0.05,parseFloat(v.toFixed(2))));}
+  if(editing&&rawSrc){
+    return (
+      <div style={{marginBottom:16}}>
+        <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}}>Logo Editor — drag to reposition, slider or ± to zoom</label>
+        <div style={{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',cursor:drag?'grabbing':'grab',background:'#F3F4F6',position:'relative',userSelect:'none'}}
+          onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
+          onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onMU}>
+          <img src={rawSrc} style={{position:'absolute',left:'50%',top:'50%',transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'}} draggable={false} />
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10,marginBottom:10}}>
+          <span style={{fontSize:12,color:'#6B7280',fontWeight:600}}>Zoom</span>
+          <button onClick={function(){setZoom(function(z){return clampZ(z-0.1);});}} style={{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}}>-</button>
+          <input type="range" min="0.05" max="1" step="0.05" value={zoom} onChange={function(ev){setZoom(parseFloat(ev.target.value));}} style={{flex:1,accentColor:'#1158A6'}} />
+          <button onClick={function(){setZoom(function(z){return clampZ(z+0.1);});}} style={{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}}>+</button>
+          <span style={{fontSize:12,color:'#6B7280',minWidth:40,textAlign:'right'}}>{Math.round(zoom*100)}%</span>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <button className="btn btn-primary btn-sm" onClick={apply}>Apply Logo</button>
+          <button className="btn btn-outline btn-sm" onClick={function(){setEditing(false);setRawSrc(null);}}>Cancel</button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{marginBottom:14}}>
+      <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}}>Lab Logo</label>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        {logo
+          ? <img src={logo} style={{width:52,height:52,borderRadius:10,objectFit:'contain',border:'1px solid #E5E7EB',background:'#F9FAFB',flexShrink:0}} />
+          : <div style={{width:52,height:52,borderRadius:10,border:'2px dashed #D1D5DB',display:'flex',alignItems:'center',justifyContent:'center',color:'#9CA3AF',fontSize:22,flexShrink:0}}>🏥</div>
+        }
+        <label style={{cursor:'pointer'}}>
+          <span style={{background:'#EFF6FF',color:'#1158A6',border:'1px solid #BFDBFE',borderRadius:8,padding:'7px 14px',fontSize:12,fontWeight:700,cursor:'pointer'}}>{logo?'Change Logo':'+ Add Logo'}</span>
+          <input type="file" accept="image/*" style={{display:'none'}} onChange={onFileChange} />
+        </label>
+        {logo && <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'5px 10px',fontSize:12,fontWeight:600,cursor:'pointer'}} onClick={function(){onChangeLogo('');}}>Remove</button>}
+      </div>
+    </div>
+  );
+}
+
+function Settings() {
+  const [cur, setCur] = useState('');
+  const [np, setNp] = useState('');
+  const [cp, setCp] = useState('');
+  const [msg, setMsg] = useState(null);
+  function changePass(ev) {
+    ev.preventDefault();
+    var storedPass = localStorage.getItem('le_admin_pass') || 'labease2024';
+    if(cur !== storedPass){setMsg({ok:false,text:'Current password is incorrect.'});return;}
+    if(!np){setMsg({ok:false,text:'New password cannot be empty.'});return;}
+    if(np !== cp){setMsg({ok:false,text:'New passwords do not match.'});return;}
+    localStorage.setItem('le_admin_pass', np);
+    setCur(''); setNp(''); setCp('');
+    setMsg({ok:true,text:'Password updated successfully!'});
+  }
+  return (
+    <div style={{padding:28}}>
+      <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Settings</div>
+      <div style={{fontSize:13.5,color:'#6B7280',marginBottom:24}}>Manage your admin account settings.</div>
+      <div style={{maxWidth:480}}>
+        <div className="card" style={{padding:28}}>
+          <div style={{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:20}}>Change Password</div>
+          <form onSubmit={changePass}>
+            <div style={{marginBottom:14}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Current Password</label>
+              <input type="password" style={{width:'100%'}} value={cur} onChange={function(ev){setCur(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            <div style={{marginBottom:14}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>New Password</label>
+              <input type="password" style={{width:'100%'}} value={np} onChange={function(ev){setNp(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            <div style={{marginBottom:18}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Confirm New Password</label>
+              <input type="password" style={{width:'100%'}} value={cp} onChange={function(ev){setCp(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            {msg && <div style={{background:msg.ok?'#F0FDF4':'#FEF2F2',color:msg.ok?'#15803D':'#DC2626',fontSize:12,padding:'8px 12px',borderRadius:8,marginBottom:14,fontWeight:500}}>{msg.text}</div>}
+            <button type="submit" className="btn btn-primary">Update Password</button>
+          </form>
+        </div>
+        <div className="card" style={{padding:28,marginTop:16}}>
+          <div style={{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:8}}>Account Info</div>
+          <div style={{fontSize:13.5,color:'#6B7280',lineHeight:1.6}}>
+            <div><strong style={{color:'#374151'}}>Username: </strong>admin</div>
+            <div><strong style={{color:'#374151'}}>Role: </strong>Administrator</div>
+            <div><strong style={{color:'#374151'}}>Platform: </strong>LabEase Admin Panel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [authed, setAuthed] = useState(function(){return localStorage.getItem('le_auth')==='1';});
   const [page, setPage] = useState('dashboard');
@@ -919,7 +1047,7 @@ function App() {
 
   if (!authed) return React.createElement(Login, {onLogin:login});
 
-  var pageTitles = {dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing'};
+  var pageTitles = {dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing',settings:'Settings'};
 
   return (
     <div>
@@ -936,6 +1064,7 @@ function App() {
         {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} />}
         {page==='labs' && <Labs labs={labs} setLabs={setLabs} />}
         {page==='tests' && <Tests tests={tests} setTests={setTests} />}
+        {page==='settings' && <Settings />}
       </div>
     </div>
   );
