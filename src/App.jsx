@@ -1799,31 +1799,27 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
           <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
         </div>
         <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
-        <div style={{ display:"flex",gap:10 }}>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              {l.timing||"6AM – 10PM"}
-            </div>
+        <div style={{ display:"flex",gap:16 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {l.timing||"6AM – 10PM"}
           </div>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
-            </div>
-            <div style={{ display:"flex",gap:8,marginTop:4 }}>
-              <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-                style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:12,padding:"16px 0",fontWeight:800,cursor:"pointer",fontSize:".95rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",flex:1,letterSpacing:".01em" }}
-                onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>View Tests</button>
-              <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-                style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:12,padding:"16px 0",fontWeight:800,cursor:"pointer",fontSize:".95rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.4)",transition:"background .15s",flex:1,letterSpacing:".01em" }}
-                onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-                onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-            </div>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
           </div>
         </div>
+      </div>
+      {/* Full-width buttons at card bottom */}
+      <div style={{ display:"flex",borderTop:"1px solid #E5E7EB" }}>
+        <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+          style={{ flex:1,background:"#fff",color:"#1158A6",border:"none",borderRight:"1px solid #E5E7EB",padding:"16px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",letterSpacing:".01em" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
+          onMouseLeave={e=>e.currentTarget.style.background="#fff"}>View Tests</button>
+        <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+          style={{ flex:1,background:"#1158A6",color:"#fff",border:"none",padding:"16px 0",fontWeight:800,cursor:"pointer",fontSize:"1rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",letterSpacing:".01em" }}
+          onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+          onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
       </div>
     </div>
   );
