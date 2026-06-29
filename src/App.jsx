@@ -3147,7 +3147,11 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
-  const LAB_SLOTS = slotsFromTiming(lab?.timing);
+  // Pick slot list based on whether the selected date is a Sunday
+  const isSunday = loc.date ? new Date(loc.date + 'T00:00:00').getDay() === 0 : false;
+  const LAB_SLOTS = isSunday && lab?.sunday_timing
+    ? slotsFromTiming(lab.sunday_timing)
+    : slotsFromTiming(lab?.timing);
   const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
@@ -3238,7 +3242,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     const isToday=i===0;
                     const sel=loc.date===val;
                     return (
-                      <button key={val} onClick={()=>sl("date",val)}
+                      <button key={val} onClick={()=>setLoc(f=>({...f,date:val,slot:""}))}
                         style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
                         <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
                         <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
