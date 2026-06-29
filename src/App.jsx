@@ -3932,10 +3932,25 @@ export default function App() {
       return map;
     } catch(e) { return {}; }
   })();
+  // Build a map of all admin-saved labs (including overrides for original labs)
+  const adminLabMap = (() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const map = {};
+      saved.forEach(l => { map[l.id] = l; });
+      return map;
+    } catch { return {}; }
+  })();
   LABS.forEach(lab => {
     if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
     if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
     if (adminLabLogos[lab.id])                   lab.logoBase64 = adminLabLogos[lab.id];
+    // Apply timing / sunday_timing edits from admin panel
+    const saved = adminLabMap[lab.id];
+    if (saved) {
+      if (saved.timing)        lab.timing        = saved.timing;
+      if (saved.sunday_timing) lab.sunday_timing = saved.sunday_timing;
+    }
     lab.tests.forEach(t => {
       const po = adminOv.prices[t.id];
       if (po) {
