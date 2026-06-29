@@ -2668,52 +2668,67 @@ function PaymentSelector({ total, onPay, onBack }) {
 /* ─── BOOKING FIELD (top-level so it never remounts on parent re-render) ─── */
 // ─── Location cache ───────────────────────────────────────────────────────────
 const _locCache = { lat: null, lng: null, address: null, accuracy: null, ts: 0 };
-const LOC_TTL   = 3 * 60 * 1000; // 3 min cache
-const ACC_GOOD  = 50;             // metres — accept GPS fix below this
-const ACC_MAX   = 200;            // metres — give up improving above this after timeout
+const LOC_TTL  = 3 * 60 * 1000; // 3 min — don't re-request GPS within this window
+const ACC_GOOD = 50;             // metres — accept immediately if GPS reaches this
+const DEADLINE = 12000;          // ms  — hard cutoff, use best fix we have by then
 
-// ─── Reverse geocoding ────────────────────────────────────────────────────────
-async function _nominatim(lat, lng, zoom) {
-  const r = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=${zoom}`,
-    { headers: { "User-Agent": "LabEase/1.0" } }
-  );
-  if (!r.ok) throw new Error("nominatim");
+// ─── Geocoding: sequential to respect Nominatim's 1 req/sec policy ───────────
+async function _fetchJSON(url, opts = {}) {
+  const r = await fetch(url, { ...opts, signal: AbortSignal.timeout(8000) });
+  if (!r.ok) throw new Error(r.status);
   return r.json();
 }
 
+// Primary: Nominatim zoom=18 (building/road level)
+async function _nominatimFine(lat, lng) {
+  return _fetchJSON(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&extratags=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=18`
+  );
+}
+
+// Secondary: BigDataCloud — free, no key, good India locality + postcode coverage
 async function _bigdata(lat, lng) {
-  const r = await fetch(
+  return _fetchJSON(
     `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
   );
-  if (!r.ok) throw new Error("bigdata");
-  return r.json();
+}
+
+// Tertiary: Nominatim zoom=10 (district level) — most reliable postcode in OSM India
+// Delayed 1100ms to stay within Nominatim's 1 req/sec limit (after the fine call)
+async function _nominatimCoarse(lat, lng) {
+  await new Promise(r => setTimeout(r, 1100));
+  return _fetchJSON(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=10`
+  );
 }
 
 async function reverseGeocodeAll(lat, lng) {
-  // Run all three in parallel — zoom=18 for building/road, zoom=14 for postcode, bigdata for locality
-  const [fine, coarse, bd] = await Promise.allSettled([
-    _nominatim(lat, lng, 18),
-    _nominatim(lat, lng, 14),
+  // BigDataCloud runs in parallel with the fine Nominatim call (different server, no rate limit)
+  const [fine, bd] = await Promise.allSettled([
+    _nominatimFine(lat, lng),
     _bigdata(lat, lng),
   ]);
+  // Coarse Nominatim runs after, respecting 1 req/sec
+  const coarseResult = await Promise.allSettled([_nominatimCoarse(lat, lng)]);
+  const coarse = coarseResult[0];
 
-  const fineA   = fine.status   === "fulfilled" ? fine.value.address   || {} : {};
-  const coarseA = coarse.status === "fulfilled" ? coarse.value.address || {} : {};
-  const bdV     = bd.status     === "fulfilled" ? bd.value              : {};
+  const fA = fine.status   === "fulfilled" ? fine.value.address   || {} : {};
+  const cA = coarse.status === "fulfilled" ? coarse.value.address || {} : {};
+  const bd_ = bd.status    === "fulfilled" ? bd.value              : {};
 
-  // Merge: fine wins for building/road, coarse wins for postcode, bigdata fills gaps
-  const house    = fineA.house_number || fineA.building || "";
-  const road     = fineA.road || fineA.residential || fineA.pedestrian || fineA.footway
-                || coarseA.road || bdV.locality || "";
-  const locality = fineA.neighbourhood || fineA.suburb || fineA.quarter
-                || coarseA.neighbourhood || coarseA.suburb
-                || bdV.localityInfo?.administrative?.find(x => x.order === 8)?.name || "";
-  const city     = fineA.city || fineA.town || coarseA.city || coarseA.town
-                || bdV.city || bdV.principalSubdivision?.split(",")[0]?.trim() || "";
-  const state    = fineA.state || coarseA.state || bdV.principalSubdivision || "";
-  // Postcode: prefer coarse nominatim, fallback bigdata
-  const pin      = coarseA.postcode || fineA.postcode || bdV.postcode || "";
+  // ── Field extraction — prioritised for Indian addresses ──────────────────
+  const house    = fA.house_number || fA.building || fA.amenity || "";
+  const road     = fA.road || fA.residential || fA.pedestrian
+                || fA.footway || fA.path || cA.road || "";
+  const locality = fA.neighbourhood || fA.suburb || fA.quarter || fA.village
+                || cA.neighbourhood || cA.suburb
+                || bd_.locality || bd_.city || "";
+  const city     = fA.city || fA.city_district || fA.town
+                || cA.city || cA.town || cA.county
+                || bd_.principalSubdivision?.split(" ")[0] || "";
+  const state    = fA.state || cA.state || bd_.principalSubdivision || "";
+  // Postcode: BigDataCloud has better India pin coverage than OSM
+  const pin      = bd_.postcode || cA.postcode || fA.postcode || "";
 
   return { house, road, locality, city, state, pin };
 }
@@ -2725,14 +2740,14 @@ function buildAddressString({ house, road, locality, city, state, pin }) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 function AddressDetector({ value, onChange }) {
-  const [phase,    setPhase]    = useState("idle");    // idle|locking|geocoding|success|error
-  const [accuracy, setAccuracy] = useState(null);      // metres
+  const [phase,    setPhase]    = useState("idle"); // idle|locking|geocoding|success|error
+  const [accuracy, setAccuracy] = useState(null);
   const [errMsg,   setErrMsg]   = useState("");
-  const watchIdRef              = useRef(null);
-  const bestPosRef              = useRef(null);         // best GPS fix so far
-  const timerRef                = useRef(null);
+  const watchIdRef  = useRef(null);
+  const bestPosRef  = useRef(null);
+  const timerRef    = useRef(null);
+  const finishedRef = useRef(false); // Bug 2 fix: guard against double-call
 
-  // Clean up watchPosition on unmount
   useEffect(() => () => _cleanup(), []);
 
   function _cleanup() {
@@ -2744,6 +2759,9 @@ function AddressDetector({ value, onChange }) {
   }
 
   async function _geocodeAndFinish(pos) {
+    // Bug 2 fix: only the first caller proceeds
+    if (finishedRef.current) return;
+    finishedRef.current = true;
     _cleanup();
     setPhase("geocoding");
     const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
@@ -2751,13 +2769,12 @@ function AddressDetector({ value, onChange }) {
       const parts = await reverseGeocodeAll(lat, lng);
       const addr  = buildAddressString(parts);
       _locCache.lat = lat; _locCache.lng = lng;
-      _locCache.address = addr; _locCache.accuracy = acc; _locCache.ts = Date.now();
+      _locCache.address = addr; _locCache.accuracy = Math.round(acc); _locCache.ts = Date.now();
       onChange(addr);
       setAccuracy(Math.round(acc));
       setPhase("success");
     } catch {
-      // Geocoding failed — let user type
-      setErrMsg("Could not fetch address. Please type it manually.");
+      setErrMsg("Could not fetch address details. Please type it manually.");
       setPhase("error");
     }
   }
@@ -2765,7 +2782,7 @@ function AddressDetector({ value, onChange }) {
   async function detect() {
     if (phase === "locking" || phase === "geocoding") return;
 
-    // Fresh cache hit
+    // Serve from cache if fresh
     if (_locCache.address && Date.now() - _locCache.ts < LOC_TTL) {
       onChange(_locCache.address);
       setAccuracy(_locCache.accuracy);
@@ -2774,68 +2791,64 @@ function AddressDetector({ value, onChange }) {
     }
 
     if (!navigator.geolocation) {
-      setErrMsg("GPS not supported on this browser. Please type your address.");
+      setErrMsg("GPS not available on this browser. Please type your address.");
       setPhase("error");
       return;
     }
 
+    finishedRef.current = false;
+    bestPosRef.current  = null;
     setPhase("locking");
     setErrMsg("");
     setAccuracy(null);
-    bestPosRef.current = null;
 
-    // watchPosition keeps getting updates — we accept the first fix ≤ ACC_GOOD,
-    // or the best fix we've seen after ACC_MAX ms timeout.
+    // Bug 1 & 3 fix: timeout:Infinity prevents watchPosition from self-erroring.
+    // We control the deadline ourselves via setTimeout below.
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         const acc = pos.coords.accuracy;
         setAccuracy(Math.round(acc));
-        // Keep best (most accurate) fix seen so far
         if (!bestPosRef.current || acc < bestPosRef.current.coords.accuracy) {
           bestPosRef.current = pos;
         }
-        if (acc <= ACC_GOOD) {
-          // Good enough — use immediately
-          _geocodeAndFinish(pos);
-        }
-        // else: keep watching — timer will fire and use best available
+        // Accept immediately if GPS is precise enough
+        if (acc <= ACC_GOOD) _geocodeAndFinish(pos);
       },
       (err) => {
-        _cleanup();
-        const msgs = {
-          1: "Location permission denied. Enable it in your browser settings, then try again.",
-          2: "GPS signal unavailable. Try moving near a window or outdoors.",
-          3: "Location timed out. GPS signal may be weak — please type your address.",
-        };
-        setErrMsg(msgs[err.code] || "Location error. Please type your address.");
-        setPhase("error");
+        // Only handle permission denied (code 1) — other codes mean no signal yet,
+        // our deadline timer handles those cases.
+        if (err.code === 1) {
+          _cleanup();
+          setErrMsg("Location permission denied. Enable it in Chrome Settings → Site Settings → Location.");
+          setPhase("error");
+        }
+        // codes 2 & 3: GPS just hasn't fixed yet — keep waiting for deadline
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      // Bug 1 fix: timeout:Infinity — never let watchPosition self-error on timeout
+      { enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 }
     );
 
-    // Hard deadline: after 10s use best fix we have, even if > ACC_GOOD
+    // Hard deadline: use best fix seen, even if > ACC_GOOD
     timerRef.current = setTimeout(() => {
       if (bestPosRef.current) {
         _geocodeAndFinish(bestPosRef.current);
       } else {
         _cleanup();
-        setErrMsg("GPS signal too weak. Try moving outdoors or type your address.");
-        setPhase("error");
+        if (!finishedRef.current) {
+          finishedRef.current = true;
+          setErrMsg("GPS signal too weak indoors. Move near a window or step outside, then try again.");
+          setPhase("error");
+        }
       }
-    }, 10000);
+    }, DEADLINE);
   }
 
-  const isWorking = phase === "locking" || phase === "geocoding";
-
-  const phaseLabel = phase === "locking"
-    ? (accuracy ? `Locking GPS… ±${accuracy}m` : "Requesting GPS…")
-    : phase === "geocoding"
-    ? "Fetching address…"
-    : "Use Current Location";
+  const isWorking  = phase === "locking" || phase === "geocoding";
+  const phaseLabel = phase === "geocoding" ? "Fetching address…"
+    : accuracy ? `Finding precise location… ±${accuracy}m` : "Requesting GPS permission…";
 
   return (
     <div>
-      {/* Detect button — hidden after success */}
       {phase !== "success" && (
         <button type="button" onClick={detect} disabled={isWorking}
           style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",
@@ -2843,11 +2856,10 @@ function AddressDetector({ value, onChange }) {
             background:isWorking?"#EEF4FF":"#F5F7FF",color:"#1158A6",fontWeight:700,
             fontSize:".83rem",cursor:isWorking?"not-allowed":"pointer",
             fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
-          {isWorking ? (
-            <><svg style={{animation:"spin 1s linear infinite"}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>{phaseLabel}</>
-          ) : (
-            <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Use Current Location</>
-          )}
+          {isWorking
+            ? <><svg style={{animation:"spin 1s linear infinite"}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>{phaseLabel}</>
+            : <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Use Current Location</>
+          }
         </button>
       )}
 
