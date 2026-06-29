@@ -24,6 +24,7 @@ jobs:
       - run: VITE_BASE_PATH=/labease/ npm run build
         env:
           NODE_ENV: production
+          VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
