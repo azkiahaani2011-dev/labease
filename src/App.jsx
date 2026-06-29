@@ -2248,10 +2248,16 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                   </div>
                   <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:3 }}>Timing</div>
                   <div style={{ fontSize:".68rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
-                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Mon–Sat</div>
-                    <div style={{ marginBottom:5 }}>{lab.timing||"6AM–10PM"}</div>
-                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Sunday</div>
-                    <div style={{ color:lab.sunday_timing?"#0D1117":"#EF4444" }}>{lab.sunday_timing||"Closed"}</div>
+                    {lab.sunday_timing ? (
+                      <>
+                        <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Mon–Sat</div>
+                        <div style={{ marginBottom:5 }}>{lab.timing||"6AM–10PM"}</div>
+                        <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Sunday</div>
+                        <div>{lab.sunday_timing}</div>
+                      </>
+                    ) : (
+                      lab.timing||"6AM–10PM"
+                    )}
                   </div>
                 </div>
                 {/* Tests cell */}

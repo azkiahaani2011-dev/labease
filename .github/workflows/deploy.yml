@@ -26,6 +26,15 @@ jobs:
           NODE_ENV: production
           VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
 
+      - name: Build admin panel
+        run: |
+          cd admin
+          npm install
+          npm run build
+
+      - name: Copy admin build into dist
+        run: cp -r admin-dist dist/admin
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
