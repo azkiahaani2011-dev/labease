@@ -9,7 +9,7 @@ const G = () => (
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Manrope', sans-serif; background: #F5F7FF; color: #111; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.7; }
+    body { font-family: 'Manrope', sans-serif; background: #F8FAFC; color: #111; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.7; }
 
     :root {
       --teal: #1158A6;
@@ -1950,7 +1950,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       </div>
 
       {/* ── BODY: FULL WIDTH LAB LIST ── */}
-      <div style={{ background:"#F5F7FF", minHeight:"80vh", padding:"16px 0" }}>
+      <div style={{ background:"#F8FAFC", minHeight:"80vh", padding:"16px 0" }}>
         {/* Search + Sort row */}
         <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:4,marginBottom:16,alignItems:"center",maxWidth:580 }}>
