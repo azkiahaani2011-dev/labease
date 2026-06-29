@@ -2831,7 +2831,7 @@ const BookingField = ({ label, req, ...p }) => (
 function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
   const [loc, setLoc] = useState(form);
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
-  const ok1 = loc.name.trim().length>=2 && /^(\+91[\s\-]?)?[6-9]\d{9}$/.test(loc.phone.replace(/\s/g,'')) && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
+  const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
   const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
