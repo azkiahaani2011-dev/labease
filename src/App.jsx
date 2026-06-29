@@ -2111,83 +2111,89 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   return (
   <div style={{ minHeight:"80vh",background:"#fff" }}>
     {/* Lab info section */}
-    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ background:"#F8FAFC",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
       {(()=>{
-        const meta = LAB_META.find(m=>m.id===lab.id);
-        const src  = lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||'';
+        const meta   = LAB_META.find(m=>m.id===lab.id);
+        const src    = lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||'';
         const accent = meta?.accent||"#1158A6";
         const rating = lab.rating||4.5;
         const full   = Math.floor(rating);
         const partial= Math.round((rating-full)*100);
         const gid    = `sg-${lab.id}`;
         return (
-          <div>
-            {/* Banner with gradient + back button */}
-            <div style={{ position:"relative",height:160,background:`linear-gradient(135deg,${accent}ee 0%,${accent}99 100%)`,overflow:"hidden" }}>
-              {/* subtle pattern */}
-              <svg style={{ position:"absolute",bottom:0,right:0,opacity:.08 }} width="220" height="160" viewBox="0 0 220 160"><circle cx="160" cy="80" r="100" fill="#fff"/><circle cx="220" cy="20" r="60" fill="#fff"/></svg>
-              {/* back button */}
-              <button onClick={()=>navTo("labs")} style={{ position:"absolute",top:12,left:12,background:"rgba(255,255,255,.18)",backdropFilter:"blur(6px)",border:"1px solid rgba(255,255,255,.3)",borderRadius:50,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer" }} aria-label="Back">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
-              </button>
-              {/* logo floated bottom-left */}
-              <div style={{ position:"absolute",bottom:-28,left:16,width:72,height:72,borderRadius:16,background:"#fff",border:"2px solid #E5E7EB",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden" }}>
-                {src
-                  ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
-                  : <span style={{ fontWeight:900,fontSize:26,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
-                }
-              </div>
-            </div>
+          <div style={{ padding:"12px 16px 16px" }}>
+            {/* Back button */}
+            <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:"0 0 12px",color:"#6B7280",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".84rem" }} aria-label="Back">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+              Labs
+            </button>
 
-            {/* Info below banner */}
-            <div style={{ padding:"38px 16px 16px" }}>
-              {/* Name */}
-              <div style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",lineHeight:1.25,marginBottom:5,letterSpacing:"-.02em" }}>{lab.name}</div>
-              {/* Rating row */}
-              <div style={{ display:"flex",alignItems:"center",gap:6,marginBottom:8 }}>
-                <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
-                <div style={{ display:"flex",gap:1 }}>
-                  {Array.from({length:5},(_,i)=>{
-                    const sid=`${gid}-${i}`;
-                    if(i<full) return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
-                    if(i===full&&partial>0) return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${partial}%`} stopColor="#F59E0B"/><stop offset={`${partial}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
-                    return <svg key={i} width="18" height="18" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
-                  })}
+            {/* Main card: logo left, name+rating right */}
+            <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:"14px",marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+              <div style={{ display:"flex",gap:14,alignItems:"flex-start" }}>
+                {/* Logo */}
+                <div style={{ width:80,height:80,borderRadius:14,border:`2px solid ${accent}22`,background:meta?.bg||"#F0F4FF",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
+                  {src
+                    ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                    : <span style={{ fontWeight:900,fontSize:28,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
+                  }
                 </div>
-                <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
+                {/* Info */}
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.3,marginBottom:4,letterSpacing:"-.02em" }}>{lab.name}</div>
+                  <div style={{ fontSize:".76rem",color:"#6B7280",marginBottom:6 }}>Diagnostic Lab · {lab.city}</div>
+                  {/* Stars inline */}
+                  <div style={{ display:"flex",alignItems:"center",gap:4 }}>
+                    <div style={{ display:"flex",gap:1 }}>
+                      {Array.from({length:5},(_,i)=>{
+                        const sid=`${gid}-${i}`;
+                        if(i<full) return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                        if(i===full&&partial>0) return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${partial}%`} stopColor="#F59E0B"/><stop offset={`${partial}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                        return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
+                      })}
+                    </div>
+                    <span style={{ fontWeight:800,fontSize:".8rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                    <span style={{ fontSize:".75rem",color:"#9CA3AF" }}>({(lab.reviews||0).toLocaleString()})</span>
+                  </div>
+                </div>
               </div>
-              {/* Address */}
-              <div style={{ display:"flex",alignItems:"flex-start",gap:5,fontSize:".84rem",color:"#6B7280",lineHeight:1.5,marginBottom:14 }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:2 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+
+              {/* Divider */}
+              <div style={{ height:1,background:"#F1F5F9",margin:"12px 0" }}/>
+
+              {/* Address row */}
+              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
               </div>
-
-              {/* Stats row */}
-              <div style={{ display:"flex",gap:0,borderRadius:12,border:"1px solid #E5E7EB",overflow:"hidden",marginBottom:14 }}>
-                <div style={{ flex:1,padding:"10px 14px",borderRight:"1px solid #E5E7EB" }}>
-                  <div style={{ fontSize:".68rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>Timing</div>
-                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117" }}>{lab.timing||"6AM – 10PM"}</div>
-                </div>
-                <div style={{ flex:1,padding:"10px 14px" }}>
-                  <div style={{ fontSize:".68rem",fontWeight:700,color:"#9CA3AF",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>Tests</div>
-                  <div style={{ fontSize:".9rem",fontWeight:800,color:"#0D1117" }}>{lab.tests.length}</div>
-                </div>
-              </div>
-
-              {/* Badges */}
-              {(lab.nabl||lab.homeCollection) && (
-                <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-                  {lab.nabl && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#F0FDF4",color:"#15803D",border:"1px solid #BBF7D0",borderRadius:50,padding:"5px 12px",fontSize:".75rem",fontWeight:700 }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#15803D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                    Verified Partner
-                  </span>}
-                  {lab.homeCollection && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",color:"#1158A6",border:"1px solid #BFDBFE",borderRadius:50,padding:"5px 12px",fontSize:".75rem",fontWeight:700 }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    Home Collection
-                  </span>}
-                </div>
-              )}
             </div>
+
+            {/* Stats strip — 3 equal tiles */}
+            <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12 }}>
+              {[
+                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Timing", value:lab.timing||"6AM–10PM" },
+                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>, label:"Tests", value:`${lab.tests.length} available` },
+                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
+              ].map(({icon,label,value},i)=>(
+                <div key={i} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,padding:"10px 10px",textAlign:"center" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>{icon}</div>
+                  <div style={{ fontSize:".6rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>{label}</div>
+                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Badges */}
+            {(lab.nabl||lab.homeCollection) && (
+              <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
+                {lab.nabl && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#ECFDF5",color:"#065F46",borderLeft:`3px solid #10B981`,borderRadius:6,padding:"5px 10px",fontSize:".73rem",fontWeight:700 }}>
+                  ✓ Verified Partner
+                </span>}
+                {lab.homeCollection && <span style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",color:"#1158A6",borderLeft:`3px solid #3B82F6`,borderRadius:6,padding:"5px 10px",fontSize:".73rem",fontWeight:700 }}>
+                  🏠 Home Collection
+                </span>}
+              </div>
+            )}
           </div>
         );
       })()}
