@@ -66,6 +66,36 @@ const G = () => (
     .hero-content-delay-3 { animation-delay:.32s; }
     .hero-content-delay-4 { animation-delay:.44s; }
 
+    /* ── Premium skeleton shimmer ── */
+    @keyframes skWave {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .sk {
+      background: linear-gradient(90deg, #F0F4F8 0%, #E2E8F0 30%, #F8FAFC 60%, #F0F4F8 100%);
+      background-size: 1200px 100%;
+      animation: skWave 1.6s ease-in-out infinite;
+      border-radius: 8px;
+    }
+
+    /* ── Page transition bar ── */
+    @keyframes pageBar {
+      0%   { width: 0%;   opacity: 1; }
+      70%  { width: 85%;  opacity: 1; }
+      100% { width: 100%; opacity: 0; }
+    }
+    .page-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 99999;
+      background: linear-gradient(90deg, #1158A6, #60A5FA, #1158A6);
+      border-radius: 0 2px 2px 0;
+      animation: pageBar .65s cubic-bezier(.4,0,.2,1) forwards;
+      pointer-events: none;
+    }
+
+    /* ── Image blur-up lazy load ── */
+    .img-lazy { transition: filter .45s ease, opacity .45s ease; filter: blur(8px); opacity: 0; }
+    .img-lazy.loaded { filter: blur(0); opacity: 1; }
+
     /* Interactions */
     .hover-lift { transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s; }
     .hover-lift:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover) !important; }
@@ -1676,7 +1706,7 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const uploadedLogo = lab.logoBase64 || lab.logoUrl || '';
   if (uploadedLogo) return (
     <div style={containerStyle}>
-      <img src={uploadedLogo} alt={lab.name} style={banner ? imgStyle : { width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+      <LazyImg src={uploadedLogo} alt={lab.name} style={banner ? imgStyle : { width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
     </div>
   );
 
@@ -1863,26 +1893,27 @@ function LabBanner({ lab }) {
 }
 
 /* ─── SKELETON LOADER ─────────────────────────────────────────────────────── */
-function LabCardSkeleton() {
+function LabCardSkeleton({ delay = 0 }) {
   return (
-    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"22px 18px 20px" }}>
-      <style>{`@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}.sk{background:linear-gradient(90deg,#F1F5F9 25%,#E8EEF5 50%,#F1F5F9 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}`}</style>
-      <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
-        <div className="sk" style={{ width:86,height:86,borderRadius:10,flexShrink:0 }}/>
-        <div style={{ flex:1 }}>
-          <div className="sk" style={{ height:16,width:"70%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:12,width:"40%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:12,width:"55%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:22,width:"30%",borderRadius:50 }}/>
+    <div style={{ background:"#fff",borderRadius:16,border:"1px solid #F0F4F8",padding:"20px 18px",marginBottom:12,overflow:"hidden",opacity:0,animation:`revealUp .4s ease ${delay}ms both` }}>
+      {/* Top row: logo + details */}
+      <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:14 }}>
+        <div className="sk" style={{ width:72,height:72,borderRadius:14,flexShrink:0 }}/>
+        <div style={{ flex:1,paddingTop:2 }}>
+          <div className="sk" style={{ height:15,width:"65%",marginBottom:10 }}/>
+          <div className="sk" style={{ height:11,width:"42%",marginBottom:8 }}/>
+          <div className="sk" style={{ height:11,width:"55%",marginBottom:10 }}/>
+          <div className="sk" style={{ height:20,width:"28%",borderRadius:99 }}/>
         </div>
       </div>
-      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-      <div className="sk" style={{ height:12,width:"60%",marginBottom:14 }}/>
-      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-      <div style={{ display:"flex",gap:10 }}>
-        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
-        <div style={{ width:1,background:"#F1F5F9",margin:"0 4px" }}/>
-        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
+      {/* Divider */}
+      <div style={{ height:1,background:"#F0F4F8",margin:"0 0 14px" }}/>
+      {/* Bottom row: 2 stat chips + button */}
+      <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+        <div className="sk" style={{ height:32,width:90,borderRadius:8,flexShrink:0 }}/>
+        <div className="sk" style={{ height:32,width:90,borderRadius:8,flexShrink:0 }}/>
+        <div style={{ flex:1 }}/>
+        <div className="sk" style={{ height:36,width:88,borderRadius:10,flexShrink:0 }}/>
       </div>
     </div>
   );
@@ -2011,7 +2042,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         </div>
         </div>
         <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
-          {loading && [1,2,3,4].map(i=><LabCardSkeleton key={i}/>)}
+          {loading && [0,1,2,3].map(i=><LabCardSkeleton key={i} delay={i*80}/>)}
           {!loading && filtered.length===0 && (
             <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:48,textAlign:"center",color:"#9CA3AF" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
@@ -2147,7 +2178,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"8px 16px 12px" }}>
                 <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
                   {src
-                    ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                    ? <LazyImg src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
                     : <span style={{ fontWeight:900,fontSize:28,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
                   }
                 </div>
@@ -2444,6 +2475,20 @@ const SEARCH_INDEX = (() => {
   });
   return items;
 })();
+
+/* ── Blur-up lazy image ─────────────────────────────────────────────────── */
+function LazyImg({ src, alt, style, className="" }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!src) return;
+    const img = new Image();
+    img.src = src;
+    img.onload = () => { if (ref.current) ref.current.classList.add("loaded"); };
+  }, [src]);
+  return (
+    <img ref={ref} src={src} alt={alt||""} className={`img-lazy ${className}`} style={style}/>
+  );
+}
 
 function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
   const [open, setOpen] = React.useState(false);
@@ -3766,6 +3811,7 @@ export class ErrorBoundary extends React.Component {
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
+  const [transitioning, setTransitioning] = useState(false);
   const [lab,    setLab]    = useState(null);
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
@@ -3918,7 +3964,7 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
   }, [cart]);
-  const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
+  const navTo   = p  => { setTransitioning(true); setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); setTimeout(()=>setTransitioning(false), 700); };
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
@@ -4281,22 +4327,22 @@ export default function App() {
               {
                 n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
                 desc:"Browse tests and packages. Compare prices across 6 verified partner labs instantly.",
-                icon:( <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
-                icon:( <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
                 desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                icon:( <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
               <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 4px 0", position:"relative", zIndex:1 }}>
@@ -4971,6 +5017,7 @@ export default function App() {
   ═══════════════════════════════════════════════════════════════ */
   return (
     <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
+      {transitioning && <div className="page-bar" key={page}/>}
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
@@ -5054,6 +5101,7 @@ export default function App() {
       </div>
       <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
 
+      <div key={page} style={{ animation:"fadeIn .35s ease both" }}>
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
       {page==="alltests" && <AllTestsPage setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>}
@@ -5086,6 +5134,7 @@ export default function App() {
         ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
         ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
       ]}/>}
+      </div>
 
       {/* CART DRAWER */}
       {cartOpen && (
