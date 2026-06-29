@@ -1258,22 +1258,34 @@ const FAQS = [
 
 const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM"];
 
-// Parse "6:00 AM – 10:00 PM" → hourly slot strings within that range
+// Parse timing strings like "6:00 AM – 10:00 PM" or looser forms like "8 to 9pm"
+// → hourly slot strings within that range. Tolerant of missing AM/PM on one side:
+// defaults a missing start period to AM and a missing end period to PM.
 function slotsFromTiming(timing) {
   if (!timing) return TIME_SLOTS;
-  // Use regex to extract two time tokens directly — avoids split-on-hyphen ambiguity
-  const tokens = [...timing.matchAll(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/gi)];
-  if (tokens.length < 2) return TIME_SLOTS;
-  function toMin(tok) {
-    let h = parseInt(tok[1], 10);
-    const min = parseInt(tok[2] || '0', 10);
-    const period = tok[3].toUpperCase();
-    if (period === 'PM' && h !== 12) h += 12;
-    if (period === 'AM' && h === 12) h = 0;
-    return h * 60 + min;
+  const cleaned = timing.replace(/[–—]/g, '-');
+  const parts = cleaned.split(/\s+to\s+|-/i).map(s => s.trim()).filter(Boolean);
+  if (parts.length < 2) return TIME_SLOTS;
+  function extract(str) {
+    const m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if (!m || !m[1]) return null;
+    return { h: parseInt(m[1], 10), min: parseInt(m[2] || '0', 10), period: m[3] ? m[3].toUpperCase() : null };
   }
-  const startMin = toMin(tokens[0]);
-  const endMin   = toMin(tokens[1]);
+  function to24(h, period) {
+    let hh = h;
+    if (period === 'PM' && hh !== 12) hh += 12;
+    if (period === 'AM' && hh === 12) hh = 0;
+    return hh;
+  }
+  const s = extract(parts[0]);
+  const e = extract(parts[1]);
+  if (!s || !e) return TIME_SLOTS;
+  let sp = s.period, ep = e.period;
+  if (!sp && !ep) { sp = 'AM'; ep = 'PM'; }
+  else if (!sp && ep) { sp = 'AM'; }
+  else if (sp && !ep) { ep = 'PM'; }
+  const startMin = to24(s.h, sp) * 60 + s.min;
+  const endMin   = to24(e.h, ep) * 60 + e.min;
   if (endMin <= startMin) return TIME_SLOTS;
   // Start at the first full hour that is >= opening time
   const firstSlot = Math.ceil(startMin / 60) * 60;

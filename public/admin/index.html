@@ -636,7 +636,7 @@ function Labs(props) {
         <div className="card" style={{padding:20,marginBottom:20}}>
           <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
-            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Weekday Timing Mon–Sat (e.g. 6:00 AM – 10:00 PM)'],['sunday_timing','Sunday Timing (leave blank if closed)'],['color','Button Color']].map(function(pair){
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Weekday Timing Mon–Sat — use AM/PM e.g. 6:00 AM - 10:00 PM'],['sunday_timing','Sunday Timing — use AM/PM e.g. 9:00 AM - 5:00 PM (blank if closed)'],['color','Button Color']].map(function(pair){
               var k=pair[0]; var lbl=pair[1];
               return (
                 <div key={k}>
@@ -708,7 +708,7 @@ function Labs(props) {
               {editing === lab.id ? (
                 <div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
-                    {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Weekday Timing (Mon–Sat)'],['sunday_timing','Sunday Timing (blank = not shown)'],['color','Button Color']].map(function(pair){
+                    {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Weekday Timing (Mon–Sat) — use AM/PM'],['sunday_timing','Sunday Timing — use AM/PM (blank = not shown)'],['color','Button Color']].map(function(pair){
                       var k=pair[0];var lbl=pair[1];
                       return (
                         <div key={k}>
