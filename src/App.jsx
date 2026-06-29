@@ -1696,7 +1696,7 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const containerStyle = banner
     ? { width:"100%", height:"100%", display:"flex", alignItems:"stretch", justifyContent:"center", background:"#fff", overflow:"hidden" }
     : { width:size, height:size, borderRadius:radius, flexShrink:0, background:"#fff", overflow:"hidden",
-        boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
+        border:"1px solid #E5E7EB",
         display:"flex", alignItems:"center", justifyContent:"center" };
 
   const imgStyle = banner
@@ -1724,7 +1724,7 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const accent = meta?.accent || "#1158A6";
   const bg = meta?.bg || "#EEF4FF";
   return (
-    <div style={{ ...(banner ? { width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center" } : { width:size,height:size,borderRadius:radius,flexShrink:0,boxShadow:"0 4px 16px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.05)" }), background:bg, flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+    <div style={{ ...(banner ? { width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center" } : { width:size,height:size,borderRadius:radius,flexShrink:0,border:"1px solid #E5E7EB" }), background:bg, flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
       <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:banner?48:size*.34, color:accent, lineHeight:1 }}>
         {(meta?.short || lab.name).slice(0,2)}
       </span>
@@ -2398,9 +2398,9 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
                 style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"18px 10px 16px", minWidth:110, maxWidth:130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="transparent"; }}>
-                <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)", transition:"box-shadow .2s" }}
-                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.2)"}
-                  onMouseLeave={e=>e.currentTarget.style.boxShadow="0 2px 14px rgba(0,0,0,.09)"}>
+                <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, border:"1px solid #E5E7EB", transition:"border-color .2s" }}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor="#BFDBFE"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="#E5E7EB"}>
                   <Icon s={86}/>
                 </div>
                 <div style={{ fontWeight:700, color:"#1F2937", fontSize:".8rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
@@ -2438,7 +2438,7 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
               style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"22px 12px 18px", background:"#fff", borderRadius:18, border:"1px solid #EEF2FF", cursor:"pointer", transition:"transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s" }}
               onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.13)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; e.currentTarget.style.boxShadow="none"; }}>
-              <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)" }}>
+              <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, border:"1px solid #E5E7EB" }}>
                 <Icon s={86}/>
               </div>
               <div style={{ fontWeight:700, color:"#1F2937", fontSize:".85rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
