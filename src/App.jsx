@@ -2672,76 +2672,144 @@ const LOC_TTL  = 3 * 60 * 1000; // 3 min — don't re-request GPS within this wi
 const ACC_GOOD = 50;             // metres — accept immediately if GPS reaches this
 const DEADLINE = 12000;          // ms  — hard cutoff, use best fix we have by then
 
-// ─── Geocoding: sequential to respect Nominatim's 1 req/sec policy ───────────
-async function _fetchJSON(url, opts = {}) {
-  const r = await fetch(url, { ...opts, signal: AbortSignal.timeout(8000) });
+// ─── Geocoding ────────────────────────────────────────────────────────────────
+const GMAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY || "";
+
+async function _fetchJSON(url) {
+  const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
   if (!r.ok) throw new Error(r.status);
   return r.json();
 }
 
-// Primary: Nominatim zoom=18 (building/road level)
-async function _nominatimFine(lat, lng) {
-  return _fetchJSON(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&extratags=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=18`
-  );
+// ── Google Maps: extract one component type from address_components ──────────
+function _gc(components, type) {
+  const c = components.find(x => x.types.includes(type));
+  return c ? c.long_name : "";
 }
 
-// Secondary: BigDataCloud — free, no key, good India locality + postcode coverage
-async function _bigdata(lat, lng) {
-  return _fetchJSON(
+// ── Google Maps Geocoding + nearby POI (CORS-safe from browser) ──────────────
+async function _googleGeocode(lat, lng) {
+  const base = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=${GMAPS_KEY}`;
+
+  // Two parallel calls:
+  //   1. General reverse geocode  → address_components
+  //   2. POI filter               → nearest named establishment/landmark
+  const [general, poi] = await Promise.allSettled([
+    _fetchJSON(base),
+    _fetchJSON(`${base}&result_type=point_of_interest|establishment|premise`),
+  ]);
+
+  if (general.status !== "fulfilled" || !general.value.results?.length) {
+    throw new Error("google_no_results");
+  }
+
+  // Merge components from ALL results so we capture the most specific data
+  // (Google returns multiple results at different granularities)
+  const allComps = {};
+  for (const result of general.value.results) {
+    for (const comp of result.address_components) {
+      for (const type of comp.types) {
+        if (!allComps[type]) allComps[type] = comp.long_name; // first = most specific
+      }
+    }
+  }
+
+  // Nearest landmark name from POI call
+  const poiName = poi.status === "fulfilled"
+    ? poi.value.results?.[0]?.name || ""
+    : "";
+
+  const comps = general.value.results[0].address_components;
+
+  return {
+    streetNumber : _gc(comps, "street_number"),
+    route        : _gc(comps, "route")
+                || allComps["route"] || "",
+    premise      : _gc(comps, "premise")
+                || allComps["premise"] || "",
+    sublocality2 : allComps["sublocality_level_2"] || "",
+    sublocality1 : _gc(comps, "sublocality_level_1")
+                || allComps["sublocality_level_1"] || "",
+    neighborhood : allComps["neighborhood"] || "",
+    locality     : _gc(comps, "locality")
+                || allComps["locality"] || "",
+    state        : _gc(comps, "administrative_area_level_1")
+                || allComps["administrative_area_level_1"] || "",
+    pin          : _gc(comps, "postal_code")
+                || allComps["postal_code"] || "",
+    landmark     : poiName,
+  };
+}
+
+// ── BigDataCloud fallback (free, no key, reasonable India coverage) ───────────
+async function _bigdataGeocode(lat, lng) {
+  const d = await _fetchJSON(
     `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
   );
+  return {
+    streetNumber : "",
+    route        : d.locality || "",
+    premise      : "",
+    sublocality2 : "",
+    sublocality1 : d.locality || "",
+    neighborhood : "",
+    locality     : d.city || d.locality || "",
+    state        : d.principalSubdivision || "",
+    pin          : d.postcode || "",
+    landmark     : "",
+  };
 }
 
-// Tertiary: Nominatim zoom=10 (district level) — most reliable postcode in OSM India
-// Delayed 1100ms to stay within Nominatim's 1 req/sec limit (after the fine call)
-async function _nominatimCoarse(lat, lng) {
-  await new Promise(r => setTimeout(r, 1100));
-  return _fetchJSON(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=10`
+// ── Nominatim fallback (zoom=18, last resort) ─────────────────────────────────
+async function _nominatimGeocode(lat, lng) {
+  const d = await _fetchJSON(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&extratags=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=18`
   );
+  const a = d.address || {};
+  return {
+    streetNumber : a.house_number || "",
+    route        : a.road || a.residential || a.pedestrian || "",
+    premise      : a.building || a.amenity || "",
+    sublocality2 : "",
+    sublocality1 : a.neighbourhood || a.suburb || a.quarter || "",
+    neighborhood : a.neighbourhood || "",
+    locality     : a.city || a.town || a.village || "",
+    state        : a.state || "",
+    pin          : a.postcode || "",
+    landmark     : (d.name && d.name !== a.road) ? d.name : "",
+  };
 }
 
 async function reverseGeocodeAll(lat, lng) {
-  const [fine, bd] = await Promise.allSettled([
-    _nominatimFine(lat, lng),
-    _bigdata(lat, lng),
-  ]);
-  const coarseResult = await Promise.allSettled([_nominatimCoarse(lat, lng)]);
-  const coarse = coarseResult[0];
-
-  const fV  = fine.status   === "fulfilled" ? fine.value            : {};
-  const fA  = fV.address || {};
-  const cA  = coarse.status === "fulfilled" ? (coarse.value.address || {}) : {};
-  const bd_ = bd.status     === "fulfilled" ? bd.value              : {};
-
-  // POI/landmark — Nominatim puts the name of the nearest named place at zoom=18
-  const landmark = (fV.name && fV.name !== fA.road) ? fV.name : "";
-  const house    = fA.house_number || "";
-  const building = fA.building || fA.amenity || fA.shop || fA.office || "";
-  const road     = fA.road || fA.residential || fA.pedestrian || fA.footway || cA.road || "";
-  const area     = fA.neighbourhood || fA.suburb || fA.quarter || fA.village
-                 || cA.neighbourhood || cA.suburb || bd_.locality || "";
-  const city     = fA.city || fA.city_district || fA.town || cA.city || cA.town || bd_.city || "";
-  const state    = fA.state || cA.state || bd_.principalSubdivision || "";
-  const pin      = bd_.postcode || cA.postcode || fA.postcode || "";
-
-  return { house, building, landmark, road, area, city, state, pin };
+  // Google Maps if key is configured, otherwise fall through to free services
+  if (GMAPS_KEY) {
+    try { return await _googleGeocode(lat, lng); } catch { /* fall through */ }
+  }
+  // BigDataCloud first (better India city/pin data), then Nominatim
+  try { return await _bigdataGeocode(lat, lng); } catch { /* fall through */ }
+  return _nominatimGeocode(lat, lng);
 }
 
-function buildAddressString({ house, building, landmark, road, area, city, state, pin }) {
-  // Format: House No, Building, Landmark, Road, Area, City, State PIN
-  // — exactly like Google Maps / Swiggy / Zomato single-line format
+function buildAddressString({ streetNumber, route, premise, sublocality2, sublocality1, neighborhood, locality, state, pin, landmark }) {
+  // ── Build each segment, most specific → least specific ───────────────────
+  // Line 1: street number + road
+  const streetPart = [streetNumber, route].filter(Boolean).join(", ");
+
+  // Sublocality: prefer level 2 (more granular) then level 1
+  const areaPart = sublocality2 || sublocality1 || neighborhood || "";
+
+  // Nearby landmark (prefix "near")
+  const nearPart = landmark ? `near ${landmark}` : (premise || "");
+
   const parts = [
-    house    ? `Door No ${house}` : "",
-    building,
-    landmark,
-    road,
-    area     ? `near ${area}` : "",
-    city,
-    state,
-    pin      ? pin : "",
+    streetPart,   // e.g. "1-711, Moghulpura Fire Station Road"
+    nearPart,     // e.g. "near Moghalpura Fire Station"
+    areaPart,     // e.g. "Moghalpura"
+    locality,     // e.g. "Hyderabad"
+    state,        // e.g. "Telangana"
+    pin,          // e.g. "500002"
   ].filter(Boolean);
+
   return parts.join(", ");
 }
 
