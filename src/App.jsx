@@ -2250,12 +2250,12 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               <div style={{ padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12 }}>
                 <div style={{ display:"flex",gap:16 }}>
                   <div>
-                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>Sample</div>
-                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>Blood</div>
-                  </div>
-                  <div>
                     <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>TAT</div>
                     <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>12–48 hrs</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>Sample</div>
+                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>Blood</div>
                   </div>
                 </div>
                 {added ? (
