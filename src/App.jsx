@@ -1699,7 +1699,7 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const uploadedLogo = lab.logoBase64 || lab.logoUrl || '';
   if (uploadedLogo) return (
     <div style={containerStyle}>
-      <LazyImg src={uploadedLogo} alt={lab.name} style={banner ? imgStyle : { width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+      <img src={uploadedLogo} alt={lab.name} style={banner ? imgStyle : { width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
     </div>
   );
 
@@ -1921,11 +1921,10 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   const [filterNabl, setFilterNabl] = useState(false);
   const [searchQ,    setSearchQ]    = useState("");
   const [labSugOpen, setLabSugOpen] = useState(false);
-  const [loading,    setLoading]    = useState(_isFirstLoad);
+  const [loading,    setLoading]    = useState(true);
   const labSearchRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (!_isFirstLoad) return;
     const t = setTimeout(() => setLoading(false), 900);
     return () => clearTimeout(t);
   }, []);
@@ -2170,9 +2169,15 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               </button>
               {/* Top: logo + name + rating */}
               <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"8px 16px 12px" }}>
-                <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
+                <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0,position:"relative" }}>
                   {src
-                    ? <LazyImg src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
+                    ? (()=>{
+                        const [imgLoaded, setImgLoaded] = React.useState(false);
+                        return <>
+                          {!imgLoaded && <div className="sk" style={{ position:"absolute",inset:0,borderRadius:14 }}/>}
+                          <img src={src} alt={lab.name} onLoad={()=>setImgLoaded(true)} style={{ width:"100%",height:"100%",objectFit:"contain",opacity:imgLoaded?1:0,transition:"opacity .3s" }}/>
+                        </>;
+                      })()
                     : <span style={{ fontWeight:900,fontSize:28,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
                   }
                 </div>
