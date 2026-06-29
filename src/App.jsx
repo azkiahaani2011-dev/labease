@@ -2215,7 +2215,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 {[
                   { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Timing", value:lab.timing||"6AM–10PM" },
                   { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>, label:"Tests", value:`${lab.tests.length} available` },
-                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
+                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
                 ].map(({icon,label,value},i)=>(
                   <div key={i} style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:i<2?"1px solid #F1F5F9":"none" }}>
                     <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>{icon}</div>
