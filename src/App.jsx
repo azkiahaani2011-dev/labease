@@ -4101,7 +4101,7 @@ export default function App() {
     if (supabase) {
       const sbResult = await createBooking({
         user_id: user?.id || null,
-        lab_id: String(cart[0]?.lid || ''),
+        // lab_id omitted — FK to labs table which is empty (labs are frontend-only)
         lab_name: cart[0]?.lname || '',
         patient_name: form.name,
         patient_phone: form.phone,
@@ -4113,8 +4113,8 @@ export default function App() {
         collection: form.mode,
         status: 'confirmed',
         total,
+        items: cart,
       });
-      // Store the Supabase UUID back so admin can cross-reference
       if (sbResult?.id) setDone(d => ({...d, supabase_id: sbResult.id}));
     }
     // Always save to localStorage as backup (admin panel uses it)
