@@ -3336,14 +3336,22 @@ function PromoCarousel({ navTo }) {
 
   useEffect(() => {
     if (idx === 3) {
-      const id = setTimeout(() => { setAnimated(false); setIdx(1); }, 500);
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setIdx(1);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 520);
       return () => clearTimeout(id);
     }
     if (idx === 0) {
-      const id = setTimeout(() => { setAnimated(false); setIdx(2); }, 500);
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setIdx(2);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 520);
       return () => clearTimeout(id);
     }
-    setAnimated(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
   }, [idx]);
 
   const Card1 = () => (
@@ -3501,16 +3509,22 @@ function FeaturesCarousel() {
   // When we land on a clone, silently jump to the real slide
   useEffect(() => {
     if (slide === 3) {
-      // just passed clone-of-first → jump to real slide index 1
-      const id = setTimeout(() => { setAnimated(false); setSlide(1); }, 550);
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setSlide(1);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 570);
       return () => clearTimeout(id);
     }
     if (slide === 0) {
-      // just passed clone-of-last → jump to real slide index 2
-      const id = setTimeout(() => { setAnimated(false); setSlide(2); }, 550);
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setSlide(2);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 570);
       return () => clearTimeout(id);
     }
-    setAnimated(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
   }, [slide]);
 
   useEffect(() => {
