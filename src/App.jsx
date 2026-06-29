@@ -2666,6 +2666,157 @@ function PaymentSelector({ total, onPay, onBack }) {
 }
 
 /* ─── BOOKING FIELD (top-level so it never remounts on parent re-render) ─── */
+// ─── Location cache (module-level, survives re-renders) ─────────────────────
+const _locCache = { coords: null, address: null, ts: 0 };
+const LOC_TTL = 5 * 60 * 1000; // 5 minutes
+
+function AddressDetector({ value, onChange }) {
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error | manual
+  const [errMsg, setErrMsg] = useState("");
+  const [detecting, setDetecting] = useState(false);
+
+  // Reverse geocode via Nominatim (free, no API key)
+  async function reverseGeocode(lat, lng) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+    const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+    if (!res.ok) throw new Error("Geocoding failed");
+    return res.json();
+  }
+
+  function buildAddress(data) {
+    const a = data.address || {};
+    const parts = [
+      a.house_number && a.road ? `${a.house_number}, ${a.road}` : a.road || a.pedestrian || "",
+      a.suburb || a.neighbourhood || a.village || a.town || "",
+      a.city || a.county || a.state_district || "",
+      a.state || "",
+      a.postcode ? `- ${a.postcode}` : "",
+    ].filter(Boolean);
+    return parts.join(", ");
+  }
+
+  async function detect() {
+    if (detecting) return; // prevent duplicate requests
+
+    // Serve from cache if fresh
+    if (_locCache.address && Date.now() - _locCache.ts < LOC_TTL) {
+      onChange(_locCache.address);
+      setStatus("success");
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      setStatus("error");
+      setErrMsg("GPS not supported on this device. Please type your address.");
+      return;
+    }
+
+    setDetecting(true);
+    setStatus("loading");
+    setErrMsg("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          const data = await reverseGeocode(lat, lng);
+          const addr = buildAddress(data);
+          _locCache.coords = { lat, lng };
+          _locCache.address = addr;
+          _locCache.ts = Date.now();
+          onChange(addr);
+          setStatus("success");
+        } catch {
+          setStatus("error");
+          setErrMsg("Could not get your address. Please type it manually.");
+        } finally {
+          setDetecting(false);
+        }
+      },
+      (err) => {
+        setDetecting(false);
+        setStatus("error");
+        const msgs = {
+          1: "Location permission denied. Please type your address or enable location in browser settings.",
+          2: "Location unavailable. Please type your address.",
+          3: "Location request timed out. Please type your address.",
+        };
+        setErrMsg(msgs[err.code] || "Location error. Please type your address.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: LOC_TTL }
+    );
+  }
+
+  return (
+    <div>
+      {/* Auto-detect button */}
+      {status !== "success" && (
+        <button
+          type="button"
+          onClick={detect}
+          disabled={detecting}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            width: "100%", padding: "11px 16px", marginBottom: 10,
+            border: "1.5px dashed #1158A6", borderRadius: 10, background: detecting ? "#EEF4FF" : "#F5F7FF",
+            color: "#1158A6", fontWeight: 700, fontSize: ".83rem", cursor: detecting ? "not-allowed" : "pointer",
+            fontFamily: "'Manrope',sans-serif", transition: "all .15s",
+          }}
+        >
+          {detecting ? (
+            <>
+              <svg style={{ animation: "spin 1s linear infinite" }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              Detecting your location…
+            </>
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+              </svg>
+              Use Current Location
+            </>
+          )}
+        </button>
+      )}
+
+      {/* Error banner */}
+      {status === "error" && (
+        <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 8, padding: "9px 13px", marginBottom: 10, fontSize: ".78rem", color: "#DC2626", fontWeight: 600, display: "flex", gap: 7, alignItems: "flex-start" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {errMsg}
+        </div>
+      )}
+
+      {/* Success pill */}
+      {status === "success" && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+          <div style={{ background: "#DCFCE7", color: "#16A34A", fontSize: ".73rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20, display: "flex", alignItems: "center", gap: 5 }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Location detected
+          </div>
+          <button type="button" onClick={() => { setStatus("idle"); onChange(""); }}
+            style={{ background: "none", border: "none", color: "#9CA3AF", fontSize: ".73rem", cursor: "pointer", fontFamily: "'Manrope',sans-serif", fontWeight: 600, padding: 0 }}>
+            Re-detect
+          </button>
+        </div>
+      )}
+
+      {/* Editable address textarea */}
+      <textarea
+        rows={3}
+        style={{ width: "100%", border: "1.5px solid #DBEAFE", borderRadius: 10, padding: "11px 14px", fontSize: ".87rem", fontFamily: "'Manrope',sans-serif", background: "#fff", color: "#111", outline: "none", resize: "vertical", boxSizing: "border-box", transition: "border-color .15s" }}
+        placeholder="Flat / house no., building, street, area, city…"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onFocus={e => e.target.style.borderColor = "#1158A6"}
+        onBlur={e => e.target.style.borderColor = "#DBEAFE"}
+      />
+    </div>
+  );
+}
+
 const BookingField = ({ label, req, ...p }) => (
   <div>
     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:6,color:"#374151",letterSpacing:".01em" }}>{label}{req&&<span style={{color:"#EF4444"}}> *</span>}</label>
@@ -2857,14 +3008,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
                   </label>
-                  <textarea rows={3}
-                    style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
-                    placeholder="Flat / house no., building, street, area, city…"
-                    value={loc.address}
-                    onChange={e=>sl("address",e.target.value)}
-                    onFocus={e=>e.target.style.borderColor="#1158A6"}
-                    onBlur={e=>e.target.style.borderColor="#DBEAFE"}
-                  />
+                  <AddressDetector value={loc.address} onChange={v=>sl("address",v)}/>
                 </div>
               )}
 
