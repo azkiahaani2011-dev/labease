@@ -4001,6 +4001,12 @@ export default function App() {
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
+            {/* location indicator */}
+            <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Hyderabad</span>
+            </div>
+
             {/* headline */}
             <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
@@ -4898,17 +4904,6 @@ export default function App() {
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
         </div>
-        {/* Center: Location pill */}
-        <button onClick={detectNavLocation} style={{ display:"flex",alignItems:"center",gap:6,background:"#F0F4FF",border:"1.5px solid #DBEAFE",borderRadius:50,padding:"7px 14px",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".82rem",color:"#1158A6",transition:"all .18s",flexShrink:0,maxWidth:180,overflow:"hidden" }}
-          onMouseEnter={e=>{e.currentTarget.style.background="#DBEAFE";e.currentTarget.style.borderColor="#93C5FD";}}
-          onMouseLeave={e=>{e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#DBEAFE";}}>
-          {navLocLoading
-            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" style={{ animation:"spin 1s linear infinite" }}><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-            : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          }
-          <span style={{ overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{navLocLoading?"Detecting…":navCity}</span>
-          {!navLocLoading&&<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>}
-        </button>
         {/* Right: person icon + menu button */}
         <div className="nav-right" style={{ display:"flex",alignItems:"center",gap:10 }}>
           {isMobile
