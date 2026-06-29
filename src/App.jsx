@@ -1257,6 +1257,36 @@ const FAQS = [
 ];
 
 const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM"];
+
+// Parse "6:00 AM – 10:00 PM" → hourly slot strings within that range
+function slotsFromTiming(timing) {
+  if (!timing) return TIME_SLOTS;
+  // normalise dashes and extract two time tokens
+  const parts = timing.replace(/[–—]/g, '-').split('-').map(s => s.trim());
+  if (parts.length < 2) return TIME_SLOTS;
+  function parse12(str) {
+    const m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+    if (!m) return null;
+    let h = parseInt(m[1], 10);
+    const min = parseInt(m[2] || '0', 10);
+    const period = m[3].toUpperCase();
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return h * 60 + min;
+  }
+  const startMin = parse12(parts[0]);
+  const endMin   = parse12(parts[1]);
+  if (startMin === null || endMin === null) return TIME_SLOTS;
+  const slots = [];
+  // generate one slot per hour from open time up to (but not including) close time
+  for (let m = startMin; m < endMin; m += 60) {
+    const h24 = Math.floor(m / 60);
+    const period = h24 < 12 ? 'AM' : 'PM';
+    const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+    slots.push(`${h12}:00 ${period}`);
+  }
+  return slots.length ? slots : TIME_SLOTS;
+}
 const TODAY = new Date().toISOString().split("T")[0];
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
@@ -3094,6 +3124,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
+  const LAB_SLOTS = slotsFromTiming(lab?.timing);
   const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
@@ -3195,7 +3226,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               </div>
               {(()=>{
                 const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
-                const filtered = TIME_SLOTS.filter(s => !loc.slot || s.toLowerCase().includes(loc.slot.toLowerCase()));
+                const filtered = LAB_SLOTS.filter(s => !loc.slot || s.toLowerCase().includes(loc.slot.toLowerCase()));
                 return (
                   <div>
                     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:8,color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
@@ -3219,7 +3250,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                         <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",border:"1.5px solid #E2E8F0",borderRadius:10,boxShadow:"0 8px 32px rgba(17,88,166,.13)",zIndex:200,overflow:"hidden" }}>
                           <div style={{ padding:"8px 14px 6px",fontSize:".7rem",fontWeight:700,color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",borderBottom:"1px solid #F1F5F9" }}>Suggested slots</div>
                           <div style={{ display:"flex",flexWrap:"wrap",gap:6,padding:"10px 12px 12px" }}>
-                            {(loc.slot ? filtered : TIME_SLOTS).map(s=>(
+                            {(loc.slot ? filtered : LAB_SLOTS).map(s=>(
                               <button key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setSlotFocus(false); }}
                                 style={{ padding:"7px 14px",borderRadius:6,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFC",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".78rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .12s",whiteSpace:"nowrap" }}
                                 onMouseEnter={e=>{ if(loc.slot!==s){ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.color="#1158A6"; } }}
@@ -3232,7 +3263,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                         </div>
                       )}
                     </div>
-                    {loc.slot&&!TIME_SLOTS.includes(loc.slot)&&<div style={{ marginTop:6,fontSize:".73rem",color:"#6B7280",display:"flex",alignItems:"center",gap:4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Custom time noted — lab will confirm availability</div>}
+                    {loc.slot&&!LAB_SLOTS.includes(loc.slot)&&<div style={{ marginTop:6,fontSize:".73rem",color:"#6B7280",display:"flex",alignItems:"center",gap:4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Custom time noted — lab will confirm availability</div>}
                   </div>
                 );
               })()}
