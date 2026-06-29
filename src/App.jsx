@@ -2128,21 +2128,19 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               Labs
             </button>
 
-            {/* Main card: logo left, name+rating right */}
-            <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:"14px",marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
-              <div style={{ display:"flex",gap:14,alignItems:"flex-start" }}>
-                {/* Logo */}
+            {/* Single combined card */}
+            <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+              {/* Top: logo + name + rating */}
+              <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"14px 14px 12px" }}>
                 <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
                   {src
                     ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
                     : <span style={{ fontWeight:900,fontSize:28,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
                   }
                 </div>
-                {/* Info */}
                 <div style={{ flex:1,minWidth:0 }}>
                   <div style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.3,marginBottom:4,letterSpacing:"-.02em" }}>{lab.name}</div>
                   <div style={{ fontSize:".76rem",color:"#6B7280",marginBottom:6 }}>Diagnostic Lab · {lab.city}</div>
-                  {/* Stars inline */}
                   <div style={{ display:"flex",alignItems:"center",gap:4 }}>
                     <div style={{ display:"flex",gap:1 }}>
                       {Array.from({length:5},(_,i)=>{
@@ -2158,29 +2156,29 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                 </div>
               </div>
 
-              {/* Divider */}
-              <div style={{ height:1,background:"#F1F5F9",margin:"12px 0" }}/>
-
-              {/* Address row */}
-              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5 }}>
+              {/* Address */}
+              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5,padding:"0 14px 12px" }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
               </div>
-            </div>
 
-            {/* Stats — single card with 3 sections */}
-            <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,overflow:"hidden",marginBottom:12,display:"flex" }}>
-              {[
-                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Timing", value:lab.timing||"6AM–10PM" },
-                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>, label:"Tests", value:`${lab.tests.length} available` },
-                { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
-              ].map(({icon,label,value},i)=>(
-                <div key={i} style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:i<2?"1px solid #F1F5F9":"none" }}>
-                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>{icon}</div>
-                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>{label}</div>
-                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{value}</div>
-                </div>
-              ))}
+              {/* Divider */}
+              <div style={{ height:1,background:"#F1F5F9" }}/>
+
+              {/* Stats row */}
+              <div style={{ display:"flex" }}>
+                {[
+                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Timing", value:lab.timing||"6AM–10PM" },
+                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>, label:"Tests", value:`${lab.tests.length} available` },
+                  { icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Collection", value:lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only" },
+                ].map(({icon,label,value},i)=>(
+                  <div key={i} style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:i<2?"1px solid #F1F5F9":"none" }}>
+                    <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>{icon}</div>
+                    <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>{label}</div>
+                    <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
           </div>
