@@ -79,18 +79,9 @@ const G = () => (
     }
 
     /* ── Page transition bar ── */
-    @keyframes pageBar {
-      0%   { width: 0%;   opacity: 1; }
-      70%  { width: 85%;  opacity: 1; }
-      100% { width: 100%; opacity: 0; }
-    }
-    .page-bar {
-      position: fixed; top: 0; left: 0; height: 3px; z-index: 99999;
-      background: linear-gradient(90deg, #1158A6, #60A5FA, #1158A6);
-      border-radius: 0 2px 2px 0;
-      animation: pageBar .65s cubic-bezier(.4,0,.2,1) forwards;
-      pointer-events: none;
-    }
+    /* ── Page enter ── */
+    @keyframes pageEnter { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .page-enter { animation: pageEnter .38s cubic-bezier(.22,1,.36,1) both; }
 
     /* ── Image blur-up lazy load ── */
     .img-lazy { transition: filter .45s ease, opacity .45s ease; filter: blur(8px); opacity: 0; }
@@ -3811,7 +3802,6 @@ export class ErrorBoundary extends React.Component {
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
-  const [transitioning, setTransitioning] = useState(false);
   const [lab,    setLab]    = useState(null);
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
@@ -3835,12 +3825,28 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Scroll-reveal: watch .reveal elements and add .visible when they enter viewport
+  // Scroll-reveal: watch .reveal elements. Once revealed, mark so revisits skip animation.
   useEffect(() => {
     const io = new IntersectionObserver((entries) => {
-      entries.forEach(el => { if (el.isIntersecting) { el.target.classList.add("visible"); io.unobserve(el.target); } });
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add("visible");
+          el.target.dataset.revealed = "1";
+          io.unobserve(el.target);
+        }
+      });
     }, { threshold: 0.08 });
-    const attach = () => document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    const attach = () => {
+      document.querySelectorAll(".reveal").forEach(el => {
+        // If already revealed in a previous visit, show immediately without transition
+        if (el.dataset.revealed === "1") {
+          el.style.transition = "none";
+          el.classList.add("visible");
+        } else {
+          io.observe(el);
+        }
+      });
+    };
     attach();
     const mo = new MutationObserver(attach);
     mo.observe(document.body, { childList: true, subtree: true });
@@ -3964,7 +3970,7 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
   }, [cart]);
-  const navTo   = p  => { setTransitioning(true); setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); setTimeout(()=>setTransitioning(false), 700); };
+  const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
@@ -4114,6 +4120,9 @@ export default function App() {
     const [selectedPkg, setSelectedPkg] = useState(null);
     const [customSelected, setCustomSelected] = useState(new Set());
     const [gridCols, setGridCols] = useState(window.innerWidth <= 600 ? 2 : 3);
+    // Hero animation only plays on the very first visit per session
+    const heroAnim = !sessionStorage.getItem("le_home_seen");
+    useEffect(() => { sessionStorage.setItem("le_home_seen","1"); }, []);
     useEffect(() => {
       const h = () => setGridCols(window.innerWidth <= 600 ? 2 : 3);
       window.addEventListener("resize", h);
@@ -4129,25 +4138,25 @@ export default function App() {
         <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
           <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+            <div className={heroAnim?"hero-content hero-eyebrow":""} style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* location indicator */}
-            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+            <div className={heroAnim?"hero-content hero-content-delay-1":""} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               <span>Hyderabad</span>
             </div>
 
             {/* headline */}
-            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 className={heroAnim?"hero-content hero-content-delay-2":""} style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p className={heroAnim?"hero-content hero-content-delay-3":""} style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
               Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -5017,7 +5026,6 @@ export default function App() {
   ═══════════════════════════════════════════════════════════════ */
   return (
     <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
-      {transitioning && <div className="page-bar" key={page}/>}
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
@@ -5101,7 +5109,7 @@ export default function App() {
       </div>
       <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
 
-      <div key={page} style={{ animation:"fadeIn .35s ease both" }}>
+      <div key={page} className="page-enter">
       {page==="home"    && <Home/>}
       {page==="labs"    && <LabsPage/>}
       {page==="alltests" && <AllTestsPage setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>}
