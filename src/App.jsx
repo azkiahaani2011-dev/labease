@@ -80,6 +80,8 @@ const G = () => (
     /* ── Page enter ── */
     @keyframes pageEnter { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     .page-enter { animation: pageEnter .38s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes slideUpFull { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+    .lab-detail-enter { animation: slideUpFull .45s cubic-bezier(.22,1,.36,1) both; }
 
     /* ── After first load: kill ALL entrance animations instantly ── */
     .app-ready .page-enter        { animation: none !important; }
@@ -2147,7 +2149,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   React.useEffect(()=>{ setShowAllTests(false); }, [catF, testQ]);
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
-  <div style={{ minHeight:"80vh",background:"#fff" }}>
+  <div className="lab-detail-enter" style={{ minHeight:"80vh",background:"#fff" }}>
     {/* Lab info section */}
     <div style={{ background:"#F8FAFC",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
       {(()=>{
