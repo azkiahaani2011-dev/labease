@@ -57,12 +57,6 @@ const G = () => (
     @keyframes countIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
     @keyframes revealUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
 
-    /* Scroll-reveal: sections start hidden, JS adds .visible */
-    .reveal { opacity:0; transform:translateY(36px); transition:opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1); }
-    .reveal.visible { opacity:1; transform:translateY(0); }
-    .reveal-delay-1 { transition-delay:.08s; }
-    .reveal-delay-2 { transition-delay:.16s; }
-    .reveal-delay-3 { transition-delay:.24s; }
     /* Hero content fades in on load (no scroll needed) */
     .hero-content { animation: revealUp .7s cubic-bezier(.22,1,.36,1) both; }
     .hero-content-delay-1 { animation-delay:.1s; }
@@ -90,8 +84,6 @@ const G = () => (
     /* ── After first load: kill ALL entrance animations instantly ── */
     .app-ready .page-enter        { animation: none !important; }
     .app-ready .hero-content      { animation: none !important; opacity: 1 !important; transform: none !important; }
-    .app-ready .reveal            { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .app-ready .reveal.visible    { opacity: 1 !important; transform: none !important; }
 
     /* ── Image blur-up lazy load ── */
     .img-lazy { transition: filter .45s ease, opacity .45s ease; filter: blur(8px); opacity: 0; }
@@ -3836,33 +3828,6 @@ export default function App() {
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Scroll-reveal: watch .reveal elements. Once revealed, mark so revisits skip animation.
-  useEffect(() => {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(el => {
-        if (el.isIntersecting) {
-          el.target.classList.add("visible");
-          el.target.dataset.revealed = "1";
-          io.unobserve(el.target);
-        }
-      });
-    }, { threshold: 0.08 });
-    const attach = () => {
-      document.querySelectorAll(".reveal").forEach(el => {
-        // If already revealed in a previous visit, show immediately without transition
-        if (el.dataset.revealed === "1") {
-          el.style.transition = "none";
-          el.classList.add("visible");
-        } else {
-          io.observe(el);
-        }
-      });
-    };
-    attach();
-    const mo = new MutationObserver(attach);
-    mo.observe(document.body, { childList: true, subtree: true });
-    return () => { io.disconnect(); mo.disconnect(); };
-  }, []);
 
   // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
@@ -4191,13 +4156,13 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <div className="reveal"><LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/></div>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
-      <div className="reveal"><PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/></div>
+      <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
 
       {/* ── FEATURED HEALTH CHECKUPS ─────────────────────────────── */}
-      <section id="packages-section" className="reveal" style={{ padding:"22px 0 20px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
+      <section id="packages-section" style={{ padding:"22px 0 20px",background:"#fff",borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
           {/* Header */}
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:18,flexWrap:"wrap",gap:12 }}>
@@ -4324,7 +4289,7 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section className="reveal" style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
+      <section style={{ padding:"20px 0 22px", background:"#fff", borderBottom:"1px solid #F1F5F9" }}>
         <div style={T.wrap}>
 
           {/* MediBuddy-style illustrated promo cards — auto-swipe carousel */}
@@ -4378,10 +4343,10 @@ export default function App() {
         </div>
       </section>
 
-      <div className="reveal"><FeaturesCarousel/></div>
+      <FeaturesCarousel/>
 
             {/* ── WHY LABEASE ───────────────────────────────────────────── */}
-      <section className="reveal" style={{ padding:"18px 0",background:"#EBF0FA" }}>
+      <section style={{ padding:"18px 0",background:"#EBF0FA" }}>
         <div style={T.wrap}>
           <div style={{ textAlign:"center",marginBottom:20 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
@@ -4415,7 +4380,7 @@ export default function App() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <section className="reveal" style={{ padding:"18px 0",background:"#fff" }}>
+      <section style={{ padding:"18px 0",background:"#fff" }}>
         <div style={{ ...T.wrap,maxWidth:780 }}>
           <div style={{ textAlign:"center",marginBottom:18 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 16px",marginBottom:14 }}>
