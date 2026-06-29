@@ -3886,7 +3886,7 @@ export class ErrorBoundary extends React.Component {
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   const [page,   setPage]   = useState("home");
-  const [lab,    setLab]    = useState(null);
+  const [labId,  setLabId]  = useState(null);
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
   });
@@ -3952,7 +3952,7 @@ export default function App() {
       return map;
     } catch(e) { return {}; }
   })();
-  // Build a map of all admin-saved labs (including overrides for original labs)
+  // Build a map of all admin-saved lab data (keyed by id)
   const adminLabMap = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
@@ -3961,25 +3961,6 @@ export default function App() {
       return map;
     } catch { return {}; }
   })();
-  LABS.forEach(lab => {
-    if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
-    if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
-    if (adminLabLogos[lab.id])                   lab.logoBase64 = adminLabLogos[lab.id];
-    // Apply timing / sunday_timing edits from admin panel
-    const saved = adminLabMap[lab.id];
-    if (saved) {
-      if (saved.timing)        lab.timing        = saved.timing;
-      if (saved.sunday_timing) lab.sunday_timing = saved.sunday_timing;
-    }
-    lab.tests.forEach(t => {
-      const po = adminOv.prices[t.id];
-      if (po) {
-        if (po.price !== undefined) t.price = po.price;
-        if (po.mrp   !== undefined) t.mrp   = po.mrp;
-      }
-      if (adminOv.testNames[t.id] !== undefined) t.name = adminOv.testNames[t.id];
-    });
-  });
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [navCity, setNavCity] = useState("Detect Location");
@@ -4144,21 +4125,44 @@ export default function App() {
     navTo("confirm");
   };
 
-  const allLabs = LABS.concat(adminOv.extraLabs.map(el => ({
+  // Build all labs as fresh objects so admin overrides (timing, sunday_timing, etc.) are always current
+  const allLabs = LABS.map(lab => {
+    const adm = adminLabMap[lab.id] || {};
+    const tests = lab.tests.map(t => {
+      const po = adminOv.prices[t.id];
+      return {
+        ...t,
+        name:  adminOv.testNames[t.id] !== undefined ? adminOv.testNames[t.id] : t.name,
+        price: po?.price !== undefined ? po.price : t.price,
+        mrp:   po?.mrp   !== undefined ? po.mrp   : t.mrp,
+      };
+    });
+    return {
+      ...lab,
+      active:       adminOv.labStatus[lab.id] !== undefined ? adminOv.labStatus[lab.id] : lab.active,
+      name:         adminOv.labNames[lab.id]   !== undefined ? adminOv.labNames[lab.id]  : lab.name,
+      logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
+      timing:       adm.timing        || lab.timing,
+      sunday_timing:adm.sunday_timing || lab.sunday_timing || '',
+      tests,
+    };
+  }).concat(adminOv.extraLabs.map(el => ({
     ...el,
-    active: adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
-    address: el.address || el.city || '',
-    distance: el.distance || el.dist || '—',
-    timing: el.timing || '6:00 AM – 10:00 PM',
+    active:       adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
+    address:      el.address || el.city || '',
+    distance:     el.distance || el.dist || '—',
+    timing:       el.timing || '6:00 AM – 10:00 PM',
+    sunday_timing:el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
-    nabl: el.nabl || false,
-    color: el.color || '#1158A6',
-    logoBase64: el.logo || el.logoBase64 || '',
-    founded: el.founded || new Date().getFullYear().toString(),
-    reportTime: el.reportTime || 'Same Day',
+    nabl:         el.nabl || false,
+    color:        el.color || '#1158A6',
+    logoBase64:   el.logo || el.logoBase64 || '',
+    founded:      el.founded || new Date().getFullYear().toString(),
+    reportTime:   el.reportTime || 'Same Day',
     tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
-    reviews: el.reviews || 0,
+    reviews:      el.reviews || 0,
   })));
+  const lab = allLabs.find(l => l.id === labId) || null;
   const filtLabs = allLabs.filter(l=>{
     const q=labQ.toLowerCase();
     if(q && !l.name.toLowerCase().includes(q) && !l.address.toLowerCase().includes(q)) return false;
@@ -4253,7 +4257,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
@@ -4651,14 +4655,14 @@ export default function App() {
 
   /* ─── SHARED LAB CARD — shim ─────────────────────────────────── */
   const LabCard = ({ l }) => (
-    <LabCardML l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} navTo={navTo}/>
+    <LabCardML l={l} T={T} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} navTo={navTo}/>
   );
 
   /* ═══════════════════════════════════════════════════════════════
      LABS LIST PAGE — shim
   ═══════════════════════════════════════════════════════════════ */
   const LabsPage = () => (
-    <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={setLab}
+    <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
       setTestQ={setTestQ} navTo={navTo} cart={cart}
       selectedTest={selectedTest} setSelectedTest={setSelectedTest}
       addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}/>
@@ -4987,7 +4991,7 @@ export default function App() {
               return (
                 <div key={l.idx} className="hover-lift"
                   style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)",cursor:"pointer" }}
-                  onClick={()=>{ if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");} }}>
+                  onClick={()=>{ if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");} }}>
 
                   <div style={{ display:"flex",gap:0 }}>
                     {/* left accent bar */}
@@ -5049,13 +5053,13 @@ export default function App() {
                               <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                             </div>
                           )}
-                          <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
+                          <button onClick={e=>{e.stopPropagation();if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");}}}
                             style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
                             Book Now
                           </button>
-                          <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
+                          <button onClick={e=>{e.stopPropagation();if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");}}}
                             style={{ background:col,color:"#fff",border:"none",borderRadius:9,padding:"8px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
