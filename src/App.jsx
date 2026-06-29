@@ -2227,41 +2227,47 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=t.subtitle||getTestSubtitle(t.name);
           return (
-            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,padding:"16px",marginBottom:10,boxShadow:"0 1px 4px rgba(0,0,0,.04)",fontFamily:"'Manrope',sans-serif" }}>
-              {/* Top row: name + price */}
-              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:6 }}>
-                <div style={{ flex:1,textAlign:"left" }}>
-                  <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,marginBottom:5 }}>{t.name}</div>
-                  <span style={{ display:"inline-block",background:"#F1F5F9",color:"#1E3A6E",borderRadius:8,padding:"3px 10px",fontSize:".72rem",fontWeight:700,lineHeight:1.4 }}>{subtitle}</span>
-                </div>
-                <div style={{ flexShrink:0,textAlign:"right" }}>
-                  <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.15rem" }}>₹{t.price}</div>
-                  <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
-                    <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".75rem" }}>₹{t.mrp}</span>
-                    <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:10,overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
+              {/* Top section: name + price */}
+              <div style={{ padding:"14px 16px 12px" }}>
+                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12 }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1rem",lineHeight:1.3,marginBottom:4 }}>{t.name}</div>
+                    <span style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:6,padding:"2px 9px",fontSize:".7rem",fontWeight:700 }}>{subtitle}</span>
+                  </div>
+                  <div style={{ flexShrink:0,textAlign:"right" }}>
+                    <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.1rem" }}>₹{t.price}</div>
+                    <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
+                      <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".73rem" }}>₹{t.mrp}</span>
+                      <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              {/* 2-column info — plain */}
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"3px 0",marginBottom:14 }}>
-                <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>Sample Type</div>
-                <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>TAT</div>
-                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
-                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>12 - 48 hours</div>
-              </div>
-              {/* Add / Added button — fully left aligned */}
-              <div style={{ display:"flex",justifyContent:"flex-start" }}>
-              {added ? (
-                <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                  Added
-                </button>
-              ) : (
-                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                  Add To Cart
-                </button>
-              )}
+              {/* Divider line */}
+              <div style={{ height:1,background:"#F1F5F9" }}/>
+              {/* Bottom section: info + button */}
+              <div style={{ padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12 }}>
+                <div style={{ display:"flex",gap:16 }}>
+                  <div>
+                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>Sample</div>
+                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>Blood</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>TAT</div>
+                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>12–48 hrs</div>
+                  </div>
+                </div>
+                {added ? (
+                  <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:8,padding:"8px 18px",fontWeight:800,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    Added
+                  </button>
+                ) : (
+                  <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"8px 18px",fontWeight:800,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>
+                    + Add
+                  </button>
+                )}
               </div>
             </div>
           );
