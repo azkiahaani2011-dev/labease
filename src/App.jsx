@@ -3304,7 +3304,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               <div style={{ background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderRadius:14,padding:"14px 18px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #BFDBFE" }}>
                 <div>
                   <div style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>Amount Payable</div>
-                  <div style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",fontWeight:700,fontSize:"1.6rem",color:"#0D1117",lineHeight:1 }}>₹{total.toLocaleString()}</div>
+                  <div style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,fontWeight:700,fontSize:"1.6rem",color:"#0D1117",lineHeight:1 }}>₹{total.toLocaleString()}</div>
                 </div>
                 <div style={{ textAlign:"right" }}>
                   <div style={{ fontSize:".7rem",color:"#16A34A",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</div>
@@ -3951,7 +3951,7 @@ export default function App() {
     inp:{ width:"100%",border:"1.5px solid #E5E7EB",borderRadius:10,padding:"12px 16px",fontSize:".9rem",fontFamily:"'Manrope',sans-serif",background:"#F5F7FF",color:"#111",display:"block" },
     wrap:{ maxWidth:1600,margin:"0 auto",padding:"0 24px" },
     card:{ background:"#fff",borderRadius:18,boxShadow:"var(--card-shadow)" },
-    serif:{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em" },
+    serif:{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900 },
   };
 
   /* ═══════════════════════════════════════════════════════════════
@@ -4315,8 +4315,8 @@ export default function App() {
             {/* Brand column */}
             <div>
               <div style={{ display:"flex",alignItems:"baseline",gap:2,marginBottom:16 }}>
-                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",fontSize:"1.7rem",color:"#60A5FA",lineHeight:1 }}>Lab</span>
-                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",fontSize:"1.7rem",color:"#fff",lineHeight:1 }}>Ease</span>
+                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,fontSize:"1.7rem",color:"#60A5FA",lineHeight:1 }}>Lab</span>
+                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,fontSize:"1.7rem",color:"#fff",lineHeight:1 }}>Ease</span>
                 <sup style={{ fontSize:".5rem",color:"#4B5563",fontWeight:600,marginLeft:2 }}>™</sup>
               </div>
               <p style={{ fontSize:".84rem",lineHeight:1.75,color:"#64748B",marginBottom:20,maxWidth:240 }}>
@@ -4457,7 +4457,7 @@ export default function App() {
             {/* Header */}
             <div style={{ background:"#1158A6",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em" }}>Your Cart</div>
+              <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900 }}>Your Cart</div>
               <span style={{ marginLeft:"auto",background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 12px",fontWeight:700,fontSize:".82rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
             </div>
             {cart.length===0 ? (
@@ -4987,7 +4987,7 @@ export default function App() {
             {/* Header */}
             <div style={{ background:"#1158A6",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",flex:1,letterSpacing:".01em" }}>Your Cart</span>
+              <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,flex:1,letterSpacing:".01em" }}>Your Cart</span>
               <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
               <button onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,.8)",fontSize:"1.7rem",lineHeight:1,padding:"2px 4px",fontWeight:300,marginLeft:8 }}>×</button>
             </div>
@@ -5080,8 +5080,8 @@ export default function App() {
             <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"28px 28px 24px",position:"relative" }}>
               <button onClick={closeAuth} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
               <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:14 }}>
-                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",fontSize:"1.4rem",color:"#90C3F5" }}>Lab</span>
-                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.01em",fontSize:"1.4rem",color:"#fff" }}>Ease</span>
+                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,fontSize:"1.4rem",color:"#90C3F5" }}>Lab</span>
+                <span style={{ fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",fontWeight:900,fontSize:"1.4rem",color:"#fff" }}>Ease</span>
                 <sup style={{ fontSize:".52rem",color:"rgba(255,255,255,.5)",fontWeight:500 }}>™</sup>
               </div>
               <div style={{ color:"#fff",fontWeight:800,fontSize:"1.3rem",marginBottom:4 }}>{authMode==="login"?"Welcome back!":"Create your account"}</div>
