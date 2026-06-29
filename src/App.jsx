@@ -3030,6 +3030,7 @@ const BookingField = ({ label, req, ...p }) => (
 /* ─── BOOKING PAGE (top-level so typing doesn't lose focus) ─────────────── */
 function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
   const [loc, setLoc] = useState(form);
+  const [bkSlotFocus, setBkSlotFocus] = useState(false);
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
@@ -3132,17 +3133,49 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   })}
                 </div>
               </div>
-              <div>
-                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Time Slot <span style={{color:"#EF4444"}}>*</span></label>
-                <div style={{ display:"flex",flexWrap:"wrap",gap:8 }}>
-                  {TIME_SLOTS.map(s=>(
-                    <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F5F7FF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {(()=>{
+                const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
+                const filtered = TIME_SLOTS.filter(s => !loc.slot || s.toLowerCase().includes(loc.slot.toLowerCase()));
+                return (
+                  <div>
+                    <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:8,color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
+                    <div style={{ position:"relative" }}>
+                      {/* Input bar */}
+                      <div style={{ display:"flex",alignItems:"center",background:"#fff",border:`1.5px solid ${slotFocus?"#1158A6":"#E2E8F0"}`,borderRadius:10,padding:"0 14px",boxShadow:slotFocus?"0 0 0 3px rgba(17,88,166,.1)":"0 1px 3px rgba(0,0,0,.05)",transition:"all .18s" }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={slotFocus?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,transition:"stroke .18s" }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <input
+                          type="text"
+                          value={loc.slot||""}
+                          onChange={e=>setLoc(f=>({...f,slot:e.target.value}))}
+                          onFocus={()=>setSlotFocus(true)}
+                          onBlur={()=>setTimeout(()=>setSlotFocus(false),160)}
+                          placeholder="Type or pick a time — e.g. 9:00 AM"
+                          style={{ flex:1,border:"none",outline:"none",padding:"13px 10px",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:600,color:"#0D1117",background:"transparent",caretColor:"#1158A6" }}
+                        />
+                        {loc.slot&&<button onClick={()=>setLoc(f=>({...f,slot:""}))} style={{ background:"none",border:"none",cursor:"pointer",padding:4,color:"#9CA3AF",lineHeight:1,fontSize:15 }}>✕</button>}
+                      </div>
+                      {/* Dropdown */}
+                      {slotFocus&&(
+                        <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",border:"1.5px solid #E2E8F0",borderRadius:10,boxShadow:"0 8px 32px rgba(17,88,166,.13)",zIndex:200,overflow:"hidden" }}>
+                          <div style={{ padding:"8px 14px 6px",fontSize:".7rem",fontWeight:700,color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",borderBottom:"1px solid #F1F5F9" }}>Suggested slots</div>
+                          <div style={{ display:"flex",flexWrap:"wrap",gap:6,padding:"10px 12px 12px" }}>
+                            {(loc.slot ? filtered : TIME_SLOTS).map(s=>(
+                              <button key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setSlotFocus(false); }}
+                                style={{ padding:"7px 14px",borderRadius:6,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFC",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".78rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .12s",whiteSpace:"nowrap" }}
+                                onMouseEnter={e=>{ if(loc.slot!==s){ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.color="#1158A6"; } }}
+                                onMouseLeave={e=>{ if(loc.slot!==s){ e.currentTarget.style.background="#F8FAFC"; e.currentTarget.style.borderColor="#E5E7EB"; e.currentTarget.style.color="#374151"; } }}>
+                                {s}
+                              </button>
+                            ))}
+                            {loc.slot && filtered.length===0 && <span style={{ fontSize:".8rem",color:"#9CA3AF",padding:"4px 2px" }}>No match — your custom time will be used</span>}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    {loc.slot&&!TIME_SLOTS.includes(loc.slot)&&<div style={{ marginTop:6,fontSize:".73rem",color:"#6B7280",display:"flex",alignItems:"center",gap:4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Custom time noted — lab will confirm availability</div>}
+                  </div>
+                );
+              })()}
               <div style={{ display:"flex",gap:10,marginTop:22 }}>
                 <button onClick={()=>setStep(1)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
                 <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}

@@ -1,21 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LabEase Admin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Manrope', sans-serif; background: #F8FAFC; color: #111; -webkit-font-smoothing: antialiased; }
-      ::-webkit-scrollbar { width: 5px; height: 5px; }
-      ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 99px; }
-    </style>
-    <script type="module" crossorigin src="/labease/admin/assets/index-DS4CRfvt.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LabEase Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #111827; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+  input, select, button { font-family: inherit; }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #0D1117; display: flex; flex-direction: column; z-index: 300; transition: transform .25s ease; }
+  .main { margin-left: 240px; min-height: 100vh; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; cursor: pointer; color: #9CA3AF; font-size: 14px; font-weight: 500; transition: all .15s; margin: 2px 8px; }
+  .nav-item:hover { background: #161B22; color: #E5E7EB; }
+  .nav-item.active { background: #1158A6; color: #fff; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 1px rgba(0,0,0,.05); }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-blue { background: #EFF6FF; color: #1D4ED8; }
+  .badge-yellow { background: #FFFBEB; color: #B45309; }
+  .badge-green { background: #F0FDF4; color: #15803D; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+  .badge-grey { background: #F3F4F6; color: #6B7280; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #F9FAFB; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: .04em; padding: 12px 16px; text-align: left; }
+  td { padding: 13px 16px; font-size: 13.5px; color: #374151; border-top: 1px solid #F3F4F6; }
+  tr:hover td { background: #FAFAFA; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary { background: #1158A6; color: #fff; }
+  .btn-primary:hover { background: #0F4A8A; }
+  .btn-outline { background: #fff; color: #374151; border: 1px solid #E5E7EB; }
+  .btn-outline:hover { background: #F9FAFB; }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+  input[type=text], input[type=password], input[type=number], input[type=date], select { border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 12px; font-size: 13.5px; outline: none; transition: border .15s; background: #fff; color: #111827; }
+  input[type=text]:focus, input[type=password]:focus, input[type=number]:focus, input[type=date]:focus, select:focus { border-color: #1158A6; box-shadow: 0 0 0 3px rgba(17,88,166,.1); }
+  .progress-bar { height: 6px; border-radius: 3px; background: #E5E7EB; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+  .pill-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid #E5E7EB; background: #fff; color: #6B7280; transition: all .15s; }
+  .pill-btn.active { background: #1158A6; color: #fff; border-color: #1158A6; }
+  .pill-btn:hover:not(.active) { background: #F3F4F6; }
+  .lab-card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.07); padding: 20px; }
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0D1117 0%, #161B22 100%); padding: 16px; }
+  .login-card { background: #fff; border-radius: 20px; padding: 40px; width: 380px; max-width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+  .top-bar { background: #fff; border-bottom: 1px solid #F3F4F6; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+  .modal-box { background: #fff; border-radius: 16px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; }
+  .clickable-row { cursor: pointer; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+  .labs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .ham-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; color: #374151; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 299; }
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.3); }
+    .sidebar-overlay { display: block; }
+    .main { margin-left: 0 !important; }
+    .top-bar { padding: 0 16px; }
+    .ham-btn { display: flex; align-items: center; justify-content: center; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .labs-grid { grid-template-columns: 1fr !important; }
+    .two-col-grid { grid-template-columns: 1fr !important; }
+    .page-pad { padding: 16px !important; }
+    th, td { padding: 10px 12px; font-size: 12.5px; }
+    .modal-box { padding: 20px; }
+    .login-card { padding: 28px 20px; }
+    .add-lab-grid { grid-template-columns: 1fr 1fr !important; }
+  }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .add-lab-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(function() {
+var e = React.createElement;
+var useState = React.useState;
+var useEffect = React.useEffect;
+
+var PATIENTS = ['Rahul Sharma','Priya Patel','Arun Kumar','Sneha Reddy','Vikram Singh','Divya Nair','Karthik Rao','Ananya Joshi','Mohammed Ali','Sunita Verma'];
+var LAB_NAMES = ['Apollo Diagnostics','SRL Diagnostics','Metropolis Health','Dr Lal PathLabs','Thyrocare','Vijaya Diagnostics'];
+var TEST_NAMES = ['CBC','Lipid Profile','Thyroid Profile','HbA1c','Vitamin D','LFT','KFT','Urine Routine','Full Body Checkup','Dengue NS1'];
+var STATUSES = ['Confirmed','Sample Collected','Report Ready','Pending','Cancelled'];
+var PHONES = ['9876543210','9123456780','9988776655','9012345678','9871234560','9654321098','9543210987','9432109876','9321098765','9210987654'];
+var CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
+var MODES = ['Home','Clinic'];
+var ADDRESSES = ['12 MG Road','45 Brigade Road','78 Andheri West','23 Connaught Place','56 Anna Salai','89 Park Street'];
+
+function genBookings() {
+  var saved = localStorage.getItem('le_bookings');
+  if (saved) return JSON.parse(saved);
+  var prices = {'CBC':299,'Lipid Profile':599,'Thyroid Profile':799,'HbA1c':499,'Vitamin D':899,'LFT':799,'KFT':699,'Urine Routine':199,'Full Body Checkup':1999,'Dengue NS1':699};
+  var data = [];
+  for (var i = 0; i < 28; i++) {
+    var t = TEST_NAMES[i % 10];
+    var d = new Date(2024, 3 + Math.floor(i/5), (i % 27) + 1);
+    data.push({id:'LB'+(1000+i),patient:PATIENTS[i%10],phone:PHONES[i%10],test:t,lab:LAB_NAMES[i%6],date:d.toISOString().slice(0,10),mode:MODES[i%2],amount:prices[t],status:STATUSES[i%5],address:ADDRESSES[i%6],notes:i%3===0?'Fasting required':'',email:PATIENTS[i%10].toLowerCase().replace(' ','.')+'@gmail.com'});
+  }
+  localStorage.setItem('le_bookings', JSON.stringify(data));
+  return data;
+}
+
+function genLabs() {
+  var saved = localStorage.getItem('le_labs');
+  if (saved) return JSON.parse(saved);
+  var ratings = [4.7,4.5,4.6,4.8,4.3,4.6];
+  var testCounts = [80,65,72,90,55,68];
+  var phones = ['040-23456789','080-34567890','022-45678901','011-56789012','044-67890123','040-78901234'];
+  var data = LAB_NAMES.map(function(name,i){return {id:i+1,name:name,city:CITIES[i],rating:ratings[i],tests:testCounts[i],phone:phones[i],active:i!==4};});
+  localStorage.setItem('le_labs', JSON.stringify(data));
+  return data;
+}
+
+var ALL_LAB_TESTS = [
+  {id:'a1',name:'Complete Blood Count (CBC)',labId:1,lab:'Apollo',cat:'Blood',price:299,mrp:499},
+  {id:'a2',name:'Lipid Profile',labId:1,lab:'Apollo',cat:'Blood',price:499,mrp:799},
+  {id:'a3',name:'Thyroid Profile (T3,T4,TSH)',labId:1,lab:'Apollo',cat:'Thyroid',price:649,mrp:999},
+  {id:'a4',name:'HbA1c (Diabetes)',labId:1,lab:'Apollo',cat:'Diabetes',price:399,mrp:599},
+  {id:'a5',name:'Liver Function Test',labId:1,lab:'Apollo',cat:'Liver',price:549,mrp:849},
+  {id:'a6',name:'Kidney Function Test',labId:1,lab:'Apollo',cat:'Kidney',price:549,mrp:849},
+  {id:'a7',name:'Vitamin D (25-OH)',labId:1,lab:'Apollo',cat:'Vitamins',price:899,mrp:1299},
+  {id:'a8',name:'Vitamin B12',labId:1,lab:'Apollo',cat:'Vitamins',price:699,mrp:999},
+  {id:'a9',name:'Full Body Checkup',labId:1,lab:'Apollo',cat:'Packages',price:1999,mrp:3499},
+  {id:'a10',name:'COVID Antibody Test',labId:1,lab:'Apollo',cat:'COVID',price:799,mrp:1199},
+  {id:'a11',name:'Iron Studies',labId:1,lab:'Apollo',cat:'Blood',price:449,mrp:699},
+  {id:'a12',name:'CRP (Inflammation)',labId:1,lab:'Apollo',cat:'Blood',price:349,mrp:599},
+  {id:'b1',name:'Complete Blood Count (CBC)',labId:2,lab:'SRL',cat:'Blood',price:279,mrp:499},
+  {id:'b2',name:'Blood Sugar Fasting',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b3',name:'Blood Sugar Post-Prandial',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b4',name:'Urine Routine & Microscopy',labId:2,lab:'SRL',cat:'Urine',price:149,mrp:299},
+  {id:'b5',name:'TSH (Thyroid Stimulating)',labId:2,lab:'SRL',cat:'Thyroid',price:299,mrp:499},
+  {id:'b6',name:'Iron Studies',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:699},
+  {id:'b7',name:'HbA1c',labId:2,lab:'SRL',cat:'Diabetes',price:349,mrp:599},
+  {id:'b8',name:'Dengue NS1 Antigen',labId:2,lab:'SRL',cat:'Infectious',price:699,mrp:999},
+  {id:'b9',name:'Comprehensive Health Package',labId:2,lab:'SRL',cat:'Packages',price:2499,mrp:4199},
+  {id:'b10',name:'Lipid Profile',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:799},
+  {id:'b11',name:'Urine Culture & Sensitivity',labId:2,lab:'SRL',cat:'Urine',price:499,mrp:799},
+  {id:'b12',name:'HIV 1 & 2 Antibody',labId:2,lab:'SRL',cat:'Infectious',price:299,mrp:549},
+  {id:'c1',name:'Complete Blood Count (CBC)',labId:3,lab:'Metropolis',cat:'Blood',price:259,mrp:499},
+  {id:'c2',name:'Liver Function Test',labId:3,lab:'Metropolis',cat:'Liver',price:499,mrp:849},
+  {id:'c3',name:'Kidney Function Test',labId:3,lab:'Metropolis',cat:'Kidney',price:499,mrp:849},
+  {id:'c4',name:'Thyroid Profile',labId:3,lab:'Metropolis',cat:'Thyroid',price:599,mrp:999},
+  {id:'c5',name:'Vitamin D3',labId:3,lab:'Metropolis',cat:'Vitamins',price:849,mrp:1299},
+  {id:'c6',name:'Vitamin B12',labId:3,lab:'Metropolis',cat:'Vitamins',price:649,mrp:999},
+  {id:'c7',name:'PSA Total (Prostate)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:799,mrp:1199},
+  {id:'c8',name:'CA-125 (Ovarian)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:1099,mrp:1699},
+  {id:'c9',name:'Wellness 360 Package',labId:3,lab:'Metropolis',cat:'Packages',price:2999,mrp:5499},
+  {id:'c10',name:'Allergy Panel (40 Allergens)',labId:3,lab:'Metropolis',cat:'Allergy',price:1999,mrp:3499},
+  {id:'c11',name:'Rheumatoid Arthritis Panel',labId:3,lab:'Metropolis',cat:'Autoimmune',price:899,mrp:1499},
+  {id:'c12',name:'ANA (Autoimmune Screen)',labId:3,lab:'Metropolis',cat:'Autoimmune',price:749,mrp:1199},
+  {id:'d1',name:'Complete Blood Count (CBC)',labId:4,lab:'Dr Lal',cat:'Blood',price:249,mrp:499},
+  {id:'d2',name:'Blood Sugar Random',labId:4,lab:'Dr Lal',cat:'Diabetes',price:79,mrp:199},
+  {id:'d3',name:'HbA1c',labId:4,lab:'Dr Lal',cat:'Diabetes',price:329,mrp:599},
+  {id:'d4',name:'Lipid Profile',labId:4,lab:'Dr Lal',cat:'Blood',price:399,mrp:799},
+  {id:'d5',name:'Urine Culture & Sensitivity',labId:4,lab:'Dr Lal',cat:'Urine',price:499,mrp:799},
+  {id:'d6',name:'Stool Examination',labId:4,lab:'Dr Lal',cat:'Stool',price:149,mrp:299},
+  {id:'d7',name:'Malaria Antigen Test',labId:4,lab:'Dr Lal',cat:'Infectious',price:399,mrp:699},
+  {id:'d8',name:'Widal Test (Typhoid)',labId:4,lab:'Dr Lal',cat:'Infectious',price:199,mrp:399},
+  {id:'d9',name:'Heart Health Package',labId:4,lab:'Dr Lal',cat:'Packages',price:1799,mrp:2999},
+  {id:'d10',name:'Senior Citizen Package',labId:4,lab:'Dr Lal',cat:'Packages',price:2299,mrp:3999},
+  {id:'d11',name:'Testosterone Total',labId:4,lab:'Dr Lal',cat:'Hormones',price:599,mrp:999},
+  {id:'d12',name:'Prolactin',labId:4,lab:'Dr Lal',cat:'Hormones',price:499,mrp:799},
+  {id:'e1',name:'Aarogyam 1.3 (Full Body)',labId:5,lab:'Thyrocare',cat:'Packages',price:999,mrp:2499},
+  {id:'e2',name:'Aarogyam C (Comprehensive)',labId:5,lab:'Thyrocare',cat:'Packages',price:1499,mrp:3499},
+  {id:'e3',name:'Thyroid Panel (T3,T4,TSH)',labId:5,lab:'Thyrocare',cat:'Thyroid',price:399,mrp:799},
+  {id:'e4',name:'Complete Blood Count',labId:5,lab:'Thyrocare',cat:'Blood',price:199,mrp:499},
+  {id:'e5',name:'Vitamin Panel (D3 + B12)',labId:5,lab:'Thyrocare',cat:'Vitamins',price:999,mrp:1799},
+  {id:'e6',name:'Hormone Panel',labId:5,lab:'Thyrocare',cat:'Hormones',price:1299,mrp:2299},
+  {id:'e7',name:'Fertility Panel (Female)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1999,mrp:3499},
+  {id:'e8',name:'Fertility Panel (Male)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1499,mrp:2499},
+  {id:'e9',name:'COVID RT-PCR',labId:5,lab:'Thyrocare',cat:'COVID',price:499,mrp:999},
+  {id:'e10',name:'Lipid Profile',labId:5,lab:'Thyrocare',cat:'Blood',price:349,mrp:799},
+  {id:'e11',name:'Cortisol (Stress Hormone)',labId:5,lab:'Thyrocare',cat:'Hormones',price:449,mrp:799},
+  {id:'e12',name:'DHEA-S',labId:5,lab:'Thyrocare',cat:'Hormones',price:549,mrp:899},
+  {id:'f1',name:'Complete Blood Count (CBC)',labId:6,lab:'Vijaya',cat:'Blood',price:269,mrp:499},
+  {id:'f2',name:'Liver Function Test',labId:6,lab:'Vijaya',cat:'Liver',price:519,mrp:849},
+  {id:'f3',name:'Kidney Panel',labId:6,lab:'Vijaya',cat:'Kidney',price:519,mrp:849},
+  {id:'f4',name:'2D Echo (Cardiac)',labId:6,lab:'Vijaya',cat:'Cardiac',price:1499,mrp:2499},
+  {id:'f5',name:'ECG (12-Lead)',labId:6,lab:'Vijaya',cat:'Cardiac',price:299,mrp:499},
+  {id:'f6',name:'X-Ray Chest (PA View)',labId:6,lab:'Vijaya',cat:'Radiology',price:399,mrp:699},
+  {id:'f7',name:'Ultrasound Abdomen',labId:6,lab:'Vijaya',cat:'Radiology',price:899,mrp:1499},
+  {id:'f8',name:'MRI Brain with Contrast',labId:6,lab:'Vijaya',cat:'Radiology',price:5999,mrp:9999},
+  {id:'f9',name:'CT Scan Chest',labId:6,lab:'Vijaya',cat:'Radiology',price:4499,mrp:7999},
+  {id:'f10',name:'Full Body Checkup Premium',labId:6,lab:'Vijaya',cat:'Packages',price:3499,mrp:5999},
+  {id:'f11',name:'Bone Density (DEXA Scan)',labId:6,lab:'Vijaya',cat:'Radiology',price:1299,mrp:2199},
+  {id:'f12',name:'PFT (Pulmonary Function)',labId:6,lab:'Vijaya',cat:'Cardiac',price:799,mrp:1399},
+];
+
+function genTests() {
+  var overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem('le_price_overrides')||'{}'); } catch(ex){}
+  return ALL_LAB_TESTS.map(function(t){
+    var ov=overrides[t.id]||{};
+    return Object.assign({},t,{price:ov.price!==undefined?ov.price:t.price,mrp:ov.mrp!==undefined?ov.mrp:t.mrp});
+  });
+}
+
+function fmt(n){return '₹'+Number(n).toLocaleString('en-IN');}
+function statusClass(s){
+  if(s==='Confirmed')return 'badge badge-blue';
+  if(s==='Sample Collected')return 'badge badge-yellow';
+  if(s==='Report Ready')return 'badge badge-green';
+  if(s==='Cancelled')return 'badge badge-red';
+  return 'badge badge-grey';
+}
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function weekAgoStr(){var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10);}
+function monthAgoStr(){var d=new Date();d.setDate(d.getDate()-30);return d.toISOString().slice(0,10);}
+
+function downloadCSV(rows) {
+  var headers = ['Booking ID','Patient','Phone','Email','Test','Lab','Date','Mode','Amount','Status','Address','Notes'];
+  var lines = [headers.join(',')].concat(rows.map(function(b){
+    return [b.id,b.patient,b.phone,b.email||'',b.test,b.lab,b.date,b.mode,b.amount,b.status,b.address||'',b.notes||''].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');
+  }));
+  var blob = new Blob([lines.join('\n')],{type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download='LabEase_Bookings_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function svgIcon(paths, w) {
+  w=w||18;
+  return e('svg',{width:w,height:w,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    paths.map(function(p,i){return e(p[0],Object.assign({key:i},p[1]));  })
+  );
+}
+function IconDash(){return svgIcon([['rect',{x:3,y:3,width:7,height:7}],['rect',{x:14,y:3,width:7,height:7}],['rect',{x:14,y:14,width:7,height:7}],['rect',{x:3,y:14,width:7,height:7}]]);}
+function IconBook(){return svgIcon([['path',{d:'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'}],['path',{d:'M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'}]]);}
+function IconLab(){return svgIcon([['path',{d:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11l-2 3h10l-2-3V3'}]]);}
+function IconTest(){return svgIcon([['path',{d:'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'}],['polyline',{points:'14 2 14 8 20 8'}],['line',{x1:9,y1:13,x2:15,y2:13}],['line',{x1:9,y1:17,x2:15,y2:17}]]);}
+function IconLogout(){return svgIcon([['path',{d:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'}],['polyline',{points:'16 17 21 12 16 7'}],['line',{x1:21,y1:12,x2:9,y2:12}]],16);}
+function IconSearch(){return svgIcon([['circle',{cx:11,cy:11,r:8}],['line',{x1:21,y1:21,x2:'16.65',y2:'16.65'}]],15);}
+function IconEdit(){return svgIcon([['path',{d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'}],['path',{d:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'}]],14);}
+function IconDownload(){return svgIcon([['path',{d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'}],['polyline',{points:'7 10 12 15 17 10'}],['line',{x1:12,y1:15,x2:12,y2:3}]],15);}
+function IconSettings(){return svgIcon([['circle',{cx:12,cy:12,r:3}],['path',{d:'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'}]]);}
+
+function Login(props) {
+  var s = useState(''), user=s[0], setUser=s[1];
+  var s2 = useState(''), pass=s2[0], setPass=s2[1];
+  var s3 = useState(''), err=s3[0], setErr=s3[1];
+  function submit(ev) {
+    ev.preventDefault();
+    var storedPass = localStorage.getItem('le_admin_pass')||'labease2024';
+    if(user.trim()==='admin'&&pass.trim()===storedPass){props.onLogin();}
+    else setErr('Invalid credentials.');
+  }
+  return e('div',{className:'login-wrap'},
+    e('div',{className:'login-card'},
+      e('div',{style:{textAlign:'center',marginBottom:28}},
+        e('div',{style:{fontFamily:'DM Serif Display',fontSize:34,color:'#0D1117',letterSpacing:'-0.5px'}},'LabEase'),
+        e('div',{style:{color:'#6B7280',fontSize:13,marginTop:4,fontWeight:500}},'Admin Panel — Sign in to continue')
+      ),
+      e('form',{onSubmit:submit},
+        e('div',{style:{marginBottom:14}},
+          e('label',{style:{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}},'Username'),
+          e('input',{type:'text',style:{width:'100%'},value:user,onChange:function(ev){setUser(ev.target.value);},placeholder:'admin',autoFocus:true})
+        ),
+        e('div',{style:{marginBottom:18}},
+          e('label',{style:{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}},'Password'),
+          e('input',{type:'password',style:{width:'100%'},value:pass,onChange:function(ev){setPass(ev.target.value);},placeholder:'••••••••'})
+        ),
+        err?e('div',{style:{background:'#FEF2F2',color:'#DC2626',fontSize:12,padding:'8px 12px',borderRadius:8,marginBottom:14,fontWeight:500}},err):null,
+        e('button',{type:'submit',className:'btn btn-primary',style:{width:'100%',justifyContent:'center',padding:'11px'}},'Sign In'),
+        e('div',{style:{textAlign:'center',marginTop:14,fontSize:12,color:'#9CA3AF'}},'Default: ',e('strong',null,'admin'),' / ',e('strong',null,'labease2024'))
+      )
+    )
+  );
+}
+
+function Sidebar(props) {
+  var items = [
+    {key:'dashboard',label:'Dashboard',icon:e(IconDash,null)},
+    {key:'bookings',label:'Bookings',icon:e(IconBook,null)},
+    {key:'labs',label:'Labs',icon:e(IconLab,null)},
+    {key:'tests',label:'Tests & Pricing',icon:e(IconTest,null)},
+    {key:'settings',label:'Settings',icon:e(IconSettings,null)},
+  ];
+  function nav(key){props.setPage(key);if(props.onClose)props.onClose();}
+  return e('div',{className:'sidebar'+(props.open?' open':'')},
+    e('div',{style:{padding:'24px 16px 12px',display:'flex',alignItems:'center',justifyContent:'space-between'}},
+      e('div',null,
+        e('div',{style:{fontFamily:'DM Serif Display',fontSize:28,color:'#fff',letterSpacing:'-0.3px'}},'LabEase'),
+        e('div',{style:{fontSize:11,color:'#6B7280',fontWeight:500,marginTop:2,letterSpacing:'0.06em',textTransform:'uppercase'}},'Admin Panel')
+      ),
+      e('button',{className:'ham-btn',onClick:props.onClose,style:{color:'#9CA3AF',fontSize:20,padding:'4px'}},'×')
+    ),
+    e('div',{style:{height:1,background:'#161B22',margin:'8px 16px'}}),
+    e('nav',{style:{flex:1,padding:'8px 0'}},
+      items.map(function(it){
+        return e('div',{key:it.key,className:'nav-item'+(props.page===it.key?' active':''),onClick:function(){nav(it.key);}},it.icon,e('span',null,it.label));
+      })
+    ),
+    e('div',{style:{padding:'12px 8px 24px'}},
+      e('div',{className:'nav-item',onClick:props.onLogout,style:{color:'#EF4444'}},e(IconLogout,null),e('span',null,'Logout'))
+    )
+  );
+}
+
+function Dashboard(props) {
+  var bookings=props.bookings, labs=props.labs||[], total=bookings.length;
+  var today=todayStr();
+  var active=bookings.filter(function(b){return b.status==='Confirmed'||b.status==='Sample Collected';}).length;
+  var revenue=bookings.filter(function(b){return b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  var todayRev=bookings.filter(function(b){return b.date===today&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  var monthStart=new Date(); monthStart.setDate(1); var msStr=monthStart.toISOString().slice(0,10);
+  var monthRev=bookings.filter(function(b){return b.date>=msStr&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  var statusCounts={};
+  STATUSES.forEach(function(s){statusCounts[s]=bookings.filter(function(b){return b.status===s;}).length;});
+  var testCount={};
+  bookings.forEach(function(b){testCount[b.test]=(testCount[b.test]||0)+1;});
+  var topTests=Object.entries(testCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  var maxT=topTests.length>0?topTests[0][1]:1;
+  var recent=bookings.slice().sort(function(a,b){return b.id.localeCompare(a.id);}).slice(0,6);
+  var statusColors={'Confirmed':'#3B82F6','Sample Collected':'#F59E0B','Report Ready':'#10B981','Pending':'#9CA3AF','Cancelled':'#EF4444'};
+  var stats=[
+    {label:'Total Bookings',value:total,bg:'#EFF6FF',ch:'📋'},
+    {label:'Active Bookings',value:active,bg:'#F0FDF4',ch:'✅'},
+    {label:"Today's Revenue",value:fmt(todayRev),bg:'#FFF7ED',ch:'📅'},
+    {label:'Total Revenue',value:fmt(revenue),bg:'#FDF4FF',ch:'💰'},
+    {label:'This Month',value:fmt(monthRev),bg:'#F0FDF4',ch:'📈'},
+    {label:'Total Labs',value:labs.length||LAB_NAMES.length,bg:'#EFF6FF',ch:'🏥'},
+  ];
+  return e('div',{className:'page-pad',style:{padding:28}},
+    e('div',{style:{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}},'Dashboard'),
+    e('div',{style:{fontSize:13.5,color:'#6B7280',marginBottom:24}},"Welcome back, Admin. Here's what's happening."),
+    e('div',{className:'stats-grid'},
+      stats.map(function(s){return e('div',{key:s.label,className:'card',style:{padding:20}},
+        e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}},
+          e('div',null,
+            e('div',{style:{fontSize:12,color:'#6B7280',fontWeight:600,marginBottom:6}},s.label),
+            e('div',{style:{fontSize:24,fontWeight:800,color:'#0D1117'}},s.value)
+          ),
+          e('div',{style:{width:44,height:44,borderRadius:12,background:s.bg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}},s.ch)
+        )
+      );})
+    ),
+    e('div',{className:'two-col-grid'},
+      e('div',{className:'card',style:{padding:22}},
+        e('div',{style:{fontWeight:700,fontSize:15,marginBottom:18,color:'#0D1117'}},'Booking Status Breakdown'),
+        STATUSES.map(function(s){return e('div',{key:s,style:{marginBottom:14}},
+          e('div',{style:{display:'flex',justifyContent:'space-between',fontSize:13,fontWeight:500,marginBottom:5}},e('span',null,s),e('span',{style:{color:'#6B7280'}},statusCounts[s])),
+          e('div',{className:'progress-bar'},e('div',{className:'progress-fill',style:{width:((statusCounts[s]/total)*100)+'%',background:statusColors[s]}}))
+        );})
+      ),
+      e('div',{className:'card',style:{padding:22}},
+        e('div',{style:{fontWeight:700,fontSize:15,marginBottom:18,color:'#0D1117'}},'Top 5 Booked Tests'),
+        topTests.map(function(entry,i){var nm=entry[0],cnt=entry[1];return e('div',{key:nm,style:{marginBottom:14}},
+          e('div',{style:{display:'flex',justifyContent:'space-between',fontSize:13,fontWeight:500,marginBottom:5}},e('span',null,(i+1)+'. '+nm),e('span',{style:{color:'#6B7280'}},cnt+' bookings')),
+          e('div',{className:'progress-bar'},e('div',{className:'progress-fill',style:{width:((cnt/maxT)*100)+'%',background:'#1158A6'}}))
+        );})
+      )
+    ),
+    e('div',{className:'card'},
+      e('div',{style:{padding:'18px 20px 0',fontWeight:700,fontSize:15,color:'#0D1117'}},'Recent Bookings'),
+      e('table',null,
+        e('thead',null,e('tr',null,['ID','Patient','Test','Lab','Date','Amount','Status'].map(function(h){return e('th',{key:h},h);}))),
+        e('tbody',null,recent.map(function(b){return e('tr',{key:b.id},
+          e('td',{style:{fontWeight:600,color:'#1158A6'}},b.id),
+          e('td',null,b.patient),e('td',null,b.test),e('td',null,b.lab),e('td',null,b.date),
+          e('td',{style:{fontWeight:600}},fmt(b.amount)),
+          e('td',null,e('span',{className:statusClass(b.status)},b.status))
+        );}))
+      )
+    )
+  );
+}
+
+function BookingDetailModal(props) {
+  var b=props.booking;
+  if(!b)return null;
+  return e('div',{className:'modal-overlay',onClick:props.onClose},
+    e('div',{className:'modal-box',style:{width:480},onClick:function(ev){ev.stopPropagation();}},
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}},
+        e('div',null,
+          e('div',{style:{fontSize:11,color:'#9CA3AF',fontWeight:600,marginBottom:4}},'BOOKING ID'),
+          e('div',{style:{fontSize:20,fontWeight:800,color:'#1158A6'}},b.id)
+        ),
+        e('button',{onClick:props.onClose,style:{background:'none',border:'none',fontSize:20,cursor:'pointer',color:'#9CA3AF',padding:'0 4px'}},'\xd7')
+      ),
+      e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}},
+        [
+          ['Patient',b.patient],
+          ['Phone',b.phone],
+          ['Email',b.email||'—'],
+          ['Test',b.test],
+          ['Lab',b.lab],
+          ['Date',b.date],
+          ['Mode',b.mode],
+          ['Amount',fmt(b.amount)],
+          ['Address',b.address||'—'],
+          ['Notes',b.notes||'—'],
+        ].map(function(pair){return e('div',{key:pair[0]},
+          e('div',{style:{fontSize:11,fontWeight:600,color:'#9CA3AF',marginBottom:3}},pair[0].toUpperCase()),
+          e('div',{style:{fontSize:13.5,fontWeight:600,color:'#111827'}},pair[1])
+        );})
+      ),
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:16,borderTop:'1px solid #F3F4F6'}},
+        e('span',{className:statusClass(b.status)},b.status),
+        e('button',{className:'btn btn-outline btn-sm',onClick:props.onClose},'Close')
+      )
+    )
+  );
+}
+
+function Bookings(props) {
+  var s1=useState(''),search=s1[0],setSearch=s1[1];
+  var s2=useState('All'),filter=s2[0],setFilter=s2[1];
+  var s3=useState('all'),dateRange=s3[0],setDateRange=s3[1];
+  var s4=useState(''),dateFrom=s4[0],setDateFrom=s4[1];
+  var s5=useState(''),dateTo=s5[0],setDateTo=s5[1];
+  var s6=useState(null),detailBooking=s6[0],setDetailBooking=s6[1];
+  function updateStatus(id,status){
+    var next=props.bookings.map(function(b){return b.id===id?Object.assign({},b,{status:status}):b;});
+    props.setBookings(next); localStorage.setItem('le_bookings',JSON.stringify(next));
+  }
+  function applyDateRange(b){
+    if(dateRange==='today') return b.date===todayStr();
+    if(dateRange==='week') return b.date>=weekAgoStr();
+    if(dateRange==='month') return b.date>=monthAgoStr();
+    if(dateRange==='custom') return (!dateFrom||b.date>=dateFrom)&&(!dateTo||b.date<=dateTo);
+    return true;
+  }
+  var filtered=props.bookings.filter(function(b){
+    var q=search.toLowerCase();
+    var mq=!q||b.patient.toLowerCase().indexOf(q)>-1||b.id.toLowerCase().indexOf(q)>-1||b.test.toLowerCase().indexOf(q)>-1||b.phone.indexOf(q)>-1;
+    var mf=filter==='All'||b.status===filter;
+    return mq&&mf&&applyDateRange(b);
+  }).sort(function(a,b){return b.id.localeCompare(a.id);});
+  var dateButtons=[{k:'all',l:'All Time'},{k:'today',l:'Today'},{k:'week',l:'This Week'},{k:'month',l:'This Month'},{k:'custom',l:'Custom'}];
+  return e('div',{className:'page-pad',style:{padding:28}},
+    e(BookingDetailModal,{booking:detailBooking,onClose:function(){setDetailBooking(null);}}),
+    e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}},
+      e('div',{style:{fontSize:22,fontWeight:800,color:'#0D1117'}},'Bookings'),
+      e('button',{className:'btn btn-outline',onClick:function(){downloadCSV(filtered);}},e(IconDownload,null),' Export CSV')
+    ),
+    e('div',{style:{display:'flex',gap:6,marginBottom:12,flexWrap:'wrap'}},
+      dateButtons.map(function(btn){return e('button',{key:btn.k,className:'pill-btn'+(dateRange===btn.k?' active':''),onClick:function(){setDateRange(btn.k);}},btn.l);})
+    ),
+    dateRange==='custom'?e('div',{style:{display:'flex',gap:10,marginBottom:12,alignItems:'center'}},
+      e('span',{style:{fontSize:13,color:'#6B7280',fontWeight:600}},'From'),
+      e('input',{type:'date',value:dateFrom,onChange:function(ev){setDateFrom(ev.target.value);}}),
+      e('span',{style:{fontSize:13,color:'#6B7280',fontWeight:600}},'To'),
+      e('input',{type:'date',value:dateTo,onChange:function(ev){setDateTo(ev.target.value);}})
+    ):null,
+    e('div',{style:{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap',alignItems:'center'}},
+      e('div',{style:{position:'relative',flex:'1',minWidth:220}},
+        e('span',{style:{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}},e(IconSearch,null)),
+        e('input',{type:'text',style:{width:'100%',paddingLeft:32},placeholder:'Search by name, phone, ID or test…',value:search,onChange:function(ev){setSearch(ev.target.value);}})
+      ),
+      e('div',{style:{display:'flex',gap:6,flexWrap:'wrap'}},
+        ['All'].concat(STATUSES).map(function(s){return e('button',{key:s,className:'pill-btn'+(filter===s?' active':''),onClick:function(){setFilter(s);}},s);})
+      )
+    ),
+    e('div',{className:'card',style:{overflow:'hidden'}},
+      e('div',{className:'table-wrap'},
+        e('table',null,
+          e('thead',null,e('tr',null,['ID','Patient','Phone','Test','Lab','Date','Mode','Amount','Status','Update'].map(function(h){return e('th',{key:h},h);}))),
+          e('tbody',null,
+            filtered.length===0?e('tr',null,e('td',{colSpan:10,style:{textAlign:'center',color:'#9CA3AF',padding:32}},'No bookings found.')):null,
+            filtered.map(function(b){return e('tr',{key:b.id,className:'clickable-row',onClick:function(){setDetailBooking(b);}},
+              e('td',{style:{fontWeight:600,color:'#1158A6'}},b.id),
+              e('td',{style:{fontWeight:600}},b.patient),
+              e('td',{style:{color:'#6B7280'}},b.phone),
+              e('td',null,b.test),e('td',null,b.lab),e('td',null,b.date),
+              e('td',null,e('span',{style:{fontSize:12,fontWeight:600,color:b.mode==='Home'?'#7E22CE':'#0369A1',background:b.mode==='Home'?'#FDF4FF':'#F0F9FF',padding:'3px 8px',borderRadius:6}},b.mode)),
+              e('td',{style:{fontWeight:700}},fmt(b.amount)),
+              e('td',null,e('span',{className:statusClass(b.status)},b.status)),
+              e('td',null,e('select',{value:b.status,onClick:function(ev){ev.stopPropagation();},onChange:function(ev){ev.stopPropagation();updateStatus(b.id,ev.target.value);},style:{fontSize:12,padding:'5px 8px'}},
+                STATUSES.map(function(s){return e('option',{key:s,value:s},s);})
+              ))
+            );})
+          )
+        )
+      ),
+      e('div',{style:{padding:'12px 20px',fontSize:12,color:'#9CA3AF',borderTop:'1px solid #F3F4F6'}},'Showing '+filtered.length+' of '+props.bookings.length+' bookings — click any row for details')
+    )
+  );
+}
+
+function LogoEditor(props) {
+  var logo=props.logo, onChangeLogo=props.onChangeLogo;
+  var CSIZE=200;
+  var sr=React.useState(null),rawSrc=sr[0],setRawSrc=sr[1];
+  var sox=React.useState(0),offX=sox[0],setOffX=sox[1];
+  var soy=React.useState(0),offY=soy[0],setOffY=soy[1];
+  var sz=React.useState(1),zoom=sz[0],setZoom=sz[1];
+  var sed=React.useState(false),editing=sed[0],setEditing=sed[1];
+  var sdg=React.useState(null),drag=sdg[0],setDrag=sdg[1];
+  function onFileChange(ev){
+    var file=ev.target.files[0]; if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(e2){setRawSrc(e2.target.result);setOffX(0);setOffY(0);setZoom(1);setEditing(true);};
+    reader.readAsDataURL(file);
+  }
+  function apply(){
+    var canvas=document.createElement('canvas');
+    canvas.width=CSIZE; canvas.height=CSIZE;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,CSIZE,CSIZE);
+    var img=new Image();
+    img.onload=function(){
+      ctx.save();
+      ctx.translate(CSIZE/2+offX,CSIZE/2+offY);
+      ctx.scale(zoom,zoom);
+      ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+      ctx.restore();
+      onChangeLogo(canvas.toDataURL('image/jpeg',0.88));
+      setEditing(false); setRawSrc(null);
+    };
+    img.src=rawSrc;
+  }
+  function onMD(ev){ev.preventDefault();setDrag({sx:ev.clientX,sy:ev.clientY,ox:offX,oy:offY});}
+  function onMM(ev){if(!drag)return;setOffX(drag.ox+ev.clientX-drag.sx);setOffY(drag.oy+ev.clientY-drag.sy);}
+  function onMU(){setDrag(null);}
+  function onTD(ev){var t=ev.touches[0];setDrag({sx:t.clientX,sy:t.clientY,ox:offX,oy:offY});}
+  function onTM(ev){if(!drag)return;ev.preventDefault();var t=ev.touches[0];setOffX(drag.ox+t.clientX-drag.sx);setOffY(drag.oy+t.clientY-drag.sy);}
+  function clampZ(v){return Math.min(1,Math.max(0.05,parseFloat(v.toFixed(2))));}
+  if(editing&&rawSrc){
+    return e('div',{style:{marginBottom:16}},
+      e('label',{style:{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}},'Logo Editor — drag to reposition, slider or \xb1 to zoom'),
+      e('div',{style:{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',cursor:drag?'grabbing':'grab',background:'#F3F4F6',position:'relative',userSelect:'none'},
+        onMouseDown:onMD,onMouseMove:onMM,onMouseUp:onMU,onMouseLeave:onMU,
+        onTouchStart:onTD,onTouchMove:onTM,onTouchEnd:onMU
+      },
+        e('img',{src:rawSrc,style:{position:'absolute',left:'50%',top:'50%',transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'},draggable:false})
+      ),
+      e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:10,marginBottom:10}},
+        e('span',{style:{fontSize:12,color:'#6B7280',fontWeight:600}},'Zoom'),
+        e('button',{onClick:function(){setZoom(function(z){return clampZ(z-0.1);});},style:{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}},'-'),
+        e('input',{type:'range',min:'0.05',max:'1',step:'0.05',value:zoom,onChange:function(ev){setZoom(parseFloat(ev.target.value));},style:{flex:1,accentColor:'#1158A6'}}),
+        e('button',{onClick:function(){setZoom(function(z){return clampZ(z+0.1);});},style:{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}},'+'),
+        e('span',{style:{fontSize:12,color:'#6B7280',minWidth:40,textAlign:'right'}},Math.round(zoom*100)+'%')
+      ),
+      e('div',{style:{display:'flex',gap:8}},
+        e('button',{className:'btn btn-primary btn-sm',onClick:apply},'Apply Logo'),
+        e('button',{className:'btn btn-outline btn-sm',onClick:function(){setEditing(false);setRawSrc(null);}},'Cancel')
+      )
+    );
+  }
+  return e('div',{style:{marginBottom:14}},
+    e('label',{style:{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}},'Lab Logo'),
+    e('div',{style:{display:'flex',alignItems:'center',gap:12}},
+      logo
+        ?e('img',{src:logo,style:{width:52,height:52,borderRadius:10,objectFit:'contain',border:'1px solid #E5E7EB',background:'#F9FAFB',flexShrink:0}})
+        :e('div',{style:{width:52,height:52,borderRadius:10,border:'2px dashed #D1D5DB',display:'flex',alignItems:'center',justifyContent:'center',color:'#9CA3AF',fontSize:22,flexShrink:0}},String.fromCodePoint(127973)),
+      e('label',{style:{cursor:'pointer'}},
+        e('span',{style:{background:'#EFF6FF',color:'#1158A6',border:'1px solid #BFDBFE',borderRadius:8,padding:'7px 14px',fontSize:12,fontWeight:700,cursor:'pointer'}},logo?'Change Logo':'+ Add Logo'),
+        e('input',{type:'file',accept:'image/*',style:{display:'none'},onChange:onFileChange})
+      ),
+      logo?e('button',{style:{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'5px 10px',fontSize:12,fontWeight:600,cursor:'pointer'},onClick:function(){onChangeLogo('');}},'Remove'):null
+    )
+  );
+}
+
+function Labs(props) {
+  var s1=useState(null),editing=s1[0],setEditing=s1[1];
+  var s2=useState({}),form=s2[0],setForm=s2[1];
+  var s3=useState([]),editTests=s3[0],setEditTests=s3[1];
+  var s4=useState(false),addingLab=s4[0],setAddingLab=s4[1];
+  var s5=useState({name:'',city:'',area:'',phone:'',rating:'4.5',address:'',timing:'',homeCollection:false,nabl:false,color:'#1158A6',logo:''}),newLab=s5[0],setNewLab=s5[1];
+  var s6=useState([{name:'',price:'',mrp:'',cat:'Blood'}]),newLabTests=s6[0],setNewLabTests=s6[1];
+  var s7=useState(null),confirmDelete=s7[0],setConfirmDelete=s7[1];
+  var CATS=['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'];
+  function startEdit(lab){
+    setEditing(lab.id);
+    setForm({name:lab.name,city:lab.city||'',area:lab.area||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logo:lab.logo||''});
+    var tests=Array.isArray(lab.tests)?lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General'};}):[];
+    setEditTests(tests.length?tests:[{name:'',price:'',mrp:'',cat:'Blood'}]);
+  }
+  function saveEdit(id){
+    var testsArr=editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General'};});
+    var next=props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,area:form.area||'',tests:testsArr.length?testsArr:l.tests,logo:form.logo||''}):l;});
+    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(ex){}
+    lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
+    setEditing(null);
+  }
+  function toggle(id){
+    var next=props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
+    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    var toggled=next.find(function(l){return l.id===id;});
+    if(toggled){var labOv={};try{labOv=JSON.parse(localStorage.getItem('le_lab_overrides')||'{}');}catch(ex){}labOv[id]=toggled.active;localStorage.setItem('le_lab_overrides',JSON.stringify(labOv));}
+  }
+  function deleteLab(id){
+    var next=props.labs.filter(function(l){return l.id!==id;});
+    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    setConfirmDelete(null);
+  }
+  function saveNewLab(){
+    if(!newLab.name.trim())return;
+    var maxId=props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
+    var labId=maxId+1;
+    var testsArr=newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General'};});
+    if(!testsArr.length)testsArr=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General'}];
+    var lab={id:labId,name:newLab.name.trim(),city:newLab.city.trim(),area:newLab.area.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logo:newLab.logo||'',tests:testsArr,active:true,distance:'—'};
+    var next=props.labs.concat([lab]);
+    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    var extras=[];try{extras=JSON.parse(localStorage.getItem('le_extra_labs')||'[]');}catch(ex){}
+    extras.push(lab); localStorage.setItem('le_extra_labs',JSON.stringify(extras));
+    setNewLab({name:'',city:'',area:'',phone:'',rating:'4.5',address:'',timing:'',homeCollection:false,nabl:false,color:'#1158A6',logo:''});
+    setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood'}]); setAddingLab(false);
+  }
+  var editFields=[['name','Lab Name'],['city','City'],['area','Area/Locality'],['phone','Phone'],['rating','Rating'],['address','Address'],['timing','Timing'],['color','Button Color']];
+  return e('div',{className:'page-pad',style:{padding:28}},
+    e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}},
+      e('div',{style:{fontSize:22,fontWeight:800,color:'#0D1117'}},'Labs'),
+      e('button',{className:'btn btn-primary',onClick:function(){setAddingLab(!addingLab);}},'+  Add Lab')
+    ),
+    addingLab?e('div',{className:'card',style:{padding:20,marginBottom:20}},
+      e('div',{style:{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}},'Add New Lab'),
+      e(LogoEditor,{logo:newLab.logo||'',onChangeLogo:function(v){setNewLab(function(f){return Object.assign({},f,{logo:v});});}}),
+      e('div',{className:'add-lab-grid',style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}},
+        editFields.map(function(pair){var k=pair[0],lbl=pair[1];return e('div',{key:k},
+          e('label',{style:{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}},lbl),
+          e('input',{type:'text',style:{width:'100%'},value:newLab[k]||'',onChange:function(ev){var v=ev.target.value;setNewLab(function(f){var n=Object.assign({},f);n[k]=v;return n;})}})
+        );}),
+        e('div',{style:{display:'flex',alignItems:'center',gap:8}},
+          e('input',{type:'checkbox',id:'nl-hc',checked:newLab.homeCollection,onChange:function(ev){var v=ev.target.checked;setNewLab(function(f){return Object.assign({},f,{homeCollection:v});})}}),
+          e('label',{htmlFor:'nl-hc',style:{fontSize:13,fontWeight:600,color:'#374151'}},'Home Collection')
+        ),
+        e('div',{style:{display:'flex',alignItems:'center',gap:8}},
+          e('input',{type:'checkbox',id:'nl-nabl',checked:newLab.nabl,onChange:function(ev){var v=ev.target.checked;setNewLab(function(f){return Object.assign({},f,{nabl:v});})}}),
+          e('label',{htmlFor:'nl-nabl',style:{fontSize:13,fontWeight:600,color:'#374151'}},'NABL Accredited')
+        )
+      ),
+      e('div',{style:{marginBottom:14}},
+        e('div',{style:{fontSize:12,fontWeight:700,color:'#374151',marginBottom:4}},'Tests / Packages'),
+        newLabTests.map(function(t,i){return e('div',{key:i,style:{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:6,alignItems:'center'}},
+          e('input',{type:'text',placeholder:'Test Name',style:{width:'100%'},value:t.name,onChange:function(ev){var v=ev.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;})}}),
+          e('input',{type:'number',placeholder:'Price',style:{width:'100%'},value:t.price,onChange:function(ev){var v=ev.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;})}}),
+          e('input',{type:'number',placeholder:'MRP',style:{width:'100%'},value:t.mrp,onChange:function(ev){var v=ev.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;})}}),
+          e('select',{style:{width:'100%',height:34,borderRadius:8,border:'1px solid #E5E7EB',fontSize:12,padding:'0 6px'},value:t.cat,onChange:function(ev){var v=ev.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}},
+            CATS.map(function(c){return e('option',{key:c,value:c},c);})
+          ),
+          e('button',{style:{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13},onClick:function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}},['✕'])
+        );}),
+        e('button',{className:'btn btn-outline btn-sm',onClick:function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood'}]);});}},'+ Add Test')
+      ),
+      e('div',{style:{display:'flex',gap:8}},
+        e('button',{className:'btn btn-primary btn-sm',onClick:saveNewLab},'Save Lab'),
+        e('button',{className:'btn btn-outline btn-sm',onClick:function(){setAddingLab(false);}},'Cancel')
+      )
+    ):null,
+    confirmDelete?e('div',{className:'modal-overlay'},
+      e('div',{className:'modal-box',style:{width:400}},
+        e('div',{style:{fontSize:18,fontWeight:800,color:'#0D1117',marginBottom:8}},'Delete Lab?'),
+        e('div',{style:{fontSize:13.5,color:'#6B7280',marginBottom:24}},
+          'Are you sure you want to remove ',
+          e('strong',{style:{color:'#0D1117'}},(function(){var l=props.labs.find(function(x){return x.id===confirmDelete;});return l?l.name:'';}())),
+          '? This action cannot be undone.'
+        ),
+        e('div',{style:{display:'flex',gap:10}},
+          e('button',{className:'btn btn-outline',style:{flex:1,justifyContent:'center'},onClick:function(){setConfirmDelete(null);}},'Cancel'),
+          e('button',{style:{flex:1,background:'#DC2626',color:'#fff',border:'none',borderRadius:8,padding:'9px 16px',fontWeight:700,fontSize:13,cursor:'pointer'},onClick:function(){deleteLab(confirmDelete);}},'Yes, Delete Lab')
+        )
+      )
+    ):null,
+    e('div',{className:'labs-grid'},
+      props.labs.map(function(lab){return e('div',{key:lab.id,className:'lab-card'},
+        e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}},
+          e('div',{style:{display:'flex',alignItems:'center',gap:10,flex:1,paddingRight:8}},
+            lab.logo?e('img',{src:lab.logo,style:{width:36,height:36,borderRadius:8,objectFit:'contain',border:'1px solid #E5E7EB',background:'#F9FAFB',flexShrink:0}}):null,
+            e('div',{style:{fontWeight:700,fontSize:15,color:'#0D1117'}},lab.name)
+          ),
+          e('span',{className:'badge '+(lab.active?'badge-green':'badge-red')},lab.active?'Active':'Inactive')
+        ),
+        editing===lab.id?e('div',null,
+          e(LogoEditor,{logo:form.logo||'',onChangeLogo:function(v){setForm(function(f){return Object.assign({},f,{logo:v});});}}),
+          e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}},
+            editFields.map(function(pair){var k=pair[0],lbl=pair[1];return e('div',{key:k},
+              e('label',{style:{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}},lbl),
+              e('input',{type:'text',style:{width:'100%'},value:form[k]||'',onChange:function(ev){var v=ev.target.value;setForm(function(f){var n=Object.assign({},f);n[k]=v;return n;})}})
+            );})
+          ),
+          e('div',{style:{display:'flex',gap:16,marginBottom:8}},
+            e('label',{style:{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}},
+              e('input',{type:'checkbox',checked:!!form.homeCollection,onChange:function(ev){var v=ev.target.checked;setForm(function(f){return Object.assign({},f,{homeCollection:v});})}}),' Home Collection'
+            ),
+            e('label',{style:{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}},
+              e('input',{type:'checkbox',checked:!!form.nabl,onChange:function(ev){var v=ev.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});})}}),' NABL'
+            )
+          ),
+          e('div',{style:{marginBottom:8}},
+            e('div',{style:{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}},'Tests'),
+            editTests.map(function(t,i){return e('div',{key:i,style:{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}},
+              e('input',{type:'text',placeholder:'Test Name',style:{width:'100%'},value:t.name,onChange:function(ev){var v=ev.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;})}}),
+              e('input',{type:'number',placeholder:'Price',style:{width:'100%'},value:t.price,onChange:function(ev){var v=ev.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;})}}),
+              e('input',{type:'number',placeholder:'MRP',style:{width:'100%'},value:t.mrp,onChange:function(ev){var v=ev.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;})}}),
+              e('select',{style:{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'},value:t.cat,onChange:function(ev){var v=ev.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}},
+                CATS.map(function(c){return e('option',{key:c,value:c},c);})
+              ),
+              e('button',{style:{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12},onClick:function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}},['✕'])
+            );}),
+            e('button',{className:'btn btn-outline btn-sm',onClick:function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood'}]);});}},'+ Add Test')
+          ),
+          e('div',{style:{display:'flex',gap:8,marginTop:10}},
+            e('button',{className:'btn btn-primary btn-sm',onClick:function(){saveEdit(lab.id);}},'Save'),
+            e('button',{className:'btn btn-outline btn-sm',onClick:function(){setEditing(null);}},'Cancel')
+          )
+        ):e('div',null,
+          e('div',{style:{color:'#6B7280',fontSize:13,marginBottom:4}},'📍 '+lab.city),
+          e('div',{style:{color:'#6B7280',fontSize:13,marginBottom:4}},'📞 '+lab.phone),
+          e('div',{style:{display:'flex',gap:16,marginBottom:14,marginTop:10}},
+            e('div',{style:{fontSize:13}},'★ ',e('span',{style:{fontWeight:600}},lab.rating),' ',e('span',{style:{color:'#9CA3AF'}},'rating')),
+            e('div',{style:{fontSize:13,color:'#6B7280'}},e('strong',{style:{color:'#0D1117'}},Array.isArray(lab.tests)?lab.tests.length:lab.tests),' tests')
+          ),
+          e('div',{style:{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}},
+            e('button',{className:'btn btn-outline btn-sm',onClick:function(){startEdit(lab);}},e(IconEdit,null),' Edit'),
+            e('button',{className:'btn btn-sm',onClick:function(){toggle(lab.id);},style:{background:lab.active?'#FEF2F2':'#F0FDF4',color:lab.active?'#DC2626':'#15803D',border:'none',fontWeight:600}},lab.active?'Deactivate':'Activate'),
+            e('button',{style:{background:'#FEF2F2',color:'#DC2626',border:'1px solid #FECACA',borderRadius:8,padding:'5px 11px',cursor:'pointer',fontSize:12,fontWeight:600},onClick:function(){setConfirmDelete(lab.id);}},'Delete')
+          )
+        )
+      );})
+    )
+  );
+}
+
+function TestTable(props) {
+  var tests=props.tests, search=props.search, editing=props.editing, form=props.form;
+  var startEdit=props.startEdit, saveEdit=props.saveEdit, setEditing=props.setEditing, setForm=props.setForm;
+  var filtered=tests.filter(function(t){
+    return !search||t.name.toLowerCase().indexOf(search.toLowerCase())>-1||t.cat.toLowerCase().indexOf(search.toLowerCase())>-1;
+  });
+  if(!filtered.length)return e('div',{style:{color:'#9CA3AF',fontSize:13,padding:'16px 0'}},'No tests match your search.');
+  return e('div',{className:'card',style:{overflow:'hidden'}},
+    e('table',null,
+      e('thead',null,e('tr',null,['Test Name','Category','MRP','Offer Price','Discount','Action'].map(function(h){return e('th',{key:h},h);}))),
+      e('tbody',null,filtered.map(function(t){
+        var disc=Math.round((1-t.price/t.mrp)*100);
+        return e('tr',{key:t.id},
+          e('td',{style:{fontWeight:600,maxWidth:200}},t.name),
+          e('td',null,e('span',{style:{fontSize:12,background:'#F3F4F6',color:'#374151',padding:'3px 8px',borderRadius:6,fontWeight:600}},t.cat)),
+          e('td',{style:{color:'#9CA3AF',textDecoration:'line-through'}},fmt(t.mrp)),
+          e('td',{style:{fontWeight:700,color:'#15803D'}},fmt(t.price)),
+          e('td',null,e('span',{style:{background:'#FFF7ED',color:'#C2410C',fontSize:12,fontWeight:700,padding:'3px 8px',borderRadius:6}},disc+'% off')),
+          e('td',null,editing===t.id?
+            e('div',{style:{display:'flex',gap:6,alignItems:'flex-end',flexWrap:'wrap'}},
+              e('div',null,e('div',{style:{fontSize:11,color:'#9CA3AF',marginBottom:2}},'Name'),e('input',{type:'text',style:{width:140,padding:'4px 8px',fontSize:12},value:form.name,onChange:function(ev){var v=ev.target.value;setForm(function(f){return Object.assign({},f,{name:v});})}})),
+              e('div',null,e('div',{style:{fontSize:11,color:'#9CA3AF',marginBottom:2}},'MRP'),e('input',{type:'number',style:{width:70,padding:'4px 8px',fontSize:12},value:form.mrp,onChange:function(ev){var v=ev.target.value;setForm(function(f){return Object.assign({},f,{mrp:v});})}})),
+              e('div',null,e('div',{style:{fontSize:11,color:'#9CA3AF',marginBottom:2}},'Price'),e('input',{type:'number',style:{width:70,padding:'4px 8px',fontSize:12},value:form.price,onChange:function(ev){var v=ev.target.value;setForm(function(f){return Object.assign({},f,{price:v});})}})),
+              e('div',{style:{display:'flex',gap:5}},
+                e('button',{className:'btn btn-primary btn-sm',onClick:function(){saveEdit(t.id);}},'Save'),
+                e('button',{className:'btn btn-outline btn-sm',onClick:function(){setEditing(null);}},'✕')
+              )
+            ):
+            e('button',{className:'btn btn-outline btn-sm',onClick:function(){startEdit(t);}},e(IconEdit,null),' Edit Price')
+          )
+        );
+      }))
+    )
+  );
+}
+
+function Tests(props) {
+  var s1=useState(''),search=s1[0],setSearch=s1[1];
+  var s2=useState(null),editing=s2[0],setEditing=s2[1];
+  var s3=useState({}),form=s3[0],setForm=s3[1];
+  var labNames=['Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
+  var s4=useState(labNames[0]),activeTab=s4[0],setActiveTab=s4[1];
+  function startEdit(t){setEditing(t.id);setForm({mrp:t.mrp,price:t.price,name:t.name});}
+  function saveEdit(id){
+    var newPrice=parseInt(form.price),newMrp=parseInt(form.mrp),newName=form.name;
+    var next=props.tests.map(function(t){return t.id===id?Object.assign({},t,{price:newPrice,mrp:newMrp,name:newName}):t;});
+    props.setTests(next);
+    var ov={};try{ov=JSON.parse(localStorage.getItem('le_price_overrides')||'{}');}catch(ex){}
+    ov[id]={price:newPrice,mrp:newMrp}; localStorage.setItem('le_price_overrides',JSON.stringify(ov));
+    var tnov={};try{tnov=JSON.parse(localStorage.getItem('le_test_name_overrides')||'{}');}catch(ex){}
+    tnov[id]=newName; localStorage.setItem('le_test_name_overrides',JSON.stringify(tnov));
+    setEditing(null);
+  }
+  var tabTests=props.tests.filter(function(t){return t.lab===activeTab;});
+  return e('div',{className:'page-pad',style:{padding:28}},
+    e('div',{style:{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}},'Tests & Pricing'),
+    e('div',{style:{color:'#6B7280',fontSize:13,marginBottom:20}},'Select a lab tab to view and edit its tests — changes reflect instantly in the main app'),
+    e('div',{style:{display:'flex',gap:0,marginBottom:20,borderBottom:'2px solid #E5E7EB',overflowX:'auto'}},
+      labNames.map(function(l){
+        var cnt=props.tests.filter(function(t){return t.lab===l;}).length;
+        return e('button',{key:l,onClick:function(){setActiveTab(l);setEditing(null);},style:{
+          padding:'10px 18px',border:'none',background:'none',cursor:'pointer',fontWeight:700,fontSize:13.5,
+          color:activeTab===l?'#1158A6':'#6B7280',
+          borderBottom:activeTab===l?'2.5px solid #1158A6':'2.5px solid transparent',
+          marginBottom:-2,transition:'all .15s',whiteSpace:'nowrap'
+        }},l,' ',e('span',{style:{fontSize:11,background:activeTab===l?'#EFF6FF':'#F3F4F6',color:activeTab===l?'#1158A6':'#9CA3AF',borderRadius:20,padding:'1px 7px',marginLeft:4,fontWeight:600}},cnt));
+      })
+    ),
+    e('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:16}},
+      e('div',{style:{position:'relative',flex:1,maxWidth:360}},
+        e('span',{style:{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}},e(IconSearch,null)),
+        e('input',{type:'text',style:{width:'100%',paddingLeft:32},placeholder:'Search in '+activeTab+'…',value:search,onChange:function(ev){setSearch(ev.target.value);}})
+      ),
+      e('div',{style:{fontSize:13,color:'#6B7280'}},tabTests.length+' tests')
+    ),
+    e(TestTable,{tests:tabTests,search:search,editing:editing,form:form,startEdit:startEdit,saveEdit:saveEdit,setEditing:setEditing,setForm:setForm})
+  );
+}
+
+function Settings(props) {
+  var s1=useState(''),cur=s1[0],setCur=s1[1];
+  var s2=useState(''),np=s2[0],setNp=s2[1];
+  var s3=useState(''),cp=s3[0],setCp=s3[1];
+  var s4=useState(null),msg=s4[0],setMsg=s4[1];
+  function changePass(ev){
+    ev.preventDefault();
+    var storedPass=localStorage.getItem('le_admin_pass')||'labease2024';
+    if(cur!==storedPass){setMsg({ok:false,text:'Current password is incorrect.'});return;}
+    if(!np){setMsg({ok:false,text:'New password cannot be empty.'});return;}
+    if(np!==cp){setMsg({ok:false,text:'New passwords do not match.'});return;}
+    localStorage.setItem('le_admin_pass',np);
+    setCur('');setNp('');setCp('');
+    setMsg({ok:true,text:'Password updated successfully!'});
+  }
+  return e('div',{className:'page-pad',style:{padding:28}},
+    e('div',{style:{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}},'Settings'),
+    e('div',{style:{fontSize:13.5,color:'#6B7280',marginBottom:24}},'Manage your admin account settings.'),
+    e('div',{style:{maxWidth:480}},
+      e('div',{className:'card',style:{padding:28}},
+        e('div',{style:{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:20}},'Change Password'),
+        e('form',{onSubmit:changePass},
+          e('div',{style:{marginBottom:14}},
+            e('label',{style:{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}},'Current Password'),
+            e('input',{type:'password',style:{width:'100%'},value:cur,onChange:function(ev){setCur(ev.target.value);},placeholder:'••••••••'})
+          ),
+          e('div',{style:{marginBottom:14}},
+            e('label',{style:{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}},'New Password'),
+            e('input',{type:'password',style:{width:'100%'},value:np,onChange:function(ev){setNp(ev.target.value);},placeholder:'••••••••'})
+          ),
+          e('div',{style:{marginBottom:18}},
+            e('label',{style:{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}},'Confirm New Password'),
+            e('input',{type:'password',style:{width:'100%'},value:cp,onChange:function(ev){setCp(ev.target.value);},placeholder:'••••••••'})
+          ),
+          msg?e('div',{style:{background:msg.ok?'#F0FDF4':'#FEF2F2',color:msg.ok?'#15803D':'#DC2626',fontSize:12,padding:'8px 12px',borderRadius:8,marginBottom:14,fontWeight:500}},msg.text):null,
+          e('button',{type:'submit',className:'btn btn-primary'},'Update Password')
+        )
+      ),
+      e('div',{className:'card',style:{padding:28,marginTop:16}},
+        e('div',{style:{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:8}},'Account Info'),
+        e('div',{style:{fontSize:13.5,color:'#6B7280',lineHeight:1.6}},
+          e('div',null,e('strong',{style:{color:'#374151'}},'Username: '),'admin'),
+          e('div',null,e('strong',{style:{color:'#374151'}},'Role: '),'Administrator'),
+          e('div',null,e('strong',{style:{color:'#374151'}},'Platform: '),'LabEase Admin Panel')
+        )
+      )
+    )
+  );
+}
+
+function App() {
+  var s1=useState(function(){return localStorage.getItem('le_auth')==='1';}),authed=s1[0],setAuthed=s1[1];
+  var s2=useState('dashboard'),page=s2[0],setPage=s2[1];
+  var s3=useState(function(){return genBookings();}),bookings=s3[0],setBookings=s3[1];
+  var s4=useState(function(){return genLabs();}),labs=s4[0],setLabs=s4[1];
+  var s5=useState(function(){return genTests();}),tests=s5[0],setTests=s5[1];
+  var s6=useState(false),sideOpen=s6[0],setSideOpen=s6[1];
+  useEffect(function(){
+    function handler(ev){if(ev.key==='le_bookings'){try{setBookings(JSON.parse(ev.newValue||'[]'));}catch(ex){}}}
+    window.addEventListener('storage',handler);
+    return function(){window.removeEventListener('storage',handler);};
+  },[]);
+  function login(){localStorage.setItem('le_auth','1');setAuthed(true);}
+  function logout(){localStorage.removeItem('le_auth');setAuthed(false);}
+  if(!authed)return e(Login,{onLogin:login});
+  var pageTitles={dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing',settings:'Settings'};
+  return e('div',null,
+    sideOpen?e('div',{className:'sidebar-overlay',onClick:function(){setSideOpen(false);}}):null,
+    e(Sidebar,{page:page,setPage:setPage,onLogout:logout,open:sideOpen,onClose:function(){setSideOpen(false);}}),
+    e('div',{className:'main'},
+      e('div',{className:'top-bar'},
+        e('div',{style:{display:'flex',alignItems:'center',gap:10}},
+          e('button',{className:'ham-btn',onClick:function(){setSideOpen(true);},style:{display:'flex',flexDirection:'column',gap:4.5,padding:'6px'}},
+            e('span',{style:{display:'block',width:20,height:2.5,background:'#374151',borderRadius:2}}),
+            e('span',{style:{display:'block',width:20,height:2.5,background:'#374151',borderRadius:2}}),
+            e('span',{style:{display:'block',width:20,height:2.5,background:'#374151',borderRadius:2}})
+          ),
+          e('div',{style:{fontWeight:700,fontSize:15,color:'#0D1117'}},pageTitles[page])
+        ),
+        e('div',{style:{fontSize:13,color:'#6B7280',display:'flex',alignItems:'center',gap:8}},
+          e('div',{style:{width:32,height:32,borderRadius:'50%',background:'#1158A6',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:13}},'A'),
+          e('span',{className:'hide-mobile',style:{fontWeight:500}},'Admin')
+        )
+      ),
+      page==='dashboard'?e(Dashboard,{bookings:bookings,labs:labs}):null,
+      page==='bookings'?e(Bookings,{bookings:bookings,setBookings:setBookings}):null,
+      page==='labs'?e(Labs,{labs:labs,setLabs:setLabs}):null,
+      page==='tests'?e(Tests,{tests:tests,setTests:setTests}):null,
+      page==='settings'?e(Settings,null):null
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(e(App,null));
+})();
+</script>
+</body>
 </html>
