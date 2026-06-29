@@ -2109,11 +2109,11 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         </div>
         {/* Logo card */}
         {(()=>{ const meta=LAB_META.find(m=>m.id===lab.id); const src=lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||''; return src ? (
-          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,overflow:"hidden",border:"1px solid #E5E7EB",flexShrink:0 }}>
-            <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }}/>
+          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,overflow:"hidden",border:"1px solid #E5E7EB",background:meta?.bg||"#fff",display:"flex",alignItems:"center",justifyContent:"center" }}>
+            <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain",display:"block" }}/>
           </div>
         ) : (
-          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,border:"1px solid #E5E7EB",background:meta?.bg||"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
+          <div style={{ margin:"10px 16px 0",height:200,borderRadius:12,border:"1px solid #E5E7EB",background:meta?.bg||"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden" }}>
             <span style={{ fontFamily:"Manrope,sans-serif",fontWeight:900,fontSize:56,color:meta?.accent||"#1158A6" }}>{(meta?.short||lab.name).slice(0,2)}</span>
           </div>
         ); })()}
