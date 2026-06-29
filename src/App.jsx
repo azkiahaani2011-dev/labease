@@ -2121,17 +2121,16 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         const partial= Math.round((rating-full)*100);
         const gid    = `sg-${lab.id}`;
         return (
-          <div style={{ padding:"12px 16px 16px" }}>
-            {/* Back button */}
-            <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:"0 0 12px",color:"#6B7280",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".84rem" }} aria-label="Back">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
-              Labs
-            </button>
-
-            {/* Single combined card — full width */}
-            <div style={{ background:"#fff",borderTop:"1px solid #E5E7EB",borderBottom:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12,marginLeft:-16,marginRight:-16 }}>
+          <div style={{ padding:"0" }}>
+            {/* Single combined card — full width, includes back button */}
+            <div style={{ background:"#fff",borderTop:"1px solid #E5E7EB",borderBottom:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12 }}>
+              {/* Back button inside card */}
+              <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:"12px 16px 4px",color:"#6B7280",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".84rem" }} aria-label="Back">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+                Labs
+              </button>
               {/* Top: logo + name + rating */}
-              <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"14px 14px 12px" }}>
+              <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"8px 16px 12px" }}>
                 <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
                   {src
                     ? <img src={src} alt={lab.name} style={{ width:"100%",height:"100%",objectFit:"contain" }}/>
@@ -2157,7 +2156,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               </div>
 
               {/* Address */}
-              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5,padding:"0 14px 12px" }}>
+              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5,padding:"0 16px 12px" }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
               </div>
