@@ -4096,23 +4096,28 @@ export default function App() {
     };
     // Save to Supabase if connected
     if (supabase) {
-      const sbResult = await createBooking({
+      const payload = {
+        booking_ref: id,
         user_id: user?.id || null,
-        // lab_id omitted — FK to labs table which is empty (labs are frontend-only)
         lab_name: cart[0]?.lname || '',
         patient_name: form.name,
         patient_phone: form.phone,
-        patient_age: form.age || null,
+        patient_age: form.age ? String(form.age) : null,
         patient_gender: form.gender || '',
         address: form.address || '',
         slot_date: form.date || null,
         slot_time: form.slot || '',
         collection: form.mode,
         status: 'confirmed',
-        total,
+        total: Number(total),
         items: cart,
-      });
-      if (sbResult?.id) setDone(d => ({...d, supabase_id: sbResult.id}));
+      };
+      const sbResult = await createBooking(payload);
+      if (sbResult?.id) {
+        setDone(d => ({...d, supabase_id: sbResult.id}));
+      } else {
+        console.warn('Supabase booking save failed — check RLS policies and table schema');
+      }
     }
     // Always save to localStorage as backup (admin panel uses it)
     try {

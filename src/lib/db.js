@@ -89,7 +89,11 @@ export async function createBooking(booking) {
     .insert(booking)
     .select()
     .single();
-  if (error) { console.error('createBooking:', error); return null; }
+  if (error) {
+    console.error('createBooking error:', JSON.stringify(error));
+    console.error('payload sent:', JSON.stringify(booking));
+    return null;
+  }
   return data;
 }
 
