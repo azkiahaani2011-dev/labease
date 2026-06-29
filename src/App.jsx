@@ -1944,7 +1944,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"12px 16px 12px" }}>
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
           <button onClick={()=>navTo("home")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", color:"#0D1117", margin:0, letterSpacing:"-.02em" }}>Our Trusted Lab Partners</h1>
         </div>
@@ -2117,7 +2117,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         {/* Back button row inside the section */}
         <div style={{ display:"flex",gap:8,alignItems:"center",padding:"10px 16px 0" }}>
           <button onClick={()=>navTo("labs")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
         </div>
         {/* Logo card */}
@@ -2384,7 +2384,7 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
           <button onClick={()=>navTo("home")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
           <p style={{ color:"#6B7280", fontSize:".88rem" }}>Browse popular test categories and compare prices across all certified labs</p>
@@ -2680,7 +2680,7 @@ function PaymentSelector({ total, onPay, onBack }) {
 
       {/* Action buttons */}
       <div style={{ display:"flex",gap:10,marginTop:4 }}>
-        <button onClick={onBack} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button onClick={onBack} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
         <button onClick={handlePay} disabled={!method||paying}
           style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
           {paying
@@ -3049,7 +3049,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
       <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
 
         <button onClick={()=>navTo("lab")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
         </button>
 
         <div style={{ marginBottom:24 }}>
@@ -3152,7 +3152,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 </div>
               </div>
               <div style={{ display:"flex",gap:10,marginTop:22 }}>
-                <button onClick={()=>setStep(1)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <button onClick={()=>setStep(1)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
                 <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}
                   style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
                   onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F2D6B")}
@@ -3221,7 +3221,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               )}
 
               <div style={{ display:"flex",gap:10,marginTop:6 }}>
-                <button onClick={()=>setStep(2)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <button onClick={()=>setStep(2)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
                 <button disabled={!ok3} onClick={()=>{ setForm(loc); setStep(4); }}
                   style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
                   onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F2D6B")}
@@ -3278,7 +3278,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 </div>
               </div>
               <div style={{ display:"flex",gap:10 }}>
-                <button onClick={()=>setStep(3)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <button onClick={()=>setStep(3)} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
                 <button onClick={()=>setStep(5)}
                   style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
@@ -4397,7 +4397,7 @@ export default function App() {
       <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 0" }}>
         <div style={{ maxWidth:760,margin:"0 auto",padding:"0 20px" }}>
           <button onClick={()=>navTo("home")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontWeight:900,fontSize:"clamp(1.4rem,3vw,1.9rem)",color:"#0D1117",letterSpacing:"-.03em",marginBottom:6 }}>{title}</h1>
           <p style={{ fontSize:".84rem",color:"#9CA3AF" }}>Last updated: June 2026 · LabEase Diagnostics Pvt. Ltd.</p>
@@ -4453,7 +4453,7 @@ export default function App() {
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
           <button onClick={()=>navTo("home")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
             {/* Header */}
@@ -4663,7 +4663,7 @@ export default function App() {
         <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",padding:"20px 0" }}>
           <div style={{ ...T.wrap }}>
             <button onClick={()=>navTo("home")} style={{ background:"#F1F5F9",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:7,borderRadius:"50%",flexShrink:0 }} aria-label="Back">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
             </button>
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:10 }}>
               <div>
