@@ -3717,7 +3717,48 @@ export class ErrorBoundary extends React.Component {
 }
 
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
+function SplashScreen({ onDone }) {
+  const [fade, setFade] = useState(false);
+  useEffect(() => {
+    const t1 = setTimeout(() => setFade(true), 1800);
+    const t2 = setTimeout(() => onDone(), 2300);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+  return (
+    <div style={{
+      position:"fixed", inset:0, zIndex:99999,
+      background:"linear-gradient(160deg,#0A1628 0%,#1158A6 60%,#0F2D6B 100%)",
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      transition:"opacity .5s ease", opacity: fade ? 0 : 1, pointerEvents: fade ? "none" : "all",
+    }}>
+      {/* Subtle radial glow */}
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse at 50% 40%, rgba(37,99,235,.35) 0%, transparent 70%)", pointerEvents:"none" }}/>
+      {/* Logo */}
+      <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:28, zIndex:1 }}>
+        <span style={{ fontFamily:"'DM Serif Display',serif", fontSize:"2.6rem", color:"#fff", letterSpacing:"-.02em" }}>Lab</span>
+        <span style={{ fontFamily:"'DM Serif Display',serif", fontSize:"2.6rem", color:"#60A5FA", letterSpacing:"-.02em" }}>Ease</span>
+        <span style={{ fontSize:".55rem", color:"rgba(255,255,255,.45)", fontFamily:"'Manrope',sans-serif", fontWeight:700, marginLeft:3, alignSelf:"flex-start", marginTop:8, letterSpacing:".05em" }}>TM</span>
+      </div>
+      {/* Tagline */}
+      <div style={{ color:"rgba(255,255,255,.55)", fontFamily:"'Manrope',sans-serif", fontWeight:500, fontSize:".88rem", letterSpacing:".12em", textTransform:"uppercase", marginBottom:44, zIndex:1 }}>
+        Book. Test. Trust.
+      </div>
+      {/* Animated loader bar */}
+      <div style={{ width:120, height:3, background:"rgba(255,255,255,.15)", borderRadius:99, overflow:"hidden", zIndex:1 }}>
+        <div style={{ height:"100%", background:"linear-gradient(90deg,#60A5FA,#fff)", borderRadius:99, animation:"splashBar 1.8s ease forwards" }}/>
+      </div>
+      <style>{`
+        @keyframes splashBar {
+          from { width:0%; }
+          to   { width:100%; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function App() {
+  const [splashDone, setSplashDone] = useState(false);
   const [page,   setPage]   = useState("home");
   const [lab,    setLab]    = useState(null);
   const [cart,   setCart]   = useState(() => {
@@ -4912,6 +4953,7 @@ export default function App() {
   ═══════════════════════════════════════════════════════════════ */
   return (
     <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
+      {!splashDone && <SplashScreen onDone={()=>setSplashDone(true)}/>}
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
