@@ -2675,24 +2675,31 @@ function AddressDetector({ value, onChange }) {
   const [errMsg, setErrMsg] = useState("");
   const [detecting, setDetecting] = useState(false);
 
-  // Reverse geocode via Nominatim (free, no API key)
+  // Two calls: zoom=18 for building/street, zoom=14 for postcode (more reliable)
   async function reverseGeocode(lat, lng) {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
-    const res = await fetch(url, { headers: { "Accept-Language": "en" } });
-    if (!res.ok) throw new Error("Geocoding failed");
-    return res.json();
+    const base = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=en`;
+    const [fine, coarse] = await Promise.all([
+      fetch(`${base}&lat=${lat}&lon=${lng}&zoom=18`).then(r => r.json()),
+      fetch(`${base}&lat=${lat}&lon=${lng}&zoom=14`).then(r => r.json()),
+    ]);
+    // merge: prefer fine-grained for street/building, coarse for postcode
+    const a = { ...coarse.address, ...fine.address };
+    // postcode from coarse is often more reliable in India
+    if (coarse.address?.postcode) a.postcode = coarse.address.postcode;
+    return a;
   }
 
-  function buildAddress(data) {
-    const a = data.address || {};
-    const parts = [
-      a.house_number && a.road ? `${a.house_number}, ${a.road}` : a.road || a.pedestrian || "",
-      a.suburb || a.neighbourhood || a.village || a.town || "",
-      a.city || a.county || a.state_district || "",
-      a.state || "",
-      a.postcode ? `- ${a.postcode}` : "",
-    ].filter(Boolean);
-    return parts.join(", ");
+  function buildAddress(a) {
+    const house    = a.house_number || a.building || "";
+    const road     = a.road || a.residential || a.pedestrian || a.footway || a.path || "";
+    const locality = a.neighbourhood || a.suburb || a.quarter || a.village || a.hamlet || "";
+    const city     = a.city || a.town || a.municipality || a.county || a.state_district || "";
+    const state    = a.state || "";
+    const pin      = a.postcode || "";
+
+    const line1 = [house, road].filter(Boolean).join(", ");
+    const parts = [line1, locality, city, state, pin ? `PIN: ${pin}` : ""].filter(Boolean);
+    return parts.join("\n");
   }
 
   async function detect() {
@@ -2719,8 +2726,8 @@ function AddressDetector({ value, onChange }) {
       async (pos) => {
         try {
           const { latitude: lat, longitude: lng } = pos.coords;
-          const data = await reverseGeocode(lat, lng);
-          const addr = buildAddress(data);
+          const addrObj = await reverseGeocode(lat, lng);
+          const addr = buildAddress(addrObj);
           _locCache.coords = { lat, lng };
           _locCache.address = addr;
           _locCache.ts = Date.now();
@@ -2805,9 +2812,10 @@ function AddressDetector({ value, onChange }) {
 
       {/* Editable address textarea */}
       <textarea
-        rows={3}
-        style={{ width: "100%", border: "1.5px solid #DBEAFE", borderRadius: 10, padding: "11px 14px", fontSize: ".87rem", fontFamily: "'Manrope',sans-serif", background: "#fff", color: "#111", outline: "none", resize: "vertical", boxSizing: "border-box", transition: "border-color .15s" }}
-        placeholder="Flat / house no., building, street, area, city…"
+        rows={6}
+        style={{ width: "100%", border: "1.5px solid #DBEAFE", borderRadius: 10, padding: "11px 14px", fontSize: ".87rem", fontFamily: "'Manrope',sans-serif", background: "#fff", color: "#111", outline: "none", resize: "vertical", boxSizing: "border-box", transition: "border-color .15s", lineHeight: 1.6 }}
+        placeholder={"House/Building, Street\nArea/Locality\nCity\nState\nPIN: 000000"}
+
         value={value}
         onChange={e => onChange(e.target.value)}
         onFocus={e => e.target.style.borderColor = "#1158A6"}
