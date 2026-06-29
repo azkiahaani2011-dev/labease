@@ -2987,9 +2987,9 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 </div>
 
                 {/* Home Collection — Labs Near Me style */}
-                <div onClick={()=>lab?.homeCollection&&setLoc(f=>({...f,mode:"home"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:lab?.homeCollection?"pointer":"not-allowed",opacity:lab?.homeCollection?1:.5,transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ if(!lab?.homeCollection)return; e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
+                <div onClick={()=>setLoc(f=>({...f,mode:"home"}))}
+                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",opacity:1,transition:"all .2s",width:"100%" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
                   <div style={{ flex:1 }}>
                     <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
