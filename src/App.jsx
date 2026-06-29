@@ -2121,24 +2121,39 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           {/* Rating */}
           {(()=>{
             const rating = lab.rating||4.5;
-            const full = Math.floor(rating);
-            const half = rating - full >= 0.5;
+            const full   = Math.floor(rating);
+            const pct    = Math.round((rating - full) * 100); // partial % for last star
+            const gid    = `sg-${lab.id}`;
             return (
-              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                <span style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
-                <div style={{ display:"flex",gap:2 }}>
-                  {Array.from({length:5},(_,i)=>(
-                    <svg key={i} width="18" height="18" viewBox="0 0 24 24">
-                      {i < full
-                        ? <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1"/>
-                        : i === full && half
-                          ? <><defs><linearGradient id="hgd"><stop offset="50%" stopColor="#F59E0B"/><stop offset="50%" stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="url(#hgd)" stroke="#F59E0B" strokeWidth="1"/></>
-                          : <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="#D1D5DB" strokeWidth="1"/>
-                      }
-                    </svg>
-                  ))}
+              <div style={{ display:"flex",alignItems:"center",gap:6,marginBottom:8 }}>
+                <span style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                <div style={{ display:"flex",gap:1 }}>
+                  {Array.from({length:5},(_,i)=>{
+                    const starId = `${gid}-${i}`;
+                    if(i < full) return (
+                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/>
+                      </svg>
+                    );
+                    if(i === full && pct > 0) return (
+                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
+                        <defs>
+                          <linearGradient id={starId} x1="0" y1="0" x2="1" y2="0">
+                            <stop offset={`${pct}%`} stopColor="#F59E0B"/>
+                            <stop offset={`${pct}%`} stopColor="#D1D5DB"/>
+                          </linearGradient>
+                        </defs>
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${starId})`} stroke="none"/>
+                      </svg>
+                    );
+                    return (
+                      <svg key={i} width="20" height="20" viewBox="0 0 24 24">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/>
+                      </svg>
+                    );
+                  })}
                 </div>
-                <span style={{ fontWeight:700,fontSize:".92rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
+                <span style={{ fontWeight:700,fontSize:".85rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
               </div>
             );
           })()}
