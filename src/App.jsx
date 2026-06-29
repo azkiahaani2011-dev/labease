@@ -1808,7 +1808,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               {l.timing||"6AM – 10PM"}
             </div>
             <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:6,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
+              style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
               onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
               onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
           </div>
@@ -1818,7 +1818,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
             </div>
             <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:6,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
               onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
           </div>
