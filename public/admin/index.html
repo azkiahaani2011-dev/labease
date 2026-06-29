@@ -113,18 +113,10 @@ const PHONES = ['9876543210','9123456780','9988776655','9012345678','9871234560'
 const CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
 const MODES = ['Home','Clinic'];
 
-// Supabase client (uses same env vars as main app, injected at build time or fallback)
-var SUPA_URL = typeof VITE_SUPABASE_URL !== 'undefined' ? VITE_SUPABASE_URL : '';
-var SUPA_KEY = typeof VITE_SUPABASE_ANON_KEY !== 'undefined' ? VITE_SUPABASE_ANON_KEY : '';
-// Try reading from meta tags injected by the server, or hardcode for admin use
-(function() {
-  var metas = document.querySelectorAll('meta[name^="supabase"]');
-  metas.forEach(function(m) {
-    if (m.name === 'supabase-url') SUPA_URL = m.content;
-    if (m.name === 'supabase-key') SUPA_KEY = m.content;
-  });
-})();
-var sb = (SUPA_URL && SUPA_KEY && window.supabase) ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+// Supabase client
+var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzIxNjcsImV4cCI6MjA2NjM0ODE2N30.0Q_1tkBdvJBygfwB01rAVMHqrQ7s89L2ZWHGpGqFM3k';
+var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 
 async function loadBookingsFromSupabase() {
   if (!sb) return null;
