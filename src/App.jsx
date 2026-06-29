@@ -1917,9 +1917,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     .filter(l => !filterNabl || l.nabl)
     .filter(l => !searchQ || l.name.toLowerCase().includes(searchQ.toLowerCase()) || l.address.toLowerCase().includes(searchQ.toLowerCase()))
     .sort((a,b) =>
-      sortBy === "rating" ? b.rating - a.rating :
-      sortBy === "price"  ? (a.tests?.length ? Math.min(...a.tests.map(t=>t.price)) : 9999) - (b.tests?.length ? Math.min(...b.tests.map(t=>t.price)) : 9999) :
-      (parseFloat(a.dist) || 9999) - (parseFloat(b.dist) || 9999)
+      sortBy === "price" ? (a.tests?.length ? Math.min(...a.tests.map(t=>t.price)) : 9999) - (b.tests?.length ? Math.min(...b.tests.map(t=>t.price)) : 9999) :
+      b.rating - a.rating
     );
 
   return (
@@ -1966,9 +1965,8 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           {sortOpen && (
             <div style={{ position:"absolute",top:"calc(100% + 6px)",right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:300,minWidth:180,overflow:"hidden" }}>
               {[
-                {key:"rating", label:"⭐ Rating (High → Low)"},
-                {key:"price",  label:"💰 Price (Low → High)"},
-                {key:"dist",   label:"📍 Distance (Nearest)"},
+                {key:"rating", label:"Rating (High → Low)"},
+                {key:"price",  label:"Price (Low → High)"},
               ].map(opt=>(
                 <button key={opt.key} onClick={()=>{ setSortBy(opt.key); setSortOpen(false); }}
                   style={{ display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",padding:"11px 16px",background:sortBy===opt.key?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F3F4F6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:sortBy===opt.key?700:500,color:sortBy===opt.key?"#1158A6":"#374151",transition:"background .1s" }}
