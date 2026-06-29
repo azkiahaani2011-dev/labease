@@ -2128,8 +2128,8 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
               Labs
             </button>
 
-            {/* Single combined card */}
-            <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+            {/* Single combined card — full width */}
+            <div style={{ background:"#fff",borderTop:"1px solid #E5E7EB",borderBottom:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12,marginLeft:-16,marginRight:-16 }}>
               {/* Top: logo + name + rating */}
               <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"14px 14px 12px" }}>
                 <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
