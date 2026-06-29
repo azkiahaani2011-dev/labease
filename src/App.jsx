@@ -3450,12 +3450,12 @@ function PromoCarousel({ navTo }) {
 
   // Infinite loop layout: [clone-Card2, Card1, Card2, clone-Card1], start at idx=1
   return (
-    <div style={{ position:"relative", marginBottom:10, overflow:"hidden", borderRadius:20 }}>
-      <div style={{ display:"flex", transition: animated ? "transform .5s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${idx * -100}%)`, willChange:"transform" }}>
-        <div style={{ minWidth:"100%", flexShrink:0 }}><Card2/></div>
-        <div style={{ minWidth:"100%", flexShrink:0 }}><Card1/></div>
-        <div style={{ minWidth:"100%", flexShrink:0 }}><Card2/></div>
-        <div style={{ minWidth:"100%", flexShrink:0 }}><Card1/></div>
+    <div style={{ position:"relative", marginBottom:10, borderRadius:20, overflow:"hidden", width:"100%" }}>
+      <div style={{ display:"flex", width:"400%", transition: animated ? "transform .5s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${idx * -25}%)`, willChange:"transform" }}>
+        <div style={{ width:"25%", flexShrink:0 }}><Card2/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card1/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card2/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card1/></div>
       </div>
       <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:8 }}>
         {[0,1].map(i=>{ const active=(idx===1&&i===0)||(idx===2&&i===1); return <div key={i} onClick={()=>{ setAnimated(true); setIdx(i+1); }} style={{ width:active?20:6,height:6,borderRadius:3,background:active?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>; })}
