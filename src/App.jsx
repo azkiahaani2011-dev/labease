@@ -2191,8 +2191,8 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ))}
       </div>
 
-      {/* test cards */}
-      <div style={{ padding:"0 16px" }}>
+      {/* test cards — paddingBottom makes room for sticky Book Now bar */}
+      <div style={{ padding:`0 16px`, paddingBottom: cart.length > 0 ? 90 : 16 }}>
         {filtTests.length===0 ? (
           <div style={{ padding:48,textAlign:"center",color:"#94A3B8" }}>
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
