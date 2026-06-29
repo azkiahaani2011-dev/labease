@@ -4099,22 +4099,23 @@ export default function App() {
     };
     // Save to Supabase if connected
     if (supabase) {
-      await createBooking({
+      const sbResult = await createBooking({
         user_id: user?.id || null,
-        lab_id: cart[0]?.lid || null,
+        lab_id: String(cart[0]?.lid || ''),
         lab_name: cart[0]?.lname || '',
         patient_name: form.name,
         patient_phone: form.phone,
-        patient_age: form.age,
+        patient_age: form.age || null,
         patient_gender: form.gender || '',
-        address: form.address,
+        address: form.address || '',
         slot_date: form.date || null,
         slot_time: form.slot || '',
         collection: form.mode,
         status: 'confirmed',
         total,
-        items: cart,
       });
+      // Store the Supabase UUID back so admin can cross-reference
+      if (sbResult?.id) setDone(d => ({...d, supabase_id: sbResult.id}));
     }
     // Always save to localStorage as backup (admin panel uses it)
     try {
