@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from './lib/supabase';
 import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs } from './lib/db';
 import BloodTestAtHome from './pages/BloodTestAtHome';
