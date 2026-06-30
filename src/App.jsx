@@ -2849,7 +2849,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         </button>
       </div>
 
-      {!open && !q && (
+      {!q && (
         <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
           <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
           {TRENDING_CHIPS.map(chip=>(
@@ -4527,7 +4527,7 @@ export default function App() {
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
-              <button onClick={()=>navTo("packages")}
+              <button onClick={()=>setPkgMsg(v=>!v)}
                 style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
                 onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
@@ -4535,6 +4535,7 @@ export default function App() {
                 onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
                 View All Packages →
               </button>
+              {pkgMsg && <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600,background:"#F1F5F9",borderRadius:8,padding:"4px 12px",whiteSpace:"nowrap" }}>Only 6 packages available</span>}
             </div>
           </div>
 
