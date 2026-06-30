@@ -1771,7 +1771,32 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   );
 }
 
-const LabsNearMeSection = ({ T, navTo }) => (
+const DEFAULT_MARQUEE_LOGOS = [
+  { id:1, name:"Apollo Diagnostics",  src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in" },
+  { id:2, name:"SRL / Agilus",        src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200" },
+  { id:3, name:"Metropolis",          src:"https://logo.clearbit.com/metropolisindia.com?size=200" },
+  { id:4, name:"Dr. Lal PathLabs",    src:"https://logo.clearbit.com/lalpathlabs.com?size=200" },
+  { id:5, name:"Thyrocare",           src:"https://logo.clearbit.com/thyrocare.com?size=200" },
+  { id:6, name:"Vijaya Diagnostics",  src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com" },
+];
+
+const LabsNearMeSection = ({ T, navTo }) => {
+  const [tick, setTick] = React.useState(0);
+  React.useEffect(() => {
+    const h = (e) => { if (e.key === 'le_marquee_logos') setTick(n => n + 1); };
+    window.addEventListener('storage', h);
+    const poll = setInterval(() => setTick(n => n + 1), 3000);
+    return () => { window.removeEventListener('storage', h); clearInterval(poll); };
+  }, []);
+  let marqueeLogos;
+  try { marqueeLogos = JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch { marqueeLogos = null; }
+  const logos = (marqueeLogos && marqueeLogos.length > 0) ? marqueeLogos : DEFAULT_MARQUEE_LOGOS.map(l => ({
+    ...l, b64: LAB_LOGOS_B64[l.id] || null,
+  }));
+  // Double the list for seamless loop
+  const doubled = [...logos, ...logos];
+
+  return (
   <section style={{ padding:"16px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
@@ -1803,24 +1828,10 @@ const LabsNearMeSection = ({ T, navTo }) => (
       <div className="marquee-labs-track"
         onClick={e=>e.currentTarget.classList.toggle("paused")}
         onMouseLeave={e=>e.currentTarget.classList.remove("paused")}>
-        {[
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-        ].map((l,i)=>(
+        {doubled.map((l,i)=>(
           <div key={i} className="marquee-lab-logo">
             <img src={l.b64||l.src} alt={l.name}
-              style={l.small ? {height:"40px",maxWidth:"110px"} : undefined}
-              onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
+              onError={e=>{ if(l.src && e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
             />
             <span>{l.name}</span>
           </div>
@@ -1828,7 +1839,8 @@ const LabsNearMeSection = ({ T, navTo }) => (
       </div>
     </div>
   </section>
-)
+  );
+}
 
 
 /* ─── MODULE-LEVEL REPLACEMENTS FOR LabCard, LabsPage, LabDetail ────────────
