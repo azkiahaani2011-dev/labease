@@ -1314,7 +1314,8 @@ function slotsFromTiming(timing) {
   }
   return slots.length ? slots : TIME_SLOTS;
 }
-const TODAY = new Date().toISOString().split("T")[0];
+const _td = new Date();
+const TODAY = _td.getFullYear()+'-'+String(_td.getMonth()+1).padStart(2,'0')+'-'+String(_td.getDate()).padStart(2,'0');
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const Stars = ({ r }) => (
@@ -3295,7 +3296,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8 }}>
                   {Array.from({length:14},(_,i)=>{
                     const d=new Date(); d.setDate(d.getDate()+i);
-                    const val=d.toISOString().split("T")[0];
+                    const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
                     const day=d.toLocaleDateString("en-IN",{weekday:"short"});
                     const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
                     const isToday=i===0;
