@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from './lib/supabase';
-import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs } from './lib/db';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs, subscribeLabData } from './lib/db';
 import BloodTestAtHome from './pages/BloodTestAtHome';
 import CbcTest from './pages/CbcTest';
 import ThyroidTest from './pages/ThyroidTest';
@@ -4130,15 +4130,13 @@ export default function App() {
     return () => window.removeEventListener("resize", h);
   }, []);
 
-  // Fetch lab timing settings + extra labs from Supabase — refreshes every 30s so admin changes propagate to all patients
+  // Realtime sync: admin changes on any device/browser push instantly to all clients
   useEffect(() => {
-    const fetchAll = () => Promise.all([
-      getLabSettings().then(s => { if (s) setLabSettings(s); }),
-      getExtraLabs().then(labs => { setSbExtraLabs(labs); }),
-    ]);
-    fetchAll();
-    const iv = setInterval(fetchAll, 30000);
-    return () => clearInterval(iv);
+    const unsub = subscribeLabData({
+      onExtraLabs: labs => setSbExtraLabs(labs),
+      onLabSettings: s => setLabSettings(s),
+    });
+    return unsub;
   }, []);
 
   // Trigger re-render when admin panel updates localStorage (cross-tab)

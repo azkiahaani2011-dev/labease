@@ -284,3 +284,28 @@ function normalizeLab(row) {
     })),
   };
 }
+
+// ── Realtime ──────────────────────────────────────────────────
+// Subscribe to live changes on extra_labs and lab_settings.
+// onExtraLabs(labs) and onLabSettings(map) are called immediately
+// with fresh data, then again whenever any row changes anywhere.
+// Returns an unsubscribe function.
+export function subscribeLabData({ onExtraLabs, onLabSettings }) {
+  if (!supabase) return () => {};
+
+  // Initial fetch
+  getExtraLabs().then(labs => onExtraLabs(labs));
+  getLabSettings().then(s => { if (s) onLabSettings(s); });
+
+  const channel = supabase
+    .channel('lab-data-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'extra_labs' }, () => {
+      getExtraLabs().then(labs => onExtraLabs(labs));
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'lab_settings' }, () => {
+      getLabSettings().then(s => { if (s) onLabSettings(s); });
+    })
+    .subscribe();
+
+  return () => { supabase.removeChannel(channel); };
+}
