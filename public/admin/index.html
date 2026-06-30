@@ -621,6 +621,11 @@ function Labs(props) {
     // lab name override for original labs
     var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
     lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
+    // timing overrides — dedicated keys so main app reliably reads them
+    var tov={};try{tov=JSON.parse(localStorage.getItem('le_timing_overrides')||'{}');}catch(e){}
+    tov[id]=form.timing||''; localStorage.setItem('le_timing_overrides',JSON.stringify(tov));
+    var stov={};try{stov=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
+    stov[id]=form.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov));
     setEditing(null);
   }
   function toggle(id) {
@@ -649,6 +654,10 @@ function Labs(props) {
     try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
     extras.push(lab);
     localStorage.setItem('le_extra_labs', JSON.stringify(extras));
+    var tov2={};try{tov2=JSON.parse(localStorage.getItem('le_timing_overrides')||'{}');}catch(e){}
+    tov2[labId]=lab.timing; localStorage.setItem('le_timing_overrides',JSON.stringify(tov2));
+    var stov2={};try{stov2=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
+    stov2[labId]=lab.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov2));
     setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
     setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
     setAddingLab(false);

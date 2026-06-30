@@ -3982,7 +3982,7 @@ export default function App() {
   // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
   useEffect(() => {
-    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'];
+    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs','le_timing_overrides','le_sunday_timing_overrides'];
     const handler = (e) => { if (keys.includes(e.key)) setOvTick(n => n + 1); };
     window.addEventListener('storage', handler);
     // Poll only when data actually changes — avoids re-render every tick (which breaks inputs)
@@ -3997,9 +3997,11 @@ export default function App() {
   const adminOv = (() => {
     try {
       return {
-        prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
-        testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
-        labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
+        prices:          JSON.parse(localStorage.getItem('le_price_overrides')            || '{}'),
+        testNames:       JSON.parse(localStorage.getItem('le_test_name_overrides')         || '{}'),
+        labNames:        JSON.parse(localStorage.getItem('le_lab_name_overrides')          || '{}'),
+        timings:         JSON.parse(localStorage.getItem('le_timing_overrides')            || '{}'),
+        sundayTimings:   JSON.parse(localStorage.getItem('le_sunday_timing_overrides')     || '{}'),
         labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
         extraLabs: (() => {
           // Read from le_extra_labs first; fall back to reading new IDs from le_labs
@@ -4010,7 +4012,7 @@ export default function App() {
           return allAdminLabs.filter(l => !knownIds.has(l.id));
         })(),
       };
-    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
+    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[],timings:{},sundayTimings:{}}; }
   })();
   // Apply price/name overrides to LABS on every render
   const adminLabLogos = (() => {
@@ -4216,8 +4218,8 @@ export default function App() {
       active:       adminOv.labStatus[lab.id] !== undefined ? adminOv.labStatus[lab.id] : lab.active,
       name:         adminOv.labNames[lab.id]   !== undefined ? adminOv.labNames[lab.id]  : lab.name,
       logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
-      timing:       adm.timing        || lab.timing,
-      sunday_timing:adm.sunday_timing || lab.sunday_timing || '',
+      timing:       adminOv.timings[lab.id]       || adm.timing        || lab.timing,
+      sunday_timing:adminOv.sundayTimings[lab.id] || adm.sunday_timing || lab.sunday_timing || '',
       tests,
     };
   }).concat(adminOv.extraLabs.map(el => ({
@@ -4225,8 +4227,8 @@ export default function App() {
     active:       adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
     address:      el.address || el.city || '',
     distance:     el.distance || el.dist || '—',
-    timing:       el.timing || '6:00 AM – 10:00 PM',
-    sunday_timing:el.sunday_timing || '',
+    timing:       adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
+    sunday_timing:adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
