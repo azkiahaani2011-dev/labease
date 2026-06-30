@@ -1788,11 +1788,13 @@ const LabsNearMeSection = ({ T, navTo }) => {
     const poll = setInterval(() => setTick(n => n + 1), 3000);
     return () => { window.removeEventListener('storage', h); clearInterval(poll); };
   }, []);
-  let marqueeLogos;
-  try { marqueeLogos = JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch { marqueeLogos = null; }
-  const logos = (marqueeLogos && marqueeLogos.length > 0) ? marqueeLogos : DEFAULT_MARQUEE_LOGOS.map(l => ({
-    ...l, b64: LAB_LOGOS_B64[l.id] || null,
-  }));
+  // Re-read localStorage whenever tick changes (poll or storage event)
+  const logos = React.useMemo(() => {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch {}
+    if (saved && saved.length > 0) return saved;
+    return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
+  }, [tick]); // eslint-disable-line
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
