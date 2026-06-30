@@ -3191,6 +3191,7 @@ const BookingField = ({ label, req, ...p }) => (
 function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
   const [loc, setLoc] = useState(form);
   const [bkSlotFocus, setBkSlotFocus] = useState(false);
+  const [bkSlotQuery, setBkSlotQuery] = useState('');
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
@@ -3300,11 +3301,14 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               </div>
               {(()=>{
                 const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
+                const [slotQuery, setSlotQuery] = [bkSlotQuery, setBkSlotQuery];
                 const displayTiming = isSunday && lab?.sunday_timing ? lab.sunday_timing : lab?.timing;
-                const filtered = LAB_SLOTS.filter(s => !loc.slot || s.toLowerCase().includes(loc.slot.toLowerCase()));
+                const query = slotQuery || '';
+                const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
+                const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
                 const slotOutOfRange = loc.slot && LAB_SLOTS.length > 0 && !LAB_SLOTS.includes(loc.slot);
                 return (
-                  <div>
+                  <div style={{ position:"relative" }}>
                     <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8 }}>
                       <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
                       {displayTiming && (
@@ -3313,22 +3317,49 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                         </span>
                       )}
                     </div>
-                    {/* Slot chips — direct tap on mobile */}
-                    <div style={{ display:"flex",flexWrap:"wrap",gap:7,marginBottom:10 }}>
-                      {LAB_SLOTS.map(s=>{
-                        const sel = loc.slot===s;
-                        return (
-                          <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                            style={{ padding:"8px 14px",borderRadius:8,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":"#F8FAFC",color:sel?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .12s",whiteSpace:"nowrap" }}>
-                            {s}
-                          </button>
-                        );
-                      })}
+                    {/* Typeahead input */}
+                    <div style={{ position:"relative" }}>
+                      <div style={{ position:"relative",display:"flex",alignItems:"center" }}>
+                        <svg style={{ position:"absolute",left:12,flexShrink:0,pointerEvents:"none" }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <input
+                          type="text"
+                          placeholder="Type or select a time slot…"
+                          value={slotSelected ? loc.slot : query}
+                          onFocus={()=>{ setSlotFocus(true); if(slotSelected){ setSlotQuery(''); setLoc(f=>({...f,slot:''})); } }}
+                          onBlur={()=>setTimeout(()=>setSlotFocus(false),160)}
+                          onChange={e=>{ setSlotQuery(e.target.value); setLoc(f=>({...f,slot:''})); }}
+                          style={{ width:"100%",padding:"11px 12px 11px 34px",borderRadius:10,border:`1.5px solid ${slotFocus?"#1158A6":"#E5E7EB"}`,fontSize:".88rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",outline:"none",background:"#F8FAFC",color:"#1F2937",boxSizing:"border-box",transition:"border .15s" }}
+                        />
+                        {(query || slotSelected) && (
+                          <button onClick={()=>{ setSlotQuery(''); setLoc(f=>({...f,slot:''})); }}
+                            style={{ position:"absolute",right:10,background:"none",border:"none",cursor:"pointer",padding:2,color:"#9CA3AF",fontSize:"1rem",lineHeight:1 }}>✕</button>
+                        )}
+                      </div>
+                      {/* Dropdown suggestions */}
+                      {slotFocus && (
+                        <div style={{ position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:12,boxShadow:"0 8px 28px rgba(0,0,0,.13)",zIndex:999,maxHeight:220,overflowY:"auto" }}>
+                          {filtered.length === 0 ? (
+                            <div style={{ padding:"14px 16px",fontSize:".83rem",color:"#9CA3AF",textAlign:"center" }}>No slots match "{query}"</div>
+                          ) : filtered.map((s,i)=>{
+                            const isActive = loc.slot===s;
+                            return (
+                              <div key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setSlotQuery(''); setSlotFocus(false); }}
+                                style={{ padding:"11px 16px",fontSize:".88rem",fontWeight:isActive?700:500,color:isActive?"#1158A6":"#374151",background:isActive?"#EFF6FF":"transparent",cursor:"pointer",borderBottom:i<filtered.length-1?"1px solid #F3F4F6":"none",display:"flex",alignItems:"center",gap:8,transition:"background .1s" }}
+                                onMouseEnter={e=>!isActive&&(e.currentTarget.style.background="#F8FAFC")}
+                                onMouseLeave={e=>!isActive&&(e.currentTarget.style.background="transparent")}>
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isActive?"#1158A6":"#9CA3AF"} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {s}
+                                {isActive && <svg style={{marginLeft:"auto"}} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                    {loc.slot && !LAB_SLOTS.includes(loc.slot) && (
-                      <div style={{ marginTop:4,fontSize:".73rem",color:"#DC2626",display:"flex",alignItems:"center",gap:4,background:"#FEF2F2",padding:"6px 10px",borderRadius:7 }}>
+                    {slotOutOfRange && (
+                      <div style={{ marginTop:6,fontSize:".73rem",color:"#DC2626",display:"flex",alignItems:"center",gap:4,background:"#FEF2F2",padding:"6px 10px",borderRadius:7 }}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        This time is outside the lab's {isSunday?"Sunday":"weekday"} hours. Please select from the slots above.
+                        This time is outside the lab's {isSunday?"Sunday":"weekday"} hours. Please select from the list above.
                       </div>
                     )}
                   </div>
