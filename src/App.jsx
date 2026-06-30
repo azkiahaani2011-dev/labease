@@ -3205,367 +3205,258 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const [bkSlotFocus, setBkSlotFocus] = useState(false);
   const [bkSlotQuery, setBkSlotQuery] = useState('');
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
-  const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
+
+  // Validation per step
+  const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim())
+              && (loc.mode==="clinic" || (loc.mode==="home" && loc.address?.trim().length>4));
   const ok2 = loc.date && loc.slot;
-  // Read timing directly from localStorage so admin changes are always current
+
+  // Timing — Supabase first, then localStorage fallback
   const _labId = lab?.id;
-  const _effectiveTiming = labSettings?.[String(_labId)]?.timing || (() => {
+  const _dbRow = labSettings?.[String(_labId)];
+  const _effectiveTiming = _dbRow?.timing || (() => {
     try {
       const tov = JSON.parse(localStorage.getItem('le_timing_overrides') || '{}');
       if (tov[_labId]) return tov[_labId];
-      const labs = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const found = labs.find(l => l.id == _labId);
+      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const found = saved.find(l => l.id == _labId);
       if (found?.timing) return found.timing;
     } catch(e) {}
     return lab?.timing;
   })();
-  const _effectiveSundayTiming = labSettings?.[String(_labId)]?.sunday_timing || (() => {
+  const _effectiveSundayTiming = _dbRow?.sunday_timing || (() => {
     try {
       const stov = JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}');
       if (stov[_labId]) return stov[_labId];
-      const labs = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const found = labs.find(l => l.id == _labId);
+      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const found = saved.find(l => l.id == _labId);
       if (found?.sunday_timing) return found.sunday_timing;
     } catch(e) {}
     return lab?.sunday_timing;
   })();
-  // Pick slot list based on whether the selected date is a Sunday
   const isSunday = loc.date ? new Date(loc.date + 'T00:00:00').getDay() === 0 : false;
   const LAB_SLOTS = isSunday && _effectiveSundayTiming
     ? slotsFromTiming(_effectiveSundayTiming)
     : slotsFromTiming(_effectiveTiming);
-  const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
-  const steps = ["Patient","Schedule","Collection","Review","Payment"];
+  const steps = ["Details","Schedule","Review & Pay"];
+
+  const BtnBack = ({onClick}) => (
+    <button onClick={onClick} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+    </button>
+  );
+  const BtnNext = ({disabled,onClick,children}) => (
+    <button disabled={disabled} onClick={onClick}
+      style={{ flex:2,background:disabled?"#E5E7EB":"#1158A6",color:disabled?"#9CA3AF":"#fff",border:"none",borderRadius:50,padding:"13px 0",fontWeight:800,fontSize:".9rem",cursor:disabled?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:disabled?"none":"0 4px 14px rgba(17,88,166,.3)" }}
+      onMouseEnter={e=>!disabled&&(e.currentTarget.style.background="#0F2D6B")}
+      onMouseLeave={e=>!disabled&&(e.currentTarget.style.background="#1158A6")}>
+      {children}
+    </button>
+  );
 
   return (
-    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
-      <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
+    <div style={{ padding:"32px 0 60px",minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ maxWidth:600,margin:"0 auto",padding:"0 16px" }}>
 
-        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
-        </button>
-
-        <div style={{ marginBottom:24 }}>
-          <h1 style={{ fontWeight:800,fontSize:"1.5rem",color:"#0D1117",marginBottom:4 }}>Complete Your Booking</h1>
-          <p style={{ color:"#9CA3AF",fontSize:".86rem" }}>
-            {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
-            <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
-            &nbsp;·&nbsp; <span style={{ color:"#1158A6",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</span>
-          </p>
+        {/* Header */}
+        <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:20 }}>
+          <button onClick={()=>navTo("lab")} style={{ background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+          </button>
+          <div>
+            <div style={{ fontWeight:800,fontSize:"1.1rem",color:"#0D1117" }}>Book Test</div>
+            <div style={{ fontSize:".75rem",color:"#6B7280" }}>
+              {lab?.name} &nbsp;·&nbsp; {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
+              <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
+              &nbsp;·&nbsp;<span style={{ color:"#16A34A",fontWeight:700 }}>Save ₹{saving.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
 
-        {/* STEP BAR */}
-        <div style={{ background:"#fff",borderRadius:16,padding:"18px 24px",marginBottom:20,border:"1.5px solid #EEF2FF",boxShadow:"0 2px 10px rgba(17,88,166,.06)",display:"flex",alignItems:"center" }}>
+        {/* Step bar — 3 steps */}
+        <div style={{ display:"flex",alignItems:"center",marginBottom:20,padding:"0 4px" }}>
           {steps.map((l,i)=>(
-            <div key={l} style={{ display:"flex",alignItems:"center",flex:i<4?1:"none" }}>
-              <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:5 }}>
-                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#16A34A":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 0 0 4px rgba(17,88,166,.18), 0 3px 10px rgba(17,88,166,.3)":step>i+1?"0 2px 8px rgba(22,163,74,.3)":"none" }}>
-                  {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
+            <React.Fragment key={l}>
+              <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:0 }}>
+                <div style={{ width:30,height:30,borderRadius:50,background:step>i+1?"#16A34A":step===i+1?"#1158A6":"#E5E7EB",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".78rem",transition:"all .25s",flexShrink:0 }}>
+                  {step>i+1?<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
                 </div>
-                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#16A34A":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
+                <span style={{ fontSize:".6rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#16A34A":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
               </div>
-              {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
-            </div>
+              {i<2&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:14,borderRadius:99,transition:"background .25s" }}/>}
+            </React.Fragment>
           ))}
         </div>
 
-        {/* STEP CARD */}
-        <div style={{ background:"#fff",borderRadius:18,padding:"28px 28px",border:"1.5px solid #EEF2FF",boxShadow:"0 4px 20px rgba(17,88,166,.07)" }}>
+        {/* Card */}
+        <div style={{ background:"#fff",borderRadius:20,padding:"24px 20px",border:"1.5px solid #EEF2FF",boxShadow:"0 4px 20px rgba(17,88,166,.07)" }}>
 
-          {/* STEP 1 — Patient */}
+          {/* ── STEP 1: Patient Info + Collection ── */}
           {step===1&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Patient Information</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 1 of 4</div>
-                </div>
-              </div>
-              <div style={{ display:"grid",gap:14 }}>
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:18 }}>Patient Details &amp; Collection</div>
+
+              <div style={{ display:"grid",gap:13,marginBottom:18 }}>
                 <BookingField label="Full Name" req placeholder="Patient's full name" value={loc.name} onChange={e=>sl("name",e.target.value)}/>
                 <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:12 }}>
                   <BookingField label="Phone" req type="tel" placeholder="+91 XXXXXXXXXX" value={loc.phone} onChange={e=>sl("phone",e.target.value)}/>
                   <BookingField label="Email" req type="email" placeholder="email@example.com" value={loc.email} onChange={e=>sl("email",e.target.value)}/>
                 </div>
-                <BookingField label="Age & Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
+                <BookingField label="Age &amp; Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
               </div>
-              <button disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}
-                style={{ marginTop:22,width:"100%",background:ok1?"#1158A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                onMouseEnter={e=>ok1&&(e.currentTarget.style.background="#0F2D6B")}
-                onMouseLeave={e=>ok1&&(e.currentTarget.style.background="#1158A6")}>
-                Continue →
-              </button>
-            </div>
-          )}
 
-          {/* STEP 2 — Schedule */}
-          {step===2&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Date & Time Slot</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 2 of 4</div>
-                </div>
-              </div>
-              <div style={{ marginBottom:18 }}>
-                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
-                <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8 }}>
-                  {Array.from({length:14},(_,i)=>{
-                    const d=new Date(); d.setDate(d.getDate()+i);
-                    const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-                    const day=d.toLocaleDateString("en-IN",{weekday:"short"});
-                    const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
-                    const isToday=i===0;
-                    const sel=loc.date===val;
-                    return (
-                      <button key={val} onClick={()=>setLoc(f=>({...f,date:val,slot:""}))}
-                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
-                        <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
-                        <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              {(()=>{
-                const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
-                const [slotQuery, setSlotQuery] = [bkSlotQuery, setBkSlotQuery];
-                const displayTiming = isSunday && _effectiveSundayTiming ? _effectiveSundayTiming : _effectiveTiming;
-                const query = slotQuery || '';
-                const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
-                const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
-                const slotOutOfRange = loc.slot && LAB_SLOTS.length > 0 && !LAB_SLOTS.includes(loc.slot);
-                return (
-                  <div style={{ position:"relative" }}>
-                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8 }}>
-                      <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
-                      {displayTiming && (
-                        <span style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:6,padding:"2px 8px" }}>
-                          🕐 {isSunday?"Sunday":"Weekday"}: {displayTiming}
-                        </span>
-                      )}
+              {/* Collection toggle */}
+              <div style={{ fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:10 }}>Sample Collection <span style={{color:"#EF4444"}}>*</span></div>
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14 }}>
+                {[["clinic","🏥","Walk-in","Visit the lab"],["home","🏠","Home Collection","We come to you"]].map(([mode,icon,title,sub])=>{
+                  const sel=loc.mode===mode;
+                  return (
+                    <div key={mode} onClick={()=>setLoc(f=>({...f,mode,address:mode==="clinic"?"":f.address}))}
+                      style={{ borderRadius:14,border:`2px solid ${sel?"#1158A6":"#E5E7EB"}`,padding:"14px 12px",cursor:"pointer",background:sel?"#EFF6FF":"#FAFAFA",transition:"all .15s",textAlign:"center" }}>
+                      <div style={{ fontSize:"1.4rem",marginBottom:4 }}>{icon}</div>
+                      <div style={{ fontWeight:800,fontSize:".82rem",color:sel?"#1158A6":"#0D1117" }}>{title}</div>
+                      <div style={{ fontSize:".68rem",color:"#9CA3AF",marginTop:2 }}>{sub}</div>
                     </div>
-                    {/* Typeahead input */}
-                    <div style={{ position:"relative" }}>
-                      <div style={{ position:"relative",display:"flex",alignItems:"center" }}>
-                        <svg style={{ position:"absolute",left:12,flexShrink:0,pointerEvents:"none" }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <input
-                          type="text"
-                          placeholder="Type or select a time slot…"
-                          value={slotSelected ? loc.slot : query}
-                          onFocus={()=>{ setSlotFocus(true); if(slotSelected){ setSlotQuery(''); setLoc(f=>({...f,slot:''})); } }}
-                          onBlur={()=>setTimeout(()=>setSlotFocus(false),160)}
-                          onChange={e=>{ setSlotQuery(e.target.value); setLoc(f=>({...f,slot:''})); }}
-                          style={{ width:"100%",padding:"11px 12px 11px 34px",borderRadius:10,border:`1.5px solid ${slotFocus?"#1158A6":"#E5E7EB"}`,fontSize:".88rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",outline:"none",background:"#F8FAFC",color:"#1F2937",boxSizing:"border-box",transition:"border .15s" }}
-                        />
-                        {(query || slotSelected) && (
-                          <button onClick={()=>{ setSlotQuery(''); setLoc(f=>({...f,slot:''})); }}
-                            style={{ position:"absolute",right:10,background:"none",border:"none",cursor:"pointer",padding:2,color:"#9CA3AF",fontSize:"1rem",lineHeight:1 }}>✕</button>
-                        )}
-                      </div>
-                      {/* Dropdown suggestions */}
-                      {slotFocus && (
-                        <div style={{ position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:12,boxShadow:"0 8px 28px rgba(0,0,0,.13)",zIndex:999,maxHeight:220,overflowY:"auto" }}>
-                          {filtered.length === 0 ? (
-                            <div style={{ padding:"14px 16px",fontSize:".83rem",color:"#9CA3AF",textAlign:"center" }}>No slots match "{query}"</div>
-                          ) : filtered.map((s,i)=>{
-                            const isActive = loc.slot===s;
-                            return (
-                              <div key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setSlotQuery(''); setSlotFocus(false); }}
-                                style={{ padding:"11px 16px",fontSize:".88rem",fontWeight:isActive?700:500,color:isActive?"#1158A6":"#374151",background:isActive?"#EFF6FF":"transparent",cursor:"pointer",borderBottom:i<filtered.length-1?"1px solid #F3F4F6":"none",display:"flex",alignItems:"center",gap:8,transition:"background .1s" }}
-                                onMouseEnter={e=>!isActive&&(e.currentTarget.style.background="#F8FAFC")}
-                                onMouseLeave={e=>!isActive&&(e.currentTarget.style.background="transparent")}>
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isActive?"#1158A6":"#9CA3AF"} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                {s}
-                                {isActive && <svg style={{marginLeft:"auto"}} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                    {slotOutOfRange && (
-                      <div style={{ marginTop:6,fontSize:".73rem",color:"#DC2626",display:"flex",alignItems:"center",gap:4,background:"#FEF2F2",padding:"6px 10px",borderRadius:7 }}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        This time is outside the lab's {isSunday?"Sunday":"weekday"} hours. Please select from the list above.
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-              <div style={{ display:"flex",gap:10,marginTop:22 }}>
-                <button onClick={()=>setStep(1)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
-                <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}
-                  style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok2&&(e.currentTarget.style.background="#1158A6")}>
-                  Continue →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3 — Collection */}
-          {step===3&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#1158A6,#3B82F6)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(17,88,166,.35)" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5z"/><polyline points="9 3 9 8 19 8"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Sample Collection</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 3 of 4 · How would you like your sample collected?</div>
-                </div>
+                  );
+                })}
               </div>
 
-              <div style={{ display:"flex",flexDirection:"column",gap:12,marginBottom:20 }}>
-
-                {/* Visit Lab — Labs Near Me style */}
-                <div onClick={()=>setLoc(f=>({...f,mode:"clinic"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="clinic"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="clinic"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Walk-in at the Lab</div>
-                    <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Visit the lab at your convenience</div>
-                  </div>
-                  {loc.mode==="clinic"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>}
-                </div>
-
-                {/* Home Collection — Labs Near Me style */}
-                <div onClick={()=>setLoc(f=>({...f,mode:"home"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",opacity:1,transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
-                    <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Phlebotomist visits your doorstep</div>
-                  </div>
-                  {loc.mode==="home"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>}
-                </div>
-              </div>
-
-              {/* Address input */}
               {loc.mode==="home"&&(
-                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
-                  <label style={{ display:"flex",alignItems:"center",gap:7,fontWeight:700,fontSize:".82rem",color:"#1158A6",marginBottom:10 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
+                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:4,animation:"slideUp .2s" }}>
+                  <label style={{ display:"flex",alignItems:"center",gap:6,fontWeight:700,fontSize:".78rem",color:"#1158A6",marginBottom:8 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Pickup Address <span style={{color:"#EF4444"}}>*</span>
                   </label>
                   <AddressDetector value={loc.address} onChange={v=>sl("address",v)}/>
                 </div>
               )}
 
-              <div style={{ display:"flex",gap:10,marginTop:6 }}>
-                <button onClick={()=>setStep(2)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
-                <button disabled={!ok3} onClick={()=>{ setForm(loc); setStep(4); }}
-                  style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok3&&(e.currentTarget.style.background="#1158A6")}>
-                  Review Order →
-                </button>
+              <div style={{ display:"flex",gap:10,marginTop:20 }}>
+                <BtnNext disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}>Next: Pick Date &amp; Time →</BtnNext>
               </div>
             </div>
           )}
 
-          {/* STEP 4 — Review */}
-          {step===4&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Review & Confirm</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 4 of 5</div>
-                </div>
+          {/* ── STEP 2: Date + Time ── */}
+          {step===2&&(
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:18 }}>Date &amp; Time Slot</div>
+
+              <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:7,marginBottom:20 }}>
+                {Array.from({length:14},(_,i)=>{
+                  const d=new Date(); d.setDate(d.getDate()+i);
+                  const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+                  const day=d.toLocaleDateString("en-IN",{weekday:"short"});
+                  const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+                  const sel=loc.date===val; const isToday=i===0;
+                  return (
+                    <button key={val} onClick={()=>setLoc(f=>({...f,date:val,slot:""}))}
+                      style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
+                      <span style={{ fontSize:".58rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
+                      <span style={{ fontSize:".76rem",fontWeight:800 }}>{date}</span>
+                    </button>
+                  );
+                })}
               </div>
-              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #EEF2FF" }}>
-                <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Booking Details</div>
-                {[["Patient",form.name],["Phone",form.phone],["Email",form.email],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Mode",form.mode==="home"?"Home Collection":"Visit Lab"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
-                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
+
+              {(()=>{
+                const displayTiming = isSunday && _effectiveSundayTiming ? _effectiveSundayTiming : _effectiveTiming;
+                const query = bkSlotQuery || '';
+                const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
+                const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
+                return (
+                  <div style={{ position:"relative" }}>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8 }}>
+                      <label style={{ fontWeight:700,fontSize:".78rem",color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
+                      {displayTiming&&<span style={{ fontSize:".66rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:6,padding:"2px 7px" }}>🕐 {isSunday?"Sun":"Weekday"}: {displayTiming}</span>}
+                    </div>
+                    <div style={{ position:"relative",display:"flex",alignItems:"center",marginBottom:4 }}>
+                      <svg style={{ position:"absolute",left:11,pointerEvents:"none" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <input type="text" placeholder="Type or tap a time slot…"
+                        value={slotSelected?loc.slot:query}
+                        onFocus={()=>{ setBkSlotFocus(true); if(slotSelected){ setBkSlotQuery(''); setLoc(f=>({...f,slot:''})); } }}
+                        onBlur={()=>setTimeout(()=>setBkSlotFocus(false),160)}
+                        onChange={e=>{ setBkSlotQuery(e.target.value); setLoc(f=>({...f,slot:''})); }}
+                        style={{ width:"100%",padding:"11px 36px 11px 32px",borderRadius:10,border:`1.5px solid ${bkSlotFocus?"#1158A6":"#E5E7EB"}`,fontSize:".88rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",outline:"none",background:"#F8FAFC",color:"#1F2937",boxSizing:"border-box" }}/>
+                      {(query||slotSelected)&&<button onClick={()=>{ setBkSlotQuery(''); setLoc(f=>({...f,slot:''})); }} style={{ position:"absolute",right:10,background:"none",border:"none",cursor:"pointer",color:"#9CA3AF",fontSize:"1rem" }}>✕</button>}
+                    </div>
+                    {bkSlotFocus&&(
+                      <div style={{ position:"absolute",top:"calc(100% - 2px)",left:0,right:0,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:12,boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:999,maxHeight:210,overflowY:"auto" }}>
+                        {filtered.length===0
+                          ?<div style={{ padding:"14px 16px",fontSize:".83rem",color:"#9CA3AF",textAlign:"center" }}>No slots match</div>
+                          :filtered.map((s,i)=>{
+                            const act=loc.slot===s;
+                            return <div key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setBkSlotQuery(''); setBkSlotFocus(false); }}
+                              style={{ padding:"11px 16px",fontSize:".88rem",fontWeight:act?700:500,color:act?"#1158A6":"#374151",background:act?"#EFF6FF":"transparent",cursor:"pointer",borderBottom:i<filtered.length-1?"1px solid #F3F4F6":"none",display:"flex",alignItems:"center",gap:8 }}
+                              onMouseEnter={e=>!act&&(e.currentTarget.style.background="#F8FAFC")}
+                              onMouseLeave={e=>!act&&(e.currentTarget.style.background="transparent")}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={act?"#1158A6":"#9CA3AF"} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                              {s}
+                              {act&&<svg style={{marginLeft:"auto"}} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                            </div>;
+                          })
+                        }
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              <div style={{ display:"flex",gap:10,marginTop:22 }}>
+                <BtnBack onClick={()=>setStep(1)}/>
+                <BtnNext disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}>Review &amp; Pay →</BtnNext>
+              </div>
+            </div>
+          )}
+
+          {/* ── STEP 3: Review + Payment ── */}
+          {step===3&&(
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:16 }}>Review &amp; Pay</div>
+
+              {/* Booking summary */}
+              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 16px",marginBottom:12,border:"1px solid #EEF2FF" }}>
+                <div style={{ fontWeight:700,fontSize:".7rem",color:"#9CA3AF",letterSpacing:".07em",textTransform:"uppercase",marginBottom:10 }}>Booking Summary</div>
+                {[["Patient",form.name],["Phone",form.phone],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Collection",form.mode==="home"?"Home Collection":"Walk-in"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
+                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #EEF2FF",fontSize:".82rem" }}>
                     <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
-                    <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"58%",textAlign:"right" }}>{v}</span>
+                    <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"60%",textAlign:"right",wordBreak:"break-word" }}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #EEF2FF" }}>
-                <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Selected Tests</div>
+
+              {/* Tests + total */}
+              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 16px",marginBottom:16,border:"1px solid #EEF2FF" }}>
+                <div style={{ fontWeight:700,fontSize:".7rem",color:"#9CA3AF",letterSpacing:".07em",textTransform:"uppercase",marginBottom:10 }}>Tests</div>
                 {cart.map(item=>(
-                  <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:7,fontSize:".83rem" }}>
-                    <span style={{ color:"#374151",fontWeight:600 }}>{item.tname}</span>
-                    <div style={{ display:"flex",gap:10,alignItems:"center" }}>
-                      <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".78rem" }}>₹{item.mrp}</span>
+                  <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:".82rem" }}>
+                    <span style={{ color:"#374151",fontWeight:600,maxWidth:"65%" }}>{item.tname}</span>
+                    <div style={{ display:"flex",gap:8,alignItems:"center" }}>
+                      <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".76rem" }}>₹{item.mrp}</span>
                       <span style={{ fontWeight:800,color:"#1158A6" }}>₹{item.price}</span>
                     </div>
                   </div>
                 ))}
                 <div style={{ borderTop:"1.5px dashed #DBEAFE",paddingTop:10,marginTop:8 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".8rem",marginBottom:3 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".79rem",marginBottom:3 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#2563EB",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",color:"#16A34A",fontSize:".8rem",marginBottom:8,fontWeight:700 }}>
                     <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
                   </div>
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>
-                    <span>Total Payable</span>
-                    <span style={{ color:"#1158A6",fontSize:"1.2rem",fontWeight:800 }}>₹{total.toLocaleString()}</span>
+                    <span>Total</span>
+                    <span style={{ color:"#1158A6",fontSize:"1.15rem" }}>₹{total.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
-              <div style={{ display:"flex",gap:10 }}>
-                <button onClick={()=>setStep(3)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
-                <button onClick={()=>setStep(5)}
-                  style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  Continue to Payment →
-                </button>
-              </div>
+
+              {/* Payment inline */}
+              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(2)}/>
             </div>
           )}
 
-          {/* STEP 5 — Payment */}
-          {step===5&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#F0FDF4",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Choose Payment Method</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 5 of 5 · Secure checkout</div>
-                </div>
-              </div>
-
-              {/* Amount summary strip */}
-              <div style={{ background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderRadius:14,padding:"14px 18px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #BFDBFE" }}>
-                <div>
-                  <div style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>Amount Payable</div>
-                  <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.6rem",color:"#0D1117",lineHeight:1 }}>₹{total.toLocaleString()}</div>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <div style={{ fontSize:".7rem",color:"#16A34A",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</div>
-                  <div style={{ fontSize:".69rem",color:"#6B7280" }}>MRP ₹{mrpTotal.toLocaleString()}</div>
-                </div>
-              </div>
-
-              {/* Payment methods */}
-              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(4)}/>
-            </div>
-          )}
         </div>
       </div>
     </div>
