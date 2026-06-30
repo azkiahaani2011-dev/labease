@@ -2691,6 +2691,16 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
    All at module level so it never remounts.
 ────────────────────────────────────────────────────────────────────────── */
 
+const ALL_PACKAGES = [
+  { title:"Full Body Checkup",   sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular",    badgeColor:"#EF4444", cat:"Packages" },
+  { title:"Diabetes Care",       sub:"12 Tests · Verified Partner",  price:399,  mrp:899,  off:56, badge:"55% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+  { title:"Heart Health",        sub:"22 Tests · Verified Partner",  price:1799, mrp:2999, off:40, badge:"Cardiology",      badgeColor:"#1158A6", cat:"Cardiac"  },
+  { title:"Thyroid Profile",     sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified",        badgeColor:"#0369A1", cat:"Thyroid"  },
+  { title:"Women's Wellness",    sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women",       badgeColor:"#9333EA", cat:"Packages" },
+  { title:"Senior Citizen",      sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+];
+
+
 // Build search index once at module level
 const SEARCH_INDEX = (() => {
   const items = [];
@@ -2700,10 +2710,14 @@ const SEARCH_INDEX = (() => {
     lab.tests.forEach(t => {
       if (!seen.has(t.name)) {
         seen.add(t.name);
-        items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat });
+        items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat, price:t.price });
       }
     });
     items.push({ type:"lab", label:lab.name, sub:`${lab.city} · ${lab.tests.length} tests`, cat:"" });
+  });
+  // Packages
+  ALL_PACKAGES.forEach(p => {
+    items.push({ type:"package", label:p.title, sub:`${p.sub} · ₹${p.price}`, cat:p.cat, price:p.price });
   });
   // Category names
   ["Blood Tests","Thyroid","Diabetes","Heart Health","Vitamins","Kidney","Liver","Full Body Packages","Cancer Markers","Hormones"].forEach(cat => {
@@ -2711,6 +2725,17 @@ const SEARCH_INDEX = (() => {
   });
   return items;
 })();
+
+const TRENDING_CHIPS = [
+  { label:"CBC",              cat:"Blood Tests" },
+  { label:"Thyroid Profile",  cat:"Thyroid" },
+  { label:"Vitamin D",        cat:"Vitamins" },
+  { label:"HbA1c",            cat:"Diabetes" },
+  { label:"Full Body Checkup",cat:"Packages" },
+  { label:"Lipid Profile",    cat:"Heart Health" },
+  { label:"Kidney Function",  cat:"Kidney" },
+  { label:"Liver Function",   cat:"Liver" },
+];
 
 /* ── Blur-up lazy image ─────────────────────────────────────────────────── */
 function LazyImg({ src, alt, style, className="" }) {
@@ -2726,92 +2751,97 @@ function LazyImg({ src, alt, style, className="" }) {
   );
 }
 
-function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
+function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
   const [open, setOpen] = React.useState(false);
+  const [activeIdx, setActiveIdx] = React.useState(-1);
   const wrapRef = React.useRef(null);
+  const inputRef = React.useRef(null);
 
-  // Default suggestions shown when input is empty
-  const DEFAULT_SUGGESTIONS = [
-    { label:"Full Body Checkup",   type:"test" },
-    { label:"CBC (Blood Count)",    type:"test" },
-    { label:"Thyroid Profile",      type:"test" },
-    { label:"Diabetes (HbA1c)",     type:"test" },
-    { label:"Vitamin D",            type:"test" },
-    { label:"Lipid Profile",        type:"test" },
-    { label:"Liver Function Test",  type:"test" },
-  ];
-
-  // Build suggestions: default when empty, search results when typing
-  const suggestions = q.trim().length < 1 ? DEFAULT_SUGGESTIONS : (() => {
+  const suggestions = React.useMemo(() => {
+    if (q.trim().length < 1) return [];
     const qlo = q.toLowerCase();
-    // Broad match: label contains any word of the query
     const words = qlo.split(/\s+/).filter(Boolean);
     const match = item => words.some(w => item.label.toLowerCase().includes(w));
-    // Get all matches, tests first then labs then categories
-    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,6);
-    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,3);
-    const cats  = SEARCH_INDEX.filter(i=>i.type==="category" && match(i)).slice(0,2);
-    const picked = new Set([...tests,...labs,...cats].map(x=>x.label));
-    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,5);
-    const results = [...tests,...labs,...cats,...extra].slice(0,8);
-    // Always pad up to 5 with popular defaults if not enough results
-    if (results.length < 5) {
-      const padded = [...results];
-      for (const d of DEFAULT_SUGGESTIONS) {
-        if (padded.length >= 5) break;
-        if (!padded.find(r=>r.label===d.label)) padded.push(d);
-      }
-      return padded;
-    }
-    return results;
-  })();
+    const tests = SEARCH_INDEX.filter(i=>i.type==="test"    && match(i)).slice(0,5);
+    const pkgs  = SEARCH_INDEX.filter(i=>i.type==="package" && match(i)).slice(0,3);
+    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"     && match(i)).slice(0,2);
+    const cats  = SEARCH_INDEX.filter(i=>i.type==="category"&& match(i)).slice(0,2);
+    return [...tests,...pkgs,...labs,...cats].slice(0,8);
+  }, [q]);
 
-  // Close on outside click
   React.useEffect(() => {
-    const handler = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) { setOpen(false); setActiveIdx(-1); } };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const go = (text) => { if(!text.trim()) return; setQ(text); setLabQ(text); setOpen(false); navTo("labs"); };
+  const pick = (item) => {
+    setOpen(false); setActiveIdx(-1);
+    if (item.type === "lab") {
+      setLabQ(item.label); setQ(item.label); navTo("labs");
+    } else if (item.type === "category") {
+      setLabQ(item.label); setQ(item.label); navTo("labs");
+    } else {
+      setSelectedTest({ name: item.label, cat: item.cat || "" });
+      setQ(item.label); setLabQ("");
+      navTo("labs");
+    }
+  };
 
-  const typeIcon = (type) => {
-    if (type === "lab") return "🏥";
-    if (type === "category") return "📋";
-    return "🔬";
+  const goText = (text) => {
+    if (!text.trim()) return;
+    const exact = SEARCH_INDEX.find(i => i.label.toLowerCase() === text.toLowerCase());
+    if (exact) { pick(exact); return; }
+    const partial = SEARCH_INDEX.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
+      || SEARCH_INDEX.find(i => i.label.toLowerCase().includes(text.toLowerCase()));
+    if (partial) { pick(partial); return; }
+    setLabQ(text); setQ(text); setOpen(false); navTo("labs");
+  };
+
+  const onKey = e => {
+    if (!open || suggestions.length === 0) { if (e.key === "Enter") goText(q); return; }
+    if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx(i => Math.min(i+1, suggestions.length-1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActiveIdx(i => Math.max(i-1, -1)); }
+    else if (e.key === "Enter") { e.preventDefault(); if (activeIdx >= 0) pick(suggestions[activeIdx]); else goText(q); }
+    else if (e.key === "Escape") { setOpen(false); setActiveIdx(-1); }
+  };
+
+  const typeIcon = type => type==="lab"?"🏥":type==="package"?"📦":type==="category"?"📋":"🔬";
+  const typeBadge = type => {
+    if (type==="lab")      return { label:"Lab",      bg:"#EFF6FF", color:"#1158A6" };
+    if (type==="package")  return { label:"Package",  bg:"#FEF3C7", color:"#92400E" };
+    if (type==="category") return { label:"Category", bg:"#F5F3FF", color:"#7C3AED" };
+    return null;
   };
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
-      {/* Search bar + separate button row */}
       <div className="hero-search-bar" style={{ display:"flex",gap:6,alignItems:"center" }}>
-        {/* Input box */}
         <div style={{ flex:1,background:"#fff",borderRadius:14,display:"flex",alignItems:"center",border:"2px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s" }}
           onFocusCapture={e=>{ e.currentTarget.style.border="2px solid #1158A6"; e.currentTarget.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; }}
           onBlurCapture={e=>{ e.currentTarget.style.border="2px solid #E5E7EB"; e.currentTarget.style.boxShadow="0 2px 12px rgba(17,88,166,.08)"; }}>
-          <svg style={{ flexShrink:0,margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
+          <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
             <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
             <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
           </svg>
-          <input
+          <input ref={inputRef}
             value={q}
-            onChange={e=>{ setQ(e.target.value); setOpen(true); }}
+            onChange={e=>{ setQ(e.target.value); setOpen(true); setActiveIdx(-1); }}
             onFocus={()=>setOpen(true)}
-            onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
-            placeholder="Search tests, packages or labs…"
+            onKeyDown={onKey}
+            placeholder="Search tests, packages or labs\u2026"
             className="hero-search-input-field"
             style={{ flex:1,border:"none",outline:"none",padding:"14px 8px 14px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
-            autoComplete="off"
+            autoComplete="off" aria-label="Search tests, packages or labs"
           />
           {q && (
-            <button onClick={()=>{ setQ(""); setOpen(false); }}
+            <button onClick={()=>{ setQ(""); setOpen(false); inputRef.current?.focus(); }}
               style={{ background:"none",border:"none",cursor:"pointer",padding:"0 12px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
-              ✕
+              \u2715
             </button>
           )}
         </div>
-        {/* Separate Search button */}
-        <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
+        <button onClick={()=>goText(q)} className="btn-anim hero-search-btn"
           style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:14,padding:"14px 26px",flexShrink:0,fontSize:".9rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",whiteSpace:"nowrap" }}
           onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.45)"; }}
           onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.35)"; }}>
@@ -2819,33 +2849,48 @@ function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
         </button>
       </div>
 
-      {/* Dropdown — always shows 5+ suggestions on focus */}
-      {open && (
-        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,border:"none",boxShadow:"0 12px 40px rgba(0,0,0,.14), 0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden" }}>
-          {q.trim().length < 1 && (
-            <div style={{ padding:"10px 18px 6px",fontSize:".72rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".08em",textTransform:"uppercase" }}>
-              Popular Searches
-            </div>
-          )}
-          {suggestions.map((s, i) => (
-            <button key={i} onClick={()=>go(s.label)}
-              style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",transition:"background .12s" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"}
-              onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              <span style={{ fontSize:".88rem", flexShrink:0 }}>{typeIcon(s.type)}</span>
-              <span style={{ flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
-              {s.type === "lab" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Lab</span>}
-              {s.type === "category" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#7C3AED",background:"#F5F3FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Category</span>}
+      {!open && !q && (
+        <div style={{ display:"flex",gap:6,marginTop:10,flexWrap:"wrap",justifyContent:"center" }}>
+          <span style={{ fontSize:".7rem",color:"rgba(255,255,255,.7)",fontWeight:600,alignSelf:"center",flexShrink:0 }}>Trending:</span>
+          {TRENDING_CHIPS.map(chip=>(
+            <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
+              style={{ background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.3)",borderRadius:99,padding:"5px 13px",fontSize:".74rem",fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",backdropFilter:"blur(4px)",transition:"background .15s" }}
+              onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.28)"}
+              onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.15)"}>
+              {chip.label}
             </button>
           ))}
-          {q.trim().length > 0 && (
-            <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
-              <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
-                See all results for &ldquo;{q}&rdquo;
+        </div>
+      )}
+
+      {open && suggestions.length > 0 && (
+        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,boxShadow:"0 12px 40px rgba(0,0,0,.14),0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden" }}>
+          <div style={{ padding:"8px 16px 4px",fontSize:".68rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".08em",textTransform:"uppercase" }}>
+            Results for "{q}"
+          </div>
+          {suggestions.map((s, i) => {
+            const badge = typeBadge(s.type);
+            return (
+              <button key={i} onClick={()=>pick(s)}
+                style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0F6FF"; }}
+                onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
+                <span style={{ fontSize:".9rem",flexShrink:0 }}>{typeIcon(s.type)}</span>
+                <span style={{ flex:1,overflow:"hidden" }}>
+                  <span style={{ display:"block",fontWeight:700,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                  {s.sub && <span style={{ display:"block",fontSize:".72rem",color:"#9CA3AF",marginTop:1 }}>{s.sub}</span>}
+                </span>
+                {badge && <span style={{ fontSize:".67rem",fontWeight:700,color:badge.color,background:badge.bg,borderRadius:4,padding:"2px 7px",flexShrink:0 }}>{badge.label}</span>}
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
               </button>
-            </div>
-          )}
+            );
+          })}
+          <div style={{ padding:"9px 16px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
+            <button onClick={()=>goText(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
+              See all results for &ldquo;{q}&rdquo;
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -3981,15 +4026,6 @@ function FeaturesCarousel() {
 }
 
 /* ─── PACKAGES PAGE ─────────────────────────────────────────────────────── */
-const ALL_PACKAGES = [
-  { title:"Full Body Checkup",   sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular",    badgeColor:"#EF4444", cat:"Packages" },
-  { title:"Diabetes Care",       sub:"12 Tests · Verified Partner",  price:399,  mrp:899,  off:56, badge:"55% OFF",         badgeColor:"#EA580C", cat:"Packages" },
-  { title:"Heart Health",        sub:"22 Tests · Verified Partner",  price:1799, mrp:2999, off:40, badge:"Cardiology",      badgeColor:"#1158A6", cat:"Cardiac"  },
-  { title:"Thyroid Profile",     sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified",        badgeColor:"#0369A1", cat:"Thyroid"  },
-  { title:"Women's Wellness",    sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women",       badgeColor:"#9333EA", cat:"Packages" },
-  { title:"Senior Citizen",      sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF",         badgeColor:"#EA580C", cat:"Packages" },
-];
-
 function PackagesPage({ navTo, setSelectedTest }) {
   return (
     <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
@@ -4465,20 +4501,8 @@ export default function App() {
             </p>
 
             {/* search bar */}
-            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
+            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T}/>
 
-            {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
-              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
-                <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
-                  {t}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
 
