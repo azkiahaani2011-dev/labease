@@ -1779,6 +1779,16 @@ const DEFAULT_MARQUEE_LOGOS = [
   { id:5, name:"Thyrocare",           src:"https://logo.clearbit.com/thyrocare.com?size=200" },
   { id:6, name:"Vijaya Diagnostics",  src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com" },
 ];
+// Embedded b64 lookup by name — ensures default logos always show even when
+// localStorage has entries without b64 (e.g. after admin saves for first time)
+const MARQUEE_NAME_B64 = {
+  "Apollo Diagnostics":  () => LAB_LOGOS_B64[1],
+  "SRL / Agilus":        () => LAB_LOGOS_B64[2],
+  "Metropolis":          () => LAB_LOGOS_B64[3],
+  "Dr. Lal PathLabs":    () => LAB_LOGOS_B64[4],
+  "Thyrocare":           () => LAB_LOGOS_B64[5],
+  "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
+};
 
 const LabsNearMeSection = ({ T, navTo }) => {
   const [tick, setTick] = React.useState(0);
@@ -1792,7 +1802,13 @@ const LabsNearMeSection = ({ T, navTo }) => {
   const logos = React.useMemo(() => {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch {}
-    if (saved && saved.length > 0) return saved;
+    if (saved && saved.length > 0) {
+      // For each saved entry, fill in embedded b64 if missing (covers default labs saved without b64)
+      return saved.map(l => ({
+        ...l,
+        b64: l.b64 || (MARQUEE_NAME_B64[l.name] ? MARQUEE_NAME_B64[l.name]() : null),
+      }));
+    }
     return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
   }, [tick]); // eslint-disable-line
   // Double the list for seamless loop
