@@ -2777,22 +2777,24 @@ function _CarouselDots({ trackRef, total }) {
    Clean payment method selector. UPI / Card / Net Banking / Pay at Lab.
    No actual payment processing — UI only (connect UPI when ready).
 ────────────────────────────────────────────────────────────────────────── */
-function PaymentSelector({ total, onPay, onBack }) {
+function PaymentSelector({ total, onPay, onBack, mode }) {
   const [method, setMethod] = React.useState("");
   const [upi, setUpi]       = React.useState("");
   const [paying, setPaying] = React.useState(false);
 
-  const methods = [
+  const allMethods = [
     { id:"upi",      icon:"📱", label:"UPI",            sub:"Google Pay, PhonePe, Paytm & more" },
     { id:"card",     icon:"💳", label:"Credit / Debit Card", sub:"Visa, Mastercard, RuPay" },
     { id:"netbank",  icon:"🏦", label:"Net Banking",     sub:"All major banks supported"        },
     { id:"paylater", icon:"🏥", label:"Pay at Lab",      sub:"Pay cash or card at the centre"   },
   ];
+  // Home collection requires upfront payment — hide "Pay at Lab"
+  const methods = mode === "home" ? allMethods.filter(m => m.id !== "paylater") : allMethods;
 
   const handlePay = () => {
     if (!method) return;
     setPaying(true);
-    setTimeout(() => { setPaying(false); onPay(); }, 900);
+    setTimeout(() => { setPaying(false); onPay(method); }, 900);
   };
 
   return (
@@ -2811,7 +2813,6 @@ function PaymentSelector({ total, onPay, onBack }) {
               <div style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117" }}>{m.label}</div>
               <div style={{ fontSize:".74rem",color:"#9CA3AF" }}>{m.sub}</div>
             </div>
-            {m.id==="paylater"&&<span style={{ fontSize:".68rem",fontWeight:700,color:"#16A34A",background:"#DCFCE7",borderRadius:20,padding:"2px 9px",flexShrink:0 }}>FREE</span>}
           </div>
         ))}
       </div>
@@ -2849,7 +2850,7 @@ function PaymentSelector({ total, onPay, onBack }) {
           style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
           {paying
             ? <><span style={{ width:16,height:16,border:"2px solid rgba(255,255,255,.4)",borderTop:"2px solid #fff",borderRadius:"50%",display:"inline-block",animation:"spin 0.7s linear infinite" }}/> Processing…</>
-            : <>{method==="paylater"?"Confirm & Reserve Slot":`Pay ₹${total.toLocaleString()}`}</>
+            : <>{method==="paylater"?<>Confirm &amp; Reserve · <span style={{fontWeight:600,fontSize:".8em",opacity:.85}}>Amount Pending</span></>:`Pay ₹${total.toLocaleString()}`}</>
           }
         </button>
       </div>
@@ -3211,29 +3212,9 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               && (loc.mode==="clinic" || (loc.mode==="home" && loc.address?.trim().length>4));
   const ok2 = loc.date && loc.slot;
 
-  // Timing — Supabase first, then localStorage fallback
-  const _labId = lab?.id;
-  const _dbRow = labSettings?.[String(_labId)];
-  const _effectiveTiming = _dbRow?.timing || (() => {
-    try {
-      const tov = JSON.parse(localStorage.getItem('le_timing_overrides') || '{}');
-      if (tov[_labId]) return tov[_labId];
-      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const found = saved.find(l => l.id == _labId);
-      if (found?.timing) return found.timing;
-    } catch(e) {}
-    return lab?.timing;
-  })();
-  const _effectiveSundayTiming = _dbRow?.sunday_timing || (() => {
-    try {
-      const stov = JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}');
-      if (stov[_labId]) return stov[_labId];
-      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const found = saved.find(l => l.id == _labId);
-      if (found?.sunday_timing) return found.sunday_timing;
-    } catch(e) {}
-    return lab?.sunday_timing;
-  })();
+  // lab.timing / lab.sunday_timing already contain the merged admin + Supabase values from allLabs
+  const _effectiveTiming = lab?.timing || '';
+  const _effectiveSundayTiming = lab?.sunday_timing || '';
   const isSunday = loc.date ? new Date(loc.date + 'T00:00:00').getDay() === 0 : false;
   const LAB_SLOTS = isSunday && _effectiveSundayTiming
     ? slotsFromTiming(_effectiveSundayTiming)
@@ -3253,6 +3234,24 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
       {children}
     </button>
   );
+
+  // Safety guard: if step is somehow out of range, reset to 1
+  const safeStep = (step >= 1 && step <= 3) ? step : 1;
+  if (safeStep !== step) { setStep(1); return null; }
+
+  // If cart is empty or lab missing, show a friendly redirect
+  if (!lab || cart.length === 0) {
+    return (
+      <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
+        <div style={{ textAlign:"center" }}>
+          <div style={{ fontSize:"3rem",marginBottom:12 }}>🧪</div>
+          <div style={{ fontWeight:800,fontSize:"1.1rem",color:"#0D1117",marginBottom:8 }}>No tests selected</div>
+          <div style={{ color:"#6B7280",marginBottom:20,fontSize:".88rem" }}>Please add tests to your cart before booking.</div>
+          <button onClick={()=>navTo("labs")} style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:800,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Browse Labs</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding:"32px 0 60px",minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
@@ -3453,7 +3452,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               </div>
 
               {/* Payment inline */}
-              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(2)}/>
+              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(2)} mode={loc.mode}/>
             </div>
           )}
 
@@ -4071,9 +4070,9 @@ export default function App() {
     setToast("Signed out successfully.");
   };
 
-  const confirm = async () => {
+  const confirm = async (payMethod) => {
     const id = "LB"+Math.random().toString(36).slice(2,8).toUpperCase();
-    setDone({...form,id,cart:[...cart],total,saving});
+    setDone({...form,id,cart:[...cart],total,saving,payMethod});
     const booking = {
       id,
       patient: form.name,
@@ -4815,7 +4814,7 @@ export default function App() {
 
         {/* summary */}
         <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
-          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",done?.cart?.map(t=>t.tname).join(", ")],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
+          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",done?.cart?.map(t=>t.tname).join(", ")],["Amount",done?.payMethod==="paylater"?"Pending · Pay at Lab":`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
             <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
               <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
               <span style={{ fontWeight:700,color:"#0D1117" }}>{v}</span>
