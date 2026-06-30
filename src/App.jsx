@@ -1263,12 +1263,15 @@ const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM
 // defaults a missing start period to AM and a missing end period to PM.
 function slotsFromTiming(timing) {
   if (!timing) return TIME_SLOTS;
-  const cleaned = timing.replace(/[–—]/g, '-');
-  const parts = cleaned.split(/\s+to\s+|-/i).map(s => s.trim()).filter(Boolean);
-  if (parts.length < 2) return TIME_SLOTS;
+  // Normalize dashes, then directly extract two time expressions anywhere in the string.
+  // This handles "Mon-Sat 9AM-5PM", "9:00 AM – 5:00 PM", "8 to 10pm", etc.
+  const t = timing.replace(/[–—]/g, '-');
+  const TIME_RE = /(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/gi;
+  const found = [...t.matchAll(TIME_RE)];
+  // Also try without AM/PM (pure-number range like "8-17" or "8 to 5")
   function extract(str) {
     const m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
-    if (!m || !m[1]) return null;
+    if (!m) return null;
     return { h: parseInt(m[1], 10), min: parseInt(m[2] || '0', 10), period: m[3] ? m[3].toUpperCase() : null };
   }
   function to24(h, period) {
@@ -1277,21 +1280,29 @@ function slotsFromTiming(timing) {
     if (period === 'AM' && hh === 12) hh = 0;
     return hh;
   }
-  const s = extract(parts[0]);
-  const e = extract(parts[1]);
-  if (!s || !e) return TIME_SLOTS;
-  let sp = s.period, ep = e.period;
-  if (!sp && !ep) { sp = 'AM'; ep = 'PM'; }
-  else if (!sp && ep) {
-    // Try same period as end first; if gives valid range, use it (e.g. "4 to 5pm" → 4PM–5PM)
-    const trySame = to24(s.h, ep) * 60 + s.min < to24(e.h, ep) * 60 + e.min;
-    sp = trySame ? ep : (ep === 'AM' ? 'PM' : 'AM');
+  let s, e;
+  if (found.length >= 2) {
+    // Two explicit AM/PM tokens — most reliable
+    s = { h: parseInt(found[0][1]), min: parseInt(found[0][2] || '0'), period: found[0][3].toUpperCase() };
+    e = { h: parseInt(found[1][1]), min: parseInt(found[1][2] || '0'), period: found[1][3].toUpperCase() };
+  } else {
+    // Fall back to splitting on "to" or a hyphen surrounded by optional spaces
+    const parts = t.split(/\s+to\s+|\s*-\s*/i).map(p => p.trim()).filter(Boolean);
+    // Find the first two parts that contain a digit
+    const timeParts = parts.filter(p => /\d/.test(p));
+    if (timeParts.length < 2) return TIME_SLOTS;
+    s = extract(timeParts[0]);
+    e = extract(timeParts[timeParts.length - 1]);
+    if (!s || !e) return TIME_SLOTS;
+    let sp = s.period, ep = e.period;
+    if (!sp && !ep) { sp = 'AM'; ep = 'PM'; }
+    else if (!sp && ep) { sp = to24(s.h, ep) * 60 + s.min < to24(e.h, ep) * 60 + e.min ? ep : (ep === 'AM' ? 'PM' : 'AM'); }
+    else if (sp && !ep) { ep = 'PM'; }
+    s.period = sp; e.period = ep;
   }
-  else if (sp && !ep) { ep = 'PM'; }
-  const startMin = to24(s.h, sp) * 60 + s.min;
-  const endMin   = to24(e.h, ep) * 60 + e.min;
+  const startMin = to24(s.h, s.period) * 60 + s.min;
+  const endMin   = to24(e.h, e.period) * 60 + e.min;
   if (endMin <= startMin) return TIME_SLOTS;
-  // First full hour >= opening; last full hour <= closing (include closing hour as valid slot)
   const firstSlot = Math.ceil(startMin / 60) * 60;
   const lastSlot  = Math.floor(endMin / 60) * 60;
   const slots = [];
