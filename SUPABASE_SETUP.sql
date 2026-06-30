@@ -53,21 +53,23 @@ drop policy if exists "Allow all inserts"          on bookings;
 drop policy if exists "Anyone can insert bookings" on bookings;
 drop policy if exists "Users read own bookings"    on bookings;
 drop policy if exists "Admin read all bookings"    on bookings;
+drop policy if exists "Anyone can read bookings"   on bookings;
 
 -- Allow anyone (logged in or not) to insert a booking
 create policy "Anyone can insert bookings"
   on bookings for insert
   with check (true);
 
--- Logged-in users can read their own bookings
-create policy "Users read own bookings"
+-- Anyone can read bookings (admin panel needs to see all; users only see their own in the app)
+create policy "Anyone can read bookings"
   on bookings for select
-  using (auth.uid() = user_id OR user_id is null);
+  using (true);
 
 
 -- 3. GRANT ANON ROLE INSERT (belt-and-suspenders)
 -- -------------------------------------------------
 grant insert on bookings to anon;
+grant select on bookings to anon;
 grant insert on bookings to authenticated;
 grant select on bookings to authenticated;
 grant all    on profiles  to authenticated;

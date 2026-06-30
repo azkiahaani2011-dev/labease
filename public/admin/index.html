@@ -204,7 +204,8 @@ async function loadBookingsFromSupabase() {
         id: b.id,
         patient: b.patient_name,
         phone: b.patient_phone,
-        test: items.length ? items.map(function(i){return i.name;}).join(', ') : '—',
+        ref: b.booking_ref || b.id.slice(0,8).toUpperCase(),
+        test: items.length ? items.map(function(i){return i.tname||i.name||i.test||'Test';}).join(', ') : '—',
         lab: b.lab_name || '—',
         date: b.slot_date || b.created_at.slice(0,10),
         mode: b.collection === 'home' ? 'Home' : 'Clinic',
@@ -569,15 +570,20 @@ function Bookings(props) {
   function updateStatus(id, status) {
     var next = props.bookings.map(function(b){return b.id===id?Object.assign({},b,{status:status}):b;});
     props.setBookings(next);
-    localStorage.setItem('le_bookings', JSON.stringify(next));
-    updateBookingStatusInSupabase(id, status); // sync to Supabase
+    updateBookingStatusInSupabase(id, status);
   }
   var filtered = props.bookings.filter(function(b) {
     var q = search.toLowerCase();
-    var matchQ = !q || b.patient.toLowerCase().indexOf(q)>-1 || b.id.toLowerCase().indexOf(q)>-1 || b.test.toLowerCase().indexOf(q)>-1;
+    var matchQ = !q || (b.patient||'').toLowerCase().indexOf(q)>-1 || (b.ref||b.id||'').toLowerCase().indexOf(q)>-1 || (b.test||'').toLowerCase().indexOf(q)>-1;
     var matchF = filter==='All' || b.status===filter;
     return matchQ && matchF;
-  }).sort(function(a,b){ return b.id.localeCompare(a.id); });
+  }).sort(function(a,b){ return (b.raw&&b.raw.created_at||b.date||'').localeCompare(a.raw&&a.raw.created_at||a.date||''); });
+  if (props.bookingsLoading) return (
+    <div style={{padding:28,textAlign:'center',color:'#6B7280',paddingTop:80}}>
+      <div style={{fontSize:16,marginBottom:8}}>Loading bookings…</div>
+      <div style={{fontSize:13}}>Fetching from database</div>
+    </div>
+  );
   return (
     <div style={{padding:28}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
@@ -610,7 +616,7 @@ function Bookings(props) {
               {filtered.map(function(b) {
                 return (
                   <tr key={b.id}>
-                    <td style={{fontWeight:600,color:'#1158A6'}}>{b.id}</td>
+                    <td style={{fontWeight:600,color:'#1158A6'}}>{b.ref||b.id.slice(0,8).toUpperCase()}</td>
                     <td style={{fontWeight:600}}>{b.patient}</td>
                     <td style={{color:'#6B7280'}}>{b.phone}</td>
                     <td>{b.test}</td>
@@ -1499,23 +1505,21 @@ function Settings() {
 function App() {
   const [authed, setAuthed] = useState(function(){return localStorage.getItem('le_auth')==='1';});
   const [page, setPage] = useState('dashboard');
-  const [bookings, setBookings] = useState(function(){return genBookings();});
+  const [bookings, setBookings] = useState([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
   const [labs, setLabs] = useState(function(){return genLabs();});
   const [tests, setTests] = useState(function(){return genTests();});
 
   useEffect(function() {
-    // Load real bookings from Supabase if available
-    loadBookingsFromSupabase().then(function(data) {
-      if (data && data.length > 0) setBookings(data);
-    });
-    // Also listen for localStorage changes (fallback)
-    function handler(e) {
-      if (e.key === 'le_bookings') {
-        try { setBookings(JSON.parse(e.newValue || '[]')); } catch(ex) {}
-      }
+    function fetchBookings() {
+      loadBookingsFromSupabase().then(function(data) {
+        if (data) { setBookings(data); setBookingsLoading(false); }
+      });
     }
-    window.addEventListener('storage', handler);
-    return function() { window.removeEventListener('storage', handler); };
+    fetchBookings();
+    // Auto-refresh every 30s so new bookings appear without manual reload
+    var iv = setInterval(fetchBookings, 30000);
+    return function() { clearInterval(iv); };
   }, []);
 
   function login() { ['le_admin_auth','labease_admin_auth'].forEach(k=>localStorage.removeItem(k)); localStorage.setItem('le_auth','1'); setAuthed(true); }
@@ -1537,7 +1541,7 @@ function App() {
           </div>
         </div>
         {page==='dashboard' && <Dashboard bookings={bookings} />}
-        {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} />}
+        {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} bookingsLoading={bookingsLoading} />}
         {page==='labs' && <Labs labs={labs} setLabs={setLabs} />}
         {page==='tests' && <Tests tests={tests} setTests={setTests} />}
         {page==='trusted'  && <TrustedLogos />}
