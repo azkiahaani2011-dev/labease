@@ -1,6 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from './lib/supabase';
 import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs } from './lib/db';
+import BloodTestAtHome from './pages/BloodTestAtHome';
+import CbcTest from './pages/CbcTest';
+import ThyroidTest from './pages/ThyroidTest';
+import FullBodyCheckup from './pages/FullBodyCheckup';
+import VitaminDTest from './pages/VitaminDTest';
+import HbA1cTest from './pages/HbA1cTest';
+import DengueTest from './pages/DengueTest';
+import BloodTestHyderabad from './pages/BloodTestHyderabad';
+
+// Maps URL slugs (no leading/trailing slash) to internal page names
+const SEO_SLUG_TO_PAGE = {
+  'blood-test-at-home': 'seo-blood-test-at-home',
+  'cbc-test': 'seo-cbc-test',
+  'thyroid-profile-test': 'seo-thyroid-profile-test',
+  'full-body-checkup': 'seo-full-body-checkup',
+  'vitamin-d-test': 'seo-vitamin-d-test',
+  'hba1c-test': 'seo-hba1c-test',
+  'dengue-test': 'seo-dengue-test',
+  'blood-test-at-home-in-hyderabad': 'seo-blood-test-at-home-in-hyderabad',
+};
+const SEO_PAGE_TO_SLUG = Object.fromEntries(Object.entries(SEO_SLUG_TO_PAGE).map(([slug, page]) => [page, slug]));
 
 // True on every fresh page load (refresh/new tab), false after first SPA navigation
 let _isFirstLoad = true;
@@ -3888,7 +3909,18 @@ export class ErrorBoundary extends React.Component {
 
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
-  const [page,   setPage]   = useState("home");
+  const [page,   setPage]   = useState(() => {
+    try {
+      const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+      let path = window.location.pathname;
+      if (base && path.startsWith(base)) path = path.slice(base.length);
+      const params = new URLSearchParams(window.location.search);
+      const pParam = params.get('p');
+      if (pParam) path = pParam;
+      const slug = path.replace(/^\/+|\/+$/g, '');
+      return (slug && SEO_SLUG_TO_PAGE[slug]) || "home";
+    } catch { return "home"; }
+  });
   const [labId,  setLabId]  = useState(null);
   const [labSettings, setLabSettings] = useState({});
   const [sbExtraLabs, setSbExtraLabs] = useState([]);
@@ -4041,8 +4073,13 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
   }, [cart]);
+  const pageUrl = p => {
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+    const slug = SEO_PAGE_TO_SLUG[p];
+    return slug ? `${base}/${slug}` : `${base}/`;
+  };
   const navTo = p => {
-    window.history.pushState({ page: p }, '', window.location.pathname);
+    window.history.pushState({ page: p }, '', pageUrl(p));
     setPage(p);
     window.scrollTo(0, 0);
     if (p !== "labs") setSelectedTest(null);
@@ -4054,9 +4091,9 @@ export default function App() {
       window.scrollTo(0, 0);
     };
     window.addEventListener("popstate", onPop);
-    // Push initial state so back from first page goes to home not away
+    // Replace initial state to match the resolved starting page (and clean up any ?p= redirect param)
     if (!window.history.state?.page) {
-      window.history.replaceState({ page: "home" }, '', window.location.pathname);
+      window.history.replaceState({ page }, '', pageUrl(page));
     }
     return () => window.removeEventListener("popstate", onPop);
   }, []);
@@ -5257,6 +5294,14 @@ export default function App() {
         ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
         ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
       ]}/>}
+      {page==="seo-blood-test-at-home" && <BloodTestAtHome navTo={navTo}/>}
+      {page==="seo-cbc-test" && <CbcTest navTo={navTo}/>}
+      {page==="seo-thyroid-profile-test" && <ThyroidTest navTo={navTo}/>}
+      {page==="seo-full-body-checkup" && <FullBodyCheckup navTo={navTo}/>}
+      {page==="seo-vitamin-d-test" && <VitaminDTest navTo={navTo}/>}
+      {page==="seo-hba1c-test" && <HbA1cTest navTo={navTo}/>}
+      {page==="seo-dengue-test" && <DengueTest navTo={navTo}/>}
+      {page==="seo-blood-test-at-home-in-hyderabad" && <BloodTestHyderabad navTo={navTo}/>}
       </div>
 
       {/* CART DRAWER */}
