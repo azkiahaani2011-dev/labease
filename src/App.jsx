@@ -3207,11 +3207,33 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
   const ok2 = loc.date && loc.slot;
+  // Read timing directly from localStorage so admin changes are always current
+  const _labId = lab?.id;
+  const _effectiveTiming = (() => {
+    try {
+      const tov = JSON.parse(localStorage.getItem('le_timing_overrides') || '{}');
+      if (tov[_labId]) return tov[_labId];
+      const labs = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const found = labs.find(l => l.id == _labId);
+      if (found?.timing) return found.timing;
+    } catch(e) {}
+    return lab?.timing;
+  })();
+  const _effectiveSundayTiming = (() => {
+    try {
+      const stov = JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}');
+      if (stov[_labId]) return stov[_labId];
+      const labs = JSON.parse(localStorage.getItem('le_labs') || '[]');
+      const found = labs.find(l => l.id == _labId);
+      if (found?.sunday_timing) return found.sunday_timing;
+    } catch(e) {}
+    return lab?.sunday_timing;
+  })();
   // Pick slot list based on whether the selected date is a Sunday
   const isSunday = loc.date ? new Date(loc.date + 'T00:00:00').getDay() === 0 : false;
-  const LAB_SLOTS = isSunday && lab?.sunday_timing
-    ? slotsFromTiming(lab.sunday_timing)
-    : slotsFromTiming(lab?.timing);
+  const LAB_SLOTS = isSunday && _effectiveSundayTiming
+    ? slotsFromTiming(_effectiveSundayTiming)
+    : slotsFromTiming(_effectiveTiming);
   const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
   const steps = ["Patient","Schedule","Collection","Review","Payment"];
 
@@ -3314,9 +3336,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               {(()=>{
                 const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
                 const [slotQuery, setSlotQuery] = [bkSlotQuery, setBkSlotQuery];
-                const displayTiming = isSunday && lab?.sunday_timing ? lab.sunday_timing : lab?.timing;
-                /* DEBUG — remove after testing */
-                console.log('[SLOTS DEBUG]', {labId: lab?.id, labName: lab?.name, weekdayTiming: lab?.timing, sundayTiming: lab?.sunday_timing, isSunday, selectedDate: loc.date, firstSlot: LAB_SLOTS[0], lastSlot: LAB_SLOTS[LAB_SLOTS.length-1], totalSlots: LAB_SLOTS.length});
+                const displayTiming = isSunday && _effectiveSundayTiming ? _effectiveSundayTiming : _effectiveTiming;
                 const query = slotQuery || '';
                 const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
                 const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
