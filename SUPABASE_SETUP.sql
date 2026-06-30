@@ -71,3 +71,43 @@ grant insert on bookings to anon;
 grant insert on bookings to authenticated;
 grant select on bookings to authenticated;
 grant all    on profiles  to authenticated;
+
+
+-- 4. LAB SETTINGS TABLE (admin-controlled timing per lab)
+-- --------------------------------------------------------
+create table if not exists lab_settings (
+  lab_id        text primary key,
+  timing        text,
+  sunday_timing text,
+  updated_at    timestamptz default now()
+);
+
+alter table lab_settings enable row level security;
+
+drop policy if exists "Public read lab_settings"   on lab_settings;
+drop policy if exists "Public insert lab_settings" on lab_settings;
+drop policy if exists "Public update lab_settings" on lab_settings;
+
+create policy "Public read lab_settings"   on lab_settings for select using (true);
+create policy "Public insert lab_settings" on lab_settings for insert with check (true);
+create policy "Public update lab_settings" on lab_settings for update using (true);
+
+grant all on lab_settings to anon;
+grant all on lab_settings to authenticated;
+
+-- 4. LAB SETTINGS TABLE (timing overrides set by admin)
+create table if not exists lab_settings (
+  lab_id  text primary key,
+  timing  text,
+  sunday_timing text,
+  updated_at timestamptz default now()
+);
+alter table lab_settings enable row level security;
+drop policy if exists "Public read lab_settings"   on lab_settings;
+drop policy if exists "Public insert lab_settings" on lab_settings;
+drop policy if exists "Public update lab_settings" on lab_settings;
+create policy "Public read lab_settings"   on lab_settings for select using (true);
+create policy "Public insert lab_settings" on lab_settings for insert with check (true);
+create policy "Public update lab_settings" on lab_settings for update using (true);
+grant all on lab_settings to anon;
+grant all on lab_settings to authenticated;

@@ -144,6 +144,13 @@ const MODES = ['Home','Clinic'];
 var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzIxNjcsImV4cCI6MjA2NjM0ODE2N30.0Q_1tkBdvJBygfwB01rAVMHqrQ7s89L2ZWHGpGqFM3k';
 var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
+var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+function saveTimingToSupabase(labId, timing, sundayTiming) {
+  if (!supaAdmin) return;
+  supaAdmin.from('lab_settings').upsert({ lab_id: String(labId), timing: timing||'', sunday_timing: sundayTiming||'', updated_at: new Date().toISOString() }).then(function(r){ if(r.error) console.error('saveTimingToSupabase:', r.error); });
+}
 
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function weekAgoStr(){var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10);}
@@ -626,6 +633,7 @@ function Labs(props) {
     tov[id]=form.timing||''; localStorage.setItem('le_timing_overrides',JSON.stringify(tov));
     var stov={};try{stov=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
     stov[id]=form.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov));
+    saveTimingToSupabase(id, form.timing||'', form.sunday_timing||'');
     setEditing(null);
   }
   function toggle(id) {
@@ -658,6 +666,7 @@ function Labs(props) {
     tov2[labId]=lab.timing; localStorage.setItem('le_timing_overrides',JSON.stringify(tov2));
     var stov2={};try{stov2=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
     stov2[labId]=lab.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov2));
+    saveTimingToSupabase(labId, lab.timing||'', lab.sunday_timing||'');
     setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
     setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
     setAddingLab(false);

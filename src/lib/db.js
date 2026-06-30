@@ -97,6 +97,26 @@ export async function createBooking(booking) {
   return data;
 }
 
+export async function getLabSettings() {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from('lab_settings').select('*');
+  if (error) { console.error('getLabSettings:', error); return {}; }
+  const map = {};
+  (data || []).forEach(row => { map[row.lab_id] = row; });
+  return map;
+}
+
+export async function saveLabSetting(labId, timing, sundayTiming) {
+  if (!supabase) return;
+  const { error } = await supabase.from('lab_settings').upsert({
+    lab_id: String(labId),
+    timing: timing || '',
+    sunday_timing: sundayTiming || '',
+    updated_at: new Date().toISOString(),
+  });
+  if (error) console.error('saveLabSetting:', error);
+}
+
 export async function getUserBookings(userId) {
   if (!supabase || !userId) return null;
   const { data, error } = await supabase

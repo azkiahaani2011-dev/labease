@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from './lib/supabase';
-import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart } from './lib/db';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings } from './lib/db';
 
 // True on every fresh page load (refresh/new tab), false after first SPA navigation
 let _isFirstLoad = true;
@@ -3200,7 +3200,7 @@ const BookingField = ({ label, req, ...p }) => (
 );
 
 /* ─── BOOKING PAGE (top-level so typing doesn't lose focus) ─────────────── */
-function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
+function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm, labSettings }) {
   const [loc, setLoc] = useState(form);
   const [bkSlotFocus, setBkSlotFocus] = useState(false);
   const [bkSlotQuery, setBkSlotQuery] = useState('');
@@ -3209,7 +3209,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const ok2 = loc.date && loc.slot;
   // Read timing directly from localStorage so admin changes are always current
   const _labId = lab?.id;
-  const _effectiveTiming = (() => {
+  const _effectiveTiming = labSettings?.[String(_labId)]?.timing || (() => {
     try {
       const tov = JSON.parse(localStorage.getItem('le_timing_overrides') || '{}');
       if (tov[_labId]) return tov[_labId];
@@ -3219,7 +3219,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
     } catch(e) {}
     return lab?.timing;
   })();
-  const _effectiveSundayTiming = (() => {
+  const _effectiveSundayTiming = labSettings?.[String(_labId)]?.sunday_timing || (() => {
     try {
       const stov = JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}');
       if (stov[_labId]) return stov[_labId];
@@ -3976,6 +3976,7 @@ export class ErrorBoundary extends React.Component {
 export default function App() {
   const [page,   setPage]   = useState("home");
   const [labId,  setLabId]  = useState(null);
+  const [labSettings, setLabSettings] = useState({});
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
   });
@@ -3997,6 +3998,14 @@ export default function App() {
     const h = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
+  }, []);
+
+  // Fetch lab timing settings from Supabase — refreshes every 30s so admin changes propagate to all patients
+  useEffect(() => {
+    const fetch = () => getLabSettings().then(s => { if (s && Object.keys(s).length >= 0) setLabSettings(s); });
+    fetch();
+    const iv = setInterval(fetch, 30000);
+    return () => clearInterval(iv);
   }, []);
 
   // Trigger re-render when admin panel updates localStorage (cross-tab)
@@ -4238,8 +4247,8 @@ export default function App() {
       active:       adminOv.labStatus[lab.id] !== undefined ? adminOv.labStatus[lab.id] : lab.active,
       name:         adminOv.labNames[lab.id]   !== undefined ? adminOv.labNames[lab.id]  : lab.name,
       logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
-      timing:       adminOv.timings[lab.id]       || adm.timing        || lab.timing,
-      sunday_timing:adminOv.sundayTimings[lab.id] || adm.sunday_timing || lab.sunday_timing || '',
+      timing:       labSettings[String(lab.id)]?.timing        || adminOv.timings[lab.id]       || adm.timing        || lab.timing,
+      sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || adm.sunday_timing || lab.sunday_timing || '',
       tests,
     };
   }).concat(adminOv.extraLabs.map(el => ({
@@ -4247,8 +4256,8 @@ export default function App() {
     active:       adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
     address:      el.address || el.city || '',
     distance:     el.distance || el.dist || '—',
-    timing:       adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
-    sunday_timing:adminOv.sundayTimings[el.id] || el.sunday_timing || '',
+    timing:       labSettings[String(el.id)]?.timing        || adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
+    sunday_timing:labSettings[String(el.id)]?.sunday_timing || adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
@@ -4890,7 +4899,7 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      BOOKING PAGE
   ═══════════════════════════════════════════════════════════════ */
-  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>;
+  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>;
 
   /* ═══════════════════════════════════════════════════════════════
      CONFIRM PAGE
@@ -5286,7 +5295,7 @@ export default function App() {
       {page==="nearme"  && <NearMePage/>}
       {page==="lab"     && <LabDetail/>}
       {page==="cart"    && <CartPage/>}
-      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>}
+      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>}
       {page==="confirm" && <Confirm/>}
       {page==="privacy" && <PolicyPage title="Privacy Policy" navTo={navTo} content={[
         ["Information We Collect","We collect your name, phone number, email address, and appointment details when you book a lab test through LabEase. We may also collect location data to show you nearby labs."],
