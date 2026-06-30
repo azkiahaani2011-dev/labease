@@ -2829,7 +2829,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
             onChange={e=>{ setQ(e.target.value); setOpen(true); setActiveIdx(-1); }}
             onFocus={()=>setOpen(true)}
             onKeyDown={onKey}
-            placeholder="Search tests, packages or labs\u2026"
+            placeholder="Search tests, packages or labs…"
             className="hero-search-input-field"
             style={{ flex:1,border:"none",outline:"none",padding:"14px 8px 14px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
             autoComplete="off" aria-label="Search tests, packages or labs"
@@ -2837,7 +2837,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
           {q && (
             <button onClick={()=>{ setQ(""); setOpen(false); inputRef.current?.focus(); }}
               style={{ background:"none",border:"none",cursor:"pointer",padding:"0 12px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
-              \u2715
+              ✕
             </button>
           )}
         </div>
@@ -2850,13 +2850,13 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
       </div>
 
       {!open && !q && (
-        <div style={{ display:"flex",gap:6,marginTop:10,flexWrap:"wrap",justifyContent:"center" }}>
-          <span style={{ fontSize:".7rem",color:"rgba(255,255,255,.7)",fontWeight:600,alignSelf:"center",flexShrink:0 }}>Trending:</span>
+        <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
+          <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
           {TRENDING_CHIPS.map(chip=>(
             <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
-              style={{ background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.3)",borderRadius:99,padding:"5px 13px",fontSize:".74rem",fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",backdropFilter:"blur(4px)",transition:"background .15s" }}
-              onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.28)"}
-              onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.15)"}>
+              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
               {chip.label}
             </button>
           ))}
