@@ -147,6 +147,23 @@ var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : nu
 var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
 var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+// Sync an admin override key to Supabase admin_settings so all devices update instantly
+var SYNC_KEYS = ['le_price_overrides','le_test_name_overrides','le_lab_name_overrides','le_lab_overrides','le_timing_overrides','le_sunday_timing_overrides','le_labs'];
+function syncAdminSetting(key, value) {
+  if (!supaAdmin) return;
+  supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){ if(r.error) console.error('syncAdminSetting:', r.error); });
+}
+// Wrap localStorage.setItem to auto-sync admin keys to Supabase
+(function() {
+  var origSet = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(key, val) {
+    origSet(key, val);
+    if (SYNC_KEYS.indexOf(key) !== -1) {
+      try { syncAdminSetting(key, JSON.parse(val)); } catch(e) { syncAdminSetting(key, val); }
+    }
+  };
+})();
+
 function saveTimingToSupabase(labId, timing, sundayTiming) {
   if (!supaAdmin) return;
   supaAdmin.from('lab_settings').upsert({ lab_id: String(labId), timing: timing||'', sunday_timing: sundayTiming||'', updated_at: new Date().toISOString() }).then(function(r){ if(r.error) console.error('saveTimingToSupabase:', r.error); });

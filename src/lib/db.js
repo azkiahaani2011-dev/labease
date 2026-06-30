@@ -309,3 +309,34 @@ export function subscribeLabData({ onExtraLabs, onLabSettings }) {
 
   return () => { supabase.removeChannel(channel); };
 }
+
+// ── Admin Settings (cross-device sync) ───────────────────────
+// Stores key/value pairs like le_price_overrides, le_lab_overrides, etc.
+// so admin changes made on any device/browser propagate to all clients.
+
+export async function getAdminSettings() {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from('admin_settings').select('key, value');
+  if (error) { console.error('getAdminSettings:', error); return {}; }
+  const map = {};
+  (data || []).forEach(row => { map[row.key] = row.value; });
+  return map;
+}
+
+export async function saveAdminSetting(key, value) {
+  if (!supabase) return;
+  const { error } = await supabase.from('admin_settings').upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  if (error) console.error('saveAdminSetting:', error);
+}
+
+export function subscribeAdminSettings(onChange) {
+  if (!supabase) return () => {};
+  getAdminSettings().then(settings => onChange(settings));
+  const channel = supabase
+    .channel('admin-settings-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'admin_settings' }, () => {
+      getAdminSettings().then(settings => onChange(settings));
+    })
+    .subscribe();
+  return () => { supabase.removeChannel(channel); };
+}

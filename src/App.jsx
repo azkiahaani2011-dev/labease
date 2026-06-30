@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from './lib/supabase';
-import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs, subscribeLabData } from './lib/db';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs, subscribeLabData, subscribeAdminSettings } from './lib/db';
 import BloodTestAtHome from './pages/BloodTestAtHome';
 import CbcTest from './pages/CbcTest';
 import ThyroidTest from './pages/ThyroidTest';
@@ -4104,6 +4104,7 @@ export default function App() {
   const [labId,  setLabId]  = useState(null);
   const [labSettings, setLabSettings] = useState({});
   const [sbExtraLabs, setSbExtraLabs] = useState([]);
+  const [sbAdminSettings, setSbAdminSettings] = useState({});
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
   });
@@ -4139,6 +4140,27 @@ export default function App() {
     return unsub;
   }, []);
 
+  // Realtime sync for admin overrides (price, names, status, timings)
+  useEffect(() => {
+    const unsub = subscribeAdminSettings(settings => {
+      setSbAdminSettings(settings);
+      // Mirror to localStorage so same-device code still works
+      const keyMap = {
+        le_price_overrides: settings.le_price_overrides,
+        le_test_name_overrides: settings.le_test_name_overrides,
+        le_lab_name_overrides: settings.le_lab_name_overrides,
+        le_lab_overrides: settings.le_lab_overrides,
+        le_timing_overrides: settings.le_timing_overrides,
+        le_sunday_timing_overrides: settings.le_sunday_timing_overrides,
+        le_labs: settings.le_labs,
+      };
+      Object.entries(keyMap).forEach(([k, v]) => {
+        if (v !== undefined) try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
+      });
+    });
+    return unsub;
+  }, []);
+
   // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
   useEffect(() => {
@@ -4153,21 +4175,30 @@ export default function App() {
     }, 2000);
     return () => { window.removeEventListener('storage', handler); clearInterval(poll); };
   }, []);
-  // Read ALL admin overrides fresh from localStorage on every render
+  // Read ALL admin overrides — prefer Supabase (sbAdminSettings) over localStorage
+  // so changes from any device/browser propagate immediately to all users
   const adminOv = (() => {
     try {
+      const get = (key) => {
+        // sbAdminSettings is keyed by the same le_* names
+        if (sbAdminSettings[key] !== undefined) return sbAdminSettings[key];
+        return JSON.parse(localStorage.getItem(key) || '{}');
+      };
+      const getArr = (key) => {
+        if (sbAdminSettings[key] !== undefined) return sbAdminSettings[key];
+        return JSON.parse(localStorage.getItem(key) || '[]');
+      };
       return {
-        prices:          JSON.parse(localStorage.getItem('le_price_overrides')            || '{}'),
-        testNames:       JSON.parse(localStorage.getItem('le_test_name_overrides')         || '{}'),
-        labNames:        JSON.parse(localStorage.getItem('le_lab_name_overrides')          || '{}'),
-        timings:       JSON.parse(localStorage.getItem('le_timing_overrides')        || '{}'),
-        sundayTimings: JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}'),
-        labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
+        prices:        get('le_price_overrides'),
+        testNames:     get('le_test_name_overrides'),
+        labNames:      get('le_lab_name_overrides'),
+        timings:       get('le_timing_overrides'),
+        sundayTimings: get('le_sunday_timing_overrides'),
+        labStatus:     get('le_lab_overrides'),
         extraLabs: (() => {
-          // Read from le_extra_labs first; fall back to reading new IDs from le_labs
-          const extra = JSON.parse(localStorage.getItem('le_extra_labs') || '[]');
+          const extra = getArr('le_extra_labs');
           if (extra.length > 0) return extra;
-          const allAdminLabs = JSON.parse(localStorage.getItem('le_labs') || '[]');
+          const allAdminLabs = getArr('le_labs');
           const knownIds = new Set([1,2,3,4,5,6]);
           return allAdminLabs.filter(l => !knownIds.has(l.id));
         })(),
