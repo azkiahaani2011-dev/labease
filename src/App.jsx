@@ -4113,7 +4113,7 @@ export default function App() {
   };
 
   const confirm = async (payMethod) => {
-    const id = "LB"+Math.random().toString(36).slice(2,8).toUpperCase();
+    const id = "LB" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,4).toUpperCase();
     setDone({...form,id,cart:[...cart],total,saving,payMethod});
     const booking = {
       id,
