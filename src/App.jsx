@@ -2392,10 +2392,12 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                   </div>
                   <div style={{ flexShrink:0,textAlign:"right" }}>
                     <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.1rem" }}>₹{t.price}</div>
-                    <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
-                      <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".73rem" }}>₹{t.mrp}</span>
-                      <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
-                    </div>
+                    {d > 0 && (
+                      <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
+                        <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".73rem" }}>₹{t.mrp}</span>
+                        <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -3278,7 +3280,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
             <div style={{ fontSize:".75rem",color:"#6B7280" }}>
               {lab?.name} &nbsp;·&nbsp; {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
               <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
-              &nbsp;·&nbsp;<span style={{ color:"#16A34A",fontWeight:700 }}>Save ₹{saving.toLocaleString()}</span>
+              {saving > 0 && <>&nbsp;·&nbsp;<span style={{ color:"#16A34A",fontWeight:700 }}>Save ₹{saving.toLocaleString()}</span></>}
             </div>
           </div>
         </div>
@@ -3452,18 +3454,20 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:".82rem" }}>
                     <span style={{ color:"#374151",fontWeight:600,maxWidth:"65%" }}>{item.tname}</span>
                     <div style={{ display:"flex",gap:8,alignItems:"center" }}>
-                      <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".76rem" }}>₹{item.mrp}</span>
+                      {item.mrp > item.price && <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".76rem" }}>₹{item.mrp}</span>}
                       <span style={{ fontWeight:800,color:"#1158A6" }}>₹{item.price}</span>
                     </div>
                   </div>
                 ))}
                 <div style={{ borderTop:"1.5px dashed #DBEAFE",paddingTop:10,marginTop:8 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".79rem",marginBottom:3 }}>
-                    <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
-                  </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#16A34A",fontSize:".8rem",marginBottom:8,fontWeight:700 }}>
-                    <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
-                  </div>
+                  {saving > 0 && <>
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".79rem",marginBottom:3 }}>
+                      <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+                    </div>
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#16A34A",fontSize:".8rem",marginBottom:8,fontWeight:700 }}>
+                      <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
+                    </div>
+                  </>}
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>
                     <span>Total</span>
                     <span style={{ color:"#1158A6",fontSize:"1.15rem" }}>₹{total.toLocaleString()}</span>
