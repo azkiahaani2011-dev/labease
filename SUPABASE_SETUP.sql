@@ -95,19 +95,44 @@ create policy "Public update lab_settings" on lab_settings for update using (tru
 grant all on lab_settings to anon;
 grant all on lab_settings to authenticated;
 
--- 4. LAB SETTINGS TABLE (timing overrides set by admin)
-create table if not exists lab_settings (
-  lab_id  text primary key,
-  timing  text,
+-- 5. EXTRA LABS TABLE (labs added via admin panel, visible on all devices)
+-- -----------------------------------------------------------------------
+create table if not exists extra_labs (
+  id            serial primary key,
+  name          text not null,
+  city          text,
+  address       text,
+  phone         text,
+  rating        numeric default 4.5,
+  reviews       int default 0,
+  timing        text,
   sunday_timing text,
-  updated_at timestamptz default now()
+  report_time   text default 'Same Day',
+  home_collection boolean default false,
+  nabl          boolean default false,
+  color         text default '#1158A6',
+  logo_base64   text,
+  tests         jsonb default '[]',
+  active        boolean default true,
+  distance      text default '—',
+  founded       text,
+  created_at    timestamptz default now(),
+  updated_at    timestamptz default now()
 );
-alter table lab_settings enable row level security;
-drop policy if exists "Public read lab_settings"   on lab_settings;
-drop policy if exists "Public insert lab_settings" on lab_settings;
-drop policy if exists "Public update lab_settings" on lab_settings;
-create policy "Public read lab_settings"   on lab_settings for select using (true);
-create policy "Public insert lab_settings" on lab_settings for insert with check (true);
-create policy "Public update lab_settings" on lab_settings for update using (true);
-grant all on lab_settings to anon;
-grant all on lab_settings to authenticated;
+
+alter table extra_labs enable row level security;
+
+drop policy if exists "Public read extra_labs"   on extra_labs;
+drop policy if exists "Public insert extra_labs" on extra_labs;
+drop policy if exists "Public update extra_labs" on extra_labs;
+drop policy if exists "Public delete extra_labs" on extra_labs;
+
+create policy "Public read extra_labs"   on extra_labs for select using (true);
+create policy "Public insert extra_labs" on extra_labs for insert with check (true);
+create policy "Public update extra_labs" on extra_labs for update using (true);
+create policy "Public delete extra_labs" on extra_labs for delete using (true);
+
+grant all on extra_labs to anon;
+grant all on extra_labs to authenticated;
+grant usage, select on sequence extra_labs_id_seq to anon;
+grant usage, select on sequence extra_labs_id_seq to authenticated;

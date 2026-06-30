@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from './lib/supabase';
-import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings } from './lib/db';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs } from './lib/db';
 
 // True on every fresh page load (refresh/new tab), false after first SPA navigation
 let _isFirstLoad = true;
@@ -3867,6 +3867,7 @@ export default function App() {
   const [page,   setPage]   = useState("home");
   const [labId,  setLabId]  = useState(null);
   const [labSettings, setLabSettings] = useState({});
+  const [sbExtraLabs, setSbExtraLabs] = useState([]);
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
   });
@@ -3890,11 +3891,14 @@ export default function App() {
     return () => window.removeEventListener("resize", h);
   }, []);
 
-  // Fetch lab timing settings from Supabase — refreshes every 30s so admin changes propagate to all patients
+  // Fetch lab timing settings + extra labs from Supabase — refreshes every 30s so admin changes propagate to all patients
   useEffect(() => {
-    const fetch = () => getLabSettings().then(s => { if (s && Object.keys(s).length >= 0) setLabSettings(s); });
-    fetch();
-    const iv = setInterval(fetch, 30000);
+    const fetchAll = () => Promise.all([
+      getLabSettings().then(s => { if (s) setLabSettings(s); }),
+      getExtraLabs().then(labs => { setSbExtraLabs(labs); }),
+    ]);
+    fetchAll();
+    const iv = setInterval(fetchAll, 30000);
     return () => clearInterval(iv);
   }, []);
 
@@ -4141,20 +4145,20 @@ export default function App() {
       sunday_timing:labSettings[String(lab.id)]?.sunday_timing || lab.sunday_timing || '',
       tests,
     };
-  }).concat(adminOv.extraLabs.map(el => ({
+  }).concat(sbExtraLabs.map(el => ({
     ...el,
-    active:       adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
+    active:       el.active !== false,
     address:      el.address || el.city || '',
-    distance:     el.distance || el.dist || '—',
-    timing:       labSettings[String(el.id)]?.timing        || el.timing       || '6:00 AM – 10:00 PM',
-    sunday_timing:labSettings[String(el.id)]?.sunday_timing || el.sunday_timing || '',
+    distance:     el.distance || '—',
+    timing:       el.timing || '6:00 AM – 10:00 PM',
+    sunday_timing:el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
-    logoBase64:   el.logo || el.logoBase64 || '',
+    logoBase64:   el.logoBase64 || '',
     founded:      el.founded || new Date().getFullYear().toString(),
     reportTime:   el.reportTime || 'Same Day',
-    tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
+    tests: Array.isArray(el.tests) && el.tests.length > 0 ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}],
     reviews:      el.reviews || 0,
   })));
   const lab = allLabs.find(l => l.id === labId) || null;

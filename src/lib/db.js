@@ -97,6 +97,82 @@ export async function createBooking(booking) {
   return data;
 }
 
+export async function getExtraLabs() {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from('extra_labs').select('*').order('id');
+  if (error) { console.error('getExtraLabs:', error); return []; }
+  return (data || []).map(row => ({
+    id: 'sb_' + row.id,
+    _supabase_id: row.id,
+    name: row.name,
+    city: row.city || '',
+    address: row.address || '',
+    phone: row.phone || '',
+    rating: parseFloat(row.rating) || 4.5,
+    reviews: row.reviews || 0,
+    timing: row.timing || '6:00 AM – 10:00 PM',
+    sunday_timing: row.sunday_timing || '',
+    reportTime: row.report_time || 'Same Day',
+    homeCollection: row.home_collection || false,
+    nabl: row.nabl || false,
+    color: row.color || '#1158A6',
+    logoBase64: row.logo_base64 || '',
+    tests: Array.isArray(row.tests) ? row.tests : [],
+    active: row.active !== false,
+    distance: row.distance || '—',
+    founded: row.founded || '',
+  }));
+}
+
+export async function saveExtraLab(lab) {
+  if (!supabase) return null;
+  const row = {
+    name: lab.name,
+    city: lab.city || '',
+    address: lab.address || '',
+    phone: lab.phone || '',
+    rating: parseFloat(lab.rating) || 4.5,
+    reviews: lab.reviews || 0,
+    timing: lab.timing || '',
+    sunday_timing: lab.sunday_timing || '',
+    report_time: lab.reportTime || 'Same Day',
+    home_collection: lab.homeCollection || false,
+    nabl: lab.nabl || false,
+    color: lab.color || '#1158A6',
+    logo_base64: lab.logoBase64 || '',
+    tests: lab.tests || [],
+    active: lab.active !== false,
+    distance: lab.distance || '—',
+    founded: lab.founded || '',
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from('extra_labs').insert(row).select().single();
+  if (error) { console.error('saveExtraLab:', error); return null; }
+  return data;
+}
+
+export async function updateExtraLab(supabaseId, updates) {
+  if (!supabase) return;
+  const { error } = await supabase.from('extra_labs').update({
+    name: updates.name,
+    city: updates.city || '',
+    address: updates.address || '',
+    phone: updates.phone || '',
+    rating: parseFloat(updates.rating) || 4.5,
+    timing: updates.timing || '',
+    sunday_timing: updates.sunday_timing || '',
+    report_time: updates.reportTime || 'Same Day',
+    home_collection: updates.homeCollection || false,
+    nabl: updates.nabl || false,
+    color: updates.color || '#1158A6',
+    logo_base64: updates.logoBase64 || '',
+    tests: updates.tests || [],
+    active: updates.active !== false,
+    updated_at: new Date().toISOString(),
+  }).eq('id', supabaseId);
+  if (error) console.error('updateExtraLab:', error);
+}
+
 export async function getLabSettings() {
   if (!supabase) return {};
   const { data, error } = await supabase.from('lab_settings').select('*');

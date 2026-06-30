@@ -152,6 +152,43 @@ function saveTimingToSupabase(labId, timing, sundayTiming) {
   supaAdmin.from('lab_settings').upsert({ lab_id: String(labId), timing: timing||'', sunday_timing: sundayTiming||'', updated_at: new Date().toISOString() }).then(function(r){ if(r.error) console.error('saveTimingToSupabase:', r.error); });
 }
 
+function saveExtraLabToSupabase(lab, callback) {
+  if (!supaAdmin) { if(callback) callback(null); return; }
+  var row = {
+    name: lab.name, city: lab.city||'', address: lab.address||'', phone: lab.phone||'',
+    rating: parseFloat(lab.rating)||4.5, reviews: lab.reviews||0,
+    timing: lab.timing||'', sunday_timing: lab.sunday_timing||'',
+    report_time: lab.reportTime||lab.report_time||'Same Day',
+    home_collection: lab.homeCollection||false, nabl: lab.nabl||false,
+    color: lab.color||'#1158A6', logo_base64: lab.logoBase64||'',
+    tests: lab.tests||[], active: lab.active!==false,
+    distance: lab.distance||'—', founded: lab.founded||'',
+    updated_at: new Date().toISOString(),
+  };
+  supaAdmin.from('extra_labs').insert(row).select().single().then(function(r){
+    if(r.error) console.error('saveExtraLabToSupabase:', r.error);
+    if(callback) callback(r.data);
+  });
+}
+
+function updateExtraLabInSupabase(supabaseId, lab) {
+  if (!supaAdmin) return;
+  var row = {
+    name: lab.name, city: lab.city||'', address: lab.address||'', phone: lab.phone||'',
+    rating: parseFloat(lab.rating)||4.5,
+    timing: lab.timing||'', sunday_timing: lab.sunday_timing||'',
+    report_time: lab.reportTime||lab.report_time||'Same Day',
+    home_collection: lab.homeCollection||false, nabl: lab.nabl||false,
+    color: lab.color||'#1158A6', logo_base64: lab.logoBase64||'',
+    tests: lab.tests||[], active: lab.active!==false,
+    updated_at: new Date().toISOString(),
+  };
+  supaAdmin.from('extra_labs').update(row).eq('id', supabaseId).then(function(r){
+    if(r.error) console.error('updateExtraLabInSupabase:', r.error);
+    else saveTimingToSupabase(supabaseId, lab.timing||'', lab.sunday_timing||'');
+  });
+}
+
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function weekAgoStr(){var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10);}
 function monthAgoStr(){var d=new Date();d.setDate(d.getDate()-30);return d.toISOString().slice(0,10);}
@@ -620,11 +657,12 @@ function Labs(props) {
     var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:testsArr.length?testsArr:l.tests}):l;});
     props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
-    // update extra_labs too
-    var extras=[];try{extras=JSON.parse(localStorage.getItem('le_extra_labs')||'[]');}catch(e){}
-    var updated=next.find(function(l){return l.id===id;});
+    // update extra lab in Supabase if it's not a built-in lab
     var knownIds=new Set([1,2,3,4,5,6]);
-    if(!knownIds.has(id)&&updated){extras=extras.map(function(e){return e.id===id?updated:e;});localStorage.setItem('le_extra_labs',JSON.stringify(extras));}
+    var updated=next.find(function(l){return l.id===id;});
+    if(!knownIds.has(id)&&updated&&updated._supabase_id){
+      updateExtraLabInSupabase(updated._supabase_id, updated);
+    }
     // lab name override for original labs
     var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
     lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
@@ -645,19 +683,15 @@ function Labs(props) {
   }
   function saveNewLab() {
     if (!newLab.name.trim()) return;
-    var maxId = props.labs.reduce(function(m,l){return Math.max(m,l.id);},0);
-    var labId = maxId+1;
-    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {id:'x'+labId+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
-    if(testsArr.length===0) testsArr=[{id:'x'+labId+'_0',name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
-    var lab = {id:labId,name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',sunday_timing:newLab.sunday_timing.trim(),reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
-    var next = props.labs.concat([lab]);
-    props.setLabs(next);
-    localStorage.setItem('le_labs', JSON.stringify(next));
-    var extras = [];
-    try { extras = JSON.parse(localStorage.getItem('le_extra_labs')||'[]'); } catch(e){}
-    extras.push(lab);
-    localStorage.setItem('le_extra_labs', JSON.stringify(extras));
-    saveTimingToSupabase(labId, lab.timing||'', lab.sunday_timing||'');
+    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
+    if(testsArr.length===0) testsArr=[{name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
+    var lab = {name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',sunday_timing:newLab.sunday_timing.trim(),reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    saveExtraLabToSupabase(lab, function(saved) {
+      if (saved) {
+        var newLabWithId = Object.assign({}, lab, {id:'sb_'+saved.id, _supabase_id:saved.id});
+        props.setLabs(function(prev){return prev.concat([newLabWithId]);});
+      }
+    });
     setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
     setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
     setAddingLab(false);
