@@ -1744,6 +1744,7 @@ const LAB_META = [
 function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const meta = LAB_META.find(m => m.id === lab.id);
   const [idx, setIdx] = React.useState(0);
+  const [loaded, setLoaded] = React.useState(false);
 
   const containerStyle = banner
     ? { width:"100%", height:"100%", display:"flex", alignItems:"stretch", justifyContent:"center", background:"#fff", overflow:"hidden" }
@@ -1768,8 +1769,12 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const srcs = embedded ? [embedded, ...(meta?.srcs||[])] : (meta?.srcs||[]);
 
   if (idx < srcs.length) return (
-    <div style={containerStyle}>
-      <img key={srcs[idx]} src={srcs[idx]} alt={lab.name} onError={() => setIdx(i => i + 1)} style={imgStyle}/>
+    <div style={{ ...containerStyle, position:"relative" }}>
+      {!loaded && <div className="sk" style={{ position:"absolute",inset:0,borderRadius:radius,zIndex:1 }}/>}
+      <img key={srcs[idx]} src={srcs[idx]} alt={lab.name}
+        onError={() => { setIdx(i => i + 1); setLoaded(false); }}
+        onLoad={() => setLoaded(true)}
+        style={{ ...imgStyle, opacity:loaded?1:0, transition:"opacity .3s" }}/>
     </div>
   );
 
@@ -2308,12 +2313,17 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
                   <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:3 }}>Timing</div>
                   <div style={{ fontSize:".68rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
                     {lab.sunday_timing ? (
-                      <>
-                        <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Mon–Sat</div>
-                        <div style={{ marginBottom:5 }}>{lab.timing||"6AM–10PM"}</div>
-                        <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,marginBottom:1 }}>Sunday</div>
-                        <div>{lab.sunday_timing}</div>
-                      </>
+                      <div style={{ display:"flex",alignItems:"stretch",gap:0,justifyContent:"center" }}>
+                        <div style={{ textAlign:"center",flex:1 }}>
+                          <div style={{ fontSize:".55rem",color:"#9CA3AF",fontWeight:700,marginBottom:2 }}>Mon–Sat</div>
+                          <div style={{ fontSize:".66rem" }}>{lab.timing||"6AM–10PM"}</div>
+                        </div>
+                        <div style={{ width:1,background:"#E5E7EB",margin:"0 6px",flexShrink:0 }}/>
+                        <div style={{ textAlign:"center",flex:1 }}>
+                          <div style={{ fontSize:".55rem",color:"#9CA3AF",fontWeight:700,marginBottom:2 }}>Sunday</div>
+                          <div style={{ fontSize:".66rem" }}>{lab.sunday_timing}</div>
+                        </div>
+                      </div>
                     ) : (
                       lab.timing||"6AM–10PM"
                     )}
@@ -3208,8 +3218,9 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
 
   // Validation per step
+  const homeAddrOk = loc.houseNo?.trim().length>0 && loc.area?.trim().length>1 && loc.city?.trim().length>1 && loc.pincode?.replace(/\D/g,'').length===6;
   const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim())
-              && (loc.mode==="clinic" || (loc.mode==="home" && loc.address?.trim().length>4));
+              && (loc.mode==="clinic" || (loc.mode==="home" && homeAddrOk));
   const ok2 = loc.date && loc.slot;
 
   // lab.timing / lab.sunday_timing already contain the merged admin + Supabase values from allLabs
@@ -3321,12 +3332,22 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               </div>
 
               {loc.mode==="home"&&(
-                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:4,animation:"slideUp .2s" }}>
-                  <label style={{ display:"flex",alignItems:"center",gap:6,fontWeight:700,fontSize:".78rem",color:"#1158A6",marginBottom:8 }}>
+                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"16px",marginBottom:4,animation:"slideUp .2s" }}>
+                  <div style={{ display:"flex",alignItems:"center",gap:6,fontWeight:700,fontSize:".78rem",color:"#1158A6",marginBottom:12 }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     Pickup Address <span style={{color:"#EF4444"}}>*</span>
-                  </label>
-                  <AddressDetector value={loc.address} onChange={v=>sl("address",v)}/>
+                  </div>
+                  <div style={{ display:"grid",gap:10 }}>
+                    <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
+                      <BookingField label="House / Flat No." req placeholder="e.g. 4B, Plot 12" value={loc.houseNo||""} onChange={e=>sl("houseNo",e.target.value)}/>
+                      <BookingField label="Area / Street" req placeholder="e.g. Jubilee Hills" value={loc.area||""} onChange={e=>sl("area",e.target.value)}/>
+                    </div>
+                    <BookingField label="Nearby Landmark (optional)" placeholder="e.g. Near Apollo Hospital" value={loc.landmark||""} onChange={e=>sl("landmark",e.target.value)}/>
+                    <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
+                      <BookingField label="City" req placeholder="e.g. Hyderabad" value={loc.city||""} onChange={e=>sl("city",e.target.value)}/>
+                      <BookingField label="Pincode" req placeholder="6-digit PIN" value={loc.pincode||""} onChange={e=>sl("pincode",e.target.value.replace(/\D/g,"").slice(0,6))} type="tel"/>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -3417,7 +3438,7 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               {/* Booking summary */}
               <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 16px",marginBottom:12,border:"1px solid #EEF2FF" }}>
                 <div style={{ fontWeight:700,fontSize:".7rem",color:"#9CA3AF",letterSpacing:".07em",textTransform:"uppercase",marginBottom:10 }}>Booking Summary</div>
-                {[["Patient",form.name],["Phone",form.phone],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Collection",form.mode==="home"?"Home Collection":"Walk-in"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
+                {[["Patient",form.name],["Phone",form.phone],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Collection",form.mode==="home"?"Home Collection":"Walk-in"],form.mode==="home"&&["Address",[form.houseNo,form.area,form.landmark&&`Near ${form.landmark}`,form.city,form.pincode].filter(Boolean).join(', ')]].filter(Boolean).map(([l,v])=>(
                   <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #EEF2FF",fontSize:".82rem" }}>
                     <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
                     <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"60%",textAlign:"right",wordBreak:"break-word" }}>{v}</span>
@@ -3877,7 +3898,7 @@ export default function App() {
   const [homeF,  setHomeF]  = useState(false);
   const [nablF,  setNablF]  = useState(false);
   const [step,   setStep]   = useState(1);
-  const [form,   setForm]   = useState({ name:"",phone:"",email:"",age:"",date:"",slot:"",mode:"clinic",address:"" });
+  const [form,   setForm]   = useState({ name:"",phone:"",email:"",age:"",date:"",slot:"",mode:"clinic",address:"",houseNo:"",area:"",landmark:"",city:"",pincode:"" });
   const [done,   setDone]   = useState(null);
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
@@ -4017,7 +4038,25 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
   }, [cart]);
-  const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
+  const navTo = p => {
+    window.history.pushState({ page: p }, '', window.location.pathname);
+    setPage(p);
+    window.scrollTo(0, 0);
+    if (p !== "labs") setSelectedTest(null);
+  };
+  useEffect(() => {
+    const onPop = e => {
+      const pg = e.state?.page || "home";
+      setPage(pg);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("popstate", onPop);
+    // Push initial state so back from first page goes to home not away
+    if (!window.history.state?.page) {
+      window.history.replaceState({ page: "home" }, '', window.location.pathname);
+    }
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
@@ -4098,7 +4137,7 @@ export default function App() {
         patient_phone: form.phone,
         patient_age: form.age ? String(form.age) : null,
         patient_gender: form.gender || '',
-        address: form.address || '',
+        address: form.mode==="home" ? [form.houseNo,form.area,form.landmark&&`Near ${form.landmark}`,form.city,form.pincode].filter(Boolean).join(', ') : (form.address||''),
         slot_date: form.date || null,
         slot_time: form.slot || '',
         collection: form.mode,
@@ -4161,7 +4200,7 @@ export default function App() {
     tests: Array.isArray(el.tests) && el.tests.length > 0 ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}],
     reviews:      el.reviews || 0,
   })));
-  const lab = allLabs.find(l => l.id === labId) || null;
+  const lab = allLabs.find(l => l.id === labId) || allLabs.find(l => l.id === cart[0]?.lid) || null;
   const filtLabs = allLabs.filter(l=>{
     const q=labQ.toLowerCase();
     if(q && !l.name.toLowerCase().includes(q) && !l.address.toLowerCase().includes(q)) return false;
