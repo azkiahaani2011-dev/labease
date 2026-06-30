@@ -957,17 +957,26 @@ function Tests(props) {
 
 function LogoEditor(props) {
   var logo=props.logo, onChangeLogo=props.onChangeLogo;
-  var CSIZE=200;
+  var CSIZE=220;
   var sr=React.useState(null),rawSrc=sr[0],setRawSrc=sr[1];
   var sox=React.useState(0),offX=sox[0],setOffX=sox[1];
   var soy=React.useState(0),offY=soy[0],setOffY=soy[1];
   var sz=React.useState(1),zoom=sz[0],setZoom=sz[1];
   var sed=React.useState(false),editing=sed[0],setEditing=sed[1];
-  var sdg=React.useState(null),drag=sdg[0],setDrag=sdg[1];
+  // Use refs so event handlers always get latest values (no stale closure)
+  var offXRef=React.useRef(0),offYRef=React.useRef(0),zoomRef=React.useRef(1);
+  var dragRef=React.useRef(null),pinchDistRef=React.useRef(null);
+  offXRef.current=offX; offYRef.current=offY; zoomRef.current=zoom;
+
+  function clampZ(v){return Math.min(8,Math.max(0.05,v));}
   function onFileChange(ev){
     var file=ev.target.files[0]; if(!file)return;
     var reader=new FileReader();
-    reader.onload=function(e2){setRawSrc(e2.target.result);setOffX(0);setOffY(0);setZoom(1);setEditing(true);};
+    reader.onload=function(e2){
+      offXRef.current=0;offYRef.current=0;zoomRef.current=1;
+      setOffX(0);setOffY(0);setZoom(1);
+      setRawSrc(e2.target.result);setEditing(true);
+    };
     reader.readAsDataURL(file);
   }
   function apply(){
@@ -975,42 +984,93 @@ function LogoEditor(props) {
     canvas.width=CSIZE; canvas.height=CSIZE;
     var ctx=canvas.getContext('2d');
     ctx.fillStyle='#fff'; ctx.fillRect(0,0,CSIZE,CSIZE);
+    var ox=offXRef.current,oy=offYRef.current,z=zoomRef.current;
     var img=new Image();
     img.onload=function(){
       ctx.save();
-      ctx.translate(CSIZE/2+offX,CSIZE/2+offY);
-      ctx.scale(zoom,zoom);
+      ctx.translate(CSIZE/2+ox,CSIZE/2+oy);
+      ctx.scale(z,z);
       ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
       ctx.restore();
-      onChangeLogo(canvas.toDataURL('image/jpeg',0.88));
+      onChangeLogo(canvas.toDataURL('image/png'));
       setEditing(false); setRawSrc(null);
     };
     img.src=rawSrc;
   }
-  function onMD(ev){ev.preventDefault();setDrag({sx:ev.clientX,sy:ev.clientY,ox:offX,oy:offY});}
-  function onMM(ev){if(!drag)return;setOffX(drag.ox+ev.clientX-drag.sx);setOffY(drag.oy+ev.clientY-drag.sy);}
-  function onMU(){setDrag(null);}
-  function onTD(ev){var t=ev.touches[0];setDrag({sx:t.clientX,sy:t.clientY,ox:offX,oy:offY});}
-  function onTM(ev){if(!drag)return;ev.preventDefault();var t=ev.touches[0];setOffX(drag.ox+t.clientX-drag.sx);setOffY(drag.oy+t.clientY-drag.sy);}
-  function clampZ(v){return Math.min(1,Math.max(0.05,parseFloat(v.toFixed(2))));}
+  // Mouse
+  function onMD(ev){ev.preventDefault();dragRef.current={sx:ev.clientX,sy:ev.clientY,ox:offXRef.current,oy:offYRef.current};}
+  function onMM(ev){
+    if(!dragRef.current)return;
+    var nx=dragRef.current.ox+ev.clientX-dragRef.current.sx;
+    var ny=dragRef.current.oy+ev.clientY-dragRef.current.sy;
+    offXRef.current=nx;offYRef.current=ny;setOffX(nx);setOffY(ny);
+  }
+  function onMU(){dragRef.current=null;}
+  function onWheel(ev){
+    ev.preventDefault();
+    var nz=clampZ(zoomRef.current+(ev.deltaY>0?-0.08:0.08));
+    zoomRef.current=nz;setZoom(nz);
+  }
+  // Touch — single finger drag + two finger pinch
+  function getTouchDist(touches){
+    var dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+  function onTD(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1){
+      var t=ev.touches[0];
+      dragRef.current={sx:t.clientX,sy:t.clientY,ox:offXRef.current,oy:offYRef.current};
+      pinchDistRef.current=null;
+    } else if(ev.touches.length===2){
+      dragRef.current=null;
+      pinchDistRef.current=getTouchDist(ev.touches);
+    }
+  }
+  function onTM(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1&&dragRef.current){
+      var t=ev.touches[0];
+      var nx=dragRef.current.ox+t.clientX-dragRef.current.sx;
+      var ny=dragRef.current.oy+t.clientY-dragRef.current.sy;
+      offXRef.current=nx;offYRef.current=ny;setOffX(nx);setOffY(ny);
+    } else if(ev.touches.length===2&&pinchDistRef.current){
+      var dist=getTouchDist(ev.touches);
+      var nz=clampZ(zoomRef.current*(dist/pinchDistRef.current));
+      zoomRef.current=nz;setZoom(nz);
+      pinchDistRef.current=dist;
+    }
+  }
+  function onTE(){dragRef.current=null;pinchDistRef.current=null;}
+
   if(editing&&rawSrc){
     return (
       <div style={{marginBottom:16}}>
-        <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}}>Logo Editor — drag to reposition, slider or ± to zoom</label>
-        <div style={{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',cursor:drag?'grabbing':'grab',background:'#F3F4F6',position:'relative',userSelect:'none'}}
+        <div style={{fontSize:11,fontWeight:600,color:'#6B7280',marginBottom:6}}>
+          Logo Editor — 👆 drag · pinch to zoom · scroll wheel · ± buttons
+        </div>
+        <div style={{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',
+          cursor:'grab',background:'#F0F4FF',position:'relative',userSelect:'none',touchAction:'none'}}
           onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
-          onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onMU}>
-          <img src={rawSrc} style={{position:'absolute',left:'50%',top:'50%',transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'}} draggable={false} />
+          onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onTE}
+          onWheel={onWheel}>
+          <img src={rawSrc} style={{position:'absolute',left:'50%',top:'50%',
+            transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',
+            transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'}} draggable={false} />
+          <div style={{position:'absolute',inset:0,border:'1px dashed rgba(17,88,166,.3)',borderRadius:10,pointerEvents:'none'}}/>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10,marginBottom:10}}>
-          <span style={{fontSize:12,color:'#6B7280',fontWeight:600}}>Zoom</span>
-          <button onClick={function(){setZoom(function(z){return clampZ(z-0.1);});}} style={{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}}>-</button>
-          <input type="range" min="0.05" max="1" step="0.05" value={zoom} onChange={function(ev){setZoom(parseFloat(ev.target.value));}} style={{flex:1,accentColor:'#1158A6'}} />
-          <button onClick={function(){setZoom(function(z){return clampZ(z+0.1);});}} style={{width:30,height:30,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:18,cursor:'pointer',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',padding:0}}>+</button>
-          <span style={{fontSize:12,color:'#6B7280',minWidth:40,textAlign:'right'}}>{Math.round(zoom*100)}%</span>
+          <button onClick={function(){var nz=clampZ(zoomRef.current-0.1);zoomRef.current=nz;setZoom(nz);}}
+            style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,padding:0,flexShrink:0}}>−</button>
+          <input type="range" min="0.05" max="8" step="0.05" value={zoom}
+            onChange={function(ev){var nz=parseFloat(ev.target.value);zoomRef.current=nz;setZoom(nz);}}
+            style={{flex:1,accentColor:'#1158A6'}} />
+          <button onClick={function(){var nz=clampZ(zoomRef.current+0.1);zoomRef.current=nz;setZoom(nz);}}
+            style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,padding:0,flexShrink:0}}>+</button>
+          <span style={{fontSize:12,color:'#6B7280',minWidth:44,textAlign:'right',fontWeight:600}}>{Math.round(zoom*100)}%</span>
         </div>
         <div style={{display:'flex',gap:8}}>
-          <button className="btn btn-primary btn-sm" onClick={apply}>Apply Logo</button>
+          <button className="btn btn-primary btn-sm" onClick={apply}>✓ Apply Logo</button>
           <button className="btn btn-outline btn-sm" onClick={function(){setEditing(false);setRawSrc(null);}}>Cancel</button>
         </div>
       </div>
@@ -1211,18 +1271,21 @@ function TrustedLogos() {
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
   var se=useState(null),editing=se[0],setEditing=se[1]; // id being edited
   var sn=useState(''),newName=sn[0],setNewName=sn[1];
-  var snl=useState(null),newLogo=snl[0],setNewLogo=snl[1]; // b64 for new entry
+  var snl=useState(null),newLogo=snl[0],setNewLogo=snl[1];
   var sen=useState(''),editName=sen[0],setEditName=sen[1];
-  var sel=useState(null),editLogo=sel[0],setEditLogo=sel[1]; // b64 for edit
-  var sew=useState(false),editingLogoFor=sew[0],setEditingLogoFor=sew[1]; // editing logo for existing entry
-  var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1]; // 'new' or id
+  var sel=useState(null),editLogo=sel[0],setEditLogo=sel[1];
+  var sew=useState(false),editingLogoFor=sew[0],setEditingLogoFor=sew[1];
+  var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
+  var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
 
   function save(next){setLogos(next);localStorage.setItem('le_marquee_logos',JSON.stringify(next));}
 
   function addNew(){
-    if(!newName.trim()||!newLogo){return;}
+    if(!newLogo){setSaveErr('Please upload a logo first.');return;}
+    setSaveErr('');
     var id='custom_'+Date.now();
-    save(logos.concat([{id:id,name:newName.trim(),src:'',b64:newLogo}]));
+    var name=newName.trim()||'Partner Lab';
+    save(logos.concat([{id:id,name:name,src:'',b64:newLogo}]));
     setNewName('');setNewLogo(null);setAdding(false);setAddingLogoFor(null);
   }
   function remove(id){save(logos.filter(function(l){return l.id!==id;}));}
@@ -1266,9 +1329,12 @@ function TrustedLogos() {
             </div>
           )}
           {addingLogoFor!=='new' && (
-            <div style={{display:'flex',gap:8,marginTop:8}}>
-              <button className="btn btn-primary btn-sm" onClick={addNew} style={{opacity:(!newName.trim()||!newLogo)?0.5:1}}>Save</button>
-              <button className="btn btn-outline btn-sm" onClick={function(){setAdding(false);setAddingLogoFor(null);setNewName('');setNewLogo(null);}}>Cancel</button>
+            <div style={{marginTop:8}}>
+              {saveErr&&<div style={{background:'#FEF2F2',color:'#DC2626',fontSize:12,padding:'7px 12px',borderRadius:8,marginBottom:8,fontWeight:600}}>{saveErr}</div>}
+              <div style={{display:'flex',gap:8}}>
+                <button className="btn btn-primary btn-sm" onClick={addNew}>Save</button>
+                <button className="btn btn-outline btn-sm" onClick={function(){setAdding(false);setAddingLogoFor(null);setNewName('');setNewLogo(null);setSaveErr('');}}>Cancel</button>
+              </div>
             </div>
           )}
         </div>
