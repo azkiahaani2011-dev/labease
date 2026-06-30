@@ -666,6 +666,10 @@ function Labs(props) {
     // lab name override for original labs
     var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
     lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
+    var tov={};try{tov=JSON.parse(localStorage.getItem('le_timing_overrides')||'{}');}catch(e){}
+    tov[id]=form.timing||''; localStorage.setItem('le_timing_overrides',JSON.stringify(tov));
+    var stov={};try{stov=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
+    stov[id]=form.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov));
     saveTimingToSupabase(id, form.timing||'', form.sunday_timing||'');
     setEditing(null);
   }

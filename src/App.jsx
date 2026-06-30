@@ -3270,8 +3270,8 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
         {/* Header */}
         <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:20 }}>
-          <button onClick={()=>navTo("lab")} style={{ background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:10,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+          <button onClick={()=>navTo(lab?"lab":"labs")} style={{ background:"none",border:"none",width:32,height:32,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,padding:0 }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <div>
             <div style={{ fontWeight:800,fontSize:"1.1rem",color:"#0D1117" }}>Book Test</div>
@@ -3312,20 +3312,19 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   <BookingField label="Phone" req type="tel" placeholder="+91 XXXXXXXXXX" value={loc.phone} onChange={e=>sl("phone",e.target.value)}/>
                   <BookingField label="Email" req type="email" placeholder="email@example.com" value={loc.email} onChange={e=>sl("email",e.target.value)}/>
                 </div>
-                <BookingField label="Age &amp; Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
+                <BookingField label="Age &amp; Gender (optional)" placeholder="34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
               </div>
 
               {/* Collection toggle */}
               <div style={{ fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:10 }}>Sample Collection <span style={{color:"#EF4444"}}>*</span></div>
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14 }}>
-                {[["clinic","🏥","Walk-in","Visit the lab"],["home","🏠","Home Collection","We come to you"]].map(([mode,icon,title,sub])=>{
+                {[["clinic","Walk-in","Visit the lab"],["home","Home Collection","We come to you"]].map(([mode,title,sub])=>{
                   const sel=loc.mode===mode;
                   return (
                     <div key={mode} onClick={()=>setLoc(f=>({...f,mode,address:mode==="clinic"?"":f.address}))}
-                      style={{ borderRadius:14,border:`2px solid ${sel?"#1158A6":"#E5E7EB"}`,padding:"14px 12px",cursor:"pointer",background:sel?"#EFF6FF":"#FAFAFA",transition:"all .15s",textAlign:"center" }}>
-                      <div style={{ fontSize:"1.4rem",marginBottom:4 }}>{icon}</div>
-                      <div style={{ fontWeight:800,fontSize:".82rem",color:sel?"#1158A6":"#0D1117" }}>{title}</div>
-                      <div style={{ fontSize:".68rem",color:"#9CA3AF",marginTop:2 }}>{sub}</div>
+                      style={{ borderRadius:14,border:`2px solid ${sel?"#1158A6":"#E5E7EB"}`,padding:"16px 12px",cursor:"pointer",background:sel?"#EFF6FF":"#FAFAFA",transition:"all .15s",textAlign:"center" }}>
+                      <div style={{ fontWeight:800,fontSize:".85rem",color:sel?"#1158A6":"#0D1117" }}>{title}</div>
+                      <div style={{ fontSize:".7rem",color:"#9CA3AF",marginTop:3 }}>{sub}</div>
                     </div>
                   );
                 })}
@@ -3339,13 +3338,13 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   </div>
                   <div style={{ display:"grid",gap:10 }}>
                     <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
-                      <BookingField label="House / Flat No." req placeholder="e.g. 4B, Plot 12" value={loc.houseNo||""} onChange={e=>sl("houseNo",e.target.value)}/>
-                      <BookingField label="Area / Street" req placeholder="e.g. Jubilee Hills" value={loc.area||""} onChange={e=>sl("area",e.target.value)}/>
+                      <BookingField label="House / Flat No." req placeholder="4B / Plot 12" value={loc.houseNo||""} onChange={e=>sl("houseNo",e.target.value)}/>
+                      <BookingField label="Area / Street" req placeholder="Jubilee Hills" value={loc.area||""} onChange={e=>sl("area",e.target.value)}/>
                     </div>
-                    <BookingField label="Nearby Landmark (optional)" placeholder="e.g. Near Apollo Hospital" value={loc.landmark||""} onChange={e=>sl("landmark",e.target.value)}/>
+                    <BookingField label="Nearby Landmark (optional)" placeholder="Near Apollo Hospital" value={loc.landmark||""} onChange={e=>sl("landmark",e.target.value)}/>
                     <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
-                      <BookingField label="City" req placeholder="e.g. Hyderabad" value={loc.city||""} onChange={e=>sl("city",e.target.value)}/>
-                      <BookingField label="Pincode" req placeholder="6-digit PIN" value={loc.pincode||""} onChange={e=>sl("pincode",e.target.value.replace(/\D/g,"").slice(0,6))} type="tel"/>
+                      <BookingField label="City" req placeholder="Hyderabad" value={loc.city||""} onChange={e=>sl("city",e.target.value)}/>
+                      <BookingField label="Pincode" req placeholder="500 001" value={loc.pincode||""} onChange={e=>sl("pincode",e.target.value.replace(/\D/g,"").slice(0,6))} type="tel"/>
                     </div>
                   </div>
                 </div>
@@ -3926,7 +3925,7 @@ export default function App() {
   // Trigger re-render when admin panel updates localStorage (cross-tab)
   const [, setOvTick] = useState(0);
   useEffect(() => {
-    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'];
+    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs','le_timing_overrides','le_sunday_timing_overrides'];
     const handler = (e) => { if (keys.includes(e.key)) setOvTick(n => n + 1); };
     window.addEventListener('storage', handler);
     // Poll only when data actually changes — avoids re-render every tick (which breaks inputs)
@@ -3944,8 +3943,8 @@ export default function App() {
         prices:          JSON.parse(localStorage.getItem('le_price_overrides')            || '{}'),
         testNames:       JSON.parse(localStorage.getItem('le_test_name_overrides')         || '{}'),
         labNames:        JSON.parse(localStorage.getItem('le_lab_name_overrides')          || '{}'),
-        timings:         {},
-        sundayTimings:   {},
+        timings:       JSON.parse(localStorage.getItem('le_timing_overrides')        || '{}'),
+        sundayTimings: JSON.parse(localStorage.getItem('le_sunday_timing_overrides') || '{}'),
         labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
         extraLabs: (() => {
           // Read from le_extra_labs first; fall back to reading new IDs from le_labs
@@ -4180,8 +4179,8 @@ export default function App() {
       active:       adminOv.labStatus[lab.id] !== undefined ? adminOv.labStatus[lab.id] : lab.active,
       name:         adminOv.labNames[lab.id]   !== undefined ? adminOv.labNames[lab.id]  : lab.name,
       logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
-      timing:       labSettings[String(lab.id)]?.timing        || lab.timing,
-      sunday_timing:labSettings[String(lab.id)]?.sunday_timing || lab.sunday_timing || '',
+      timing:       labSettings[String(lab.id)]?.timing        || adminOv.timings[lab.id]       || lab.timing,
+      sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
       tests,
     };
   }).concat(sbExtraLabs.map(el => ({
@@ -4189,8 +4188,8 @@ export default function App() {
     active:       el.active !== false,
     address:      el.address || el.city || '',
     distance:     el.distance || '—',
-    timing:       el.timing || '6:00 AM – 10:00 PM',
-    sunday_timing:el.sunday_timing || '',
+    timing:       labSettings[String(el.id)]?.timing        || adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
+    sunday_timing:labSettings[String(el.id)]?.sunday_timing || adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
