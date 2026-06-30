@@ -3315,6 +3315,8 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                 const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
                 const [slotQuery, setSlotQuery] = [bkSlotQuery, setBkSlotQuery];
                 const displayTiming = isSunday && lab?.sunday_timing ? lab.sunday_timing : lab?.timing;
+                /* DEBUG — remove after testing */
+                console.log('[SLOTS DEBUG]', {labId: lab?.id, labName: lab?.name, weekdayTiming: lab?.timing, sundayTiming: lab?.sunday_timing, isSunday, selectedDate: loc.date, firstSlot: LAB_SLOTS[0], lastSlot: LAB_SLOTS[LAB_SLOTS.length-1], totalSlots: LAB_SLOTS.length});
                 const query = slotQuery || '';
                 const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
                 const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
