@@ -1291,10 +1291,11 @@ function slotsFromTiming(timing) {
   const startMin = to24(s.h, sp) * 60 + s.min;
   const endMin   = to24(e.h, ep) * 60 + e.min;
   if (endMin <= startMin) return TIME_SLOTS;
-  // Start at the first full hour that is >= opening time
+  // First full hour >= opening; last full hour <= closing (include closing hour as valid slot)
   const firstSlot = Math.ceil(startMin / 60) * 60;
+  const lastSlot  = Math.floor(endMin / 60) * 60;
   const slots = [];
-  for (let m = firstSlot; m < endMin; m += 60) {
+  for (let m = firstSlot; m <= lastSlot; m += 60) {
     const h24 = Math.floor(m / 60);
     const period = h24 < 12 ? 'AM' : 'PM';
     const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
@@ -3299,44 +3300,37 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
               </div>
               {(()=>{
                 const [slotFocus, setSlotFocus] = [bkSlotFocus, setBkSlotFocus];
+                const displayTiming = isSunday && lab?.sunday_timing ? lab.sunday_timing : lab?.timing;
                 const filtered = LAB_SLOTS.filter(s => !loc.slot || s.toLowerCase().includes(loc.slot.toLowerCase()));
+                const slotOutOfRange = loc.slot && LAB_SLOTS.length > 0 && !LAB_SLOTS.includes(loc.slot);
                 return (
                   <div>
-                    <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:8,color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
-                    <div style={{ position:"relative" }}>
-                      {/* Input bar */}
-                      <div style={{ display:"flex",alignItems:"center",background:"#fff",border:`1.5px solid ${slotFocus?"#1158A6":"#E2E8F0"}`,borderRadius:10,padding:"0 14px",boxShadow:slotFocus?"0 0 0 3px rgba(17,88,166,.1)":"0 1px 3px rgba(0,0,0,.05)",transition:"all .18s" }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={slotFocus?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,transition:"stroke .18s" }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <input
-                          type="text"
-                          value={loc.slot||""}
-                          onChange={e=>setLoc(f=>({...f,slot:e.target.value}))}
-                          onFocus={()=>setSlotFocus(true)}
-                          onBlur={()=>setTimeout(()=>setSlotFocus(false),160)}
-                          placeholder="Type or pick a time — e.g. 9:00 AM"
-                          style={{ flex:1,border:"none",outline:"none",padding:"13px 10px",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:600,color:"#0D1117",background:"transparent",caretColor:"#1158A6" }}
-                        />
-                        {loc.slot&&<button onClick={()=>setLoc(f=>({...f,slot:""}))} style={{ background:"none",border:"none",cursor:"pointer",padding:4,color:"#9CA3AF",lineHeight:1,fontSize:15 }}>✕</button>}
-                      </div>
-                      {/* Dropdown */}
-                      {slotFocus&&(
-                        <div style={{ position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",border:"1.5px solid #E2E8F0",borderRadius:10,boxShadow:"0 8px 32px rgba(17,88,166,.13)",zIndex:200,overflow:"hidden" }}>
-                          <div style={{ padding:"8px 14px 6px",fontSize:".7rem",fontWeight:700,color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",borderBottom:"1px solid #F1F5F9" }}>Suggested slots</div>
-                          <div style={{ display:"flex",flexWrap:"wrap",gap:6,padding:"10px 12px 12px" }}>
-                            {(loc.slot ? filtered : LAB_SLOTS).map(s=>(
-                              <button key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setSlotFocus(false); }}
-                                style={{ padding:"7px 14px",borderRadius:6,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F8FAFC",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".78rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .12s",whiteSpace:"nowrap" }}
-                                onMouseEnter={e=>{ if(loc.slot!==s){ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.color="#1158A6"; } }}
-                                onMouseLeave={e=>{ if(loc.slot!==s){ e.currentTarget.style.background="#F8FAFC"; e.currentTarget.style.borderColor="#E5E7EB"; e.currentTarget.style.color="#374151"; } }}>
-                                {s}
-                              </button>
-                            ))}
-                            {loc.slot && filtered.length===0 && <span style={{ fontSize:".8rem",color:"#9CA3AF",padding:"4px 2px" }}>No match — your custom time will be used</span>}
-                          </div>
-                        </div>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8 }}>
+                      <label style={{ display:"block",fontWeight:700,fontSize:".78rem",color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
+                      {displayTiming && (
+                        <span style={{ fontSize:".68rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:6,padding:"2px 8px" }}>
+                          🕐 {isSunday?"Sunday":"Weekday"}: {displayTiming}
+                        </span>
                       )}
                     </div>
-                    {loc.slot&&!LAB_SLOTS.includes(loc.slot)&&<div style={{ marginTop:6,fontSize:".73rem",color:"#6B7280",display:"flex",alignItems:"center",gap:4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Custom time noted — lab will confirm availability</div>}
+                    {/* Slot chips — direct tap on mobile */}
+                    <div style={{ display:"flex",flexWrap:"wrap",gap:7,marginBottom:10 }}>
+                      {LAB_SLOTS.map(s=>{
+                        const sel = loc.slot===s;
+                        return (
+                          <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
+                            style={{ padding:"8px 14px",borderRadius:8,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":"#F8FAFC",color:sel?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .12s",whiteSpace:"nowrap" }}>
+                            {s}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {loc.slot && !LAB_SLOTS.includes(loc.slot) && (
+                      <div style={{ marginTop:4,fontSize:".73rem",color:"#DC2626",display:"flex",alignItems:"center",gap:4,background:"#FEF2F2",padding:"6px 10px",borderRadius:7 }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        This time is outside the lab's {isSunday?"Sunday":"weekday"} hours. Please select from the slots above.
+                      </div>
+                    )}
                   </div>
                 );
               })()}
