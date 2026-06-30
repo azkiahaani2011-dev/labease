@@ -1905,12 +1905,25 @@ const LabsNearMeSection = ({ T, navTo }) => {
    render. This fixes Add/Book buttons losing click handlers on cart updates.
 ────────────────────────────────────────────────────────────────────────── */
 
-function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) {
+function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, selectedTest, addCart }) {
   const minPrice = l.tests?.length ? Math.min(...l.tests.map(t=>t.price)) : null;
   const reportTime = l.reportTime || "24 hrs";
+
+  // When a test is pre-selected, clicking the card/Book Now auto-adds it and goes straight to booking
+  const handleBookDirect = (e) => {
+    if (!selectedTest || !addCart) return false;
+    e?.stopPropagation?.();
+    const match = l.tests.find(t => t.name.toLowerCase() === selectedTest.name.toLowerCase())
+      || l.tests.find(t => t.name.toLowerCase().includes(selectedTest.name.toLowerCase()) || selectedTest.name.toLowerCase().includes(t.name.toLowerCase()))
+      || l.tests.find(t => t.cat === selectedTest.cat)
+      || l.tests[0];
+    if (match) { addCart(l, match); navTo("booking"); return true; }
+    return false;
+  };
+
   return (
     <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}
-      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
+      onClick={(e)=>{ if(handleBookDirect(e)) return; setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
       <div style={{ padding:"20px 18px 18px" }}>
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
           <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
@@ -1960,7 +1973,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               {l.timing||"6AM – 10PM"}
             </div>
-            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+            <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
               style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
               onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
               onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
@@ -1970,10 +1983,10 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) 
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
             </div>
-            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
+            <button onClick={e=>{ if(handleBookDirect(e)) return; e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
               style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
+              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>{selectedTest ? "Book Now →" : "Book Now"}</button>
           </div>
         </div>
       </div>
@@ -2150,6 +2163,16 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         </div>
         </div>
         </div>
+        {selectedTest && (
+          <div style={{ margin:"0 16px 12px",background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:12,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12 }}>
+            <div>
+              <span style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase" }}>Selected Test</span>
+              <div style={{ fontWeight:800,color:"#0D1117",fontSize:".95rem",marginTop:2 }}>{selectedTest.name}</div>
+              <div style={{ fontSize:".76rem",color:"#6B7280",marginTop:2 }}>Tap "Book Now →" on any lab to book directly</div>
+            </div>
+            <button onClick={()=>setSelectedTest(null)} style={{ background:"none",border:"1px solid #CBD5E8",borderRadius:8,padding:"6px 12px",fontSize:".78rem",fontWeight:700,color:"#374151",cursor:"pointer",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>Clear ✕</button>
+          </div>
+        )}
         <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
           {loading && [0,1,2,3].map(i=><LabCardSkeleton key={i} delay={i*80}/>)}
           {!loading && filtered.length===0 && (
@@ -2159,7 +2182,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             </div>
           )}
           {!loading && filtered.map(l => (
-            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo}/>
+            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart}/>
           ))}
         </div>
       </div>
@@ -3890,6 +3913,60 @@ function FeaturesCarousel() {
   );
 }
 
+/* ─── PACKAGES PAGE ─────────────────────────────────────────────────────── */
+const ALL_PACKAGES = [
+  { title:"Full Body Checkup",   sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular",    badgeColor:"#EF4444", cat:"Packages" },
+  { title:"Diabetes Care",       sub:"12 Tests · Verified Partner",  price:399,  mrp:899,  off:56, badge:"55% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+  { title:"Heart Health",        sub:"22 Tests · Verified Partner",  price:1799, mrp:2999, off:40, badge:"Cardiology",      badgeColor:"#1158A6", cat:"Cardiac"  },
+  { title:"Thyroid Profile",     sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified",        badgeColor:"#0369A1", cat:"Thyroid"  },
+  { title:"Women's Wellness",    sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women",       badgeColor:"#9333EA", cat:"Packages" },
+  { title:"Senior Citizen",      sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+];
+
+function PackagesPage({ navTo, setSelectedTest }) {
+  return (
+    <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
+        <div style={{ maxWidth:760, margin:"0 auto", padding:"0 20px" }}>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:4,color:"#374151",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".9rem" }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+            Back
+          </button>
+          <h1 style={{ fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", letterSpacing:"-.03em", marginBottom:6, marginTop:8 }}>Health Packages</h1>
+          <p style={{ fontSize:".88rem", color:"#6B7280" }}>Comprehensive screening packages at transparent prices. All include home sample collection.</p>
+        </div>
+      </div>
+      <div style={{ maxWidth:760, margin:"0 auto", padding:"24px 20px 60px" }}>
+        {ALL_PACKAGES.map((pkg, i) => (
+          <div key={pkg.title} style={{ background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", marginBottom:16, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+            <div style={{ padding:"20px 20px 18px" }}>
+              <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, marginBottom:12 }}>
+                <div style={{ flex:1 }}>
+                  <span style={{ display:"inline-block", background:pkg.badgeColor, color:"#fff", borderRadius:6, padding:"2px 10px", fontSize:".65rem", fontWeight:800, letterSpacing:".05em", marginBottom:8 }}>{pkg.badge}</span>
+                  <h2 style={{ fontWeight:900, fontSize:"1.1rem", color:"#0D1117", marginBottom:4, letterSpacing:"-.02em" }}>{pkg.title}</h2>
+                  <p style={{ fontSize:".82rem", color:"#6B7280", margin:0 }}>{pkg.sub}</p>
+                </div>
+                <div style={{ textAlign:"right", flexShrink:0 }}>
+                  <div style={{ fontWeight:900, fontSize:"1.3rem", color:"#0D1117" }}>₹{pkg.price.toLocaleString()}</div>
+                  <div style={{ fontSize:".76rem", color:"#CBD5E1", textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</div>
+                  <div style={{ fontSize:".72rem", fontWeight:800, color:"#16A34A", marginTop:2 }}>{pkg.off}% OFF</div>
+                </div>
+              </div>
+              <button
+                onClick={()=>{ setSelectedTest({name:pkg.title, cat:pkg.cat}); navTo("labs"); }}
+                style={{ width:"100%", background:"#1158A6", color:"#fff", border:"none", borderRadius:10, padding:"13px", fontWeight:800, fontSize:".92rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif", letterSpacing:".02em" }}
+                onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                Book Now — ₹{pkg.price.toLocaleString()} →
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── ERROR BOUNDARY ────────────────────────────────────────────────────── */
 export class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { hasError: false }; }
@@ -3941,6 +4018,8 @@ export default function App() {
   const [sideMenu,    setSideMenu]   = useState(false);
   const [selectedTest, setSelectedTest] = useState(null); // {name, cat} when user clicks a specific test
   const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
+  const isMobileRef = useRef(isMobile);
+  isMobileRef.current = isMobile;
   useEffect(() => {
     const h = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", h);
@@ -4268,7 +4347,12 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      HOME PAGE
   ═══════════════════════════════════════════════════════════════ */
-  const Home = () => {
+  // useCallback gives Home a stable function reference across App re-renders,
+  // so React never unmounts+remounts the Home component on unrelated state changes
+  // (which caused hero animations to replay — the "loads twice" symptom).
+  // isMobile is the only mutable closure; we read it via isMobileRef.current.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const Home = useCallback(() => {
     const [q,setQ]       = useState("");
     const [faq,setFaq]   = useState(null);
     const [pkgMsg, setPkgMsg] = useState(false);
@@ -4287,8 +4371,8 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
+          <div style={{ maxWidth:isMobileRef.current?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
             {/* eyebrow pill */}
             <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
@@ -4351,7 +4435,7 @@ export default function App() {
               <p style={{ color:"#64748B",fontSize:".88rem",lineHeight:1.6 }}>Curated by India's top doctors. Comprehensive screening at unbeatable prices.</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6 }}>
-              <button onClick={()=>setPkgMsg(v=>!v)}
+              <button onClick={()=>navTo("packages")}
                 style={{ background:"transparent",color:"#1158A6",border:"1.5px solid #1158A6",borderRadius:50,padding:"12px 28px",fontWeight:700,fontSize:".86rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap",transition:"all .18s",minHeight:44,display:"flex",alignItems:"center",gap:8 }}
                 onMouseEnter={e=>{ e.currentTarget.style.background="#EFF6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}
@@ -4359,7 +4443,6 @@ export default function App() {
                 onMouseUp={e=>{ e.currentTarget.style.background="#EFF6FF"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.transform="scale(1)"; }}>
                 View All Packages →
               </button>
-              {pkgMsg && <span style={{ fontSize:".76rem",color:"#64748B",fontWeight:600,background:"#F1F5F9",borderRadius:8,padding:"4px 12px",whiteSpace:"nowrap" }}>Only 6 packages available</span>}
             </div>
           </div>
 
@@ -4702,7 +4785,8 @@ export default function App() {
       </footer>
     </div>
     );
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ─── POLICY PAGE ───────────────────────────────────────────── */
   const PolicyPage = ({ title, content, navTo }) => (
@@ -5294,6 +5378,7 @@ export default function App() {
         ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
         ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
       ]}/>}
+      {page==="packages" && <PackagesPage navTo={navTo} setSelectedTest={setSelectedTest}/>}
       {page==="seo-blood-test-at-home" && <BloodTestAtHome navTo={navTo}/>}
       {page==="seo-cbc-test" && <CbcTest navTo={navTo}/>}
       {page==="seo-thyroid-profile-test" && <ThyroidTest navTo={navTo}/>}
