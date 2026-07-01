@@ -4228,11 +4228,11 @@ function FeaturesCarousel() {
     );
   };
 
-  // Desktop: both slides side by side, no carousel
+  // Desktop: both slides side by side, no carousel — same max-width as PromoCarousel above
   if (isDesk) {
     return (
       <section style={{ padding:"32px 0 28px", background:"#EBF0FA" }}>
-        <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
+        <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
             <SlideWhy/><SlideFeatures/>
           </div>
@@ -5149,33 +5149,6 @@ export default function App() {
     <LabCardML l={l} T={T} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} navTo={navTo}/>
   );
 
-  /* ═══════════════════════════════════════════════════════════════
-     LABS LIST PAGE — shim
-  ═══════════════════════════════════════════════════════════════ */
-  const LabsPage = () => {
-    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>;
-    return (
-      <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
-        setTestQ={setTestQ} navTo={navTo} cart={cart}
-        selectedTest={selectedTest} setSelectedTest={setSelectedTest}
-        addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}
-        isDesktop={isDesktop} cartSlot={cartSlot}/>
-    );
-  };
-
-  /* ═══════════════════════════════════════════════════════════════
-     LAB DETAIL PAGE — shim
-  ═══════════════════════════════════════════════════════════════ */
-  const LabDetail = () => {
-    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>;
-    return (
-      <LabDetailML lab={lab} T={T} cart={cart} total={total}
-        testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
-        filtTests={filtTests} addCart={addCart} delCart={delCart}
-        has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}
-        isDesktop={isDesktop} cartSlot={cartSlot}/>
-    );
-  };
 
   /* ═══════════════════════════════════════════════════════════════
      CART PAGE
@@ -5723,10 +5696,20 @@ export default function App() {
 
       <div key={page} className="page-enter">
       {page==="home"    && <Home/>}
-      {page==="labs"    && <LabsPage/>}
+      {page==="labs"    && <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
+          setTestQ={setTestQ} navTo={navTo} cart={cart}
+          selectedTest={selectedTest} setSelectedTest={setSelectedTest}
+          addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}
+          isDesktop={isDesktop}
+          cartSlot={<DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>}/>}
       {page==="alltests" && <AllTestsPage setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>}
       {page==="nearme"  && <NearMePage/>}
-      {page==="lab"     && <LabDetail/>}
+      {page==="lab"     && <LabDetailML lab={lab} T={T} cart={cart} total={total}
+          testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
+          filtTests={filtTests} addCart={addCart} delCart={delCart}
+          has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}
+          isDesktop={isDesktop}
+          cartSlot={<DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>}/>}
       {page==="cart"    && <CartPage/>}
       {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>}
       {page==="confirm" && <Confirm/>}
