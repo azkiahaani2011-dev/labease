@@ -5667,45 +5667,23 @@ export default function App() {
                     </div>
                   ))}
 
-                  {/* About This Test — always visible, no accordion */}
-                  {cart.some(item=>getTestInfo(item.tname)) && (
-                    <div style={{ marginTop:16 }}>
-                      <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:10 }}>
-                        <span style={{ fontSize:"1rem" }}>🧬</span>
-                        <span style={{ fontWeight:800,fontSize:".88rem",color:"#1158A6" }}>About This Test</span>
+                  {/* About This Test — plain text with left border, like the image */}
+                  {cart.map(item=>{
+                    const info = getTestInfo(item.tname);
+                    if (!info) return null;
+                    return (
+                      <div key={item.tid} style={{ marginTop:18 }}>
+                        <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:12,marginBottom:14 }}>
+                          <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6 }}>What Is {item.tname}?</div>
+                          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75 }}>{info.what}</div>
+                        </div>
+                        <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:12 }}>
+                          <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6 }}>Why Is This Test Done?</div>
+                          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75 }}>{info.why}</div>
+                        </div>
                       </div>
-                      <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-                        {cart.map(item=>{
-                          const info = getTestInfo(item.tname);
-                          if (!info) return null;
-                          return (
-                            <div key={item.tid} style={{ borderRadius:12,overflow:"hidden",border:"1px solid #BFDBFE",background:"#fff" }}>
-                              <div style={{ background:"linear-gradient(90deg,#EFF6FF,#F0F9FF)",padding:"9px 14px",borderBottom:"1px solid #BFDBFE",display:"flex",alignItems:"center",gap:6 }}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="#1158A6"/></svg>
-                                <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6" }}>{item.tname}</span>
-                              </div>
-                              <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
-                                <div style={{ display:"flex",gap:10 }}>
-                                  <div style={{ width:3,borderRadius:4,background:"#BFDBFE",flexShrink:0 }}/>
-                                  <div>
-                                    <div style={{ fontWeight:700,fontSize:".72rem",color:"#1158A6",marginBottom:3,textTransform:"uppercase",letterSpacing:".06em" }}>What is this test?</div>
-                                    <div style={{ fontSize:".8rem",color:"#4B5563",lineHeight:1.65 }}>{info.what}</div>
-                                  </div>
-                                </div>
-                                <div style={{ display:"flex",gap:10 }}>
-                                  <div style={{ width:3,borderRadius:4,background:"#6EE7B7",flexShrink:0 }}/>
-                                  <div>
-                                    <div style={{ fontWeight:700,fontSize:".72rem",color:"#059669",marginBottom:3,textTransform:"uppercase",letterSpacing:".06em" }}>Why is this test done?</div>
-                                    <div style={{ fontSize:".8rem",color:"#4B5563",lineHeight:1.65 }}>{info.why}</div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })}
 
                   {/* Preparation Guide — separate section */}
                   <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
