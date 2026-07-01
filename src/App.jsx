@@ -1976,14 +1976,22 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
   const minPrice = l.tests?.length ? Math.min(...l.tests.map(t=>t.price)) : null;
   const reportTime = l.reportTime || "24 hrs";
 
+  // Find the matching test for the selected test in this lab
+  const matchedTest = selectedTest ? (
+    l.tests.find(t => t.name.toLowerCase() === selectedTest.name.toLowerCase())
+    || l.tests.find(t => t.name.toLowerCase().includes(selectedTest.name.toLowerCase()) || selectedTest.name.toLowerCase().includes(t.name.toLowerCase()))
+    || l.tests.find(t => t.cat === selectedTest.cat)
+  ) : null;
+
+  // Price to show: matched test price if a test is selected, else min price
+  const displayPrice = matchedTest ? matchedTest.price : minPrice;
+  const displayLabel = matchedTest ? matchedTest.name : null;
+
   // When a test is pre-selected, clicking the card/Book Now auto-adds it and goes straight to booking
   const handleBookDirect = (e) => {
     if (!selectedTest || !addCart) return false;
     e?.stopPropagation?.();
-    const match = l.tests.find(t => t.name.toLowerCase() === selectedTest.name.toLowerCase())
-      || l.tests.find(t => t.name.toLowerCase().includes(selectedTest.name.toLowerCase()) || selectedTest.name.toLowerCase().includes(t.name.toLowerCase()))
-      || l.tests.find(t => t.cat === selectedTest.cat)
-      || l.tests[0];
+    const match = matchedTest || l.tests[0];
     if (match) { addCart(l, match); navTo("booking"); return true; }
     return false;
   };
@@ -2028,9 +2036,18 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
           <span style={{ color:"#6B7280" }}>{l.city}</span>
         </div>
-        <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
-          ~₹{minPrice?.toLocaleString()}
-          <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
+        <div style={{ marginBottom:14 }}>
+          {displayLabel && (
+            <div style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,color:"#1158A6",marginBottom:6 }}>
+              🔬 {displayLabel}
+            </div>
+          )}
+          <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117" }}>
+            ₹{displayPrice?.toLocaleString()}
+            <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>
+              {displayLabel ? "for this test" : "Starting Price"}
+            </span>
+          </div>
         </div>
         <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
         <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
