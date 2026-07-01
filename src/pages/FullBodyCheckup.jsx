@@ -30,7 +30,7 @@ export default function FullBodyCheckup({ navTo }) {
   useSEO({
     title: "Full Body Checkup – 60+ Tests | Book Health Package | LabEase",
     description:
-      "Book Full Body Checkup from ₹999. 60+ tests: CBC, thyroid, diabetes, liver, kidney & vitamins. Home collection. NABL labs. Same-day reports.",
+      "Book Full Body Checkup from ₹999. 60+ tests: CBC, thyroid, diabetes, liver, kidney & vitamins. Home collection. verified labs. Same-day reports.",
     schema,
   });
 
@@ -59,7 +59,7 @@ export default function FullBodyCheckup({ navTo }) {
         Full Body Checkup – Complete Health Package with 60+ Tests
       </h1>
       <p style={{ color: "#6B7280", fontSize: "0.92rem", marginBottom: 20 }}>
-        Starting from ₹999 · 60+ parameters · Home collection · NABL labs
+        Starting from ₹999 · 60+ parameters · Home collection · verified labs
       </p>
 
       {/* Section 1 */}

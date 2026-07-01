@@ -7,7 +7,7 @@ const schema = {
       "@type": "MedicalWebPage",
       name: "Blood Test at Home in Hyderabad | LabEase Home Collection",
       description:
-        "Book blood test at home in Hyderabad from ₹249. Phlebotomist at your door. NABL labs, same-day reports.",
+        "Book blood test at home in Hyderabad from ₹249. Phlebotomist at your door. verified labs, same-day reports.",
       medicalAudience: "Patient",
     },
     {
@@ -61,7 +61,7 @@ export default function BloodTestHyderabad({ navTo }) {
   useSEO({
     title: "Blood Test at Home in Hyderabad | LabEase Home Collection",
     description:
-      "Book blood test at home in Hyderabad from ₹249. Phlebotomist at your door. NABL labs, same-day reports. Banjara Hills, Jubilee Hills & all areas.",
+      "Book blood test at home in Hyderabad from ₹249. Phlebotomist at your door. verified labs, same-day reports. Banjara Hills, Jubilee Hills & all areas.",
     schema,
   });
 
@@ -87,7 +87,7 @@ export default function BloodTestHyderabad({ navTo }) {
       {/* Section 1 */}
       <SectionHeading>Why Choose LabEase in Hyderabad?</SectionHeading>
       <ul style={{ color: "#374151", lineHeight: 1.9, paddingLeft: 0, marginBottom: 16, listStyle: "none" }}>
-        <li>✅ <strong>NABL-certified labs</strong> across Hyderabad with accurate, trusted reports</li>
+        <li>✅ <strong>verified labs</strong> across Hyderabad with accurate, trusted reports</li>
         <li>✅ <strong>Trained, verified phlebotomists</strong> who arrive at your doorstep on time</li>
         <li>✅ <strong>Same-day reports</strong> delivered digitally via WhatsApp or email</li>
         <li>✅ <strong>No extra charges</strong> for home sample collection on most tests</li>
@@ -184,8 +184,8 @@ export default function BloodTestHyderabad({ navTo }) {
             a: "The earliest slot in Hyderabad starts at 6:00 AM, which is ideal for fasting tests like blood sugar and lipid profile. Slots continue through the day until 8:00 PM, seven days a week, including weekends and public holidays.",
           },
           {
-            q: "Are the labs NABL-certified in Hyderabad?",
-            a: "Yes. All LabEase partner labs in Hyderabad are NABL (National Accreditation Board for Testing and Calibration Laboratories) accredited, ensuring accurate and internationally recognised results trusted by hospitals and doctors across the city.",
+            q: "Are the labs verified in Hyderabad?",
+            a: "Yes. All LabEase partner labs in Hyderabad are verified, ensuring accurate and internationally recognised results trusted by hospitals and doctors across the city.",
           },
           {
             q: "Is there an extra charge for home collection in Hyderabad?",
@@ -197,7 +197,7 @@ export default function BloodTestHyderabad({ navTo }) {
           },
           {
             q: "How do I get my report after the test?",
-            a: "Once your sample is processed at the NABL-certified lab, your report is sent digitally via WhatsApp and email — typically the same day for most tests, and within 24 hours for specialised tests like Vitamin D or B12.",
+            a: "Once your sample is processed at the verified lab, your report is sent digitally via WhatsApp and email — typically the same day for most tests, and within 24 hours for specialised tests like Vitamin D or B12.",
           },
         ]}
       />

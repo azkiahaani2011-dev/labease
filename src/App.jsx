@@ -5904,15 +5904,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Key numbers */}
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24 }}>
-                {[["50+","Partner Labs"],["500+","Tests Available"],["10+","Cities Served"],["10,000+","Happy Patients"]].map(([n,l])=>(
-                  <div key={l} style={{ background:"#EFF6FF",borderRadius:14,padding:"16px 18px",textAlign:"center",border:"1px solid #DBEAFE" }}>
-                    <div style={{ fontWeight:900,fontSize:"1.5rem",color:"#1158A6",lineHeight:1 }}>{n}</div>
-                    <div style={{ fontSize:".75rem",color:"#6B7280",fontWeight:600,marginTop:4 }}>{l}</div>
-                  </div>
-                ))}
-              </div>
 
               {/* Values */}
               <div style={{ marginBottom:24 }}>
@@ -5922,7 +5913,7 @@ export default function App() {
                 <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
                   {[
                     ["🔍","Transparency","Real prices. No hidden fees. Ever."],
-                    ["✅","Accuracy","Only NABL-accredited and verified partner labs."],
+                    ["✅","Accuracy","Only verified partner labs with trusted, accurate results."],
                     ["⚡","Convenience","Book in under 2 minutes, sample collected at home."],
                     ["🤝","Trust","Your health data is private and always secure."],
                   ].map(([icon,title,desc])=>(

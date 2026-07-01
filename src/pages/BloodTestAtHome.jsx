@@ -7,7 +7,7 @@ const schema = {
       "@type": "MedicalWebPage",
       name: "Blood Test at Home – Easy, Safe & Affordable",
       description:
-        "Book a blood test at home with LabEase. NABL-certified labs, trained phlebotomists, same-day reports.",
+        "Book a blood test at home with LabEase. verified labs, trained phlebotomists, same-day reports.",
       url: typeof window !== "undefined" ? window.location.href : "",
       medicalAudience: "Patient",
     },
@@ -39,7 +39,7 @@ export default function BloodTestAtHome({ navTo }) {
   useSEO({
     title: "Blood Test at Home – Book Home Sample Collection | LabEase",
     description:
-      "Book a blood test at home with LabEase. NABL-certified labs, trained phlebotomists, same-day reports. Easy online booking. No extra charges.",
+      "Book a blood test at home with LabEase. verified labs, trained phlebotomists, same-day reports. Easy online booking. No extra charges.",
     schema,
   });
 
@@ -59,14 +59,14 @@ export default function BloodTestAtHome({ navTo }) {
         Blood Test at Home – Easy, Safe &amp; Affordable
       </h1>
       <p style={{ color: "#6B7280", fontSize: "0.92rem", marginBottom: 20 }}>
-        Home sample collection · NABL-certified labs · Same-day reports
+        Home sample collection · verified labs · Same-day reports
       </p>
 
       {/* Section 1 */}
       <SectionHeading>What Is a Home Blood Test?</SectionHeading>
       <p style={{ color: "#374151", lineHeight: 1.7, marginBottom: 16 }}>
         A home blood test is exactly what it sounds like — a certified phlebotomist visits your
-        home, collects a small blood sample, and the sample is transported to a NABL-accredited
+        home, collects a small blood sample, and the sample is transported to a verified
         laboratory for analysis. You receive your report digitally, usually within a few hours.
         It eliminates hospital visits, long queues, and travel stress — making it ideal for
         working professionals, elderly patients, children, and anyone who values convenience.
@@ -112,7 +112,7 @@ export default function BloodTestAtHome({ navTo }) {
       {/* Section 4 */}
       <SectionHeading>Is It Safe?</SectionHeading>
       <ul style={{ color: "#374151", lineHeight: 1.8, paddingLeft: 22, marginBottom: 16 }}>
-        <li>All partner labs are <strong>NABL-accredited</strong>, ensuring the highest quality standards.</li>
+        <li>All partner labs are <strong>verified</strong>, ensuring the highest quality standards.</li>
         <li>Phlebotomists are <strong>trained, verified, and background-checked</strong> professionals.</li>
         <li>Only <strong>single-use, sterile needles and vacutainers</strong> are used — never reused.</li>
         <li>Samples are transported in <strong>temperature-controlled bio-safe containers</strong>.</li>
@@ -185,8 +185,8 @@ export default function BloodTestAtHome({ navTo }) {
             a: "Yes. You can add multiple tests to a single booking. The phlebotomist will collect all required samples in one visit, saving you time and the discomfort of multiple needle pricks wherever possible.",
           },
           {
-            q: "Are the labs NABL-certified?",
-            a: "Yes. LabEase partners exclusively with NABL (National Accreditation Board for Testing and Calibration Laboratories) accredited labs. This ensures your reports meet national quality standards and are accepted by all major hospitals and doctors.",
+            q: "Are the labs verified?",
+            a: "Yes. LabEase partners exclusively with verified partner labs. This ensures your reports meet national quality standards and are accepted by all major hospitals and doctors.",
           },
         ]}
       />

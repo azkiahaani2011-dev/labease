@@ -38,7 +38,7 @@ export default function CbcTest({ navTo }) {
   useSEO({
     title: "CBC Test – Complete Blood Count | Price & Normal Range | LabEase",
     description:
-      "Book CBC blood test from ₹249. Know CBC normal range, what it measures, and when doctors order it. Home collection available. NABL labs.",
+      "Book CBC blood test from ₹249. Know CBC normal range, what it measures, and when doctors order it. Home collection available. verified labs.",
     schema,
   });
 
