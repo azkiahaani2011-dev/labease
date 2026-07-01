@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LabEase Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #111827; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+  input, select, button { font-family: inherit; }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #0D1117; display: flex; flex-direction: column; z-index: 100; }
+  .main { margin-left: 240px; min-height: 100vh; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; cursor: pointer; color: #9CA3AF; font-size: 14px; font-weight: 500; transition: all .15s; margin: 2px 8px; }
+  .nav-item:hover { background: #161B22; color: #E5E7EB; }
+  .nav-item.active { background: #1158A6; color: #fff; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 1px rgba(0,0,0,.05); }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-blue { background: #EFF6FF; color: #1D4ED8; }
+  .badge-yellow { background: #FFFBEB; color: #B45309; }
+  .badge-green { background: #F0FDF4; color: #15803D; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+  .badge-grey { background: #F3F4F6; color: #6B7280; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #F9FAFB; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: .04em; padding: 12px 16px; text-align: left; }
+  td { padding: 13px 16px; font-size: 13.5px; color: #374151; border-top: 1px solid #F3F4F6; }
+  tr:hover td { background: #FAFAFA; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary { background: #1158A6; color: #fff; }
+  .btn-primary:hover { background: #0F4A8A; }
+  .btn-outline { background: #fff; color: #374151; border: 1px solid #E5E7EB; }
+  .btn-outline:hover { background: #F9FAFB; }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+  input[type=text], input[type=password], input[type=number], select { border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 12px; font-size: 13.5px; outline: none; transition: border .15s; background: #fff; color: #111827; }
+  input[type=text]:focus, input[type=password]:focus, input[type=number]:focus, select:focus { border-color: #1158A6; box-shadow: 0 0 0 3px rgba(17,88,166,.1); }
+  .progress-bar { height: 6px; border-radius: 3px; background: #E5E7EB; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+  .pill-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid #E5E7EB; background: #fff; color: #6B7280; transition: all .15s; }
+  .pill-btn.active { background: #1158A6; color: #fff; border-color: #1158A6; }
+  .pill-btn:hover:not(.active) { background: #F3F4F6; }
+  .lab-card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.07); padding: 20px; }
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0D1117 0%, #161B22 100%); }
+  .login-card { background: #fff; border-radius: 20px; padding: 40px; width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+  .top-bar { background: #fff; border-bottom: 1px solid #F3F4F6; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+function previewSlots(timing) {
+  if (!timing) return [];
+  var cleaned = timing.replace(/[–—]/g, '-');
+  var parts = cleaned.split(/\s+to\s+|-/i).map(function(s){return s.trim();}).filter(Boolean);
+  if (parts.length < 2) return [];
+  function extract(str) {
+    var m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if (!m || !m[1]) return null;
+    return { h: parseInt(m[1],10), min: parseInt(m[2]||'0',10), period: m[3]?m[3].toUpperCase():null };
+  }
+  function to24(h, period) { var hh=h; if(period==='PM'&&hh!==12) hh+=12; if(period==='AM'&&hh===12) hh=0; return hh; }
+  var s=extract(parts[0]); var e=extract(parts[1]);
+  if (!s||!e) return [];
+  var sp=s.period, ep=e.period;
+  if (!sp&&!ep){sp='AM';ep='PM';}
+  else if (!sp&&ep){ var same=to24(s.h,ep)*60+s.min<to24(e.h,ep)*60+e.min; sp=same?ep:(ep==='AM'?'PM':'AM'); }
+  else if (sp&&!ep){ep='PM';}
+  var startMin=to24(s.h,sp)*60+s.min; var endMin=to24(e.h,ep)*60+e.min;
+  if (endMin<=startMin) return [];
+  var firstSlot=Math.ceil(startMin/60)*60; var slots=[];
+  for (var m=firstSlot; m<endMin; m+=60) {
+    var h24=Math.floor(m/60); var period=h24<12?'AM':'PM'; var h12=h24===0?12:h24>12?h24-12:h24;
+    slots.push(h12+':00 '+period);
+  }
+  return slots;
+}
+
+function IconDash() {
+  return React.createElement('svg', {width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('rect',{x:3,y:3,width:7,height:7}),
+    React.createElement('rect',{x:14,y:3,width:7,height:7}),
+    React.createElement('rect',{x:14,y:14,width:7,height:7}),
+    React.createElement('rect',{x:3,y:14,width:7,height:7})
+  );
+}
+function IconBook() {
+  return React.createElement('svg', {width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'}),
+    React.createElement('path',{d:'M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'})
+  );
+}
+function IconLab() {
+  return React.createElement('svg', {width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11l-2 3h10l-2-3V3'})
+  );
+}
+function IconTest() {
+  return React.createElement('svg', {width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'}),
+    React.createElement('polyline',{points:'14 2 14 8 20 8'}),
+    React.createElement('line',{x1:9,y1:13,x2:15,y2:13}),
+    React.createElement('line',{x1:9,y1:17,x2:15,y2:17})
+  );
+}
+function IconLogout() {
+  return React.createElement('svg', {width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'}),
+    React.createElement('polyline',{points:'16 17 21 12 16 7'}),
+    React.createElement('line',{x1:21,y1:12,x2:9,y2:12})
+  );
+}
+function IconSearch() {
+  return React.createElement('svg', {width:15,height:15,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('circle',{cx:11,cy:11,r:8}),
+    React.createElement('line',{x1:21,y1:21,x2:'16.65',y2:'16.65'})
+  );
+}
+function IconEdit() {
+  return React.createElement('svg', {width:14,height:14,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'}),
+    React.createElement('path',{d:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'})
+  );
+}
+
+const PATIENTS = ['Rahul Sharma','Priya Patel','Arun Kumar','Sneha Reddy','Vikram Singh','Divya Nair','Karthik Rao','Ananya Joshi','Mohammed Ali','Sunita Verma'];
+const LAB_NAMES = ['Apollo Diagnostics','SRL Diagnostics','Metropolis Health','Dr Lal PathLabs','Thyrocare','Vijaya Diagnostics'];
+const TEST_NAMES = ['CBC','Lipid Profile','Thyroid Profile','HbA1c','Vitamin D','LFT','KFT','Urine Routine','Full Body Checkup','Dengue NS1'];
+const STATUSES = ['Confirmed','Sample Collected','Report Ready','Pending','Cancelled'];
+const PHONES = ['9876543210','9123456780','9988776655','9012345678','9871234560','9654321098','9543210987','9432109876','9321098765','9210987654'];
+const CITIES = ['Hyderabad','Bengaluru','Mumbai','Delhi','Chennai','Kolkata'];
+const MODES = ['Home','Clinic'];
+
+// Supabase client
+var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzIxNjcsImV4cCI6MjA2NjM0ODE2N30.0Q_1tkBdvJBygfwB01rAVMHqrQ7s89L2ZWHGpGqFM3k';
+var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
+var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+// Sync an admin override key to Supabase admin_settings so all devices update instantly
+// Write a setting directly to Supabase (no localStorage involved)
+function showSyncStatus(ok, msg) {
+  var el = document.getElementById('sync-status-toast');
+  if (!el) { el = document.createElement('div'); el.id='sync-status-toast'; Object.assign(el.style,{position:'fixed',bottom:24,right:24,zIndex:9999,padding:'10px 18px',borderRadius:10,fontFamily:'Manrope,sans-serif',fontWeight:700,fontSize:14,boxShadow:'0 4px 20px rgba(0,0,0,.18)',transition:'opacity .3s'}); document.body.appendChild(el); }
+  el.textContent = msg;
+  el.style.background = ok ? '#D1FAE5' : '#FEE2E2';
+  el.style.color = ok ? '#065F46' : '#991B1B';
+  el.style.border = ok ? '1.5px solid #6EE7B7' : '1.5px solid #FCA5A5';
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){ el.style.opacity='0'; }, ok ? 2000 : 6000);
+}
+function syncAdminSetting(key, value) {
+  if (!supaAdmin) { showSyncStatus(false, '❌ Supabase not connected — check credentials'); return; }
+  supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){
+    if (r.error) {
+      console.error('syncAdminSetting:', r.error);
+      showSyncStatus(false, '❌ Save failed: ' + (r.error.message || r.error.code || 'Unknown error — check Supabase setup'));
+    } else {
+      showSyncStatus(true, '✅ Saved to Supabase');
+    }
+  });
+}
+
+function saveTimingToSupabase(labId, timing, sundayTiming) {
+  if (!supaAdmin) return;
+  supaAdmin.from('lab_settings').upsert({ lab_id: String(labId), timing: timing||'', sunday_timing: sundayTiming||'', updated_at: new Date().toISOString() }).then(function(r){ if(r.error) console.error('saveTimingToSupabase:', r.error); });
+}
+
+function saveExtraLabToSupabase(lab, callback) {
+  if (!supaAdmin) { if(callback) callback(null); return; }
+  var row = {
+    name: lab.name, city: lab.city||'', address: lab.address||'', phone: lab.phone||'',
+    rating: parseFloat(lab.rating)||4.5, reviews: lab.reviews||0,
+    timing: lab.timing||'', sunday_timing: lab.sunday_timing||'',
+    report_time: lab.reportTime||lab.report_time||'Same Day',
+    home_collection: lab.homeCollection||false, nabl: lab.nabl||false,
+    color: lab.color||'#1158A6', logo_base64: lab.logoBase64||'',
+    tests: lab.tests||[], active: lab.active!==false,
+    distance: lab.distance||'—', founded: lab.founded||'',
+    updated_at: new Date().toISOString(),
+  };
+  supaAdmin.from('extra_labs').insert(row).select().single().then(function(r){
+    if(r.error) console.error('saveExtraLabToSupabase:', r.error);
+    if(callback) callback(r.data);
+  });
+}
+
+function updateExtraLabInSupabase(supabaseId, lab) {
+  if (!supaAdmin) return;
+  var row = {
+    name: lab.name, city: lab.city||'', address: lab.address||'', phone: lab.phone||'',
+    rating: parseFloat(lab.rating)||4.5,
+    timing: lab.timing||'', sunday_timing: lab.sunday_timing||'',
+    report_time: lab.reportTime||lab.report_time||'Same Day',
+    home_collection: lab.homeCollection||false, nabl: lab.nabl||false,
+    color: lab.color||'#1158A6', logo_base64: lab.logoBase64||'',
+    tests: lab.tests||[], active: lab.active!==false,
+    updated_at: new Date().toISOString(),
+  };
+  supaAdmin.from('extra_labs').update(row).eq('id', supabaseId).then(function(r){
+    if(r.error) console.error('updateExtraLabInSupabase:', r.error);
+    else saveTimingToSupabase(supabaseId, lab.timing||'', lab.sunday_timing||'');
+  });
+}
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function weekAgoStr(){var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10);}
+function monthAgoStr(){var d=new Date();d.setDate(d.getDate()-30);return d.toISOString().slice(0,10);}
+
+async function loadBookingsFromSupabase() {
+  if (!sb) return null;
+  try {
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending: false});
+    if (res.error) return null;
+    return res.data.map(function(b) {
+      var items = b.items || [];
+      return {
+        id: b.id,
+        patient: b.patient_name,
+        phone: b.patient_phone,
+        ref: b.booking_ref || b.id.slice(0,8).toUpperCase(),
+        test: items.length ? items.map(function(i){return i.tname||i.name||i.test||'Test';}).join(', ') : '—',
+        lab: b.lab_name || '—',
+        date: b.slot_date || b.created_at.slice(0,10),
+        mode: b.collection === 'home' ? 'Home' : 'Clinic',
+        amount: b.total,
+        status: b.status.charAt(0).toUpperCase() + b.status.slice(1),
+        raw: b,
+      };
+    });
+  } catch(e) { return null; }
+}
+
+async function updateBookingStatusInSupabase(id, status) {
+  if (!sb) return false;
+  try {
+    var res = await sb.from('bookings').update({status: status.toLowerCase()}).eq('id', id);
+    return !res.error;
+  } catch(e) { return false; }
+}
+
+function genBookings() {
+  const saved = localStorage.getItem('le_bookings');
+  if (saved) return JSON.parse(saved);
+  const prices = {'CBC':299,'Lipid Profile':599,'Thyroid Profile':799,'HbA1c':499,'Vitamin D':899,'LFT':799,'KFT':699,'Urine Routine':199,'Full Body Checkup':1999,'Dengue NS1':699};
+  const data = [];
+  for (let i = 0; i < 28; i++) {
+    const t = TEST_NAMES[i % 10];
+    const d = new Date(2024, 3 + Math.floor(i/5), (i % 27) + 1);
+    data.push({
+      id: 'LB' + (1000 + i),
+      patient: PATIENTS[i % 10],
+      phone: PHONES[i % 10],
+      test: t,
+      lab: LAB_NAMES[i % 6],
+      date: d.toISOString().slice(0,10),
+      mode: MODES[i % 2],
+      amount: prices[t],
+      status: STATUSES[i % 5],
+    });
+  }
+  localStorage.setItem('le_bookings', JSON.stringify(data));
+  return data;
+}
+
+function genLabs() {
+  const ratings = [4.7, 4.5, 4.6, 4.8, 4.3, 4.6];
+  const testCounts = [80, 65, 72, 90, 55, 68];
+  const phones = ['040-23456789','080-34567890','022-45678901','011-56789012','044-67890123','040-78901234'];
+  return LAB_NAMES.map(function(name, i) {
+    return { id: i+1, name: name, city: CITIES[i], rating: ratings[i], tests: testCounts[i], phone: phones[i], active: i !== 4 };
+  });
+}
+
+// All tests from the main app, keyed by test ID (labPrefix+num)
+// Structure: { testId, testName, labId, labName, cat, price, mrp }
+var ALL_LAB_TESTS = [
+  {id:'a1',name:'Complete Blood Count (CBC)',labId:1,lab:'Apollo',cat:'Blood',price:299,mrp:499},
+  {id:'a2',name:'Lipid Profile',labId:1,lab:'Apollo',cat:'Blood',price:499,mrp:799},
+  {id:'a3',name:'Thyroid Profile (T3,T4,TSH)',labId:1,lab:'Apollo',cat:'Thyroid',price:649,mrp:999},
+  {id:'a4',name:'HbA1c (Diabetes)',labId:1,lab:'Apollo',cat:'Diabetes',price:399,mrp:599},
+  {id:'a5',name:'Liver Function Test',labId:1,lab:'Apollo',cat:'Liver',price:549,mrp:849},
+  {id:'a6',name:'Kidney Function Test',labId:1,lab:'Apollo',cat:'Kidney',price:549,mrp:849},
+  {id:'a7',name:'Vitamin D (25-OH)',labId:1,lab:'Apollo',cat:'Vitamins',price:899,mrp:1299},
+  {id:'a8',name:'Vitamin B12',labId:1,lab:'Apollo',cat:'Vitamins',price:699,mrp:999},
+  {id:'a9',name:'Full Body Checkup',labId:1,lab:'Apollo',cat:'Packages',price:1999,mrp:3499},
+  {id:'a10',name:'COVID Antibody Test',labId:1,lab:'Apollo',cat:'COVID',price:799,mrp:1199},
+  {id:'a11',name:'Iron Studies',labId:1,lab:'Apollo',cat:'Blood',price:449,mrp:699},
+  {id:'a12',name:'CRP (Inflammation)',labId:1,lab:'Apollo',cat:'Blood',price:349,mrp:599},
+  {id:'b1',name:'Complete Blood Count (CBC)',labId:2,lab:'SRL',cat:'Blood',price:279,mrp:499},
+  {id:'b2',name:'Blood Sugar Fasting',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b3',name:'Blood Sugar Post-Prandial',labId:2,lab:'SRL',cat:'Diabetes',price:99,mrp:199},
+  {id:'b4',name:'Urine Routine & Microscopy',labId:2,lab:'SRL',cat:'Urine',price:149,mrp:299},
+  {id:'b5',name:'TSH (Thyroid Stimulating)',labId:2,lab:'SRL',cat:'Thyroid',price:299,mrp:499},
+  {id:'b6',name:'Iron Studies',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:699},
+  {id:'b7',name:'HbA1c',labId:2,lab:'SRL',cat:'Diabetes',price:349,mrp:599},
+  {id:'b8',name:'Dengue NS1 Antigen',labId:2,lab:'SRL',cat:'Infectious',price:699,mrp:999},
+  {id:'b9',name:'Comprehensive Health Package',labId:2,lab:'SRL',cat:'Packages',price:2499,mrp:4199},
+  {id:'b10',name:'Lipid Profile',labId:2,lab:'SRL',cat:'Blood',price:449,mrp:799},
+  {id:'b11',name:'Urine Culture & Sensitivity',labId:2,lab:'SRL',cat:'Urine',price:499,mrp:799},
+  {id:'b12',name:'HIV 1 & 2 Antibody',labId:2,lab:'SRL',cat:'Infectious',price:299,mrp:549},
+  {id:'c1',name:'Complete Blood Count (CBC)',labId:3,lab:'Metropolis',cat:'Blood',price:259,mrp:499},
+  {id:'c2',name:'Liver Function Test',labId:3,lab:'Metropolis',cat:'Liver',price:499,mrp:849},
+  {id:'c3',name:'Kidney Function Test',labId:3,lab:'Metropolis',cat:'Kidney',price:499,mrp:849},
+  {id:'c4',name:'Thyroid Profile',labId:3,lab:'Metropolis',cat:'Thyroid',price:599,mrp:999},
+  {id:'c5',name:'Vitamin D3',labId:3,lab:'Metropolis',cat:'Vitamins',price:849,mrp:1299},
+  {id:'c6',name:'Vitamin B12',labId:3,lab:'Metropolis',cat:'Vitamins',price:649,mrp:999},
+  {id:'c7',name:'PSA Total (Prostate)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:799,mrp:1199},
+  {id:'c8',name:'CA-125 (Ovarian)',labId:3,lab:'Metropolis',cat:'Cancer Markers',price:1099,mrp:1699},
+  {id:'c9',name:'Wellness 360 Package',labId:3,lab:'Metropolis',cat:'Packages',price:2999,mrp:5499},
+  {id:'c10',name:'Allergy Panel (40 Allergens)',labId:3,lab:'Metropolis',cat:'Allergy',price:1999,mrp:3499},
+  {id:'c11',name:'Rheumatoid Arthritis Panel',labId:3,lab:'Metropolis',cat:'Autoimmune',price:899,mrp:1499},
+  {id:'c12',name:'ANA (Autoimmune Screen)',labId:3,lab:'Metropolis',cat:'Autoimmune',price:749,mrp:1199},
+  {id:'d1',name:'Complete Blood Count (CBC)',labId:4,lab:'Dr Lal',cat:'Blood',price:249,mrp:499},
+  {id:'d2',name:'Blood Sugar Random',labId:4,lab:'Dr Lal',cat:'Diabetes',price:79,mrp:199},
+  {id:'d3',name:'HbA1c',labId:4,lab:'Dr Lal',cat:'Diabetes',price:329,mrp:599},
+  {id:'d4',name:'Lipid Profile',labId:4,lab:'Dr Lal',cat:'Blood',price:399,mrp:799},
+  {id:'d5',name:'Urine Culture & Sensitivity',labId:4,lab:'Dr Lal',cat:'Urine',price:499,mrp:799},
+  {id:'d6',name:'Stool Examination',labId:4,lab:'Dr Lal',cat:'Stool',price:149,mrp:299},
+  {id:'d7',name:'Malaria Antigen Test',labId:4,lab:'Dr Lal',cat:'Infectious',price:399,mrp:699},
+  {id:'d8',name:'Widal Test (Typhoid)',labId:4,lab:'Dr Lal',cat:'Infectious',price:199,mrp:399},
+  {id:'d9',name:'Heart Health Package',labId:4,lab:'Dr Lal',cat:'Packages',price:1799,mrp:2999},
+  {id:'d10',name:'Senior Citizen Package',labId:4,lab:'Dr Lal',cat:'Packages',price:2299,mrp:3999},
+  {id:'d11',name:'Testosterone Total',labId:4,lab:'Dr Lal',cat:'Hormones',price:599,mrp:999},
+  {id:'d12',name:'Prolactin',labId:4,lab:'Dr Lal',cat:'Hormones',price:499,mrp:799},
+  {id:'e1',name:'Aarogyam 1.3 (Full Body)',labId:5,lab:'Thyrocare',cat:'Packages',price:999,mrp:2499},
+  {id:'e2',name:'Aarogyam C (Comprehensive)',labId:5,lab:'Thyrocare',cat:'Packages',price:1499,mrp:3499},
+  {id:'e3',name:'Thyroid Panel (T3,T4,TSH)',labId:5,lab:'Thyrocare',cat:'Thyroid',price:399,mrp:799},
+  {id:'e4',name:'Complete Blood Count',labId:5,lab:'Thyrocare',cat:'Blood',price:199,mrp:499},
+  {id:'e5',name:'Vitamin Panel (D3 + B12)',labId:5,lab:'Thyrocare',cat:'Vitamins',price:999,mrp:1799},
+  {id:'e6',name:'Hormone Panel',labId:5,lab:'Thyrocare',cat:'Hormones',price:1299,mrp:2299},
+  {id:'e7',name:'Fertility Panel (Female)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1999,mrp:3499},
+  {id:'e8',name:'Fertility Panel (Male)',labId:5,lab:'Thyrocare',cat:'Hormones',price:1499,mrp:2499},
+  {id:'e9',name:'COVID RT-PCR',labId:5,lab:'Thyrocare',cat:'COVID',price:499,mrp:999},
+  {id:'e10',name:'Lipid Profile',labId:5,lab:'Thyrocare',cat:'Blood',price:349,mrp:799},
+  {id:'e11',name:'Cortisol (Stress Hormone)',labId:5,lab:'Thyrocare',cat:'Hormones',price:449,mrp:799},
+  {id:'e12',name:'DHEA-S',labId:5,lab:'Thyrocare',cat:'Hormones',price:549,mrp:899},
+  {id:'f1',name:'Complete Blood Count (CBC)',labId:6,lab:'Vijaya',cat:'Blood',price:269,mrp:499},
+  {id:'f2',name:'Liver Function Test',labId:6,lab:'Vijaya',cat:'Liver',price:519,mrp:849},
+  {id:'f3',name:'Kidney Panel',labId:6,lab:'Vijaya',cat:'Kidney',price:519,mrp:849},
+  {id:'f4',name:'2D Echo (Cardiac)',labId:6,lab:'Vijaya',cat:'Cardiac',price:1499,mrp:2499},
+  {id:'f5',name:'ECG (12-Lead)',labId:6,lab:'Vijaya',cat:'Cardiac',price:299,mrp:499},
+  {id:'f6',name:'X-Ray Chest (PA View)',labId:6,lab:'Vijaya',cat:'Radiology',price:399,mrp:699},
+  {id:'f7',name:'Ultrasound Abdomen',labId:6,lab:'Vijaya',cat:'Radiology',price:899,mrp:1499},
+  {id:'f8',name:'MRI Brain with Contrast',labId:6,lab:'Vijaya',cat:'Radiology',price:5999,mrp:9999},
+  {id:'f9',name:'CT Scan Chest',labId:6,lab:'Vijaya',cat:'Radiology',price:4499,mrp:7999},
+  {id:'f10',name:'Full Body Checkup Premium',labId:6,lab:'Vijaya',cat:'Packages',price:3499,mrp:5999},
+  {id:'f11',name:'Bone Density (DEXA Scan)',labId:6,lab:'Vijaya',cat:'Radiology',price:1299,mrp:2199},
+  {id:'f12',name:'PFT (Pulmonary Function)',labId:6,lab:'Vijaya',cat:'Cardiac',price:799,mrp:1399},
+];
+
+function genTests() {
+  return ALL_LAB_TESTS.map(function(t) { return Object.assign({}, t); });
+}
+
+function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+function statusBadgeClass(s) {
+  if (s === 'Confirmed') return 'badge badge-blue';
+  if (s === 'Sample Collected') return 'badge badge-yellow';
+  if (s === 'Report Ready') return 'badge badge-green';
+  if (s === 'Cancelled') return 'badge badge-red';
+  return 'badge badge-grey';
+}
+
+function Login(props) {
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const [err, setErr] = useState('');
+  function submit(e) {
+    e.preventDefault();
+    if (user.trim() === 'admin' && pass.trim() === 'labease2024') { props.onLogin(); }
+    else setErr('Invalid credentials. Use admin / labease2024');
+  }
+  return (
+    <div className="login-wrap">
+      <div className="login-card">
+        <div style={{textAlign:'center',marginBottom:28}}>
+          <div style={{fontFamily:'DM Serif Display',fontSize:34,color:'#0D1117',letterSpacing:'-0.5px'}}>LabEase</div>
+          <div style={{color:'#6B7280',fontSize:13,marginTop:4,fontWeight:500}}>Admin Panel — Sign in to continue</div>
+        </div>
+        <form onSubmit={submit}>
+          <div style={{marginBottom:14}}>
+            <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Username</label>
+            <input type="text" style={{width:'100%'}} value={user} onChange={function(e){setUser(e.target.value);}} placeholder="admin" autoFocus />
+          </div>
+          <div style={{marginBottom:18}}>
+            <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Password</label>
+            <input type="password" style={{width:'100%'}} value={pass} onChange={function(e){setPass(e.target.value);}} placeholder="••••••••" />
+          </div>
+          {err && <div style={{background:'#FEF2F2',color:'#DC2626',fontSize:12,padding:'8px 12px',borderRadius:8,marginBottom:14,fontWeight:500}}>{err}</div>}
+          <button type="submit" className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'11px'}}>Sign In</button>
+          <div style={{textAlign:'center',marginTop:14,fontSize:12,color:'#9CA3AF'}}>Default: <strong>admin</strong> / <strong>labease2024</strong></div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar(props) {
+  const items = [
+    {key:'dashboard',label:'Dashboard',icon:React.createElement(IconDash,null)},
+    {key:'bookings',label:'Bookings',icon:React.createElement(IconBook,null)},
+    {key:'labs',label:'Labs',icon:React.createElement(IconLab,null)},
+    {key:'tests',label:'Tests & Pricing',icon:React.createElement(IconTest,null)},
+    {key:'packages',label:'Health Packages',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('path',{d:'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'}),React.createElement('polyline',{points:'3.27 6.96 12 12.01 20.73 6.96'}),React.createElement('line',{x1:12,y1:22.08,x2:12,y2:12}))},
+    {key:'trusted',label:'Trusted Logos',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('rect',{x:3,y:3,width:18,height:18,rx:3}),React.createElement('path',{d:'M3 9h18M9 21V9'}))},
+    {key:'settings',label:'Settings',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('circle',{cx:12,cy:12,r:3}),React.createElement('path',{d:'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'}))},
+  ];
+  return (
+    <div className="sidebar">
+      <div style={{padding:'24px 16px 12px'}}>
+        <div style={{fontFamily:'DM Serif Display',fontSize:28,color:'#fff',letterSpacing:'-0.3px'}}>LabEase</div>
+        <div style={{fontSize:11,color:'#6B7280',fontWeight:500,marginTop:2,letterSpacing:'0.06em',textTransform:'uppercase'}}>Admin Panel</div>
+      </div>
+      <div style={{height:1,background:'#161B22',margin:'8px 16px'}} />
+      <nav style={{flex:1,padding:'8px 0'}}>
+        {items.map(function(it) {
+          return (
+            <div key={it.key} className={'nav-item' + (props.page === it.key ? ' active' : '')} onClick={function(){props.setPage(it.key);}}>
+              {it.icon}<span>{it.label}</span>
+            </div>
+          );
+        })}
+      </nav>
+      <div style={{padding:'12px 8px 24px'}}>
+        <div className="nav-item" onClick={props.onLogout} style={{color:'#EF4444'}}>
+          {React.createElement(IconLogout,null)}<span>Logout</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard(props) {
+  const bookings = props.bookings;
+  const total = bookings.length;
+  const active = bookings.filter(function(b){return b.status==='Confirmed'||b.status==='Sample Collected';}).length;
+  const revenue = bookings.filter(function(b){return b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const today = todayStr();
+  const todayRev = bookings.filter(function(b){return b.date===today&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const weekRev = bookings.filter(function(b){return b.date>=weekAgoStr()&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const monthStart = new Date(); monthStart.setDate(1);
+  const msStr = monthStart.toISOString().slice(0,10);
+  const monthRev = bookings.filter(function(b){return b.date>=msStr&&b.status!=='Cancelled';}).reduce(function(s,b){return s+b.amount;},0);
+  const statusCounts = {};
+  STATUSES.forEach(function(s){statusCounts[s]=bookings.filter(function(b){return b.status===s;}).length;});
+  const testCount = {};
+  bookings.forEach(function(b){testCount[b.test]=(testCount[b.test]||0)+1;});
+  const topTests = Object.entries(testCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  const maxT = topTests.length > 0 ? topTests[0][1] : 1;
+  const recent = bookings.slice().sort(function(a,b){return b.id.localeCompare(a.id);}).slice(0,6);
+  const statusColors = {'Confirmed':'#3B82F6','Sample Collected':'#F59E0B','Report Ready':'#10B981','Pending':'#9CA3AF','Cancelled':'#EF4444'};
+  const stats = [
+    {label:'Total Bookings',value:total,bg:'#EFF6FF',emoji:'📋'},
+    {label:'Active Bookings',value:active,bg:'#F0FDF4',emoji:'✅'},
+    {label:"Today's Revenue",value:fmt(todayRev),bg:'#FFF7ED',emoji:'📅'},
+    {label:'This Week',value:fmt(weekRev),bg:'#FDF4FF',emoji:'📊'},
+    {label:'This Month',value:fmt(monthRev),bg:'#F0FDF4',emoji:'📈'},
+    {label:'Total Revenue',value:fmt(revenue),bg:'#FFF7ED',emoji:'💰'},
+    {label:'Total Labs',value:LAB_NAMES.length,bg:'#EFF6FF',emoji:'🏥'},
+  ];
+  return (
+    <div style={{padding:28}}>
+      <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Dashboard</div>
+      <div style={{fontSize:13.5,color:'#6B7280',marginBottom:24}}>Welcome back, Admin. Here's what's happening today.</div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:24,gridAutoRows:'auto'}}>
+        {stats.map(function(s) {
+          return (
+            <div key={s.label} className="card" style={{padding:20}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                <div>
+                  <div style={{fontSize:12,color:'#6B7280',fontWeight:600,marginBottom:6}}>{s.label}</div>
+                  <div style={{fontSize:26,fontWeight:800,color:'#0D1117'}}>{s.value}</div>
+                </div>
+                <div style={{width:44,height:44,borderRadius:12,background:s.bg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}}>{s.emoji}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <div className="card" style={{padding:22}}>
+          <div style={{fontWeight:700,fontSize:15,marginBottom:18,color:'#0D1117'}}>Booking Status Breakdown</div>
+          {STATUSES.map(function(s) {
+            return (
+              <div key={s} style={{marginBottom:14}}>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,fontWeight:500,marginBottom:5}}>
+                  <span>{s}</span><span style={{color:'#6B7280'}}>{statusCounts[s]}</span>
+                </div>
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{width:((statusCounts[s]/total)*100)+'%',background:statusColors[s]}} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="card" style={{padding:22}}>
+          <div style={{fontWeight:700,fontSize:15,marginBottom:18,color:'#0D1117'}}>Top 5 Booked Tests</div>
+          {topTests.map(function(entry, i) {
+            var name = entry[0]; var cnt = entry[1];
+            return (
+              <div key={name} style={{marginBottom:14}}>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,fontWeight:500,marginBottom:5}}>
+                  <span>{(i+1)+'. '+name}</span><span style={{color:'#6B7280'}}>{cnt} bookings</span>
+                </div>
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{width:((cnt/maxT)*100)+'%',background:'#1158A6'}} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="card">
+        <div style={{padding:'18px 20px 0',fontWeight:700,fontSize:15,color:'#0D1117'}}>Recent Bookings</div>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Patient</th><th>Test</th><th>Lab</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {recent.map(function(b) {
+              return (
+                <tr key={b.id}>
+                  <td style={{fontWeight:600,color:'#1158A6'}}>{b.id}</td>
+                  <td>{b.patient}</td>
+                  <td>{b.test}</td>
+                  <td>{b.lab}</td>
+                  <td>{b.date}</td>
+                  <td style={{fontWeight:600}}>{fmt(b.amount)}</td>
+                  <td><span className={statusBadgeClass(b.status)}>{b.status}</span></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function IconDownload() {
+  return React.createElement('svg', {width:15,height:15,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+    React.createElement('path',{d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'}),
+    React.createElement('polyline',{points:'7 10 12 15 17 10'}),
+    React.createElement('line',{x1:12,y1:15,x2:12,y2:3})
+  );
+}
+
+function Bookings(props) {
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('All');
+  function downloadExcel(rows) {
+    var data = rows.map(function(b) {
+      return {
+        'Booking ID': b.id,
+        'Patient Name': b.patient,
+        'Phone': b.phone,
+        'Test': b.test,
+        'Lab': b.lab,
+        'Date': b.date,
+        'Mode': b.mode,
+        'Amount (₹)': b.amount,
+        'Status': b.status,
+      };
+    });
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Bookings');
+    XLSX.writeFile(wb, 'LabEase_Bookings_' + new Date().toISOString().slice(0,10) + '.xlsx');
+  }
+  function updateStatus(id, status) {
+    var next = props.bookings.map(function(b){return b.id===id?Object.assign({},b,{status:status}):b;});
+    props.setBookings(next);
+    updateBookingStatusInSupabase(id, status);
+  }
+  var filtered = props.bookings.filter(function(b) {
+    var q = search.toLowerCase();
+    var matchQ = !q || (b.patient||'').toLowerCase().indexOf(q)>-1 || (b.ref||b.id||'').toLowerCase().indexOf(q)>-1 || (b.test||'').toLowerCase().indexOf(q)>-1;
+    var matchF = filter==='All' || b.status===filter;
+    return matchQ && matchF;
+  }).sort(function(a,b){ return (b.raw&&b.raw.created_at||b.date||'').localeCompare(a.raw&&a.raw.created_at||a.date||''); });
+  if (props.bookingsLoading) return (
+    <div style={{padding:28,textAlign:'center',color:'#6B7280',paddingTop:80}}>
+      <div style={{fontSize:16,marginBottom:8}}>Loading bookings…</div>
+      <div style={{fontSize:13}}>Fetching from database</div>
+    </div>
+  );
+  return (
+    <div style={{padding:28}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+        <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Bookings</div>
+        <button className="btn btn-outline" onClick={function(){downloadExcel(filtered);}}>
+          {React.createElement(IconDownload,null)} Download Excel
+        </button>
+      </div>
+      <div style={{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}>
+        <div style={{position:'relative',flex:'1',minWidth:220}}>
+          <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}}>{React.createElement(IconSearch,null)}</span>
+          <input type="text" style={{width:'100%',paddingLeft:32}} placeholder="Search by name, ID or test…" value={search} onChange={function(e){setSearch(e.target.value);}} />
+        </div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+          {['All'].concat(STATUSES).map(function(s) {
+            return <button key={s} className={'pill-btn'+(filter===s?' active':'')} onClick={function(){setFilter(s);}}>{s}</button>;
+          })}
+        </div>
+      </div>
+      <div className="card" style={{overflow:'hidden'}}>
+        <div style={{overflowX:'auto'}}>
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Patient</th><th>Phone</th><th>Test</th><th>Lab</th><th>Date</th><th>Mode</th><th>Amount</th><th>Status</th><th>Update Status</th></tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 && (
+                <tr><td colSpan={10} style={{textAlign:'center',color:'#9CA3AF',padding:32}}>No bookings found.</td></tr>
+              )}
+              {filtered.map(function(b) {
+                return (
+                  <tr key={b.id}>
+                    <td style={{fontWeight:600,color:'#1158A6'}}>{b.ref||b.id.slice(0,8).toUpperCase()}</td>
+                    <td style={{fontWeight:600}}>{b.patient}</td>
+                    <td style={{color:'#6B7280'}}>{b.phone}</td>
+                    <td>{b.test}</td>
+                    <td>{b.lab}</td>
+                    <td>{b.date}</td>
+                    <td>
+                      <span style={{fontSize:12,fontWeight:600,color:b.mode==='Home'?'#7E22CE':'#0369A1',background:b.mode==='Home'?'#FDF4FF':'#F0F9FF',padding:'3px 8px',borderRadius:6}}>{b.mode}</span>
+                    </td>
+                    <td style={{fontWeight:700}}>{fmt(b.amount)}</td>
+                    <td><span className={statusBadgeClass(b.status)}>{b.status}</span></td>
+                    <td>
+                      <select value={b.status} onChange={function(e){updateStatus(b.id,e.target.value);}} style={{fontSize:12,padding:'5px 8px'}}>
+                        {STATUSES.map(function(s){return <option key={s} value={s}>{s}</option>;})}
+                      </select>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div style={{padding:'12px 20px',fontSize:12,color:'#9CA3AF',borderTop:'1px solid #F3F4F6'}}>
+          Showing {filtered.length} of {props.bookings.length} bookings
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Labs(props) {
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({});
+  const [editTests, setEditTests] = useState([]);
+  const [addingLab, setAddingLab] = useState(false);
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+  const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+  function startEdit(lab) {
+    setEditing(lab.id);
+    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',sunday_timing:lab.sunday_timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
+    var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};}) : [];
+    setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+  }
+  function saveEdit(id) {
+    var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
+    var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:testsArr.length?testsArr:l.tests}):l;});
+    props.setLabs(next);
+    // Persist to Supabase only
+    syncAdminSetting('le_labs', next);
+    // update extra lab in Supabase if it's not a built-in lab
+    var knownIds=new Set([1,2,3,4,5,6]);
+    var updated=next.find(function(l){return l.id===id;});
+    if(!knownIds.has(id)&&updated&&updated._supabase_id){
+      updateExtraLabInSupabase(updated._supabase_id, updated);
+    }
+    // lab name / timing overrides — read from props.sbSettings (Supabase state)
+    var lnov=Object.assign({},props.sbSettings['le_lab_name_overrides']||{});
+    lnov[id]=form.name; syncAdminSetting('le_lab_name_overrides',lnov);
+    var tov=Object.assign({},props.sbSettings['le_timing_overrides']||{});
+    tov[id]=form.timing||''; syncAdminSetting('le_timing_overrides',tov);
+    var stov=Object.assign({},props.sbSettings['le_sunday_timing_overrides']||{});
+    stov[id]=form.sunday_timing||''; syncAdminSetting('le_sunday_timing_overrides',stov);
+    saveTimingToSupabase(id, form.timing||'', form.sunday_timing||'');
+    setEditing(null);
+  }
+  function toggle(id) {
+    var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
+    props.setLabs(next);
+    var toggled = next.find(function(l){return l.id===id;});
+    // Persist to Supabase only
+    syncAdminSetting('le_labs', next);
+    if (toggled) {
+      var labOv = Object.assign({}, props.sbSettings['le_lab_overrides']||{});
+      labOv[id] = toggled.active;
+      syncAdminSetting('le_lab_overrides', labOv);
+    }
+  }
+  function saveNewLab() {
+    if (!newLab.name.trim()) return;
+    var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
+    if(testsArr.length===0) testsArr=[{name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
+    var lab = {name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',sunday_timing:newLab.sunday_timing.trim(),reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    saveExtraLabToSupabase(lab, function(saved) {
+      if (saved) {
+        var newLabWithId = Object.assign({}, lab, {id:'sb_'+saved.id, _supabase_id:saved.id});
+        props.setLabs(function(prev){return prev.concat([newLabWithId]);});
+      }
+    });
+    setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+    setNewLabTests([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
+    setAddingLab(false);
+  }
+  var fields = [['name','Name'],['city','City'],['phone','Phone'],['rating','Rating'],['tests','Tests Count']];
+  return (
+    <div style={{padding:28}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+        <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Labs</div>
+        <button className="btn btn-primary" onClick={function(){setAddingLab(!addingLab);}}>+ Add Lab</button>
+      </div>
+      {addingLab && (
+        <div className="card" style={{padding:20,marginBottom:20}}>
+          <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
+            {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['color','Button Color']].map(function(pair){
+              var k=pair[0]; var lbl=pair[1];
+              return (
+                <div key={k}>
+                  <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>{lbl}</label>
+                  <input type="text" style={{width:'100%'}} value={newLab[k]||''} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
+                </div>
+              );
+            })}
+            {[['timing','Weekday Timing (Mon–Sat) e.g. 9:00 AM - 6:00 PM'],['sunday_timing','Sunday Timing e.g. 10:00 AM - 4:00 PM (blank if closed)']].map(function(pair){
+              var k=pair[0]; var lbl=pair[1];
+              var slots=previewSlots(newLab[k]||'');
+              return (
+                <div key={k} style={{gridColumn:'1/-1'}}>
+                  <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>{lbl}</label>
+                  <input type="text" style={{width:'100%'}} placeholder="e.g. 9:00 AM - 6:00 PM" value={newLab[k]||''} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
+                  {newLab[k]&&<div style={{marginTop:4,fontSize:10,color:'#1158A6',fontWeight:600}}>
+                    {slots.length?'Slots: '+slots.join(' · '):'⚠ Cannot parse — use format: 9:00 AM - 6:00 PM'}
+                  </div>}
+                </div>
+              );
+            })}
+            <div>
+              <LogoEditor logo={newLab.logoBase64||''} onChangeLogo={function(v){setNewLab(function(f){return Object.assign({},f,{logoBase64:v});});}} />
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <input type="checkbox" id="nl-hc" checked={newLab.homeCollection} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.homeCollection=v;return n;});}} />
+              <label htmlFor="nl-hc" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Home Collection</label>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
+              <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Verified Partner</label>
+            </div>
+            <div>
+              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In</label>
+              <select style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 6px'}} value={newLab.reportTime} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n.reportTime=v;return n;});}}>
+                {['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'].map(function(r){return <option key={r} value={r}>{r}</option>;})}
+              </select>
+            </div>
+          </div>
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
+            <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:3}}>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
+              <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
+              <span/>
+            </div>
+            {newLabTests.map(function(t,i){return (
+              <div key={i} style={{marginBottom:8,background:'#F9FAFB',borderRadius:8,padding:'8px',border:'1px solid #E5E7EB'}}>
+                <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:8,marginBottom:5,alignItems:'center'}}>
+                  <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                  <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                  <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                  <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
+                    {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                  </select>
+                  <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'4px 8px',cursor:'pointer',fontWeight:700,fontSize:13}} onClick={function(){setNewLabTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <span style={{fontSize:10,fontWeight:700,color:'#6B7280',whiteSpace:'nowrap'}}>Blue Label:</span>
+                  <input type="text" placeholder="e.g. Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin" style={{width:'100%',fontSize:11,padding:'4px 8px',borderRadius:6,border:'1px solid #BFDBFE',background:'#EFF6FF',color:'#1D4ED8'}} value={t.subtitle||''} onChange={function(e){var v=e.target.value;setNewLabTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{subtitle:v});return n;});}} />
+                </div>
+              </div>
+            );})}
+            <button className="btn btn-outline btn-sm" onClick={function(){setNewLabTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day',subtitle:''}]);});}}>+ Add Test</button>
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button className="btn btn-primary btn-sm" onClick={saveNewLab}>Save Lab</button>
+            <button className="btn btn-outline btn-sm" onClick={function(){setAddingLab(false);}}>Cancel</button>
+          </div>
+        </div>
+      )}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18}}>
+        {props.labs.map(function(lab) {
+          return (
+            <div key={lab.id} className="lab-card">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
+                <div style={{fontWeight:700,fontSize:15,color:'#0D1117',flex:1,paddingRight:8}}>{lab.name}</div>
+                <span className={'badge '+(lab.active?'badge-green':'badge-red')} style={{flexShrink:0}}>{lab.active?'Active':'Inactive'}</span>
+              </div>
+              {editing === lab.id ? (
+                <div>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
+                    {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['color','Button Color']].map(function(pair){
+                      var k=pair[0];var lbl=pair[1];
+                      return (
+                        <div key={k}>
+                          <label style={{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}}>{lbl}</label>
+                          <input type="text" style={{width:'100%'}} value={form[k]||''} onChange={function(e){var v=e.target.value;setForm(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
+                        </div>
+                      );
+                    })}
+                    {[['timing','Weekday Timing (Mon–Sat) e.g. 9:00 AM - 6:00 PM'],['sunday_timing','Sunday Timing e.g. 10:00 AM - 4:00 PM (blank = not shown)']].map(function(pair){
+                      var k=pair[0];var lbl=pair[1];
+                      var slots=previewSlots(form[k]||'');
+                      return (
+                        <div key={k} style={{gridColumn:'1/-1'}}>
+                          <label style={{fontSize:10,fontWeight:600,color:'#6B7280',display:'block',marginBottom:2}}>{lbl}</label>
+                          <input type="text" style={{width:'100%'}} placeholder="e.g. 9:00 AM - 6:00 PM" value={form[k]||''} onChange={function(e){var v=e.target.value;setForm(function(f){var n=Object.assign({},f);n[k]=v;return n;});}} />
+                          {form[k]&&<div style={{marginTop:4,fontSize:10,color:'#1158A6',fontWeight:600}}>
+                            {slots.length?'Slots: '+slots.join(' · '):'⚠ Cannot parse — use format: 9:00 AM - 6:00 PM'}
+                          </div>}
+                        </div>
+                      );
+                    })}
+                    <div>
+                      <LogoEditor logo={form.logoBase64||''} onChangeLogo={function(v){setForm(function(f){return Object.assign({},f,{logoBase64:v});});}} />
+                    </div>
+                  </div>
+                  <div style={{display:'flex',gap:16,marginBottom:8}}>
+                    <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}}>
+                      <input type="checkbox" checked={!!form.homeCollection} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{homeCollection:v});});}} /> Home Collection
+                    </label>
+                    <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,cursor:'pointer'}}>
+                      <input type="checkbox" checked={!!form.nabl} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});});}} /> Verified Partner
+                    </label>
+                  </div>
+                  <div style={{marginBottom:8}}>
+                    <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
+                    <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:3}}>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Test Name</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Price (₹)</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>MRP (₹)</span>
+                      <span style={{fontSize:10,fontWeight:600,color:'#9CA3AF'}}>Category</span>
+                      <span/>
+                    </div>
+                    {editTests.map(function(t,i){return (
+                      <div key={i} style={{marginBottom:8,background:'#F9FAFB',borderRadius:8,padding:'8px',border:'1px solid #E5E7EB'}}>
+                        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:5,alignItems:'center'}}>
+                          <input type="text" placeholder="e.g. CBC" style={{width:'100%'}} value={t.name} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{name:v});return n;});}} />
+                          <input type="number" placeholder="0" style={{width:'100%'}} value={t.price} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{price:v});return n;});}} />
+                          <input type="number" placeholder="0" style={{width:'100%'}} value={t.mrp} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{mrp:v});return n;});}} />
+                          <select style={{width:'100%',height:32,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 4px'}} value={t.cat} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{cat:v});return n;});}}>
+                            {['Blood','Thyroid','Diabetes','Liver','Kidney','Vitamins','Cardiac','Packages','Radiology','Hormones','Infectious','COVID','Allergy','Autoimmune','Cancer Markers','Urine','General'].map(function(c){return <option key={c} value={c}>{c}</option>;})}
+                          </select>
+                          <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:5,padding:'3px 7px',cursor:'pointer',fontWeight:700,fontSize:12}} onClick={function(){setEditTests(function(arr){return arr.filter(function(_,j){return j!==i;});});}}>✕</button>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center',gap:6}}>
+                          <span style={{fontSize:10,fontWeight:700,color:'#6B7280',whiteSpace:'nowrap'}}>Blue Label:</span>
+                          <input type="text" placeholder="e.g. Complete Blood Count (CBC) – RBC, WBC, Platelets & Hemoglobin" style={{width:'100%',fontSize:11,padding:'4px 8px',borderRadius:6,border:'1px solid #BFDBFE',background:'#EFF6FF',color:'#1D4ED8'}} value={t.subtitle||''} onChange={function(e){var v=e.target.value;setEditTests(function(arr){var n=arr.slice();n[i]=Object.assign({},n[i],{subtitle:v});return n;});}} />
+                        </div>
+                      </div>
+                    );})}
+                    <button className="btn btn-outline btn-sm" onClick={function(){setEditTests(function(arr){return arr.concat([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day',subtitle:''}]);});}}>+ Add Test</button>
+                  </div>
+                  <div style={{display:'flex',gap:8,marginTop:10}}>
+                    <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(lab.id);}}>Save</button>
+                    <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);}}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div style={{color:'#6B7280',fontSize:13,marginBottom:4}}>📍 {lab.city}</div>
+                  <div style={{color:'#6B7280',fontSize:13,marginBottom:4}}>📞 {lab.phone}</div>
+                  <div style={{display:'flex',gap:16,marginBottom:14,marginTop:10}}>
+                    <div style={{fontSize:13}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" strokeWidth="1" style={{verticalAlign:'middle'}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      {' '}<span style={{fontWeight:600}}>{lab.rating}</span> <span style={{color:'#9CA3AF'}}>rating</span>
+                    </div>
+                    <div style={{fontSize:13,color:'#6B7280'}}><strong style={{color:'#0D1117'}}>{Array.isArray(lab.tests)?lab.tests.length:lab.tests}</strong> tests</div>
+                  </div>
+                  <div style={{display:'flex',gap:8}}>
+                    <button className="btn btn-outline btn-sm" onClick={function(){startEdit(lab);}}>
+                      {React.createElement(IconEdit,null)} Edit
+                    </button>
+                    <button className="btn btn-sm" onClick={function(){toggle(lab.id);}} style={{background:lab.active?'#FEF2F2':'#F0FDF4',color:lab.active?'#DC2626':'#15803D',border:'none',fontWeight:600}}>
+                      {lab.active?'Deactivate':'Activate'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Tests(props) {
+  const [search, setSearch] = useState('');
+  const [labFilter, setLabFilter] = useState('All');
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({});
+
+  var labNames = ['All','Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
+
+  // Apply overrides from Supabase settings for display
+  var priceOv = (props.sbSettings && props.sbSettings['le_price_overrides']) || {};
+  var nameOv  = (props.sbSettings && props.sbSettings['le_test_name_overrides']) || {};
+  var displayTests = props.tests.map(function(t) {
+    var pov = priceOv[t.id] || {};
+    return Object.assign({}, t, {
+      price: pov.price !== undefined ? pov.price : t.price,
+      mrp:   pov.mrp   !== undefined ? pov.mrp   : t.mrp,
+      name:  nameOv[t.id]  !== undefined ? nameOv[t.id]  : t.name,
+    });
+  });
+
+  function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp, price:t.price, name:t.name}); }
+  function saveEdit(id) {
+    var newPrice = parseInt(form.price);
+    var newMrp   = parseInt(form.mrp);
+    var newName  = form.name;
+    // Write price override to Supabase
+    var ov = Object.assign({}, (props.sbSettings && props.sbSettings['le_price_overrides']) || {});
+    ov[id] = {price:newPrice, mrp:newMrp};
+    syncAdminSetting('le_price_overrides', ov);
+    // Write name override to Supabase
+    var tnov = Object.assign({}, (props.sbSettings && props.sbSettings['le_test_name_overrides']) || {});
+    tnov[id] = newName;
+    syncAdminSetting('le_test_name_overrides', tnov);
+    setEditing(null);
+  }
+
+  var filtered = displayTests.filter(function(t) {
+    var mq = !search || t.name.toLowerCase().indexOf(search.toLowerCase())>-1 || t.cat.toLowerCase().indexOf(search.toLowerCase())>-1;
+    var ml = labFilter==='All' || t.lab===labFilter;
+    return mq && ml;
+  });
+
+  return (
+    <div style={{padding:28}}>
+      <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Tests & Pricing</div>
+      <div style={{color:'#6B7280',fontSize:13,marginBottom:20}}>Edit prices per lab — changes reflect instantly in the main app</div>
+      <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}>
+        <div style={{position:'relative',width:280}}>
+          <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#9CA3AF'}}>{React.createElement(IconSearch,null)}</span>
+          <input type="text" style={{width:'100%',paddingLeft:32}} placeholder="Search test or category…" value={search} onChange={function(e){setSearch(e.target.value);}} />
+        </div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+          {labNames.map(function(l) {
+            return React.createElement('button', {
+              key:l, className:'btn '+(labFilter===l?'btn-primary':'btn-outline')+' btn-sm',
+              onClick:function(){setLabFilter(l);}
+            }, l);
+          })}
+        </div>
+      </div>
+      <div style={{color:'#6B7280',fontSize:12,marginBottom:10}}>{filtered.length} entries</div>
+      <div className="card" style={{overflow:'hidden'}}>
+        <table>
+          <thead>
+            <tr><th>Test Name</th><th>Lab</th><th>Category</th><th>MRP</th><th>Offer Price</th><th>Discount</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            {filtered.map(function(t) {
+              var disc = Math.round((1 - t.price/t.mrp)*100);
+              return (
+                <tr key={t.id}>
+                  <td style={{fontWeight:600,maxWidth:180}}>{t.name}</td>
+                  <td>
+                    <span style={{fontSize:12,background:'#EFF6FF',color:'#1158A6',padding:'3px 8px',borderRadius:6,fontWeight:600,whiteSpace:'nowrap'}}>{t.lab}</span>
+                  </td>
+                  <td><span style={{fontSize:12,background:'#F3F4F6',color:'#374151',padding:'3px 8px',borderRadius:6,fontWeight:600}}>{t.cat}</span></td>
+                  <td style={{color:'#9CA3AF',textDecoration:'line-through'}}>{fmt(t.mrp)}</td>
+                  <td style={{fontWeight:700,color:'#15803D'}}>{fmt(t.price)}</td>
+                  <td><span style={{background:'#FFF7ED',color:'#C2410C',fontSize:12,fontWeight:700,padding:'3px 8px',borderRadius:6}}>{disc}% off</span></td>
+                  <td>
+                    {editing === t.id ? (
+                      <div style={{display:'flex',gap:6,alignItems:'flex-end',flexWrap:'wrap'}}>
+                        <div>
+                          <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>Test Name</div>
+                          <input type="text" style={{width:160,padding:'4px 8px',fontSize:12}} value={form.name} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{name:v});});}} />
+                        </div>
+                        <div>
+                          <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>MRP</div>
+                          <input type="number" style={{width:76,padding:'4px 8px',fontSize:12}} value={form.mrp} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{mrp:v});});}} />
+                        </div>
+                        <div>
+                          <div style={{fontSize:11,color:'#9CA3AF',marginBottom:2}}>Price</div>
+                          <input type="number" style={{width:76,padding:'4px 8px',fontSize:12}} value={form.price} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{price:v});});}} />
+                        </div>
+                        <div style={{display:'flex',gap:5}}>
+                          <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(t.id);}}>Save</button>
+                          <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);}}>✕</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button className="btn btn-outline btn-sm" onClick={function(){startEdit(t);}}>
+                        {React.createElement(IconEdit,null)} Edit Price
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function LogoEditor(props) {
+  var logo=props.logo, onChangeLogo=props.onChangeLogo;
+  var CSIZE=220;
+  var sr=React.useState(null),rawSrc=sr[0],setRawSrc=sr[1];
+  var sox=React.useState(0),offX=sox[0],setOffX=sox[1];
+  var soy=React.useState(0),offY=soy[0],setOffY=soy[1];
+  var sz=React.useState(1),zoom=sz[0],setZoom=sz[1];
+  var sed=React.useState(false),editing=sed[0],setEditing=sed[1];
+  // Use refs so event handlers always get latest values (no stale closure)
+  var offXRef=React.useRef(0),offYRef=React.useRef(0),zoomRef=React.useRef(1);
+  var dragRef=React.useRef(null),pinchDistRef=React.useRef(null);
+  offXRef.current=offX; offYRef.current=offY; zoomRef.current=zoom;
+
+  function clampZ(v){return Math.min(8,Math.max(0.05,v));}
+  function onFileChange(ev){
+    var file=ev.target.files[0]; if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(e2){
+      offXRef.current=0;offYRef.current=0;zoomRef.current=1;
+      setOffX(0);setOffY(0);setZoom(1);
+      setRawSrc(e2.target.result);setEditing(true);
+    };
+    reader.readAsDataURL(file);
+  }
+  function apply(){
+    var canvas=document.createElement('canvas');
+    canvas.width=CSIZE; canvas.height=CSIZE;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,CSIZE,CSIZE);
+    var ox=offXRef.current,oy=offYRef.current,z=zoomRef.current;
+    var img=new Image();
+    img.onload=function(){
+      ctx.save();
+      ctx.translate(CSIZE/2+ox,CSIZE/2+oy);
+      ctx.scale(z,z);
+      ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+      ctx.restore();
+      onChangeLogo(canvas.toDataURL('image/png'));
+      setEditing(false); setRawSrc(null);
+    };
+    img.src=rawSrc;
+  }
+  // Mouse
+  function onMD(ev){ev.preventDefault();dragRef.current={sx:ev.clientX,sy:ev.clientY,ox:offXRef.current,oy:offYRef.current};}
+  function onMM(ev){
+    if(!dragRef.current)return;
+    var nx=dragRef.current.ox+ev.clientX-dragRef.current.sx;
+    var ny=dragRef.current.oy+ev.clientY-dragRef.current.sy;
+    offXRef.current=nx;offYRef.current=ny;setOffX(nx);setOffY(ny);
+  }
+  function onMU(){dragRef.current=null;}
+  function onWheel(ev){
+    ev.preventDefault();
+    var nz=clampZ(zoomRef.current+(ev.deltaY>0?-0.08:0.08));
+    zoomRef.current=nz;setZoom(nz);
+  }
+  // Touch — single finger drag + two finger pinch
+  function getTouchDist(touches){
+    var dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+  function onTD(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1){
+      var t=ev.touches[0];
+      dragRef.current={sx:t.clientX,sy:t.clientY,ox:offXRef.current,oy:offYRef.current};
+      pinchDistRef.current=null;
+    } else if(ev.touches.length===2){
+      dragRef.current=null;
+      pinchDistRef.current=getTouchDist(ev.touches);
+    }
+  }
+  function onTM(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1&&dragRef.current){
+      var t=ev.touches[0];
+      var nx=dragRef.current.ox+t.clientX-dragRef.current.sx;
+      var ny=dragRef.current.oy+t.clientY-dragRef.current.sy;
+      offXRef.current=nx;offYRef.current=ny;setOffX(nx);setOffY(ny);
+    } else if(ev.touches.length===2&&pinchDistRef.current){
+      var dist=getTouchDist(ev.touches);
+      var nz=clampZ(zoomRef.current*(dist/pinchDistRef.current));
+      zoomRef.current=nz;setZoom(nz);
+      pinchDistRef.current=dist;
+    }
+  }
+  function onTE(){dragRef.current=null;pinchDistRef.current=null;}
+
+  if(editing&&rawSrc){
+    return (
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:11,fontWeight:600,color:'#6B7280',marginBottom:6}}>
+          Logo Editor — 👆 drag · pinch to zoom · scroll wheel · ± buttons
+        </div>
+        <div style={{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',
+          cursor:'grab',background:'#F0F4FF',position:'relative',userSelect:'none',touchAction:'none'}}
+          onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
+          onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onTE}
+          onWheel={onWheel}>
+          <img src={rawSrc} style={{position:'absolute',left:'50%',top:'50%',
+            transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',
+            transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'}} draggable={false} />
+          <div style={{position:'absolute',inset:0,border:'1px dashed rgba(17,88,166,.3)',borderRadius:10,pointerEvents:'none'}}/>
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10,marginBottom:10}}>
+          <button onClick={function(){var nz=clampZ(zoomRef.current-0.1);zoomRef.current=nz;setZoom(nz);}}
+            style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,padding:0,flexShrink:0}}>−</button>
+          <input type="range" min="0.05" max="8" step="0.05" value={zoom}
+            onChange={function(ev){var nz=parseFloat(ev.target.value);zoomRef.current=nz;setZoom(nz);}}
+            style={{flex:1,accentColor:'#1158A6'}} />
+          <button onClick={function(){var nz=clampZ(zoomRef.current+0.1);zoomRef.current=nz;setZoom(nz);}}
+            style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,padding:0,flexShrink:0}}>+</button>
+          <span style={{fontSize:12,color:'#6B7280',minWidth:44,textAlign:'right',fontWeight:600}}>{Math.round(zoom*100)}%</span>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <button className="btn btn-primary btn-sm" onClick={apply}>✓ Apply Logo</button>
+          <button className="btn btn-outline btn-sm" onClick={function(){setEditing(false);setRawSrc(null);}}>Cancel</button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{marginBottom:14}}>
+      <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:6}}>Lab Logo</label>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        {logo
+          ? <img src={logo} style={{width:52,height:52,borderRadius:10,objectFit:'contain',border:'1px solid #E5E7EB',background:'#F9FAFB',flexShrink:0}} />
+          : <div style={{width:52,height:52,borderRadius:10,border:'2px dashed #D1D5DB',display:'flex',alignItems:'center',justifyContent:'center',color:'#9CA3AF',fontSize:22,flexShrink:0}}>🏥</div>
+        }
+        <label style={{cursor:'pointer'}}>
+          <span style={{background:'#EFF6FF',color:'#1158A6',border:'1px solid #BFDBFE',borderRadius:8,padding:'7px 14px',fontSize:12,fontWeight:700,cursor:'pointer'}}>{logo?'Change Logo':'+ Add Logo'}</span>
+          <input type="file" accept="image/*" style={{display:'none'}} onChange={onFileChange} />
+        </label>
+        {logo && <button style={{background:'#FEE2E2',color:'#DC2626',border:'none',borderRadius:6,padding:'5px 10px',fontSize:12,fontWeight:600,cursor:'pointer'}} onClick={function(){onChangeLogo('');}}>Remove</button>}
+      </div>
+    </div>
+  );
+}
+
+var DEFAULT_MARQUEE = [
+  {id:'def1',name:'Apollo Diagnostics', src:'https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in'},
+  {id:'def2',name:'SRL / Agilus',       src:'https://logo.clearbit.com/agilusdiagnostics.com?size=200'},
+  {id:'def3',name:'Metropolis',         src:'https://logo.clearbit.com/metropolisindia.com?size=200'},
+  {id:'def4',name:'Dr. Lal PathLabs',   src:'https://logo.clearbit.com/lalpathlabs.com?size=200'},
+  {id:'def5',name:'Thyrocare',          src:'https://logo.clearbit.com/thyrocare.com?size=200'},
+  {id:'def6',name:'Vijaya Diagnostics', src:'https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com'},
+];
+
+function LogoEditorInline(props) {
+  var onDone=props.onDone, onCancel=props.onCancel;
+  var CSIZE=240;
+  var sr=useState(null),rawSrc=sr[0],setRawSrc=sr[1];
+  // Use refs for position/zoom so event handlers always get latest values without stale closure
+  var offXRef=useRef(0), offYRef=useRef(0), zoomRef=useRef(1);
+  var sz=useState(1),zoom=sz[0],setZoom=sz[1];
+  var sox=useState(0),offX=sox[0],setOffX=sox[1];
+  var soy=useState(0),offY=soy[0],setOffY=soy[1];
+  var dragRef=useRef(null);
+  var pinchDistRef=useRef(null);
+
+  // keep refs in sync with state
+  offXRef.current=offX; offYRef.current=offY; zoomRef.current=zoom;
+
+  function clampZ(v){return Math.min(8,Math.max(0.05,v));}
+
+  function onFile(ev){
+    var f=ev.target.files[0]; if(!f)return;
+    var r=new FileReader();
+    r.onload=function(e2){
+      setRawSrc(e2.target.result);
+      offXRef.current=0; offYRef.current=0; zoomRef.current=1;
+      setOffX(0); setOffY(0); setZoom(1);
+    };
+    r.readAsDataURL(f);
+  }
+
+  function apply(){
+    var canvas=document.createElement('canvas');
+    canvas.width=CSIZE; canvas.height=CSIZE;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,CSIZE,CSIZE);
+    var img=new Image();
+    // capture current values from refs (always fresh, no stale closure)
+    var ox=offXRef.current, oy=offYRef.current, z=zoomRef.current;
+    img.onload=function(){
+      ctx.save();
+      ctx.translate(CSIZE/2+ox, CSIZE/2+oy);
+      ctx.scale(z,z);
+      ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+      ctx.restore();
+      var b64=canvas.toDataURL('image/png');
+      onDone(b64);
+    };
+    img.src=rawSrc;
+  }
+
+  // Mouse handlers
+  function onMD(ev){
+    ev.preventDefault();
+    dragRef.current={sx:ev.clientX,sy:ev.clientY,ox:offXRef.current,oy:offYRef.current};
+  }
+  function onMM(ev){
+    if(!dragRef.current)return;
+    var nx=dragRef.current.ox+ev.clientX-dragRef.current.sx;
+    var ny=dragRef.current.oy+ev.clientY-dragRef.current.sy;
+    offXRef.current=nx; offYRef.current=ny;
+    setOffX(nx); setOffY(ny);
+  }
+  function onMU(){dragRef.current=null;}
+
+  // Touch handlers — single finger drag, two finger pinch-to-zoom
+  function getTouchDist(touches){
+    var dx=touches[0].clientX-touches[1].clientX;
+    var dy=touches[0].clientY-touches[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+  function onTD(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1){
+      var t=ev.touches[0];
+      dragRef.current={sx:t.clientX,sy:t.clientY,ox:offXRef.current,oy:offYRef.current};
+      pinchDistRef.current=null;
+    } else if(ev.touches.length===2){
+      dragRef.current=null;
+      pinchDistRef.current=getTouchDist(ev.touches);
+    }
+  }
+  function onTM(ev){
+    ev.preventDefault();
+    if(ev.touches.length===1 && dragRef.current){
+      var t=ev.touches[0];
+      var nx=dragRef.current.ox+t.clientX-dragRef.current.sx;
+      var ny=dragRef.current.oy+t.clientY-dragRef.current.sy;
+      offXRef.current=nx; offYRef.current=ny;
+      setOffX(nx); setOffY(ny);
+    } else if(ev.touches.length===2 && pinchDistRef.current){
+      var dist=getTouchDist(ev.touches);
+      var ratio=dist/pinchDistRef.current;
+      var newZ=clampZ(zoomRef.current*ratio);
+      zoomRef.current=newZ;
+      setZoom(newZ);
+      pinchDistRef.current=dist;
+    }
+  }
+  function onTE(){dragRef.current=null; pinchDistRef.current=null;}
+
+  // Wheel zoom on desktop
+  function onWheel(ev){
+    ev.preventDefault();
+    var delta=ev.deltaY>0?-0.08:0.08;
+    var newZ=clampZ(zoomRef.current+delta);
+    zoomRef.current=newZ; setZoom(newZ);
+  }
+
+  return (
+    <div style={{background:'#F9FAFB',borderRadius:14,padding:20,border:'1px solid #E5E7EB',marginBottom:16}}>
+      <div style={{fontWeight:700,fontSize:14,color:'#0D1117',marginBottom:14}}>Logo Editor</div>
+      {!rawSrc ? (
+        <div>
+          <label style={{display:'flex',alignItems:'center',gap:12,cursor:'pointer',marginBottom:12}}>
+            <div style={{width:80,height:80,borderRadius:10,border:'2px dashed #BFDBFE',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,background:'#EFF6FF'}}>🖼</div>
+            <div>
+              <div style={{fontWeight:700,color:'#1158A6',fontSize:13,marginBottom:3}}>Tap to upload image</div>
+              <div style={{fontSize:11,color:'#9CA3AF'}}>PNG, JPG, SVG — any size</div>
+            </div>
+            <input type="file" accept="image/*" style={{display:'none'}} onChange={onFile} />
+          </label>
+          <button className="btn btn-outline btn-sm" onClick={onCancel}>Cancel</button>
+        </div>
+      ) : (
+        <div>
+          <div style={{fontSize:11,color:'#6B7280',marginBottom:6,fontWeight:600}}>
+            👆 Drag to move &nbsp;·&nbsp; Pinch or scroll to zoom &nbsp;·&nbsp; Use ± buttons too
+          </div>
+          <div
+            style={{width:CSIZE,height:CSIZE,overflow:'hidden',borderRadius:12,border:'2px solid #1158A6',
+              cursor:dragRef.current?'grabbing':'grab',background:'#F0F4FF',position:'relative',
+              userSelect:'none',marginBottom:12,touchAction:'none'}}
+            onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
+            onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onTE}
+            onWheel={onWheel}>
+            <img src={rawSrc}
+              style={{position:'absolute',left:'50%',top:'50%',
+                transform:'translate(calc(-50% + '+offX+'px), calc(-50% + '+offY+'px)) scale('+zoom+')',
+                transformOrigin:'center center',maxWidth:'none',pointerEvents:'none',userSelect:'none'}}
+              draggable={false} />
+            {/* crosshair guide */}
+            <div style={{position:'absolute',inset:0,pointerEvents:'none',border:'1px dashed rgba(17,88,166,.3)',borderRadius:10}} />
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+            <button onClick={function(){var nz=clampZ(zoomRef.current-0.1);zoomRef.current=nz;setZoom(nz);}}
+              style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,lineHeight:'1',padding:0,flexShrink:0}}>−</button>
+            <input type="range" min="0.05" max="8" step="0.05" value={zoom}
+              onChange={function(ev){var nz=parseFloat(ev.target.value);zoomRef.current=nz;setZoom(nz);}}
+              style={{flex:1,accentColor:'#1158A6'}} />
+            <button onClick={function(){var nz=clampZ(zoomRef.current+0.1);zoomRef.current=nz;setZoom(nz);}}
+              style={{width:32,height:32,border:'1px solid #E5E7EB',borderRadius:6,background:'#fff',fontSize:20,cursor:'pointer',fontWeight:700,lineHeight:'1',padding:0,flexShrink:0}}>+</button>
+            <span style={{fontSize:12,color:'#6B7280',minWidth:44,textAlign:'right',fontWeight:600}}>{Math.round(zoom*100)}%</span>
+          </div>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            <button className="btn btn-primary btn-sm" onClick={apply}>✓ Use This Logo</button>
+            <button className="btn btn-outline btn-sm" onClick={function(){setRawSrc(null);offXRef.current=0;offYRef.current=0;zoomRef.current=1;setOffX(0);setOffY(0);setZoom(1);}}>Re-upload</button>
+            <button className="btn btn-outline btn-sm" onClick={onCancel}>Cancel</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+var DEFAULT_PACKAGES = [
+  {id:'pkg_1',title:'Full Body Checkup',sub:'65+ Tests · Verified Partner',price:1999,mrp:3499,off:43,badge:'Most Popular',badgeColor:'#EF4444',cat:'Packages',tests:['CBC','Blood Sugar (Fasting)','Thyroid Profile','Liver Function Test','Kidney Function Test','Lipid Profile','Vitamin D','Vitamin B12','Urine Complete Examination','HbA1c']},
+  {id:'pkg_2',title:'Diabetes Care',sub:'12 Tests · Verified Partner',price:399,mrp:899,off:56,badge:'55% OFF',badgeColor:'#EA580C',cat:'Packages',tests:['Blood Sugar (Fasting)','Blood Sugar (PP)','HbA1c','Urine Microalbumin','Kidney Function Test','Lipid Profile']},
+  {id:'pkg_3',title:'Heart Health',sub:'22 Tests · Verified Partner',price:1799,mrp:2999,off:40,badge:'Cardiology',badgeColor:'#1158A6',cat:'Cardiac',tests:['Lipid Profile','Homocysteine','hs-CRP','ECG','Troponin I','BNP','Complete Blood Count','Blood Sugar (Fasting)']},
+  {id:'pkg_4',title:'Thyroid Profile',sub:'T3, T4, TSH · Verified Partner',price:399,mrp:799,off:50,badge:'Verified',badgeColor:'#0369A1',cat:'Thyroid',tests:['T3','T4','TSH']},
+  {id:'pkg_5',title:"Women's Wellness",sub:'40+ Tests · Verified Partner',price:2299,mrp:3999,off:43,badge:'For Women',badgeColor:'#9333EA',cat:'Packages',tests:['CBC','Thyroid Profile','Vitamin D','Vitamin B12','Iron Studies','Calcium','Prolactin','FSH','LH','Estrogen','Progesterone','HbA1c']},
+  {id:'pkg_6',title:'Senior Citizen',sub:'55+ Tests · Verified Partner',price:2499,mrp:4499,off:44,badge:'45% OFF',badgeColor:'#EA580C',cat:'Packages',tests:['CBC','Thyroid Profile','Blood Sugar (Fasting)','HbA1c','Lipid Profile','Liver Function Test','Kidney Function Test','Vitamin D','Vitamin B12','Uric Acid','ESR','Urine Complete Examination']},
+];
+
+function Packages(props) {
+  var sl=useState(DEFAULT_PACKAGES),pkgs=sl[0],setPkgs=sl[1];
+  // Sync from Supabase settings whenever they arrive/change
+  useEffect(function(){
+    var sb = props.sbSettings && props.sbSettings['le_packages'];
+    if (sb && Array.isArray(sb) && sb.length) setPkgs(sb);
+  }, [props.sbSettings]);
+  var se=useState(null),editing=se[0],setEditing=se[1];
+  var sa=useState(false),adding=sa[0],setAdding=sa[1];
+  var sm=useState(''),msg=sm[0],setMsg=sm[1];
+
+  var emptyPkg={id:'',title:'',sub:'',price:'',mrp:'',badge:'',badgeColor:'#1158A6',cat:'Packages',tests:[]};
+  var sform=useState(emptyPkg),form=sform[0],setForm=sform[1];
+  var snewTest=useState(''),newTest=snewTest[0],setNewTest=snewTest[1];
+
+  function save(next){
+    setPkgs(next);
+    syncAdminSetting('le_packages', next);
+    setMsg('Saved!');setTimeout(function(){setMsg('');},2000);
+  }
+
+  function startEdit(pkg){
+    setEditing(pkg.id);
+    setForm(Object.assign({},pkg,{tests:(pkg.tests||[]).slice()}));
+    setAdding(false);
+  }
+
+  function startAdd(){
+    setAdding(true);
+    setEditing(null);
+    setForm(Object.assign({},emptyPkg,{id:'pkg_'+Date.now()}));
+    setNewTest('');
+  }
+
+  function cancelEdit(){setEditing(null);setAdding(false);setForm(emptyPkg);}
+
+  function saveEdit(){
+    if(!form.title.trim()){alert('Package name is required.');return;}
+    var p=parseFloat(form.price);var m=parseFloat(form.mrp);
+    if(isNaN(p)||p<0){alert('Enter a valid price.');return;}
+    if(isNaN(m)||m<p){alert('MRP must be ≥ price.');return;}
+    var off=m>0?Math.round((m-p)/m*100):0;
+    var updated=Object.assign({},form,{price:p,mrp:m,off:off});
+    if(adding){
+      save(pkgs.concat([updated]));
+    } else {
+      save(pkgs.map(function(pk){return pk.id===editing?updated:pk;}));
+    }
+    cancelEdit();
+  }
+
+  function remove(id){if(window.confirm('Remove this package?'))save(pkgs.filter(function(pk){return pk.id!==id;}));}
+
+  function addTestToForm(){
+    var t=newTest.trim();
+    if(!t)return;
+    if(form.tests.indexOf(t)===-1)setForm(function(f){return Object.assign({},f,{tests:f.tests.concat([t])});});
+    setNewTest('');
+  }
+
+  function removeTestFromForm(t){setForm(function(f){return Object.assign({},f,{tests:f.tests.filter(function(x){return x!==t;})});});}
+
+  function resetToDefault(){if(window.confirm('Reset all packages to default?'))save(DEFAULT_PACKAGES);}
+
+  var fld={width:'100%',padding:'9px 12px',borderRadius:8,border:'1.5px solid #E5E7EB',fontSize:14,fontFamily:'inherit',boxSizing:'border-box',outline:'none'};
+
+  return (
+    React.createElement('div',{style:{padding:28}},
+      React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+        React.createElement('div',{style:{fontSize:22,fontWeight:800,color:'#0D1117'}},'Healthcare Packages'),
+        React.createElement('div',{style:{display:'flex',gap:8}},
+          React.createElement('button',{className:'btn btn-outline btn-sm',onClick:resetToDefault},'Reset to Default'),
+          React.createElement('button',{className:'btn btn-primary',onClick:startAdd},'+ Add Package')
+        )
+      ),
+      React.createElement('div',{style:{fontSize:13,color:'#6B7280',marginBottom:24}},'Edit package prices, badge labels, and included tests. Changes sync instantly to all devices.'),
+      msg&&React.createElement('div',{style:{background:'#D1FAE5',color:'#065F46',border:'1px solid #6EE7B7',borderRadius:8,padding:'10px 16px',marginBottom:16,fontWeight:600}},msg),
+
+      /* Add / Edit form */
+      (adding||editing)&&React.createElement('div',{style:{background:'#F8FAFC',border:'1.5px solid #DBEAFE',borderRadius:14,padding:22,marginBottom:24}},
+        React.createElement('div',{style:{fontWeight:800,fontSize:16,color:'#1158A6',marginBottom:16}},adding?'Add New Package':'Edit Package'),
+        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}},
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Package Name *'),
+            React.createElement('input',{style:fld,value:form.title,placeholder:'e.g. Full Body Checkup',onChange:function(e){setForm(function(f){return Object.assign({},f,{title:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Sub-label'),
+            React.createElement('input',{style:fld,value:form.sub,placeholder:'e.g. 65+ Tests · Verified Partner',onChange:function(e){setForm(function(f){return Object.assign({},f,{sub:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Price (₹) *'),
+            React.createElement('input',{style:fld,type:'number',value:form.price,placeholder:'e.g. 1999',onChange:function(e){setForm(function(f){return Object.assign({},f,{price:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'MRP (₹) *'),
+            React.createElement('input',{style:fld,type:'number',value:form.mrp,placeholder:'e.g. 3499',onChange:function(e){setForm(function(f){return Object.assign({},f,{mrp:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Badge Text'),
+            React.createElement('input',{style:fld,value:form.badge,placeholder:'e.g. Most Popular',onChange:function(e){setForm(function(f){return Object.assign({},f,{badge:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Badge Color'),
+            React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center'}},
+              React.createElement('input',{type:'color',value:form.badgeColor,style:{width:40,height:36,border:'1.5px solid #E5E7EB',borderRadius:6,cursor:'pointer'},onChange:function(e){setForm(function(f){return Object.assign({},f,{badgeColor:e.target.value})});}}),
+              React.createElement('input',{style:Object.assign({},fld,{flex:1}),value:form.badgeColor,onChange:function(e){setForm(function(f){return Object.assign({},f,{badgeColor:e.target.value});})}})
+            )
+          )
+        ),
+        /* Tests list */
+        React.createElement('div',{style:{marginBottom:12}},
+          React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:6}},'Included Tests'),
+          React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginBottom:8}},
+            form.tests.map(function(t){
+              return React.createElement('span',{key:t,style:{background:'#EFF6FF',color:'#1158A6',border:'1px solid #BFDBFE',borderRadius:20,padding:'4px 10px',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}},
+                t,
+                React.createElement('button',{onClick:function(){removeTestFromForm(t);},style:{background:'none',border:'none',cursor:'pointer',color:'#EF4444',fontSize:14,lineHeight:1,padding:'0 0 0 2px',fontWeight:700}},'×')
+              );
+            })
+          ),
+          React.createElement('div',{style:{display:'flex',gap:8}},
+            React.createElement('input',{style:Object.assign({},fld,{flex:1}),value:newTest,placeholder:'Type test name and press Add',onChange:function(e){setNewTest(e.target.value);},onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();addTestToForm();}}}),
+            React.createElement('button',{className:'btn btn-outline btn-sm',onClick:addTestToForm,style:{whiteSpace:'nowrap'}},'+ Add Test')
+          )
+        ),
+        React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end'}},
+          React.createElement('button',{className:'btn btn-outline btn-sm',onClick:cancelEdit},'Cancel'),
+          React.createElement('button',{className:'btn btn-primary',onClick:saveEdit},adding?'Create Package':'Save Changes')
+        )
+      ),
+
+      /* Package cards */
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))',gap:16}},
+        pkgs.map(function(pkg){
+          return React.createElement('div',{key:pkg.id,style:{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:14,overflow:'hidden'}},
+            React.createElement('div',{style:{background:'linear-gradient(90deg,#EEF4FF,#F0F9FF)',padding:'14px 16px',borderBottom:'1px solid #E5E7EB',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}},
+              React.createElement('div',null,
+                React.createElement('div',{style:{fontWeight:800,fontSize:15,color:'#0D1117',marginBottom:3}},pkg.title),
+                React.createElement('div',{style:{fontSize:12,color:'#6B7280'}},pkg.sub),
+                React.createElement('span',{style:{display:'inline-block',background:pkg.badgeColor,color:'#fff',borderRadius:20,padding:'2px 10px',fontSize:11,fontWeight:700,marginTop:6}},pkg.badge)
+              ),
+              React.createElement('div',{style:{textAlign:'right',flexShrink:0}},
+                React.createElement('div',{style:{fontWeight:900,fontSize:18,color:'#0D1117'}},'₹'+pkg.price.toLocaleString()),
+                React.createElement('div',{style:{textDecoration:'line-through',color:'#9CA3AF',fontSize:12}},'₹'+pkg.mrp.toLocaleString()),
+                React.createElement('div',{style:{color:'#16A34A',fontWeight:700,fontSize:12}},pkg.off+'% off')
+              )
+            ),
+            React.createElement('div',{style:{padding:'10px 16px',borderBottom:'1px solid #F1F5F9'}},
+              React.createElement('div',{style:{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:6}},'Included Tests ('+((pkg.tests||[]).length)+')'),
+              React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:4}},
+                (pkg.tests||[]).slice(0,6).map(function(t){return React.createElement('span',{key:t,style:{background:'#F1F5F9',borderRadius:12,padding:'2px 8px',fontSize:11,color:'#374151'}},t);}),
+                (pkg.tests||[]).length>6&&React.createElement('span',{style:{background:'#F1F5F9',borderRadius:12,padding:'2px 8px',fontSize:11,color:'#6B7280'}},'+'+((pkg.tests||[]).length-6)+' more')
+              )
+            ),
+            React.createElement('div',{style:{padding:'10px 16px',display:'flex',gap:8,justifyContent:'flex-end'}},
+              React.createElement('button',{className:'btn btn-outline btn-sm',onClick:function(){startEdit(pkg);}},
+                React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',style:{marginRight:4}},React.createElement('path',{d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'}),React.createElement('path',{d:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'})),
+                'Edit'
+              ),
+              React.createElement('button',{className:'btn btn-sm',style:{background:'#FEF2F2',color:'#EF4444',border:'1px solid #FECACA'},onClick:function(){remove(pkg.id);}},
+                React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',style:{marginRight:4}},React.createElement('polyline',{points:'3 6 5 6 21 6'}),React.createElement('path',{d:'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'}),React.createElement('path',{d:'M10 11v6M14 11v6'}),React.createElement('path',{d:'M9 6V4h6v2'})),
+                'Remove'
+              )
+            )
+          );
+        })
+      )
+    )
+  );
+}
+
+function TrustedLogos(props) {
+  var sl=useState(DEFAULT_MARQUEE),logos=sl[0],setLogos=sl[1];
+  // Sync from Supabase settings whenever they arrive/change
+  useEffect(function(){
+    var sb = props.sbSettings && props.sbSettings['le_marquee_logos'];
+    if (sb && Array.isArray(sb) && sb.length) setLogos(sb);
+  }, [props.sbSettings]);
+  var sa=useState(false),adding=sa[0],setAdding=sa[1];
+  var se=useState(null),editing=se[0],setEditing=se[1]; // id being edited
+  var sn=useState(''),newName=sn[0],setNewName=sn[1];
+  var snl=useState(null),newLogo=snl[0],setNewLogo=snl[1];
+  var sen=useState(''),editName=sen[0],setEditName=sen[1];
+  var sel=useState(null),editLogo=sel[0],setEditLogo=sel[1];
+  var sew=useState(false),editingLogoFor=sew[0],setEditingLogoFor=sew[1];
+  var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
+  var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
+
+  function save(next){setLogos(next);syncAdminSetting('le_marquee_logos',next);}
+
+  function addNew(){
+    if(!newLogo){setSaveErr('Please upload a logo first.');return;}
+    setSaveErr('');
+    var id='custom_'+Date.now();
+    var name=newName.trim()||'Partner Lab';
+    save(logos.concat([{id:id,name:name,src:'',b64:newLogo}]));
+    setNewName('');setNewLogo(null);setAdding(false);setAddingLogoFor(null);
+  }
+  function remove(id){save(logos.filter(function(l){return l.id!==id;}));}
+  function startEdit(l){setEditing(l.id);setEditName(l.name);setEditLogo(l.b64||null);setEditingLogoFor(false);}
+  function saveEdit(id){
+    save(logos.map(function(l){return l.id===id?Object.assign({},l,{name:editName,b64:editLogo||l.b64}):l;}));
+    setEditing(null);setEditingLogoFor(false);
+  }
+  function resetToDefault(){save(DEFAULT_MARQUEE);}
+
+  return (
+    <div style={{padding:28}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
+        <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Trusted Labs — Marquee Logos</div>
+        <div style={{display:'flex',gap:8}}>
+          <button className="btn btn-outline btn-sm" onClick={resetToDefault}>Reset to Default</button>
+          <button className="btn btn-primary" onClick={function(){setAdding(!adding);setAddingLogoFor(null);}}>+ Add Logo</button>
+        </div>
+      </div>
+      <div style={{fontSize:13,color:'#6B7280',marginBottom:24}}>These logos scroll in the "Our Trusted Lab Partners" section on the homepage. Changes show on the website within a few seconds.</div>
+
+      {/* Add new */}
+      {adding && (
+        <div className="card" style={{padding:20,marginBottom:20}}>
+          <div style={{fontWeight:700,fontSize:15,color:'#0D1117',marginBottom:14}}>Add New Logo</div>
+          <div style={{marginBottom:12}}>
+            <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:4}}>Lab / Partner Name</label>
+            <input type="text" style={{width:'100%',maxWidth:320}} placeholder="e.g. Narayana Diagnostics" value={newName} onChange={function(e){setNewName(e.target.value);}} />
+          </div>
+          {addingLogoFor==='new' ? (
+            <LogoEditorInline onDone={function(b64){setNewLogo(b64);setAddingLogoFor(null);}} onCancel={function(){setAddingLogoFor(null);}} />
+          ) : (
+            <div style={{marginBottom:12}}>
+              {newLogo
+                ? <div style={{display:'flex',alignItems:'center',gap:12}}>
+                    <img src={newLogo} style={{height:60,maxWidth:140,objectFit:'contain',borderRadius:8,border:'1px solid #E5E7EB',background:'#F9FAFB'}} />
+                    <button className="btn btn-outline btn-sm" onClick={function(){setAddingLogoFor('new');}}>Change Logo</button>
+                  </div>
+                : <button className="btn btn-outline" onClick={function(){setAddingLogoFor('new');}}>📷 Upload &amp; Crop Logo</button>
+              }
+            </div>
+          )}
+          {addingLogoFor!=='new' && (
+            <div style={{marginTop:8}}>
+              {saveErr&&<div style={{background:'#FEF2F2',color:'#DC2626',fontSize:12,padding:'7px 12px',borderRadius:8,marginBottom:8,fontWeight:600}}>{saveErr}</div>}
+              <div style={{display:'flex',gap:8}}>
+                <button className="btn btn-primary btn-sm" onClick={addNew}>Save</button>
+                <button className="btn btn-outline btn-sm" onClick={function(){setAdding(false);setAddingLogoFor(null);setNewName('');setNewLogo(null);setSaveErr('');}}>Cancel</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Grid of existing logos */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:16}}>
+        {logos.map(function(l,idx){
+          var isEditing=editing===l.id;
+          return (
+            <div key={l.id} className="card" style={{padding:16,position:'relative'}}>
+              {/* drag handle indicator */}
+              <div style={{position:'absolute',top:8,left:8,color:'#D1D5DB',fontSize:11,fontWeight:600}}>#{idx+1}</div>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
+                {(l.b64||l.src)
+                  ? <img src={l.b64||l.src} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} onError={function(e){e.target.style.display='none';}} />
+                  : <div style={{color:'#9CA3AF',fontSize:28}}>🏥</div>
+                }
+              </div>
+              {isEditing ? (
+                <div>
+                  <input type="text" style={{width:'100%',marginBottom:8,fontSize:13}} value={editName} onChange={function(e){setEditName(e.target.value);}} />
+                  {editingLogoFor ? (
+                    <LogoEditorInline onDone={function(b64){setEditLogo(b64);setEditingLogoFor(false);}} onCancel={function(){setEditingLogoFor(false);}} />
+                  ) : (
+                    <div style={{marginBottom:10}}>
+                      {editLogo
+                        ? <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                            <img src={editLogo} style={{height:36,maxWidth:80,objectFit:'contain',borderRadius:6,border:'1px solid #E5E7EB'}} />
+                            <button className="btn btn-outline btn-sm" onClick={function(){setEditingLogoFor(true);}}>Change</button>
+                          </div>
+                        : <button className="btn btn-outline btn-sm" style={{marginBottom:6}} onClick={function(){setEditingLogoFor(true);}}>📷 Change Logo</button>
+                      }
+                    </div>
+                  )}
+                  {!editingLogoFor && (
+                    <div style={{display:'flex',gap:6}}>
+                      <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(l.id);}}>Save</button>
+                      <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);setEditingLogoFor(false);}}>Cancel</button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:10,textAlign:'center'}}>{l.name}</div>
+                  <div style={{display:'flex',gap:6,justifyContent:'center'}}>
+                    <button className="btn btn-outline btn-sm" onClick={function(){startEdit(l);}}>Edit</button>
+                    <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){remove(l.id);}}>Remove</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {logos.length===0 && (
+        <div style={{textAlign:'center',padding:48,color:'#9CA3AF',fontSize:14}}>No logos yet. Click "+ Add Logo" to add one.</div>
+      )}
+    </div>
+  );
+}
+
+function Settings() {
+  const [cur, setCur] = useState('');
+  const [np, setNp] = useState('');
+  const [cp, setCp] = useState('');
+  const [msg, setMsg] = useState(null);
+  function changePass(ev) {
+    ev.preventDefault();
+    var storedPass = localStorage.getItem('le_admin_pass') || 'labease2024';
+    if(cur !== storedPass){setMsg({ok:false,text:'Current password is incorrect.'});return;}
+    if(!np){setMsg({ok:false,text:'New password cannot be empty.'});return;}
+    if(np !== cp){setMsg({ok:false,text:'New passwords do not match.'});return;}
+    localStorage.setItem('le_admin_pass', np);
+    setCur(''); setNp(''); setCp('');
+    setMsg({ok:true,text:'Password updated successfully!'});
+  }
+  return (
+    <div style={{padding:28}}>
+      <div style={{fontSize:22,fontWeight:800,marginBottom:6,color:'#0D1117'}}>Settings</div>
+      <div style={{fontSize:13.5,color:'#6B7280',marginBottom:24}}>Manage your admin account settings.</div>
+      <div style={{maxWidth:480}}>
+        <div className="card" style={{padding:28}}>
+          <div style={{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:20}}>Change Password</div>
+          <form onSubmit={changePass}>
+            <div style={{marginBottom:14}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Current Password</label>
+              <input type="password" style={{width:'100%'}} value={cur} onChange={function(ev){setCur(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            <div style={{marginBottom:14}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>New Password</label>
+              <input type="password" style={{width:'100%'}} value={np} onChange={function(ev){setNp(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            <div style={{marginBottom:18}}>
+              <label style={{fontSize:12,fontWeight:600,color:'#374151',display:'block',marginBottom:5}}>Confirm New Password</label>
+              <input type="password" style={{width:'100%'}} value={cp} onChange={function(ev){setCp(ev.target.value);}} placeholder="••••••••" />
+            </div>
+            {msg && <div style={{background:msg.ok?'#F0FDF4':'#FEF2F2',color:msg.ok?'#15803D':'#DC2626',fontSize:12,padding:'8px 12px',borderRadius:8,marginBottom:14,fontWeight:500}}>{msg.text}</div>}
+            <button type="submit" className="btn btn-primary">Update Password</button>
+          </form>
+        </div>
+        <div className="card" style={{padding:28,marginTop:16}}>
+          <div style={{fontWeight:700,fontSize:16,color:'#0D1117',marginBottom:8}}>Account Info</div>
+          <div style={{fontSize:13.5,color:'#6B7280',lineHeight:1.6}}>
+            <div><strong style={{color:'#374151'}}>Username: </strong>admin</div>
+            <div><strong style={{color:'#374151'}}>Role: </strong>Administrator</div>
+            <div><strong style={{color:'#374151'}}>Platform: </strong>LabEase Admin Panel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [authed, setAuthed] = useState(function(){return localStorage.getItem('le_auth')==='1';});
+  const [page, setPage] = useState('dashboard');
+  const [bookings, setBookings] = useState([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [labs, setLabs] = useState(function(){return genLabs();});
+  const [tests, setTests] = useState(function(){return genTests();});
+  const [sbSettings, setSbSettings] = useState({});
+
+  // On startup: fetch ALL admin_settings from Supabase into sbSettings state
+  // and subscribe to Realtime so every device sees live changes instantly
+  useEffect(function() {
+    if (!supaAdmin) return;
+    function fetchAll() {
+      supaAdmin.from('admin_settings').select('key, value').then(function(r) {
+        if (r.error || !r.data) return;
+        var updated = {};
+        r.data.forEach(function(row) { updated[row.key] = row.value; });
+        setSbSettings(updated);
+        if (updated['le_labs'] && Array.isArray(updated['le_labs'])) {
+          setLabs(updated['le_labs']);
+        }
+      });
+    }
+    fetchAll();
+    var channel = supaAdmin.channel('admin-settings-panel')
+      .on('postgres_changes', {event:'*', schema:'public', table:'admin_settings'}, fetchAll)
+      .subscribe();
+    // Polling fallback — syncs across devices even if Realtime isn't enabled
+    var poll = setInterval(fetchAll, 10000);
+    return function() { supaAdmin.removeChannel(channel); clearInterval(poll); };
+  }, []);
+
+  useEffect(function() {
+    function fetchBookings() {
+      loadBookingsFromSupabase().then(function(data) {
+        if (data) { setBookings(data); setBookingsLoading(false); }
+      });
+    }
+    fetchBookings();
+    // Auto-refresh every 30s so new bookings appear without manual reload
+    var iv = setInterval(fetchBookings, 30000);
+    return function() { clearInterval(iv); };
+  }, []);
+
+  function login() { ['le_admin_auth','labease_admin_auth'].forEach(k=>localStorage.removeItem(k)); localStorage.setItem('le_auth','1'); setAuthed(true); }
+  function logout() { localStorage.removeItem('le_auth'); setAuthed(false); }
+
+  if (!authed) return React.createElement(Login, {onLogin:login});
+
+  var pageTitles = {dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing',packages:'Healthcare Packages',trusted:'Trusted Logos',settings:'Settings'};
+
+  return (
+    <div>
+      <Sidebar page={page} setPage={setPage} onLogout={logout} />
+      <div className="main">
+        <div className="top-bar">
+          <div style={{fontWeight:700,fontSize:15,color:'#0D1117'}}>{pageTitles[page]}</div>
+          <div style={{fontSize:13,color:'#6B7280',display:'flex',alignItems:'center',gap:8}}>
+            <div style={{width:32,height:32,borderRadius:'50%',background:'#1158A6',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:13}}>A</div>
+            <span style={{fontWeight:500}}>Admin</span>
+          </div>
+        </div>
+        {page==='dashboard' && <Dashboard bookings={bookings} />}
+        {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} bookingsLoading={bookingsLoading} />}
+        {page==='labs' && <Labs labs={labs} setLabs={setLabs} sbSettings={sbSettings} />}
+        {page==='tests' && <Tests tests={tests} setTests={setTests} sbSettings={sbSettings} />}
+        {page==='packages' && <Packages sbSettings={sbSettings} />}
+        {page==='trusted'  && <TrustedLogos sbSettings={sbSettings} />}
+        {page==='settings' && <Settings />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App, null));
+</script>
+</body>
+</html>
