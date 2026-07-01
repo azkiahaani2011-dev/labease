@@ -4470,6 +4470,10 @@ export default function App() {
   }, []);
   const [prepGuideOpen, setPrepGuideOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [partnerOpen, setPartnerOpen] = useState(false);
+  const [careersOpen, setCareersOpen] = useState(false);
+  const [blogOpen, setBlogOpen] = useState(false);
+  const [blogPost, setBlogPost] = useState(null);
   const [sideMenu,    setSideMenu]   = useState(false);
   const [selectedTest, setSelectedTest] = useState(null); // {name, cat} when user clicks a specific test
   const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
@@ -5182,7 +5186,7 @@ export default function App() {
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
                 {["About Us","Partner With Us","Careers","Blog","Press"].map(l=>(
                   <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
-                    onClick={()=>{ if(l==="About Us") setAboutOpen(true); }}
+                    onClick={()=>{ if(l==="About Us") setAboutOpen(true); if(l==="Partner With Us") setPartnerOpen(true); if(l==="Careers") setCareersOpen(true); if(l==="Blog") setBlogOpen(true); }}
                     onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
                     onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
                 ))}
@@ -5934,6 +5938,129 @@ export default function App() {
                 <div style={{ fontSize:".8rem",color:"#374151" }}>📧 support@labease.in &nbsp;·&nbsp; 📞 1800-103-0001</div>
               </div>
 
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PARTNER WITH US MODAL */}
+      {partnerOpen && (
+        <div onClick={()=>setPartnerOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setPartnerOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>🤝 Partner With Us</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Grow your lab with LabEase</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,marginBottom:20 }}>
+                We're building a network of trusted diagnostic labs across India. If you run a diagnostic center or clinic and want to reach more patients, we'd love to connect.
+              </p>
+              <div style={{ display:"flex",flexDirection:"column",gap:10,marginBottom:24 }}>
+                {[["🏥","Who can apply","Diagnostic centers, pathology labs, and clinics of any size."],["📋","What we need","Your lab details, location, and the tests you offer."],["📞","What happens next","Our team will reach out within 2–3 business days to discuss next steps."]].map(([icon,title,desc])=>(
+                  <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start",background:"#F9FAFB",borderRadius:12,padding:"12px 14px" }}>
+                    <span style={{ fontSize:"1.1rem",flexShrink:0 }}>{icon}</span>
+                    <div>
+                      <div style={{ fontWeight:700,fontSize:".84rem",color:"#0D1117",marginBottom:2 }}>{title}</div>
+                      <div style={{ fontSize:".8rem",color:"#6B7280" }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:14,padding:"18px 20px" }}>
+                <div style={{ fontWeight:700,fontSize:".88rem",color:"#1158A6",marginBottom:10 }}>Send us your details</div>
+                {[["Lab / Clinic Name","text","e.g. Sunrise Diagnostics"],["City","text","e.g. Hyderabad"],["Phone Number","tel","e.g. 9876543210"],["Email Address","email","e.g. lab@example.com"]].map(([label,type,ph])=>(
+                  <div key={label} style={{ marginBottom:12 }}>
+                    <div style={{ fontSize:".75rem",fontWeight:700,color:"#374151",marginBottom:4 }}>{label}</div>
+                    <input type={type} placeholder={ph} style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:8,padding:"10px 12px",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",outline:"none",boxSizing:"border-box",color:"#0D1117" }}/>
+                  </div>
+                ))}
+                <button style={{ width:"100%",background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",marginTop:4 }}
+                  onClick={()=>{ alert("Thank you! We'll be in touch within 2–3 business days."); setPartnerOpen(false); }}>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CAREERS MODAL */}
+      {careersOpen && (
+        <div onClick={()=>setCareersOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setCareersOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>💼 Careers at LabEase</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Join us in making healthcare simpler</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,marginBottom:20 }}>
+                We're a small team working to make diagnostic healthcare more transparent and accessible for everyone in India. We value people who care about the impact of their work.
+              </p>
+              <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:14,padding:"18px 20px",marginBottom:20,textAlign:"center" }}>
+                <div style={{ fontWeight:800,fontSize:".95rem",color:"#92400E",marginBottom:6 }}>No open positions right now</div>
+                <div style={{ fontSize:".83rem",color:"#78350F",lineHeight:1.65 }}>But we're always happy to hear from talented people. If you're passionate about healthcare, technology, or operations — send us your resume and we'll keep you in mind.</div>
+              </div>
+              <div style={{ background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:14,padding:"16px 20px",textAlign:"center" }}>
+                <div style={{ fontWeight:700,fontSize:".85rem",color:"#1158A6",marginBottom:4 }}>Send your resume to</div>
+                <div style={{ fontSize:".88rem",color:"#374151",fontWeight:600 }}>careers@labease.in</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BLOG MODAL */}
+      {blogOpen && !blogPost && (
+        <div onClick={()=>setBlogOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:520,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setBlogOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>📖 LabEase Blog</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Simple health information, no jargon</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              {[
+                { tag:"Blood Test", title:"What is a CBC Test?", desc:"A Complete Blood Count test checks your red cells, white cells, and platelets — and why your doctor orders it.", what:"A CBC (Complete Blood Count) is a blood test that measures the different cells in your blood — red blood cells, white blood cells, and platelets. It gives your doctor a quick overview of your overall health.", why:"Doctors order a CBC to check for infections, anaemia, clotting problems, or to monitor an existing condition. It is one of the most common tests ordered during a routine health check." },
+                { tag:"Thyroid", title:"What is a Thyroid Test?", desc:"Your thyroid controls your metabolism, energy, and mood. Here's what a thyroid test actually checks.", what:"A thyroid test measures the levels of thyroid hormones (TSH, T3, T4) in your blood. The thyroid gland in your neck produces these hormones, which control how your body uses energy.", why:"Doctors order a thyroid test if you're feeling unusually tired, gaining or losing weight without reason, feeling cold all the time, or experiencing mood changes. It helps detect an underactive or overactive thyroid." },
+                { tag:"Diabetes", title:"What is an HbA1c Test?", desc:"Unlike a regular sugar test, HbA1c shows your average blood sugar over 3 months — here's why that matters.", what:"HbA1c (Glycated Haemoglobin) is a blood test that shows your average blood sugar level over the past 2–3 months. It measures how much sugar has attached itself to haemoglobin in your red blood cells.", why:"Doctors use this test to diagnose diabetes and prediabetes, and to monitor how well diabetes is being managed over time. It is more reliable than a single fasting sugar test because it reflects long-term blood sugar control." },
+                { tag:"Vitamins", title:"What is a Vitamin D Test?", desc:"Vitamin D deficiency is extremely common in India. This test tells you where your levels stand.", what:"A Vitamin D test (25-OH Vitamin D) measures the amount of Vitamin D in your blood. Vitamin D is essential for strong bones, immune function, and muscle health.", why:"Doctors order this test if you have bone pain, fatigue, frequent infections, or muscle weakness. Vitamin D deficiency is very common in India due to limited sun exposure and diet, and is easily corrected with supplements once diagnosed." },
+                { tag:"Liver", title:"What is a Liver Function Test?", desc:"Your liver does hundreds of jobs silently. A Liver Function Test checks how well it's doing.", what:"A Liver Function Test (LFT) is a group of blood tests that check enzymes, proteins, and bilirubin produced or processed by the liver. It gives a picture of how well your liver is working.", why:"Doctors order an LFT to check for liver damage, infections like hepatitis, the effects of alcohol, or to monitor medications that can affect the liver. It is also done as part of routine full-body checkups." },
+              ].map((post,i)=>(
+                <div key={i} onClick={()=>setBlogPost(post)} style={{ border:"1px solid #E5E7EB",borderRadius:14,padding:"16px 18px",marginBottom:12,cursor:"pointer",transition:"box-shadow .15s" }}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(17,88,166,.12)"}
+                  onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                  <div style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 10px",fontSize:".68rem",fontWeight:700,marginBottom:8 }}>{post.tag}</div>
+                  <div style={{ fontWeight:800,fontSize:".95rem",color:"#0D1117",marginBottom:4 }}>{post.title}</div>
+                  <div style={{ fontSize:".82rem",color:"#6B7280",lineHeight:1.6 }}>{post.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BLOG POST MODAL */}
+      {blogPost && (
+        <div onClick={()=>setBlogPost(null)} style={{ position:"fixed",inset:0,zIndex:6001,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ padding:"24px 24px 12px",borderBottom:"1px solid #F1F5F9",position:"sticky",top:0,background:"#fff",borderRadius:"24px 24px 0 0",display:"flex",alignItems:"center",gap:12 }}>
+              <button onClick={()=>setBlogPost(null)} style={{ background:"#F3F4F6",border:"none",borderRadius:"50%",width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+              </button>
+              <div style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 10px",fontSize:".68rem",fontWeight:700 }}>{blogPost.tag}</div>
+            </div>
+            <div style={{ padding:"20px 24px 32px" }}>
+              <div style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",marginBottom:20,lineHeight:1.4 }}>{blogPost.title}</div>
+              <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:14,marginBottom:20 }}>
+                <div style={{ fontWeight:800,fontSize:".88rem",color:"#1158A6",marginBottom:6 }}>What is it?</div>
+                <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.8 }}>{blogPost.what}</div>
+              </div>
+              <div style={{ borderLeft:"3.5px solid #16A34A",paddingLeft:14 }}>
+                <div style={{ fontWeight:800,fontSize:".88rem",color:"#16A34A",marginBottom:6 }}>Why is it taken?</div>
+                <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.8 }}>{blogPost.why}</div>
+              </div>
             </div>
           </div>
         </div>
