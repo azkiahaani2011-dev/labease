@@ -2057,7 +2057,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
             {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
           </div>
         </div>
-        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12 }}>REPORTS IN {reportTime.toUpperCase()}</div>
+        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12,textAlign:"center" }}>REPORTS IN {reportTime.toUpperCase()}</div>
         <div style={{ display:"flex",justifyContent:"center" }}>
           <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
@@ -2819,15 +2819,15 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
 
   const tabStyle = (active) => ({
     flex: 1,
-    padding: "10px 0",
+    padding: "11px 0",
     border: "none",
-    background: "none",
+    background: active ? "#EEF4FF" : "none",
     fontFamily: "'Manrope', sans-serif",
     fontWeight: 700,
     fontSize: ".85rem",
     cursor: "pointer",
-    color: active ? "#1158A6" : "#9CA3AF",
-    borderBottom: active ? "2px solid #1158A6" : "2px solid transparent",
+    color: active ? "#1158A6" : "#6B7280",
+    borderBottom: active ? "2.5px solid #1158A6" : "2.5px solid transparent",
     transition: "all .15s",
   });
 
@@ -2843,25 +2843,27 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         {/* Tabs */}
         <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
-              {/* DNA / test tube with liquid icon for Tests & Packages */}
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M8 2h8"/><path d="M9 2v5.5L5.5 14A5 5 0 0 0 10 22h4a5 5 0 0 0 4.5-8.5L15 7.5V2"/>
-                <path d="M5.8 15h12.4"/>
-                <circle cx="10" cy="17" r=".8" fill={tab==="tests"?"#1158A6":"#9CA3AF"} stroke="none"/>
-                <circle cx="14" cy="19" r=".8" fill={tab==="tests"?"#1158A6":"#9CA3AF"} stroke="none"/>
-              </svg>
+            <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
+              {/* Pill / capsule icon — represents medicine/test */}
+              <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="tests"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
+                  <path d="M8.5 8.5 15.5 15.5"/>
+                </svg>
+              </span>
               Tests &amp; Packages
             </span>
           </button>
           <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
-              {/* Location pin with cross / lab marker icon */}
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                <path d="M12 7v4"/><path d="M10 9h4"/>
-              </svg>
+            <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
+              {/* Map pin with medical cross */}
+              <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                  <line x1="12" y1="7" x2="12" y2="11"/><line x1="10" y1="9" x2="14" y2="9"/>
+                </svg>
+              </span>
               Labs
             </span>
           </button>
@@ -2899,12 +2901,12 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
       {/* Popular chips */}
       {!q && (
         <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
-          <span style={{ fontSize:".72rem",color:"rgba(255,255,255,.7)",fontWeight:600 }}>Popular:</span>
+          <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
           {TRENDING_CHIPS.map(chip=>(
             <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
-              style={{ background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.3)",backdropFilter:"blur(6px)",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.28)"; e.currentTarget.style.borderColor="rgba(255,255,255,.5)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.15)"; e.currentTarget.style.borderColor="rgba(255,255,255,.3)"; }}>
+              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
               {chip.label}
             </button>
           ))}
@@ -4576,35 +4578,30 @@ export default function App() {
     <div>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="hero-section" style={{ background:"linear-gradient(135deg,#0A1628 0%,#0F2D6B 45%,#1158A6 100%)", minHeight:360, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
-        {/* ambient orbs */}
-        <div style={{ position:"absolute",top:-60,right:"8%",width:320,height:320,borderRadius:"50%",background:"radial-gradient(circle,rgba(37,99,235,.35) 0%,transparent 70%)",pointerEvents:"none",zIndex:1 }}/>
-        <div style={{ position:"absolute",bottom:-80,left:"5%",width:260,height:260,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,.2) 0%,transparent 70%)",pointerEvents:"none",zIndex:1 }}/>
-        {/* subtle dot grid */}
-        <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px)",backgroundSize:"28px 28px",pointerEvents:"none",zIndex:1 }}/>
+      <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?24:42,paddingBottom:isMobileRef.current?20:42,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
-          <div style={{ maxWidth:isMobileRef.current?"100%":600,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
+        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
+          <div style={{ maxWidth:isMobileRef.current?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.12)",backdropFilter:"blur(8px)",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:14,border:"1px solid rgba(255,255,255,.2)",maxWidth:"100%",boxSizing:"border-box" }}>
-              <span style={{ background:"linear-gradient(90deg,#60A5FA,#93C5FD)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#0A1628",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-              <span style={{ color:"rgba(255,255,255,.9)",fontSize:".73rem",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
             {/* location indicator */}
-            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:14,color:"rgba(255,255,255,.75)",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               <span>Hyderabad</span>
             </div>
 
             {/* headline */}
-            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#fff",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
-              <span style={{ background:"linear-gradient(90deg,#60A5FA 0%,#93C5FD 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p className="hero-content hero-content-delay-3" style={{ color:"rgba(255,255,255,.7)",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+            <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
               Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
@@ -5670,38 +5667,43 @@ export default function App() {
                     </div>
                   ))}
 
-                  {/* About This Test — separate section */}
+                  {/* About This Test — always visible, no accordion */}
                   {cart.some(item=>getTestInfo(item.tname)) && (
-                    <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
-                      <button onClick={()=>setAboutOpen(o=>!o)}
-                        style={{ width:"100%",background:aboutOpen?"#EFF6FF":"#F5F7FF",border:"none",borderBottom:aboutOpen?"1.5px solid #BFDBFE":"none",padding:"13px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:aboutOpen?"#1158A6":"#374151",fontSize:".88rem",fontWeight:700,fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
-                        🧬 About This Test <span style={{ fontSize:".75rem" }}>{aboutOpen?"▾":"▸"}</span>
-                      </button>
-                      {aboutOpen && (
-                        <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
-                          {cart.map(item=>{
-                            const info = getTestInfo(item.tname);
-                            if (!info) return null;
-                            return (
-                              <div key={item.tid} style={{ borderRadius:9,overflow:"hidden",border:"1px solid #BFDBFE" }}>
-                                <div style={{ background:"#EFF6FF",padding:"8px 12px",borderBottom:"1px solid #BFDBFE" }}>
-                                  <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6" }}>{item.tname}</span>
-                                </div>
-                                <div style={{ padding:"10px 12px",background:"#fff",display:"flex",flexDirection:"column",gap:8 }}>
+                    <div style={{ marginTop:16 }}>
+                      <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:10 }}>
+                        <span style={{ fontSize:"1rem" }}>🧬</span>
+                        <span style={{ fontWeight:800,fontSize:".88rem",color:"#1158A6" }}>About This Test</span>
+                      </div>
+                      <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+                        {cart.map(item=>{
+                          const info = getTestInfo(item.tname);
+                          if (!info) return null;
+                          return (
+                            <div key={item.tid} style={{ borderRadius:12,overflow:"hidden",border:"1px solid #BFDBFE",background:"#fff" }}>
+                              <div style={{ background:"linear-gradient(90deg,#EFF6FF,#F0F9FF)",padding:"9px 14px",borderBottom:"1px solid #BFDBFE",display:"flex",alignItems:"center",gap:6 }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="#1158A6"/></svg>
+                                <span style={{ fontWeight:700,fontSize:".82rem",color:"#1158A6" }}>{item.tname}</span>
+                              </div>
+                              <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
+                                <div style={{ display:"flex",gap:10 }}>
+                                  <div style={{ width:3,borderRadius:4,background:"#BFDBFE",flexShrink:0 }}/>
                                   <div>
-                                    <div style={{ fontWeight:700,fontSize:".75rem",color:"#374151",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>What is this test?</div>
+                                    <div style={{ fontWeight:700,fontSize:".72rem",color:"#1158A6",marginBottom:3,textTransform:"uppercase",letterSpacing:".06em" }}>What is this test?</div>
                                     <div style={{ fontSize:".8rem",color:"#4B5563",lineHeight:1.65 }}>{info.what}</div>
                                   </div>
+                                </div>
+                                <div style={{ display:"flex",gap:10 }}>
+                                  <div style={{ width:3,borderRadius:4,background:"#6EE7B7",flexShrink:0 }}/>
                                   <div>
-                                    <div style={{ fontWeight:700,fontSize:".75rem",color:"#374151",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Why is this test done?</div>
+                                    <div style={{ fontWeight:700,fontSize:".72rem",color:"#059669",marginBottom:3,textTransform:"uppercase",letterSpacing:".06em" }}>Why is this test done?</div>
                                     <div style={{ fontSize:".8rem",color:"#4B5563",lineHeight:1.65 }}>{info.why}</div>
                                   </div>
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
-                      )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
 
