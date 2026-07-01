@@ -2043,9 +2043,9 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
         <div style={{ display:"flex",justifyContent:"center" }}>
           {selectedTest ? (
             <button onClick={e=>{ e.stopPropagation(); const match = matchedTest || l.tests[0]; if(match){ addCart(l, match); if(setCartOpen) setCartOpen(true); } }}
-              style={{ background:"#16A34A",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(22,163,74,.35)",transition:"background .15s",width:"85%" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#15803D"}
-              onMouseLeave={e=>e.currentTarget.style.background="#16A34A"}>
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
               Book Now
             </button>
           ) : (
@@ -5347,12 +5347,13 @@ export default function App() {
               <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
                 ℹ️ Please follow these instructions before your sample collection appointment.
               </div>
-              {cart.slice(0,1).map(item=>{
+              {cart.length===1 && cart.slice(0,1).map(item=>{
                 const prep = getTestPrep(item.tname);
                 const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
                 const isSpecial = prep.prep !== "No special requirement.";
                 return (
                   <div key={item.tid} style={{ marginBottom:14,borderRadius:14,border:"1px solid #E5E7EB",overflow:"hidden" }}>
+
                     <div style={{ background:"#F5F7FF",padding:"11px 16px",borderBottom:"1px solid #E5E7EB" }}>
                       <div style={{ fontWeight:700,fontSize:".88rem" }}>{item.tname}</div>
                       <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
@@ -5383,7 +5384,7 @@ export default function App() {
                 <div style={{ fontWeight:800,fontSize:"1.08rem" }}>🧬 About This Test</div>
                 <button onClick={()=>setAboutPageOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
               </div>
-              {cart.slice(0,1).map(item=>{
+              {cart.length===1 && cart.slice(0,1).map(item=>{
                 const info = getTestInfo(item.tname);
                 if (!info) return null;
                 return (
@@ -5897,7 +5898,7 @@ export default function App() {
                   ))}
 
                   {/* About This Test — plain text with left border, like the image */}
-                  {cart.slice(0,1).map(item=>{
+                  {cart.length===1 && cart.slice(0,1).map(item=>{
                     const info = getTestInfo(item.tname);
                     if (!info) return null;
                     return (
@@ -5922,7 +5923,7 @@ export default function App() {
                     </button>
                     {prepGuideOpen && (
                       <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
-                        {cart.slice(0,1).map(item=>{
+                        {cart.length===1 && cart.slice(0,1).map(item=>{
                           const prep = getTestPrep(item.tname);
                           const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
                           const isSpecial = prep.prep !== "No special requirement.";
