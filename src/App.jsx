@@ -2881,22 +2881,55 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
       )}
 
       {open && suggestions.length > 0 && (
-        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,boxShadow:"0 12px 40px rgba(0,0,0,.14),0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden" }}>
-          <div style={{ padding:"8px 16px 4px",fontSize:".68rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".08em",textTransform:"uppercase" }}>
-            Results for "{q}"
-          </div>
-          {suggestions.map((s, i) => {
-            const badge = typeBadge(s.type);
-            return (
-              <button key={i} onClick={()=>pick(s)}
-                style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
-                onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0F6FF"; }}
-                onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
-                <span style={{ flex:1,overflow:"hidden",fontWeight:700,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
-              </button>
+        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,boxShadow:"0 12px 40px rgba(0,0,0,.14),0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden",maxHeight:420,overflowY:"auto" }}>
+          {(() => {
+            const tests = suggestions.filter(s => s.type === "test" || s.type === "category");
+            const packages = suggestions.filter(s => s.type === "package");
+            const labs = suggestions.filter(s => s.type === "lab");
+            let flatIdx = 0;
+
+            const renderItem = (s) => {
+              const idx = flatIdx++;
+              return (
+                <button key={s.label} onClick={()=>pick(s)}
+                  style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:idx===activeIdx?"#F0F6FF":"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                  onMouseEnter={e=>{ setActiveIdx(idx); e.currentTarget.style.background="#F0F6FF"; }}
+                  onMouseLeave={e=>{ if(activeIdx!==idx) e.currentTarget.style.background="none"; }}>
+                  <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                </button>
+              );
+            };
+
+            const SectionHeader = ({ label, color }) => (
+              <div style={{ padding:"8px 16px 4px",fontSize:".67rem",fontWeight:800,color:color||"#9CA3AF",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB",borderTop:"1px solid #F3F4F6" }}>
+                {label}
+              </div>
             );
-          })}
+
+            return (
+              <>
+                {tests.length > 0 && (
+                  <>
+                    <SectionHeader label="Tests" color="#1158A6"/>
+                    {tests.map(s => renderItem(s))}
+                  </>
+                )}
+                {packages.length > 0 && (
+                  <>
+                    <SectionHeader label="Packages" color="#92400E"/>
+                    {packages.map(s => renderItem(s))}
+                  </>
+                )}
+                {labs.length > 0 && (
+                  <>
+                    <SectionHeader label="Labs" color="#059669"/>
+                    {labs.map(s => renderItem(s))}
+                  </>
+                )}
+              </>
+            );
+          })()}
           <div style={{ padding:"9px 16px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
             <button onClick={()=>goText(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
