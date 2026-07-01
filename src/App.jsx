@@ -2225,7 +2225,6 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             <div style={{ position:"absolute",top:"calc(100% + 6px)",right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:300,minWidth:180,overflow:"hidden" }}>
               {[
                 {key:"rating", label:"Rating (High → Low)"},
-                {key:"price",  label:"Price (Low → High)"},
               ].map(opt=>(
                 <button key={opt.key} onClick={()=>{ setSortBy(opt.key); setSortOpen(false); }}
                   style={{ display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",padding:"11px 16px",background:sortBy===opt.key?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F3F4F6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:sortBy===opt.key?700:500,color:sortBy===opt.key?"#1158A6":"#374151",transition:"background .1s" }}
@@ -2845,9 +2844,11 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 2h6"/><path d="M10 2v6.5l-3.5 9A2 2 0 0 0 8.3 20h7.4a2 2 0 0 0 1.8-2.5L14 8.5V2"/>
-                <path d="M6.5 14.5h11"/>
+              {/* Microscope icon */}
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/>
+                <path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/>
+                <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>
               </svg>
               Tests &amp; Packages
             </span>
@@ -2855,9 +2856,10 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
           <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 2v6l-3 6a4 4 0 0 0 3.5 6h9a4 4 0 0 0 3.5-6l-3-6V2"/>
-                <path d="M6 2h12"/><path d="M5 14h14"/>
+              {/* Hospital/clinic building icon */}
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/>
+                <path d="M9 21v-4h6v4"/><path d="M12 7v4"/><path d="M10 9h4"/>
               </svg>
               Labs
             </span>
@@ -5454,16 +5456,10 @@ export default function App() {
                             </div>
                           )}
                           <button onClick={e=>{e.stopPropagation();if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
-                            onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
-                            onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            Book Now
-                          </button>
-                          <button onClick={e=>{e.stopPropagation();if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:col,color:"#fff",border:"none",borderRadius:9,padding:"8px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            View Tests & Prices
+                            View Tests &amp; Prices
                           </button>
                         </div>
                       </div>
