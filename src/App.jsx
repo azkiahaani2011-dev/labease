@@ -2003,21 +2003,33 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
           <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
           <div style={{ flex:1,minWidth:0 }}>
-            <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:3 }}>{l.name}</div>
-            <div style={{ display:"flex",alignItems:"center",gap:4,fontSize:".78rem",color:"#6B7280",marginBottom:6 }}>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>{[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}</span>
+            <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
+            <div style={{ fontSize:".78rem",color:"#6B7280",marginBottom:5 }}>
+              {[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}
             </div>
-            <div style={{ height:1,background:"#F1F5F9",marginBottom:6 }}/>
-            <div style={{ display:"flex",alignItems:"center",gap:0 }}>
-              <span style={{ fontSize:".77rem",color:"#374151",fontWeight:600 }}>{l.tests.length} Tests Available</span>
-              <span style={{ width:1,background:"#E5E7EB",height:14,margin:"0 8px",display:"inline-block" }}/>
-              <span style={{ display:"flex",alignItems:"center",gap:3,fontSize:".77rem",fontWeight:700,color:"#0D1117" }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-                {(l.rating||4.5).toFixed(1)}
-                <span style={{ fontWeight:400,color:"#9CA3AF",fontSize:".72rem" }}>({l.reviews||0})</span>
-              </span>
+            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A",marginBottom:5 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+              {l.tests.length} Tests Available
             </div>
+            {(()=>{
+              const rating = l.rating||4.5;
+              const full = Math.floor(rating);
+              const pct  = Math.round((rating - full)*100);
+              const gid  = `lsg-${l.id}`;
+              return (
+                <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                  <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                  <div style={{ display:"flex",gap:1 }}>
+                    {Array.from({length:5},(_,i)=>{
+                      const sid=`${gid}-${i}`;
+                      if(i<full) return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                      if(i===full&&pct>0) return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${pct}%`} stopColor="#F59E0B"/><stop offset={`${pct}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                      return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
         <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
