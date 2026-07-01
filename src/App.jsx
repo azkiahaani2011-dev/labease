@@ -2853,10 +2853,11 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         {/* Tabs */}
         <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            🔬 Tests &amp; Packages
+            Tests &amp; Packages
           </button>
+          <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            🏥 Labs
+            Labs
           </button>
         </div>
 
