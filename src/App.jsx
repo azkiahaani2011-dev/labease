@@ -2744,14 +2744,12 @@ const SEARCH_INDEX = (() => {
 })();
 
 const TRENDING_CHIPS = [
-  { label:"CBC",              cat:"Blood Tests" },
-  { label:"Thyroid Profile",  cat:"Thyroid" },
-  { label:"Vitamin D",        cat:"Vitamins" },
-  { label:"HbA1c",            cat:"Diabetes" },
-  { label:"Full Body Checkup",cat:"Packages" },
-  { label:"Lipid Profile",    cat:"Heart Health" },
-  { label:"Kidney Function",  cat:"Kidney" },
-  { label:"Liver Function",   cat:"Liver" },
+  { label:"CBC",             cat:"Blood Tests" },
+  { label:"Thyroid Profile", cat:"Thyroid" },
+  { label:"Vitamin D",       cat:"Vitamins" },
+  { label:"Lipid Profile",   cat:"Heart Health" },
+  { label:"Kidney Function", cat:"Kidney" },
+  { label:"Liver Function",  cat:"Liver" },
 ];
 
 /* ── Blur-up lazy image ─────────────────────────────────────────────────── */
