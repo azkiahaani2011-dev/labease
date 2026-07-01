@@ -1896,27 +1896,20 @@ const MARQUEE_NAME_B64 = {
   "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
 };
 
-const LabsNearMeSection = ({ T, navTo }) => {
-  const [tick, setTick] = React.useState(0);
-  React.useEffect(() => {
-    const h = (e) => { if (e.key === 'le_marquee_logos') setTick(n => n + 1); };
-    window.addEventListener('storage', h);
-    const poll = setInterval(() => setTick(n => n + 1), 3000);
-    return () => { window.removeEventListener('storage', h); clearInterval(poll); };
-  }, []);
-  // Re-read localStorage whenever tick changes (poll or storage event)
+const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
+  // Use Supabase logos if available, otherwise fall back to localStorage, then defaults
   const logos = React.useMemo(() => {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch {}
+    const saved = sbMarqueeLogos && sbMarqueeLogos.length ? sbMarqueeLogos : (() => {
+      try { return JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch { return null; }
+    })();
     if (saved && saved.length > 0) {
-      // For each saved entry, fill in embedded b64 if missing (covers default labs saved without b64)
       return saved.map(l => ({
         ...l,
         b64: l.b64 || (MARQUEE_NAME_B64[l.name] ? MARQUEE_NAME_B64[l.name]() : null),
       }));
     }
     return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
-  }, [tick]); // eslint-disable-line
+  }, [sbMarqueeLogos]); // eslint-disable-line
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
@@ -4757,7 +4750,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ}/>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbMarqueeLogos={sbAdminSettings.le_marquee_logos}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
