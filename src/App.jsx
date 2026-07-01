@@ -2118,7 +2118,7 @@ function LabCardSkeleton({ delay = 0 }) {
   );
 }
 
-function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen }) {
+function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen, navTo }) {
   return (
     <div style={{ position:"sticky", top:72, width:420, flexShrink:0, background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", boxShadow:"0 4px 28px rgba(17,88,166,.11)", fontFamily:"'Manrope',sans-serif", overflow:"hidden", maxHeight:"calc(100vh - 88px)", display:"flex", flexDirection:"column" }}>
 
@@ -2165,8 +2165,8 @@ function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen 
                     </div>
                   </div>
 
-                  {/* Test info — what + why */}
-                  {info && (
+                  {/* Test info — only when single item in cart */}
+                  {cart.length === 1 && info && (
                     <div style={{ padding:"12px 14px", display:"flex", flexDirection:"column", gap:10 }}>
                       <div style={{ display:"flex", gap:9 }}>
                         <div style={{ width:3, borderRadius:4, background:"#BFDBFE", flexShrink:0, marginTop:2 }}/>
@@ -2211,9 +2211,9 @@ function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen 
             </div>
           </div>
           <div style={{ padding:"0 16px 16px" }}>
-            <button onClick={()=>setCartOpen(true)} className="btn-anim"
-              style={{ width:"100%", background:"#F59E0B", color:"#fff", border:"none", borderRadius:12, padding:"14px 0", fontWeight:800, fontSize:".95rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif", boxShadow:"0 4px 16px rgba(245,158,11,.35)" }}>
-              Proceed to Checkout →
+            <button onClick={()=>navTo("cart")} className="btn-anim"
+              style={{ width:"100%", background:"#1158A6", color:"#fff", border:"none", borderRadius:12, padding:"14px 0", fontWeight:800, fontSize:".95rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif", boxShadow:"0 4px 16px rgba(17,88,166,.3)" }}>
+              Book Now →
             </button>
           </div>
         </div>
@@ -5144,7 +5144,7 @@ export default function App() {
      LABS LIST PAGE — shim
   ═══════════════════════════════════════════════════════════════ */
   const LabsPage = () => {
-    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen}/>;
+    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>;
     return (
       <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
         setTestQ={setTestQ} navTo={navTo} cart={cart}
@@ -5158,7 +5158,7 @@ export default function App() {
      LAB DETAIL PAGE — shim
   ═══════════════════════════════════════════════════════════════ */
   const LabDetail = () => {
-    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen}/>;
+    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>;
     return (
       <LabDetailML lab={lab} T={T} cart={cart} total={total}
         testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
