@@ -2118,7 +2118,71 @@ function LabCardSkeleton({ delay = 0 }) {
   );
 }
 
-function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs }) {
+function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen }) {
+  return (
+    <div style={{ position:"sticky", top:72, width:340, flexShrink:0, background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", boxShadow:"0 4px 24px rgba(17,88,166,.09)", fontFamily:"'Manrope',sans-serif", overflow:"hidden" }}>
+      {/* Header */}
+      <div style={{ background:"#F8FAFC", borderBottom:"1px solid #E5E7EB", padding:"15px 18px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span style={{ fontWeight:800, fontSize:"1rem", color:"#0D1117" }}>Your Cart</span>
+        </div>
+        {cart.length > 0 && <span style={{ background:"#1158A6", color:"#fff", borderRadius:50, padding:"2px 10px", fontSize:".72rem", fontWeight:700 }}>{cart.length} item{cart.length>1?"s":""}</span>}
+      </div>
+
+      {cart.length === 0 ? (
+        <div style={{ padding:"44px 20px", textAlign:"center" }}>
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom:14 }}><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <div style={{ fontWeight:700, color:"#374151", marginBottom:6, fontSize:".95rem" }}>No items in cart</div>
+          <div style={{ fontSize:".8rem", color:"#9CA3AF", lineHeight:1.6 }}>Add tests from the list to see them here</div>
+        </div>
+      ) : (
+        <div>
+          <div style={{ padding:"12px 14px", display:"flex", flexDirection:"column", gap:8, maxHeight:340, overflowY:"auto" }}>
+            {cart.map(item => (
+              <div key={item.tid} style={{ background:"#F8FAFC", borderRadius:10, padding:"10px 12px", display:"flex", alignItems:"flex-start", gap:8, border:"1px solid #F1F5F9" }}>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontWeight:700, fontSize:".84rem", color:"#0D1117", marginBottom:2, lineHeight:1.3 }}>{item.tname}</div>
+                  <div style={{ fontSize:".71rem", color:"#6B7280" }}>{item.lname}</div>
+                </div>
+                <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4, flexShrink:0 }}>
+                  <span style={{ fontWeight:800, fontSize:".9rem", color:"#0D1117" }}>₹{item.price.toLocaleString()}</span>
+                  <button onClick={()=>delCart(item.tid)} style={{ background:"none", border:"none", cursor:"pointer", padding:0, color:"#EF4444", fontSize:".71rem", fontWeight:700 }}>Remove</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ borderTop:"1px solid #E5E7EB", padding:"12px 16px", display:"flex", flexDirection:"column", gap:5 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", fontSize:".8rem", color:"#9CA3AF" }}>
+              <span>MRP Total</span>
+              <span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+            </div>
+            {saving > 0 && (
+              <div style={{ display:"flex", justifyContent:"space-between", fontSize:".8rem", color:"#16A34A", fontWeight:600 }}>
+                <span>You Save</span>
+                <span>−₹{saving.toLocaleString()}</span>
+              </div>
+            )}
+            <div style={{ display:"flex", justifyContent:"space-between", fontWeight:800, fontSize:"1rem", color:"#0D1117", borderTop:"1px solid #F1F5F9", paddingTop:8, marginTop:2 }}>
+              <span>Total</span>
+              <span>₹{total.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <div style={{ padding:"0 14px 14px" }}>
+            <button onClick={()=>setCartOpen(true)} className="btn-anim"
+              style={{ width:"100%", background:"#F59E0B", color:"#fff", border:"none", borderRadius:12, padding:"13px 0", fontWeight:800, fontSize:".92rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif" }}>
+              Proceed to Checkout →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs, isDesktop, cartSlot }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [sortOpen,   setSortOpen]   = useState(false);
   const sortRef = React.useRef(null);
@@ -2193,8 +2257,11 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         </div>
       </div>
 
-      {/* ── BODY: FULL WIDTH LAB LIST ── */}
+      {/* ── BODY ── */}
       <div style={{ background:"#F8FAFC", minHeight:"80vh", padding:"16px 0" }}>
+        {/* Desktop two-column wrapper */}
+        <div style={isDesktop ? { display:"flex", gap:28, alignItems:"flex-start", maxWidth:1280, margin:"0 auto", padding:"0 24px" } : {}}>
+        <div style={isDesktop ? { flex:1, minWidth:0 } : {}}>
         {/* Search + Sort row */}
         <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:4,marginBottom:16,alignItems:"center",maxWidth:580 }}>
@@ -2261,6 +2328,9 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart}/>
           ))}
         </div>
+        </div>{/* end flex-1 list column */}
+        {isDesktop && cartSlot}
+        </div>{/* end desktop two-column wrapper */}
       </div>
     </div>
   );
@@ -2354,7 +2424,7 @@ function getTestSubtitle(name) {
   return name;
 }
 
-function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen }) {
+function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen, isDesktop, cartSlot }) {
   if (!lab) return null;
   const cats = ["All",...new Set(lab.tests.map(t=>t.cat))];
   const [showAllTests, setShowAllTests] = React.useState(false);
@@ -2474,6 +2544,9 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
     </div>
 
     <div style={{ padding:"16px 0" }}>
+      {/* Desktop two-column wrapper */}
+      <div style={isDesktop ? { display:"flex", gap:28, alignItems:"flex-start", maxWidth:1280, margin:"0 auto", padding:"0 24px" } : {}}>
+      <div style={isDesktop ? { flex:1, minWidth:0 } : {}}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440,padding:"0 12px" }}>
         <svg style={{ position:"absolute",left:25,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
@@ -2555,10 +2628,13 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           </button>
         )}
       </div>
+      </div>{/* end flex-1 list column */}
+      {isDesktop && cartSlot}
+      </div>{/* end desktop two-column wrapper */}
     </div>
 
-    {/* ── Sticky Book Now bar ── */}
-    {cart.length > 0 && (
+    {/* ── Sticky Book Now bar — mobile only ── */}
+    {!isDesktop && cart.length > 0 && (
       <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"#fff",borderTop:"1px solid #E5E7EB",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
         <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
           <span style={{ color:"#6B7280",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} selected</span>
@@ -4194,6 +4270,12 @@ export default function App() {
   const [done,   setDone]   = useState(null);
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
+  const [isDesktop,   setIsDesktop]  = useState(() => window.innerWidth >= 1024);
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [prepGuideOpen, setPrepGuideOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [sideMenu,    setSideMenu]   = useState(false);
@@ -5021,22 +5103,30 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      LABS LIST PAGE — shim
   ═══════════════════════════════════════════════════════════════ */
-  const LabsPage = () => (
-    <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
-      setTestQ={setTestQ} navTo={navTo} cart={cart}
-      selectedTest={selectedTest} setSelectedTest={setSelectedTest}
-      addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}/>
-  );
+  const LabsPage = () => {
+    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen}/>;
+    return (
+      <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
+        setTestQ={setTestQ} navTo={navTo} cart={cart}
+        selectedTest={selectedTest} setSelectedTest={setSelectedTest}
+        addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}
+        isDesktop={isDesktop} cartSlot={cartSlot}/>
+    );
+  };
 
   /* ═══════════════════════════════════════════════════════════════
      LAB DETAIL PAGE — shim
   ═══════════════════════════════════════════════════════════════ */
-  const LabDetail = () => (
-    <LabDetailML lab={lab} T={T} cart={cart} total={total}
-      testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
-      filtTests={filtTests} addCart={addCart} delCart={delCart}
-      has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}/>
-  );
+  const LabDetail = () => {
+    const cartSlot = <DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen}/>;
+    return (
+      <LabDetailML lab={lab} T={T} cart={cart} total={total}
+        testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
+        filtTests={filtTests} addCart={addCart} delCart={delCart}
+        has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}
+        isDesktop={isDesktop} cartSlot={cartSlot}/>
+    );
+  };
 
   /* ═══════════════════════════════════════════════════════════════
      CART PAGE
