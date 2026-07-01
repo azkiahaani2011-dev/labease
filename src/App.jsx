@@ -2841,33 +2841,35 @@ function BookingStepsPanel() {
         <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.15rem", color:"#0A1628", lineHeight:1.2 }}>Book your test in 3 easy steps</div>
       </div>
 
-      {/* Single card */}
-      <div key={animKey} className="step-slide"
-        style={{ background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"22px 22px 20px" }}>
-        {/* Number circle */}
-        <div style={{ width:50, height:50, borderRadius:14, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14, boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
-          <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", lineHeight:1 }}>{s.n}</span>
+      {/* Arrow left + card + arrow right */}
+      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+        <button onClick={() => goTo((active - 1 + HOW_TO_STEPS.length) % HOW_TO_STEPS.length)}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:"4px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", opacity:.7 }}
+          onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=.7}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <div key={animKey} className="step-slide" style={{ flex:1, background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"22px 22px 20px" }}>
+          <div style={{ width:50, height:50, borderRadius:14, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14, boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+            <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", lineHeight:1 }}>{s.n}</span>
+          </div>
+          <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:"1rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
+          <div style={{ color:"#6B7280", fontSize:".84rem", lineHeight:1.7 }}>{s.desc}</div>
         </div>
-        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:"1rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
-        <div style={{ color:"#6B7280", fontSize:".84rem", lineHeight:1.7 }}>{s.desc}</div>
+
+        <button onClick={() => goTo((active + 1) % HOW_TO_STEPS.length)}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:"4px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", opacity:.7 }}
+          onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=.7}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
 
-      {/* Step dots + prev/next */}
+      {/* Step dots */}
       <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:14 }}>
         {HOW_TO_STEPS.map((_, i) => (
           <div key={i} onClick={() => goTo(i)}
             style={{ width: i===active ? 24 : 8, height:8, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
         ))}
-        <div style={{ marginLeft:"auto", display:"flex", gap:8 }}>
-          <button onClick={() => goTo((active - 1 + HOW_TO_STEPS.length) % HOW_TO_STEPS.length)}
-            style={{ width:34, height:34, borderRadius:"50%", border:"1.5px solid #BFDBFE", background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button onClick={() => goTo((active + 1) % HOW_TO_STEPS.length)}
-            style={{ width:34, height:34, borderRadius:"50%", border:"1.5px solid #1158A6", background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
       </div>
     </div>
   );
