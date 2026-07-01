@@ -3000,16 +3000,17 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
 
   const tabStyle = (active) => ({
     flex: 1,
-    padding: "11px 0",
-    border: "none",
-    background: "none",
+    padding: "10px 0",
+    border: active ? "2px solid #1158A6" : "2px solid #E5E7EB",
+    borderRadius: 10,
+    background: active ? "#EFF6FF" : "#fff",
     fontFamily: "'Manrope', sans-serif",
     fontWeight: 700,
     fontSize: ".85rem",
     cursor: "pointer",
     color: active ? "#1158A6" : "#6B7280",
-    borderBottom: active ? "2.5px solid #1158A6" : "2.5px solid transparent",
-    transition: "all .15s",
+    transition: "all .18s",
+    margin: "8px 6px 4px",
   });
 
   // grouped results for tests tab
@@ -3022,7 +3023,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
       {/* Tab bar + input combined card */}
       <div style={{ background:"#fff", borderRadius:16, boxShadow:"0 4px 24px rgba(17,88,166,.13)", overflow:"hidden" }}>
         {/* Tabs */}
-        <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
+        <div style={{ display:"flex" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
               {/* Pill / capsule icon — represents medicine/test */}
@@ -3035,10 +3036,8 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
               Tests &amp; Packages
             </span>
           </button>
-          <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
-              {/* Map pin with medical cross */}
               <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
