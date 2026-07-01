@@ -5686,7 +5686,7 @@ export default function App() {
           {/* Logo */}
           <div onClick={()=>{ navTo("home"); setSideMenu(false); setProfileDrop(false); }} style={{ cursor:"pointer",display:"flex",alignItems:"baseline",gap:1 }}>
             <span style={{ ...T.serif,fontSize:"2.05rem",color:"#60A5FA" }}>Lab</span>
-            <span style={{ ...T.serif,fontSize:"1.45rem",color:"#1E3A8A" }}>Ease</span>
+            <span style={{ ...T.serif,fontSize:"1.55rem",color:"#1E3A8A" }}>Ease</span>
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
         </div>
