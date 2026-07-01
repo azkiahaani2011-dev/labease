@@ -2892,12 +2892,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
                 style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
                 onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0F6FF"; }}
                 onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
-                <span style={{ fontSize:".9rem",flexShrink:0 }}>{typeIcon(s.type)}</span>
-                <span style={{ flex:1,overflow:"hidden" }}>
-                  <span style={{ display:"block",fontWeight:700,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
-                  {s.sub && <span style={{ display:"block",fontSize:".72rem",color:"#9CA3AF",marginTop:1 }}>{s.sub}</span>}
-                </span>
-                {badge && <span style={{ fontSize:".67rem",fontWeight:700,color:badge.color,background:badge.bg,borderRadius:4,padding:"2px 7px",flexShrink:0 }}>{badge.label}</span>}
+                <span style={{ flex:1,overflow:"hidden",fontWeight:700,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
               </button>
             );
