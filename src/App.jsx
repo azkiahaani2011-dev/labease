@@ -2771,6 +2771,7 @@ function LazyImg({ src, alt, style, className="" }) {
 function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
   const [open, setOpen] = React.useState(false);
   const [activeIdx, setActiveIdx] = React.useState(-1);
+  const [tab, setTab] = React.useState("tests"); // "tests" | "labs"
   const wrapRef = React.useRef(null);
   const inputRef = React.useRef(null);
 
@@ -2779,12 +2780,14 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
     const qlo = q.toLowerCase();
     const words = qlo.split(/\s+/).filter(Boolean);
     const match = item => words.some(w => item.label.toLowerCase().includes(w));
-    const tests = SEARCH_INDEX.filter(i=>i.type==="test"    && match(i)).slice(0,5);
-    const pkgs  = SEARCH_INDEX.filter(i=>i.type==="package" && match(i)).slice(0,3);
-    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"     && match(i)).slice(0,2);
-    const cats  = SEARCH_INDEX.filter(i=>i.type==="category"&& match(i)).slice(0,2);
-    return [...tests,...pkgs,...labs,...cats].slice(0,8);
-  }, [q]);
+    if (tab === "labs") {
+      return SEARCH_INDEX.filter(i => i.type === "lab" && match(i)).slice(0, 8);
+    }
+    const tests = SEARCH_INDEX.filter(i => i.type === "test"     && match(i)).slice(0, 5);
+    const pkgs  = SEARCH_INDEX.filter(i => i.type === "package"  && match(i)).slice(0, 3);
+    const cats  = SEARCH_INDEX.filter(i => i.type === "category" && match(i)).slice(0, 2);
+    return [...tests, ...pkgs, ...cats].slice(0, 8);
+  }, [q, tab]);
 
   React.useEffect(() => {
     const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) { setOpen(false); setActiveIdx(-1); } };
@@ -2807,6 +2810,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
 
   const goText = (text) => {
     if (!text.trim()) return;
+    if (tab === "labs") { setLabQ(text); setQ(text); setOpen(false); navTo("labs"); return; }
     const exact = SEARCH_INDEX.find(i => i.label.toLowerCase() === text.toLowerCase());
     if (exact) { pick(exact); return; }
     const partial = SEARCH_INDEX.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
@@ -2823,21 +2827,42 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
     else if (e.key === "Escape") { setOpen(false); setActiveIdx(-1); }
   };
 
-  const typeIcon = type => type==="lab"?"🏥":type==="package"?"📦":type==="category"?"📋":"🔬";
-  const typeBadge = type => {
-    if (type==="lab")      return { label:"Lab",      bg:"#EFF6FF", color:"#1158A6" };
-    if (type==="package")  return { label:"Package",  bg:"#FEF3C7", color:"#92400E" };
-    if (type==="category") return { label:"Category", bg:"#F5F3FF", color:"#7C3AED" };
-    return null;
-  };
+  const tabStyle = (active) => ({
+    flex: 1,
+    padding: "10px 0",
+    border: "none",
+    background: "none",
+    fontFamily: "'Manrope', sans-serif",
+    fontWeight: 700,
+    fontSize: ".85rem",
+    cursor: "pointer",
+    color: active ? "#1158A6" : "#9CA3AF",
+    borderBottom: active ? "2px solid #1158A6" : "2px solid transparent",
+    transition: "all .15s",
+  });
+
+  // grouped results for tests tab
+  const testItems = suggestions.filter(s => s.type === "test" || s.type === "category");
+  const pkgItems  = suggestions.filter(s => s.type === "package");
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
-      <div className="hero-search-bar" style={{ display:"flex",gap:6,alignItems:"center" }}>
-        <div style={{ flex:1,background:"#fff",borderRadius:14,display:"flex",alignItems:"center",border:"2px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s" }}
-          onFocusCapture={e=>{ e.currentTarget.style.border="2px solid #1158A6"; e.currentTarget.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; }}
-          onBlurCapture={e=>{ e.currentTarget.style.border="2px solid #E5E7EB"; e.currentTarget.style.boxShadow="0 2px 12px rgba(17,88,166,.08)"; }}>
-          <svg className="hero-search-icon" style={{ flexShrink:0,margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
+
+      {/* Tab bar + input combined card */}
+      <div style={{ background:"#fff", borderRadius:16, boxShadow:"0 4px 24px rgba(17,88,166,.13)", overflow:"hidden" }}>
+        {/* Tabs */}
+        <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
+          <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
+            🔬 Tests &amp; Packages
+          </button>
+          <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
+            🏥 Labs
+          </button>
+        </div>
+
+        {/* Input row */}
+        <div style={{ display:"flex", alignItems:"center" }}>
+          <svg style={{ flexShrink:0, margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
             <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
             <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
           </svg>
@@ -2846,26 +2871,25 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
             onChange={e=>{ setQ(e.target.value); setOpen(true); setActiveIdx(-1); }}
             onFocus={()=>setOpen(true)}
             onKeyDown={onKey}
-            placeholder="Search tests, packages or labs…"
+            placeholder={tab==="labs" ? "Search labs by name or area…" : "Search tests or packages…"}
             className="hero-search-input-field"
-            style={{ flex:1,border:"none",outline:"none",padding:"14px 8px 14px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
-            autoComplete="off" aria-label="Search tests, packages or labs"
+            style={{ flex:1, border:"none", outline:"none", padding:"14px 8px", fontSize:".95rem", color:"#111", fontFamily:"'Manrope',sans-serif", background:"transparent" }}
+            autoComplete="off"
           />
           {q && (
             <button onClick={()=>{ setQ(""); setOpen(false); inputRef.current?.focus(); }}
-              style={{ background:"none",border:"none",cursor:"pointer",padding:"0 12px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
+              style={{ background:"none",border:"none",cursor:"pointer",padding:"0 10px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
               ✕
             </button>
           )}
+          <button onClick={()=>goText(q)} className="btn-anim"
+            style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:10,padding:"12px 22px",flexShrink:0,fontSize:".88rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap" }}>
+            Search
+          </button>
         </div>
-        <button onClick={()=>goText(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:14,padding:"14px 26px",flexShrink:0,fontSize:".9rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.45)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.35)"; }}>
-          Search
-        </button>
       </div>
 
+      {/* Popular chips */}
       {!q && (
         <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
           <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
@@ -2880,56 +2904,54 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         </div>
       )}
 
+      {/* Dropdown */}
       {open && suggestions.length > 0 && (
-        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,boxShadow:"0 12px 40px rgba(0,0,0,.14),0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden",maxHeight:420,overflowY:"auto" }}>
-          {(() => {
-            const tests = suggestions.filter(s => s.type === "test" || s.type === "category");
-            const packages = suggestions.filter(s => s.type === "package");
-            const labs = suggestions.filter(s => s.type === "lab");
-            let flatIdx = 0;
-
-            const renderItem = (s) => {
-              const idx = flatIdx++;
-              return (
+        <div style={{ position:"absolute",top:"calc(100% - 14px)",left:0,right:0,background:"#fff",borderRadius:"0 0 16px 16px",boxShadow:"0 12px 40px rgba(0,0,0,.13)",zIndex:500,overflow:"hidden",borderTop:"1px solid #F1F5F9",maxHeight:360,overflowY:"auto" }}>
+          {tab === "labs" ? (
+            <>
+              <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#059669",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB" }}>Labs</div>
+              {suggestions.map((s, i) => (
                 <button key={s.label} onClick={()=>pick(s)}
-                  style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:idx===activeIdx?"#F0F6FF":"none",border:"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
-                  onMouseEnter={e=>{ setActiveIdx(idx); e.currentTarget.style.background="#F0F6FF"; }}
-                  onMouseLeave={e=>{ if(activeIdx!==idx) e.currentTarget.style.background="none"; }}>
+                  style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0FFF4":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                  onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0FFF4"; }}
+                  onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
                   <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
                   <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
                 </button>
-              );
-            };
-
-            const SectionHeader = ({ label, color }) => (
-              <div style={{ padding:"8px 16px 4px",fontSize:".67rem",fontWeight:800,color:color||"#9CA3AF",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB",borderTop:"1px solid #F3F4F6" }}>
-                {label}
-              </div>
-            );
-
-            return (
-              <>
-                {tests.length > 0 && (
-                  <>
-                    <SectionHeader label="Tests" color="#1158A6"/>
-                    {tests.map(s => renderItem(s))}
-                  </>
-                )}
-                {packages.length > 0 && (
-                  <>
-                    <SectionHeader label="Packages" color="#92400E"/>
-                    {packages.map(s => renderItem(s))}
-                  </>
-                )}
-                {labs.length > 0 && (
-                  <>
-                    <SectionHeader label="Labs" color="#059669"/>
-                    {labs.map(s => renderItem(s))}
-                  </>
-                )}
-              </>
-            );
-          })()}
+              ))}
+            </>
+          ) : (
+            <>
+              {testItems.length > 0 && (
+                <>
+                  <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB" }}>Tests</div>
+                  {testItems.map((s, i) => (
+                    <button key={s.label} onClick={()=>pick(s)}
+                      style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                      onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0F6FF"; }}
+                      onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
+                      <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                  ))}
+                </>
+              )}
+              {pkgItems.length > 0 && (
+                <>
+                  <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#92400E",letterSpacing:".1em",textTransform:"uppercase",background:"#FFFBF0",borderTop:"1px solid #F3F4F6" }}>Packages</div>
+                  {pkgItems.map((s, i) => (
+                    <button key={s.label} onClick={()=>pick(s)}
+                      style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i+testItems.length===activeIdx?"#FFFBEB":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                      onMouseEnter={e=>{ setActiveIdx(i+testItems.length); e.currentTarget.style.background="#FFFBEB"; }}
+                      onMouseLeave={e=>{ if(activeIdx!==i+testItems.length) e.currentTarget.style.background="none"; }}>
+                      <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                  ))}
+                </>
+              )}
+            </>
+          )}
           <div style={{ padding:"9px 16px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
             <button onClick={()=>goText(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
