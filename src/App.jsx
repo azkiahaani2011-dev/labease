@@ -5182,6 +5182,7 @@ export default function App() {
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
                 {["About Us","Partner With Us","Careers","Blog","Press"].map(l=>(
                   <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                    onClick={()=>{ if(l==="About Us") setAboutOpen(true); }}
                     onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
                     onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
                 ))}
@@ -5855,6 +5856,97 @@ export default function App() {
       {page==="seo-dengue-test" && <DengueTest navTo={navTo}/>}
       {page==="seo-blood-test-at-home-in-hyderabad" && <BloodTestHyderabad navTo={navTo}/>}
       </div>
+
+      {/* ABOUT US MODAL */}
+      {aboutOpen && (
+        <div onClick={()=>setAboutOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:540,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            {/* Header */}
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"28px 28px 24px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setAboutOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ display:"flex",alignItems:"baseline",gap:3,marginBottom:6 }}>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"2rem",color:"#93C5FD" }}>Lab</span>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.7rem",color:"#fff" }}>Ease</span>
+                <sup style={{ fontSize:".5rem",color:"rgba(255,255,255,.5)",marginLeft:2 }}>™</sup>
+              </div>
+              <p style={{ color:"rgba(255,255,255,.8)",fontSize:".88rem",margin:0,lineHeight:1.6 }}>India's most transparent diagnostic booking platform</p>
+            </div>
+
+            <div style={{ padding:"24px 28px 32px" }}>
+
+              {/* Mission */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>🎯</span> Our Mission
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  At LabEase, we believe every person deserves honest, affordable access to diagnostic healthcare. We built this platform to eliminate hidden prices, confusing lab options, and the hassle of booking — so you can focus on what matters most: your health.
+                </p>
+              </div>
+
+              {/* What we do */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>🔬</span> What We Do
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  LabEase is a diagnostic test booking platform that connects patients with verified partner labs across India. Search for any test or health package, compare real prices and turnaround times across labs, and book a slot in under 2 minutes — with doorstep sample collection available.
+                </p>
+              </div>
+
+              {/* Why we exist */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>💡</span> Why We Exist
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  Lab test prices in India vary wildly — the same CBC test can cost ₹150 at one lab and ₹900 at another. Most people have no way to compare. LabEase was built to fix exactly that: full price transparency, real patient ratings, and a booking experience that puts you in control.
+                </p>
+              </div>
+
+              {/* Key numbers */}
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24 }}>
+                {[["50+","Partner Labs"],["500+","Tests Available"],["10+","Cities Served"],["10,000+","Happy Patients"]].map(([n,l])=>(
+                  <div key={l} style={{ background:"#EFF6FF",borderRadius:14,padding:"16px 18px",textAlign:"center",border:"1px solid #DBEAFE" }}>
+                    <div style={{ fontWeight:900,fontSize:"1.5rem",color:"#1158A6",lineHeight:1 }}>{n}</div>
+                    <div style={{ fontSize:".75rem",color:"#6B7280",fontWeight:600,marginTop:4 }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Values */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:12,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>❤️</span> Our Values
+                </div>
+                <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
+                  {[
+                    ["🔍","Transparency","Real prices. No hidden fees. Ever."],
+                    ["✅","Accuracy","Only NABL-accredited and verified partner labs."],
+                    ["⚡","Convenience","Book in under 2 minutes, sample collected at home."],
+                    ["🤝","Trust","Your health data is private and always secure."],
+                  ].map(([icon,title,desc])=>(
+                    <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start",background:"#F9FAFB",borderRadius:12,padding:"12px 14px" }}>
+                      <span style={{ fontSize:"1.1rem",flexShrink:0 }}>{icon}</span>
+                      <div>
+                        <div style={{ fontWeight:700,fontSize:".85rem",color:"#0D1117",marginBottom:2 }}>{title}</div>
+                        <div style={{ fontSize:".8rem",color:"#6B7280" }}>{desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact */}
+              <div style={{ background:"#F0FDF4",border:"1px solid #BBF7D0",borderRadius:14,padding:"16px 18px",textAlign:"center" }}>
+                <div style={{ fontWeight:700,fontSize:".85rem",color:"#166534",marginBottom:4 }}>Get in Touch</div>
+                <div style={{ fontSize:".8rem",color:"#374151" }}>📧 support@labease.in &nbsp;·&nbsp; 📞 1800-103-0001</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CART DRAWER */}
       {cartOpen && (
