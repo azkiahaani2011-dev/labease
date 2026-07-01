@@ -4196,10 +4196,16 @@ function FeaturesCarousel() {
   );
 
   /* Slide 2 — 6 Features */
-  const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "14px 14px" : "28px 44px", height: mob ? 220 : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
+  const SlideFeatures = () => {
+    const pad   = mob ? "14px 14px" : isDesk ? "20px 28px" : "28px 44px";
+    const cols  = mob ? "1fr 1fr"   : isDesk ? "1fr 1fr"   : "1fr 1fr 1fr";
+    const gapV  = mob ? "8px 12px"  : isDesk ? "14px 20px" : "28px 52px";
+    const circ  = mob ? 32          : isDesk ? 44           : 62;
+    const gapI  = mob ? 7           : isDesk ? 10           : 18;
+    return (
+    <div style={{ ...CARD, padding: pad, height: mob ? 220 : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
       <Wave/>
-      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "8px 12px" : "28px 52px", width:"100%", zIndex:1 }}>
+      <div style={{ display:"grid", gridTemplateColumns: cols, gap: gapV, width:"100%", zIndex:1 }}>
         {[
           { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
@@ -4207,19 +4213,20 @@ function FeaturesCarousel() {
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 7 : 18, minWidth:0 }}>
-            <div style={{ width: mob ? 32 : 62, height: mob ? 32 : 62, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: gapI, minWidth:0 }}>
+            <div style={{ width: circ, height: circ, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
             <div style={{ minWidth:0, overflow:"hidden" }}>
-              <div style={{ fontSize: mob ? ".58rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t1}</div>
-              <div style={{ fontSize: mob ? ".68rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t2}</div>
+              <div style={{ fontSize: mob ? ".58rem" : isDesk ? ".75rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".68rem" : isDesk ? ".88rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t2}</div>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+    );
+  };
 
   // Desktop: both slides side by side, no carousel
   if (isDesk) {
