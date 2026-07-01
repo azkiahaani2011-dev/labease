@@ -1977,7 +1977,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
   };
 
   return (
-    <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif",borderLeft:"4px solid #7C3AED" }}
+    <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}
       onClick={(e)=>{ if(handleBookDirect(e)) return; setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
       <div style={{ padding:"20px 18px 18px" }}>
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
@@ -2604,7 +2604,7 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ) : visibleTests.map(t=>{
           const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=t.subtitle||getTestSubtitle(t.name);
           return (
-            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:10,overflow:"hidden",fontFamily:"'Manrope',sans-serif",borderLeft:"4px solid #1158A6" }}>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:10,overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
               {/* Top section: name + price */}
               <div style={{ padding:"14px 16px 12px" }}>
                 <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12 }}>
@@ -4343,7 +4343,7 @@ function PackagesPage({ navTo, setSelectedTest }) {
       </div>
       <div style={{ maxWidth:760, margin:"0 auto", padding:"24px 20px 60px" }}>
         {activePackages.map((pkg, i) => (
-          <div key={pkg.title} style={{ background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", borderLeft:"4px solid #059669", marginBottom:16, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+          <div key={pkg.title} style={{ background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", marginBottom:16, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
             <div style={{ padding:"20px 20px 18px" }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, marginBottom:12 }}>
                 <div style={{ flex:1 }}>
