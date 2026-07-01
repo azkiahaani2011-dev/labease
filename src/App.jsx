@@ -4798,20 +4798,23 @@ export default function App() {
 
             {/* ── Desktop category nav bar ── */}
             {!isMobileRef.current && (
-              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:16,flexWrap:"wrap" }}>
+              <div style={{ display:"flex",alignItems:"center",background:"#0F2B5B",borderRadius:10,marginBottom:16,overflow:"hidden",width:"fit-content" }}>
                 {[
                   { label:"Popular Packages",  action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
                   { label:"Lifestyle Packages", action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
                   { label:"Popular Tests",      action:()=>navTo("alltests") },
                   { label:"Family Care",        action:()=>{ setCatF("Family Health"); navTo("labs"); } },
                   { label:"Health Scans",       action:()=>{ setCatF("Imaging"); navTo("labs"); } },
-                ].map((item, i) => (
-                  <button key={i} onClick={item.action}
-                    style={{ background:"#0F2B5B",border:"2px solid rgba(255,255,255,.18)",borderRadius:8,cursor:"pointer",padding:"10px 18px",fontFamily:"'Manrope',sans-serif",fontWeight:700,fontSize:".84rem",color:"#fff",letterSpacing:".01em",whiteSpace:"nowrap",transition:"all .15s",boxShadow:"0 2px 8px rgba(15,43,91,.25)" }}
-                    onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.boxShadow="0 4px 16px rgba(17,88,166,.4)"; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.background="#0F2B5B"; e.currentTarget.style.borderColor="rgba(255,255,255,.18)"; e.currentTarget.style.boxShadow="0 2px 8px rgba(15,43,91,.25)"; }}>
-                    {item.label}
-                  </button>
+                ].map((item, i, arr) => (
+                  <React.Fragment key={i}>
+                    <button onClick={item.action}
+                      style={{ background:"none",border:"none",cursor:"pointer",padding:"13px 20px",fontFamily:"'Manrope',sans-serif",fontWeight:700,fontSize:".84rem",color:"rgba(255,255,255,.9)",letterSpacing:".01em",whiteSpace:"nowrap",transition:"background .15s,color .15s" }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.color="#fff"; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="rgba(255,255,255,.9)"; }}>
+                      {item.label}
+                    </button>
+                    {i < arr.length - 1 && <div style={{ width:1,height:18,background:"rgba(255,255,255,.25)",flexShrink:0 }}/>}
+                  </React.Fragment>
                 ))}
               </div>
             )}
