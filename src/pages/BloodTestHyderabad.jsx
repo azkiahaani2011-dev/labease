@@ -94,28 +94,6 @@ export default function BloodTestHyderabad({ navTo }) {
         <li>✅ <strong>Flexible slots</strong> from early morning to evening, 7 days a week</li>
       </ul>
 
-      {/* Section 2 */}
-      <SectionHeading>Areas Served in Hyderabad</SectionHeading>
-      <AreaGroup
-        title="Western Hyderabad"
-        areas={["Banjara Hills", "Jubilee Hills", "Madhapur", "Gachibowli", "Kondapur"]}
-      />
-      <AreaGroup
-        title="Central Hyderabad"
-        areas={["Abids", "Himayatnagar", "Ameerpet", "Begumpet", "Somajiguda"]}
-      />
-      <AreaGroup
-        title="Northern Hyderabad"
-        areas={["Kukatpally", "Miyapur", "Bachupally", "KPHB Colony", "Nizampet"]}
-      />
-      <AreaGroup
-        title="Eastern Hyderabad"
-        areas={["Uppal", "L.B. Nagar", "Dilsukhnagar", "Vanasthalipuram", "Nagole"]}
-      />
-      <AreaGroup
-        title="Secunderabad"
-        areas={["Secunderabad", "Trimulgherry", "Alwal", "Sainikpuri", "ECIL"]}
-      />
 
       {/* Section 3 */}
       <SectionHeading>Available Tests in Hyderabad</SectionHeading>
