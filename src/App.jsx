@@ -1,6 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from './lib/supabase';
-import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart } from './lib/db';
+import { signIn, signUp, signOut, onAuthChange, getProfile, createBooking, addToCart, removeFromCart, getLabSettings, getExtraLabs, subscribeLabData, subscribeAdminSettings } from './lib/db';
+import BloodTestAtHome from './pages/BloodTestAtHome';
+import CbcTest from './pages/CbcTest';
+import ThyroidTest from './pages/ThyroidTest';
+import FullBodyCheckup from './pages/FullBodyCheckup';
+import VitaminDTest from './pages/VitaminDTest';
+import HbA1cTest from './pages/HbA1cTest';
+import DengueTest from './pages/DengueTest';
+import BloodTestHyderabad from './pages/BloodTestHyderabad';
+
+// Maps URL slugs (no leading/trailing slash) to internal page names
+const SEO_SLUG_TO_PAGE = {
+  'blood-test-at-home': 'seo-blood-test-at-home',
+  'cbc-test': 'seo-cbc-test',
+  'thyroid-profile-test': 'seo-thyroid-profile-test',
+  'full-body-checkup': 'seo-full-body-checkup',
+  'vitamin-d-test': 'seo-vitamin-d-test',
+  'hba1c-test': 'seo-hba1c-test',
+  'dengue-test': 'seo-dengue-test',
+  'blood-test-at-home-in-hyderabad': 'seo-blood-test-at-home-in-hyderabad',
+};
+const SEO_PAGE_TO_SLUG = Object.fromEntries(Object.entries(SEO_SLUG_TO_PAGE).map(([slug, page]) => [page, slug]));
+
+// True on every fresh page load (refresh/new tab), false after first SPA navigation
+let _isFirstLoad = true;
+setTimeout(() => { _isFirstLoad = false; }, 2500);
 
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 const G = () => (
@@ -9,7 +34,7 @@ const G = () => (
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Manrope', sans-serif; background: #F5F7FF; color: #111; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.7; }
+    body { font-family: 'Manrope', sans-serif; background: #F8FAFC; color: #111; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.7; }
 
     :root {
       --teal: #1158A6;
@@ -46,10 +71,50 @@ const G = () => (
     .hero-stat-card { transition: transform .2s; }
     @media (max-width: 600px) { .hero-stat-card { display: none !important; } }
     @keyframes shimmer  { 0%,100%{opacity:.5} 50%{opacity:1} }
+    @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     @keyframes marquee  { from{transform:translateX(-50%)} to{transform:translateX(0)} }
     @keyframes orb1     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,15px)} }
     @keyframes orb2     { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-25px,20px)} 66%{transform:translate(20px,-10px)} }
     @keyframes countIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes revealUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Hero content fades in on load (no scroll needed) */
+    .hero-content { animation: revealUp .7s cubic-bezier(.22,1,.36,1) both; }
+    .hero-content-delay-1 { animation-delay:.1s; }
+    .hero-content-delay-2 { animation-delay:.2s; }
+    .hero-content-delay-3 { animation-delay:.32s; }
+    .hero-content-delay-4 { animation-delay:.44s; }
+
+    /* ── Premium skeleton shimmer ── */
+    @keyframes skWave {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .sk {
+      background: linear-gradient(90deg, #F0F4F8 0%, #E2E8F0 30%, #F8FAFC 60%, #F0F4F8 100%);
+      background-size: 1200px 100%;
+      animation: skWave 1.6s ease-in-out infinite;
+      border-radius: 8px;
+    }
+
+    /* ── Page transition bar ── */
+    /* ── Page enter ── */
+    @keyframes pageEnter { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .page-enter { animation: pageEnter .38s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes slideUpFull { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+    .lab-detail-enter { animation: slideUpFull .45s cubic-bezier(.22,1,.36,1) both; }
+
+    /* ── Booking steps slide-in from right ── */
+    @keyframes slideFromRight { from{opacity:0;transform:translateX(48px)} to{opacity:1;transform:translateX(0)} }
+    .step-slide { animation: slideFromRight .7s cubic-bezier(.25,.46,.45,.94) both; }
+
+    /* ── After first load: kill ALL entrance animations instantly ── */
+    .app-ready .page-enter        { animation: none !important; }
+    .app-ready .hero-content      { animation: none !important; opacity: 1 !important; transform: none !important; }
+
+    /* ── Image blur-up lazy load ── */
+    .img-lazy { transition: filter .45s ease, opacity .45s ease; filter: blur(8px); opacity: 0; }
+    .img-lazy.loaded { filter: blur(0); opacity: 1; }
 
     /* Interactions */
     .hover-lift { transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s; }
@@ -1080,6 +1145,7 @@ const ICancer = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" f
 const IUrine = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" fill="#FEFCE8" stroke="#FEF08A" strokeWidth=".8"/><rect x="20" y="9" width="8" height="26" rx="4" fill="#EAB308" opacity=".75"/><rect x="20" y="24" width="8" height="11" rx="4" fill="#CA8A04" opacity=".85"/><rect x="18" y="7" width="12" height="4.5" rx="2" fill="#78716C"/></svg>);
 const ILock = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="12" y="22" width="24" height="18" rx="4" fill="#7C3AED" opacity=".85"/><rect x="12" y="22" width="24" height="18" rx="4" fill="url(#lg1)"/><defs><linearGradient id="lg1" x1="12" y1="22" x2="36" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#8B5CF6"/><stop offset="1" stopColor="#6D28D9"/></linearGradient></defs><path d="M17 22V17a7 7 0 0114 0v5" stroke="#5B21B6" strokeWidth="2.2" fill="none" strokeLinecap="round"/><circle cx="24" cy="31" r="3" fill="#fff" opacity=".9"/><rect x="23" y="31" width="2" height="4" rx="1" fill="#fff" opacity=".9"/></svg>);
 const IHeadset = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M12 26v-2a12 12 0 0124 0v2" stroke="#059669" strokeWidth="2.2" fill="none" strokeLinecap="round"/><rect x="10" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><rect x="32" y="25" width="6" height="10" rx="3" fill="#059669" opacity=".85"/><path d="M36 35v2a4 4 0 01-4 4h-4" stroke="#059669" strokeWidth="2" fill="none" strokeLinecap="round"/><circle cx="28" cy="41" r="2.5" fill="#059669" opacity=".85"/><circle cx="24" cy="22" r="3" fill="#5EEAD4" opacity=".7"/></svg>);
+const IBooking = ({ s = 48 }) => (<svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="8" y="12" width="32" height="30" rx="4" stroke="#059669" strokeWidth="2.2" fill="none"/><path d="M16 8v8M32 8v8M8 22h32" stroke="#059669" strokeWidth="2.2" strokeLinecap="round"/><polyline points="18,30 22,34 30,26" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>);
 
 const IGeneral = ({ s = 60 }) => (<svg width={s} height={s} viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="#EFF6FF"/><rect x="26" y="52" width="20" height="4" rx="2" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><rect x="33" y="44" width="6" height="10" rx="1" fill="#60A5FA" stroke="#1E293B" strokeWidth="1"/><path d="M36 44 L36 28 L28 28" stroke="#1E293B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><rect x="22" y="24" width="12" height="6" rx="3" fill="#BFDBFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="7" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1.2"/><circle cx="38" cy="38" r="3.5" fill="#93C5FD" stroke="#1E293B" strokeWidth="1"/><circle cx="50" cy="22" r="3" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1"/></svg>);
 
@@ -1179,26 +1245,6 @@ const LABS = [
     ]},
 ];
 
-// Apply admin panel price & lab overrides from localStorage
-(function applyAdminOverrides() {
-  try {
-    const priceOv    = JSON.parse(localStorage.getItem('le_price_overrides')    || '{}');
-    const labOv      = JSON.parse(localStorage.getItem('le_lab_overrides')      || '{}');
-    const testNameOv = JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}');
-    const labNameOv  = JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}');
-    LABS.forEach(lab => {
-      if (labOv[lab.id]     !== undefined) lab.active = labOv[lab.id];
-      if (labNameOv[lab.id] !== undefined) lab.name   = labNameOv[lab.id];
-      lab.tests.forEach(t => {
-        if (priceOv[t.id]) {
-          if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
-          if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
-        }
-        if (testNameOv[t.id] !== undefined) t.name = testNameOv[t.id];
-      });
-    });
-  } catch(e) {}
-})();
 
 const NEAR_ME = [
   { name:"Apollo Diagnostics", area:"Indiranagar", dist:"0.4 km", open:true,  rating:4.8, homecoll:true  },
@@ -1211,13 +1257,71 @@ const NEAR_ME = [
 
 const FAQS = [
   { q:"How do I book a lab test on LabEase?", a:"Browse our partner labs, choose your tests, add them to cart, and complete the 4-step booking: patient info, date & slot, collection mode, and confirmation. You'll receive a booking ID instantly via email." },
-  { q:"Is home sample collection really free?", a:"Yes. Home collection is completely free for eligible tests at participating labs. A certified phlebotomist arrives at your doorstep at your chosen time slot." },
+  { q:"How long does it take to get my report?", a:"Most routine tests like CBC, thyroid, and blood sugar are delivered the same day or within 24 hours. Specialized tests may take 2–3 days. You'll receive your report digitally once it's ready." },
   { q:"How soon will I receive my reports?", a:"Routine blood tests are typically ready the same day or within 2–6 hours. Specialised tests may take 24–72 hours. Exact turnaround times are listed for every test on our platform." },
   { q:"Are there hidden charges?", a:"Never. The price shown on LabEase is the final price you pay — inclusive of all taxes. No convenience fees, no surprises." },
 ];
 
 const TIME_SLOTS = ["6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM"];
-const TODAY = new Date().toISOString().split("T")[0];
+
+// Parse timing strings like "6:00 AM – 10:00 PM" or looser forms like "8 to 9pm"
+// → hourly slot strings within that range. Tolerant of missing AM/PM on one side:
+// defaults a missing start period to AM and a missing end period to PM.
+function slotsFromTiming(timing) {
+  if (!timing) return TIME_SLOTS;
+  // Normalize dashes, then directly extract two time expressions anywhere in the string.
+  // This handles "Mon-Sat 9AM-5PM", "9:00 AM – 5:00 PM", "8 to 10pm", etc.
+  const t = timing.replace(/[–—]/g, '-');
+  const TIME_RE = /(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/gi;
+  const found = [...t.matchAll(TIME_RE)];
+  // Also try without AM/PM (pure-number range like "8-17" or "8 to 5")
+  function extract(str) {
+    const m = str.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if (!m) return null;
+    return { h: parseInt(m[1], 10), min: parseInt(m[2] || '0', 10), period: m[3] ? m[3].toUpperCase() : null };
+  }
+  function to24(h, period) {
+    let hh = h;
+    if (period === 'PM' && hh !== 12) hh += 12;
+    if (period === 'AM' && hh === 12) hh = 0;
+    return hh;
+  }
+  let s, e;
+  if (found.length >= 2) {
+    // Two explicit AM/PM tokens — most reliable
+    s = { h: parseInt(found[0][1]), min: parseInt(found[0][2] || '0'), period: found[0][3].toUpperCase() };
+    e = { h: parseInt(found[1][1]), min: parseInt(found[1][2] || '0'), period: found[1][3].toUpperCase() };
+  } else {
+    // Fall back to splitting on "to" or a hyphen surrounded by optional spaces
+    const parts = t.split(/\s+to\s+|\s*-\s*/i).map(p => p.trim()).filter(Boolean);
+    // Find the first two parts that contain a digit
+    const timeParts = parts.filter(p => /\d/.test(p));
+    if (timeParts.length < 2) return TIME_SLOTS;
+    s = extract(timeParts[0]);
+    e = extract(timeParts[timeParts.length - 1]);
+    if (!s || !e) return TIME_SLOTS;
+    let sp = s.period, ep = e.period;
+    if (!sp && !ep) { sp = 'AM'; ep = 'PM'; }
+    else if (!sp && ep) { sp = to24(s.h, ep) * 60 + s.min < to24(e.h, ep) * 60 + e.min ? ep : (ep === 'AM' ? 'PM' : 'AM'); }
+    else if (sp && !ep) { ep = 'PM'; }
+    s.period = sp; e.period = ep;
+  }
+  const startMin = to24(s.h, s.period) * 60 + s.min;
+  const endMin   = to24(e.h, e.period) * 60 + e.min;
+  if (endMin <= startMin) return TIME_SLOTS;
+  const firstSlot = Math.ceil(startMin / 60) * 60;
+  const lastSlot  = Math.floor(endMin / 60) * 60;
+  const slots = [];
+  for (let m = firstSlot; m <= lastSlot; m += 60) {
+    const h24 = Math.floor(m / 60);
+    const period = h24 < 12 ? 'AM' : 'PM';
+    const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+    slots.push(`${h12}:00 ${period}`);
+  }
+  return slots.length ? slots : TIME_SLOTS;
+}
+const _td = new Date();
+const TODAY = _td.getFullYear()+'-'+String(_td.getMonth()+1).padStart(2,'0')+'-'+String(_td.getDate()).padStart(2,'0');
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const Stars = ({ r }) => (
@@ -1619,6 +1723,73 @@ function getTestPrep(testName) {
   return { sample: "Blood (Venous)", prep: "No special requirement." };
 }
 
+const TEST_INFO = {
+  "Complete Blood Count":  { what:"A CBC measures the three main types of cells in your blood — red blood cells (which carry oxygen), white blood cells (which fight infections), and platelets (which help blood clot). It gives a quick snapshot of your overall blood health.", why:"Doctors order a CBC to check for anaemia, infections, dengue fever, blood clotting problems, and blood disorders such as leukaemia. It is also routinely included in annual health checkups as a baseline test." },
+  "CBC":                   { what:"A CBC measures the three main types of cells in your blood — red blood cells (which carry oxygen), white blood cells (which fight infections), and platelets (which help blood clot). It gives a quick snapshot of your overall blood health.", why:"Doctors order a CBC to check for anaemia, infections, dengue fever, blood clotting problems, and blood disorders such as leukaemia. It is also routinely included in annual health checkups as a baseline test." },
+  "Lipid Profile":         { what:"A lipid profile measures fats (lipids) in your blood, including total cholesterol, LDL (bad cholesterol), HDL (good cholesterol), and triglycerides. These values reflect how well your body handles fat.", why:"Doctors order this test to assess your risk of heart disease and stroke, especially if you have high blood pressure, diabetes, a family history of heart problems, or as part of a routine health checkup." },
+  "Thyroid Profile":       { what:"This test measures thyroid hormones T3 and T4, along with TSH (thyroid-stimulating hormone), to evaluate how well your thyroid gland is functioning. The thyroid controls metabolism, energy levels, and several vital body processes.", why:"Doctors order it when you have symptoms like fatigue, unexplained weight gain or loss, hair thinning, feeling too cold or hot, irregular periods, or palpitations. It is also used to monitor thyroid medication." },
+  "TSH":                   { what:"TSH (Thyroid-Stimulating Hormone) is produced by the pituitary gland and tells the thyroid when to make hormones. Measuring TSH helps identify whether the thyroid gland is overactive (hyperthyroidism) or underactive (hypothyroidism).", why:"Doctors order TSH to investigate fatigue, unexpected weight changes, hair loss, cold intolerance, constipation, or palpitations — all common signs of thyroid imbalance. It is also used to track thyroid treatment." },
+  "HbA1c":                 { what:"HbA1c (glycated haemoglobin) measures the percentage of haemoglobin in your red blood cells that has sugar attached to it, reflecting your average blood sugar level over the past 2–3 months. Unlike a fasting test, it does not depend on when you last ate.", why:"This test is used to diagnose type 2 diabetes and prediabetes, and to monitor how well blood sugar is being controlled in people already diagnosed with diabetes. It helps doctors adjust diet, medication, or insulin doses." },
+  "Blood Sugar":           { what:"A blood sugar test measures the concentration of glucose in your blood. A fasting test is taken after 8 hours without food, a post-prandial test is done 2 hours after a meal, and a random test can be done at any time.", why:"Blood sugar tests are used to screen for, diagnose, and monitor diabetes and prediabetes. They are also routinely checked before surgery, in annual health packages, and when symptoms like excessive thirst or fatigue are present." },
+  "Liver Function":        { what:"A liver function test measures enzymes and proteins produced by the liver — including SGOT, SGPT, bilirubin, albumin, and alkaline phosphatase — to evaluate how well the liver is working.", why:"Doctors order it when there are symptoms of liver disease such as jaundice, dark urine, abdominal pain, or fatigue, or to monitor the effect of medications, alcohol use, or conditions like hepatitis and fatty liver disease." },
+  "LFT":                   { what:"A liver function test measures enzymes and proteins produced by the liver — including SGOT, SGPT, bilirubin, albumin, and alkaline phosphatase — to evaluate how well the liver is working.", why:"Doctors order it when there are symptoms of liver disease such as jaundice, dark urine, abdominal pain, or fatigue, or to monitor the effect of medications, alcohol use, or conditions like hepatitis and fatty liver disease." },
+  "Kidney Function":       { what:"A kidney function test checks how well your kidneys are filtering waste from the blood by measuring creatinine, urea, uric acid, and electrolytes — substances that healthy kidneys keep in balance.", why:"Doctors order it to detect or monitor kidney disease, check the impact of medications on kidney health, or evaluate symptoms such as swelling, reduced urine output, high blood pressure, or persistent fatigue." },
+  "Kidney Panel":          { what:"A kidney function test checks how well your kidneys are filtering waste from the blood by measuring creatinine, urea, uric acid, and electrolytes — substances that healthy kidneys keep in balance.", why:"Doctors order it to detect or monitor kidney disease, check the impact of medications on kidney health, or evaluate symptoms such as swelling, reduced urine output, high blood pressure, or persistent fatigue." },
+  "KFT":                   { what:"A kidney function test checks how well your kidneys are filtering waste from the blood by measuring creatinine, urea, uric acid, and electrolytes — substances that healthy kidneys keep in balance.", why:"Doctors order it to detect or monitor kidney disease, check the impact of medications on kidney health, or evaluate symptoms such as swelling, reduced urine output, high blood pressure, or persistent fatigue." },
+  "Vitamin D":             { what:"This test measures 25-hydroxyvitamin D, the main storage form of vitamin D in your body. Vitamin D is essential for calcium absorption, bone strength, muscle function, and a healthy immune system.", why:"Recommended for people with bone pain, muscle weakness, fatigue, or frequent infections, as well as those with limited sun exposure, older adults, or anyone at risk of osteoporosis or rickets." },
+  "Vitamin B12":           { what:"Vitamin B12 (cobalamin) is a nutrient essential for healthy nerve function, the production of red blood cells, and DNA synthesis. This test measures how much B12 is circulating in your bloodstream.", why:"Done to diagnose B12 deficiency, which can cause anaemia, numbness or tingling in the hands and feet, fatigue, and memory problems. It is particularly important for vegetarians, vegans, and older adults." },
+  "Iron Studies":          { what:"Iron studies measure serum iron, TIBC (total iron-binding capacity), and ferritin (stored iron) together to give a complete picture of your body's iron status — how much iron is in your blood and how much is stored.", why:"Done to find the cause of anaemia, detect iron deficiency or iron overload, and monitor iron replacement therapy in patients being treated for low iron levels." },
+  "CRP":                   { what:"C-Reactive Protein (CRP) is a substance produced by the liver whenever there is inflammation in the body. This test measures CRP levels to detect the presence and degree of inflammation.", why:"Ordered to detect acute infections, monitor inflammatory conditions like rheumatoid arthritis or inflammatory bowel disease, and — with a high-sensitivity CRP test — to assess the risk of heart disease." },
+  "Urine Routine":         { what:"This test examines a urine sample for its physical properties (colour, clarity), chemical composition (protein, sugar, pH), and microscopic elements (cells, bacteria, casts), giving a broad view of kidney and urinary tract health.", why:"Done to detect urinary tract infections (UTIs), kidney disease, diabetes, and blood or metabolic disorders. It is included in most standard health checkups as a basic screen." },
+  "Urine Culture":         { what:"A urine culture grows any bacteria present in your urine sample in a lab and then tests which antibiotics can kill them. It takes 48–72 hours to give a result.", why:"Ordered to confirm a urinary tract infection and identify the specific bacteria causing it, so the right antibiotic can be prescribed. Especially important for recurrent or antibiotic-resistant infections." },
+  "Dengue":                { what:"The Dengue NS1 antigen test detects a protein released by the dengue virus into the blood during early infection. It is most accurate in the first 5 days of fever, before the body produces antibodies.", why:"Done when a patient develops sudden high fever, severe headache, pain behind the eyes, joint or muscle pain, or a rash — all typical symptoms of dengue. Early diagnosis allows timely monitoring of platelet levels." },
+  "HIV":                   { what:"This test detects antibodies produced by the immune system against HIV (Human Immunodeficiency Virus), screening for both HIV-1 and HIV-2. Modern tests also detect a viral protein (p24 antigen) for earlier detection.", why:"Recommended for people at risk of HIV exposure, during routine antenatal care in pregnancy, before surgery or blood donation, and as a voluntary health check. It is completely confidential." },
+  "PSA":                   { what:"PSA (Prostate-Specific Antigen) is a protein produced by the prostate gland. This blood test measures the PSA level, which can rise when there is prostate enlargement, inflammation, or cancer.", why:"Used to screen for prostate cancer in men over 50, or younger men with a family history of the disease. Also used to monitor treatment response in men already diagnosed with prostate cancer." },
+  "CA-125":                { what:"CA-125 is a protein found on the surface of many ovarian cancer cells that can be detected in the blood. Some benign (non-cancerous) conditions like endometriosis can also raise CA-125 levels.", why:"Used to monitor known or suspected ovarian cancer and assess treatment response. May also be ordered to evaluate unexplained pelvic pain, persistent bloating, or abnormal pelvic ultrasound results." },
+  "Testosterone":          { what:"Testosterone is the primary male sex hormone, also present in smaller amounts in women. This test measures the total amount of testosterone in your blood, reflecting its production by the testes (in men) or ovaries and adrenal glands (in women).", why:"Done in men with symptoms of low testosterone such as fatigue, low libido, reduced muscle mass, or mood changes. In women, it helps evaluate hormonal disorders such as PCOS or excess body hair." },
+  "Prolactin":             { what:"Prolactin is a hormone produced by the pituitary gland that stimulates breast milk production after childbirth. It is present at low levels in non-pregnant women and men.", why:"Ordered to investigate unexpected milk production (in men or non-pregnant women), irregular or absent periods, infertility, or to detect a pituitary tumour (prolactinoma) that may cause headaches or vision disturbance." },
+  "Cortisol":              { what:"Cortisol is a steroid hormone produced by the adrenal glands that regulates the body's response to stress, blood sugar, blood pressure, immune function, and the sleep-wake cycle.", why:"Done to diagnose or rule out disorders of the adrenal glands — such as Cushing's syndrome (too much cortisol) or Addison's disease (too little cortisol) — when there is unexplained weight gain, weakness, or fatigue." },
+  "DHEA":                  { what:"DHEA-S (dehydroepiandrosterone sulfate) is a hormone produced by the adrenal glands and serves as a precursor to both male and female sex hormones. It is one of the most abundant hormones in the human body.", why:"Done to evaluate adrenal gland function, investigate excess body hair in women, early puberty in children, or to assess suspected adrenal tumours and hormonal imbalance disorders." },
+  "Malaria":               { what:"This test detects proteins (antigens) produced by malaria parasites (Plasmodium species) directly from a blood sample. It can identify the specific type of malaria parasite causing the infection.", why:"Done when a patient has high fever with chills, sweating, headache, or body aches — especially after travel to or residence in a malaria-prone area. Early diagnosis enables prompt anti-malarial treatment." },
+  "Typhoid":               { what:"The Widal test detects antibodies in the blood that the immune system produces against Salmonella typhi — the bacteria responsible for typhoid fever. Results are usually available on the same day.", why:"Done to investigate prolonged fever lasting more than a week, abdominal pain, headache, or weakness — typical symptoms of typhoid fever. A positive result guides antibiotic treatment." },
+  "Widal":                 { what:"The Widal test detects antibodies in the blood that the immune system produces against Salmonella typhi — the bacteria responsible for typhoid fever. Results are usually available on the same day.", why:"Done to investigate prolonged fever lasting more than a week, abdominal pain, headache, or weakness — typical symptoms of typhoid fever. A positive result guides antibiotic treatment." },
+  "Stool":                 { what:"A stool examination analyses a faecal sample for signs of infection, parasites, blood, or digestive problems. It may include microscopy, culture, or specific antigen tests depending on what the doctor suspects.", why:"Done for prolonged diarrhoea, abdominal pain, blood or mucus in stool, or unexplained weight loss. It helps identify bacterial, viral, or parasitic causes of gut and digestive problems." },
+  "Allergy":               { what:"An allergy panel tests the blood for IgE antibodies — proteins produced by the immune system when it reacts to specific allergens such as pollen, dust mites, pet dander, mould, or certain foods. A single blood draw can screen for dozens of allergens at once.", why:"Done to identify the specific triggers causing symptoms like sneezing, runny nose, watery eyes, skin rashes, or asthma. Identifying the allergen helps guide avoidance and treatment decisions." },
+  "Rheumatoid":            { what:"A rheumatoid arthritis panel is a group of blood tests — typically RA factor, Anti-CCP antibodies, CRP, and ESR — that help evaluate inflammation and immune activity in the joints.", why:"Done when there is persistent joint pain, morning stiffness, joint swelling, or fatigue to help diagnose or rule out rheumatoid arthritis and similar autoimmune joint conditions." },
+  "ANA":                   { what:"ANA (Antinuclear Antibody) test detects antibodies the immune system mistakenly makes against the body's own cells. It is a broad screening test for autoimmune conditions rather than a test for a single disease.", why:"Ordered when symptoms suggest an autoimmune disorder — such as lupus, Sjögren's syndrome, or scleroderma — including joint pain, persistent fatigue, skin rashes, or kidney problems." },
+  "Autoimmune":            { what:"Autoimmune tests detect specific antibodies or immune markers that indicate the immune system may be attacking the body's own tissues or organs. Different tests target different conditions.", why:"Done when symptoms suggest an autoimmune disorder such as lupus, rheumatoid arthritis, or thyroid autoimmune disease — including joint pain, skin rashes, fatigue, or unexplained organ inflammation." },
+  "2D Echo":               { what:"A 2D echocardiogram (2D Echo) is an ultrasound of the heart that produces real-time images of its chambers, valves, and walls. It uses sound waves, takes about 30 minutes, and involves no radiation or pain.", why:"Ordered to evaluate chest pain, breathlessness, heart murmurs, or palpitations, and to assess heart function in patients with known heart disease, high blood pressure, or diabetes." },
+  "Echo":                  { what:"An echocardiogram is an ultrasound of the heart that produces detailed images of its structure and movement. It uses sound waves, is completely painless, and takes about 20–40 minutes.", why:"Ordered to evaluate chest pain, breathlessness, heart murmurs, or palpitations, and to assess heart size and pumping function in people with known or suspected heart conditions." },
+  "ECG":                   { what:"An ECG (electrocardiogram) records the electrical activity of the heart using electrodes placed on the skin. A 12-lead ECG captures the heart's rhythm from 12 different angles simultaneously. It is painless and takes under 10 minutes.", why:"Done to detect irregular heart rhythms (arrhythmias), diagnose a heart attack or ischaemia, evaluate chest pain or palpitations, and screen cardiac health before surgery or in high-risk individuals." },
+  "X-Ray":                 { what:"An X-ray uses a small, safe dose of radiation to create images of the inside of the body. A chest X-ray shows the lungs, heart, major blood vessels, and ribs, and is one of the most commonly performed imaging tests.", why:"Ordered to detect lung infections (pneumonia, TB), fluid around the lungs, an enlarged heart, rib fractures, or to investigate chronic cough, breathlessness, or chest pain." },
+  "Ultrasound":            { what:"An ultrasound scan uses high-frequency sound waves to create real-time images of organs and tissues inside the body. It does not use radiation, is painless, and produces immediate results.", why:"Done to investigate abdominal or pelvic pain, bloating, or abnormal blood tests. It helps detect gallstones, kidney stones, liver disease, ovarian cysts, pregnancy-related concerns, or masses in soft tissues." },
+  "MRI":                   { what:"MRI (Magnetic Resonance Imaging) uses a strong magnetic field and radio waves to produce detailed images of soft tissues, organs, and structures inside the body. It does not use radiation and is painless, though the machine makes loud noises.", why:"Ordered for neurological symptoms (severe headache, seizures, memory loss, stroke signs), suspected tumours, disc problems in the spine, ligament injuries, and conditions where soft tissue detail is critical." },
+  "CT Scan":               { what:"A CT scan (computed tomography) uses X-rays taken from multiple angles combined by a computer to create detailed cross-sectional images of the inside of the body. It provides far more detail than a plain X-ray.", why:"Done to diagnose lung cancer, pulmonary embolism, severe infections, bone injuries, abdominal masses, and to stage cancer or plan surgical or radiation treatment." },
+  "Bone Density":          { what:"A DEXA scan (dual-energy X-ray absorptiometry) uses a very low dose of X-rays to measure the mineral density of your bones, most commonly in the spine and hip. It takes about 20 minutes and is painless.", why:"Recommended for post-menopausal women, men over 70, people on long-term steroid therapy, or anyone who has had a fracture from a minor impact — to diagnose osteoporosis and assess future fracture risk." },
+  "DEXA":                  { what:"A DEXA scan measures bone mineral density using a very small dose of X-ray radiation. It compares your bone density to that of a healthy young adult using a T-score.", why:"Done to diagnose osteoporosis, assess fracture risk, and monitor the effectiveness of osteoporosis treatment. Recommended for older adults, post-menopausal women, and those on steroid medications." },
+  "PFT":                   { what:"A Pulmonary Function Test (PFT) is a series of breathing tests — including spirometry — that measure how much air your lungs can hold and how quickly you can move air in and out. It is non-invasive and painless.", why:"Done to diagnose or monitor lung conditions such as asthma, COPD (chronic obstructive pulmonary disease), pulmonary fibrosis, and to evaluate unexplained breathlessness or assess lung health before surgery." },
+  "Pulmonary":             { what:"A Pulmonary Function Test is a series of breathing tests that measure lung capacity and airflow. It helps doctors understand how well your lungs are working overall.", why:"Done to diagnose or monitor conditions like asthma, COPD, and pulmonary fibrosis, and to evaluate unexplained shortness of breath or monitor chronic lung disease over time." },
+  "Fertility Panel":       { what:"A fertility panel is a group of blood tests measuring reproductive hormones — such as FSH, LH, oestradiol, AMH, and prolactin for women, or testosterone, FSH, and LH for men — that assess hormonal health and reproductive function.", why:"Done to evaluate irregular periods, difficulty conceiving, suspected hormonal imbalance, or to assess reproductive potential before starting fertility treatments such as IVF." },
+  "Hormone Panel":         { what:"A hormone panel is a comprehensive blood test that measures multiple hormones — including thyroid hormones, sex hormones, cortisol, and prolactin — to give an overview of overall hormonal health.", why:"Done to investigate a wide range of symptoms related to hormonal imbalance, including fatigue, weight changes, irregular periods, mood swings, low libido, or concerns about fertility." },
+  "COVID Antibody":        { what:"This test detects IgG antibodies produced by the immune system in response to a past COVID-19 infection or vaccination. Antibodies typically develop 1–2 weeks after infection or immunisation.", why:"Done to check for evidence of past COVID-19 exposure or vaccination response. It does not diagnose active infection — for active infection, an RT-PCR or antigen test is required." },
+  "COVID RT-PCR":          { what:"RT-PCR detects the genetic material (RNA) of the SARS-CoV-2 virus from a nasal or throat swab. It is the gold-standard test for diagnosing an active COVID-19 infection with high accuracy.", why:"Done when a person has symptoms of COVID-19 (fever, cough, breathlessness, loss of taste or smell), after exposure to a confirmed case, or as required before travel or medical procedures." },
+  "RT-PCR":                { what:"RT-PCR detects the genetic material (RNA) of the SARS-CoV-2 virus from a nasal or throat swab. It is the gold-standard test for diagnosing an active COVID-19 infection with high accuracy.", why:"Done when a person has symptoms of COVID-19, after close contact with a confirmed case, or as required for travel, hospital admission, or other procedures." },
+  "Full Body":             { what:"A full body checkup is a comprehensive package of blood and urine tests that evaluates multiple organ systems in a single visit — typically covering blood count, liver, kidney, thyroid, diabetes, cholesterol, vitamins, and more.", why:"Recommended as an annual preventive health check to detect lifestyle diseases such as diabetes, high cholesterol, thyroid imbalance, and anaemia early — before symptoms appear — making treatment more effective." },
+  "Aarogyam":              { what:"Aarogyam is a comprehensive preventive health screening package from Thyrocare that covers 72–107 parameters — including blood count, organ function tests, hormones, vitamins, and metabolic markers — in a single blood and urine test.", why:"Recommended as an annual health screen for adults to detect diabetes, thyroid disorders, vitamin deficiencies, anaemia, and organ dysfunction early, enabling timely lifestyle changes or treatment." },
+  "Wellness":              { what:"A wellness package is a preventive health screening that combines multiple blood and urine tests to assess the overall health of key organ systems — including the heart, liver, kidneys, thyroid, and blood — in a single appointment.", why:"Done annually or as recommended by a doctor to catch silent health conditions early, track changes in health over time, and enable informed lifestyle decisions based on personal health data." },
+  "Senior Citizen":        { what:"A senior citizen health package is a comprehensive set of tests designed for older adults, covering blood count, heart health, bone markers, thyroid, diabetes, kidney, liver, and cancer markers in a single visit.", why:"Recommended for adults above 60 to screen for age-related conditions such as anaemia, osteoporosis, heart disease, diabetes complications, and thyroid imbalance — enabling early intervention and better quality of life." },
+  "Diabetes Package":      { what:"A diabetes care package is a focused set of blood tests — including HbA1c, fasting blood sugar, kidney function, and lipid profile — designed to give a complete picture of diabetes management and its effect on key organs.", why:"Recommended for people diagnosed with or at risk of diabetes to monitor blood sugar control, detect early kidney or cardiovascular complications, and guide medication or lifestyle adjustments." },
+  "Heart Health":          { what:"A heart health package is a group of blood tests — including lipid profile, hs-CRP, homocysteine, blood sugar, and ECG — that evaluate key risk factors for heart disease and cardiovascular health.", why:"Recommended for people with high blood pressure, diabetes, a family history of heart disease, or chest discomfort, and as a preventive screen for adults above 40 to assess overall cardiovascular risk." },
+};
+
+function getTestInfo(testName) {
+  const name = testName.toLowerCase();
+  for (const [key, val] of Object.entries(TEST_INFO)) {
+    if (name.includes(key.toLowerCase())) return val;
+  }
+  return null;
+}
+
 const LAB_LOGOS_B64 = {
   1: "data:image/jpeg;base64,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",
   2: "data:image/jpeg;base64,/9j/4QEbRXhpZgAATU0AKgAAAAgABQEAAAMAAAABBDgAAAEBAAMAAAABAoAAAAExAAIAAAAnAAAASodpAAQAAAABAAAAcQESAAQAAAABAAAAAAAAAABBbmRyb2lkIFVQMUEuMjMxMDA1LjAwNy5NMzM2QlVYWFNCRVlCMwAABJADAAIAAAAUAAAAp5KRAAIAAAAEODQ5AJARAAIAAAAHAAAAu5IIAAQAAAABAAAAAAAAAAAyMDI2OjA2OjE2IDA0OjUwOjU3ACswNTozMAAAAwEAAAMAAAABBDgAAAExAAIAAAAnAAAA7AEBAAMAAAABAoAAAAAAAABBbmRyb2lkIFVQMUEuMjMxMDA1LjAwNy5NMzM2QlVYWFNCRVlCMwD/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAKABDgDASIAAhEBAxEB/8QAHwABAAAGAwEBAAAAAAAAAAAAAAECAwQJCgcICwUG/8QAcBAAAQMDAgQDBAYFBgcICwUZAQACAwQFEQYhBwgSMUFRYQkTcYEUIpGhsfAKFTLB0RYXGCM44SgzQlJysvEkJic1YnSz0yU3RldYZ3N3eLa3GTQ2RUhUVmaGkpMaR1ODh6anwjlDVWNogoWVlpel/8QAHgEBAAEEAwEBAAAAAAAAAAAAAAgBAgcJAwUGBAr/xABaEQABAwMDAgMEBwQFBwgGCAcBAAIDBAURBhIhBzETQVEIImFxFDKBkaGx8BUjwdEWM0Lh8RckNjdzdbIJJTVDUnS0tSZERlVypUVTYnaEkqSzGCc0VFaD0v/aAAwDAQACEQMRAD8A38EREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREXwNU6lsujNOX/AFZqO4RWrT2l7Lc9RX66Tsmlht1mstFPcbpXSxU0U1RIykoqaad7IIZZntZ0xRSSEMWP2b2tXIBDJLCeY/SAkikfE9sln13E8SRvLHtcx2kSWkOaRvse4yCF2lrsV8vfi/sezXS6iAtE7rdQVVa2Iv8AqCQ08Uvh7udu/G7aSF0d41PpzT/gi+3202g1GTA2419PRmYN+sYxPIzeG55Lc481khRY2P8A3W/kAPbmQ0UfL/sXrvyzv/vQ223VRntbvZ+H9vmQ0cO/7Nq1wfh30kPXPyxldudCa1AJOktSgAZybFdB+dIul/yldPf/APN9LeXa92898HynPr39cjus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ovDLZPX1VuNIx0FTO6ZkUcwleBTRSbdm6PO7b34+EKPaq6cay1zeNKv0tZJ7rHSUNZHUyRyQRMidJNCY2PdPKwFzsEjBPby5WuwyJ7hnqyPMnbJx5Eefftj54hjDsHdwIIO58D4nfB/az4YOceOxUP0dXj/GcjmC4QH46c1jjOMfnHzHgg/RzeYCR3UOYPg+Ccf9z2sgRjcDHSfPtnxI9FJmp9oDpOY5BFquEENAbm23P3iA3gf5pxnt2748u8T4fZy6yPm2/wBE34xzmutzQCQ1uc/Su4/DA7ZXfX9HaH+CXxcONjzJ6vwds7aC4c5GM7dx37LYDWNb2YvI7rPkQ4Na04Zay1vpvXNZqjifc9fU1w0zbrpQUlLT3PSukrJLSTi6P97JUfTrDWTN93EyNlJNSgyyymQRZLA0EZ3J8th+OVrk6gXShvOsb/c6CpbU0lZXPmgna18fiMcGEO2SNY9oPbBaPXthbR+llpuVi0BpazXalfR3C2Wmmo6qFz45NksTA1wEkT3sIyeC04PPxUiKr0DzP3fwUrmgDIz3/ivILIC09/0jDqHMnwMx04/mUqu7c/8AdzqA/HI2xnOMfI68H/VrYe/SMf7SfAzZx/4FKkYb451xqHbw9D4b48gVrw/9Wtq/QAOPR7RhJaAKe5BoHfm61XfBB9MeZ5wfTT37SX+uDVn/AHii/wDL6JU12b5Lv7YfKj4/4S/Av5/8KOlsn5Dc79vNdZF2a5LR/hg8qB8uZfgV888T9Lfh3/uyD73Wbi3SOqiR/wCz12H2Gglb8fU/d5LFmjP9LNOZ4xeraPvqoAPvx9nmvSLj/wAXH/oN/wBUKdSR/wCLj/0G/wCqFOtNQPb4jP5fz/l2W9OH+qi/2bP+EIiIqrkRERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE88f4ff2REREREREREREREREQDJGd9x4fLw9O/mq3Q09wD38Md+/iqTe4+I/FV1TGDkYzxz9369MqhAIAIz65w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4bp7seZ9fz4feogO7k+mNtx8vFTK07SecE/j5fwA+z4LkDW+g9SPQnv+u33lSBgBBydvyFOiKm1voP1/h+fqVUAAYCIiK4cAD0VUREREREREREVCQO/miIiI4kNJAyQOyKVwLhgHCi0YABOcePZSgOB3OR8fj57/AGKdfOwCRz3kOaSNpGe4wO3w4H80UAMDHcfu8vVW5bh5dnsdvTG3f87/AGK5VLpdnByRvgnOO23w3/OMK/f4G1gblrsN7njJGfPJ7nHA5+81Bxn0Iwe/8CPzVM7jAyPnv9uPl4/wi0EuHiD2Hhjzz8B3+XlmoWuGMHw3I2+3z2/eo9JDiRgA+PiCe+2PPfv8vK5sziZAGHAAAORkjjjtjtn54GOUBDQWtGAc/r7uPyxhToqfQTuTvjyyB+H7lFgIzkbfH8/uTxANmQRvx38s47/f/PCtyc4xx68fl3US0E5OUADQTvjv59vJQd1dTcHbxHn5/d6Kf4fn8FQP8Tc0ZYQQMnzHBJH2ccqqlx1dJPcYO37/AD/PxUS0EYPb8/ndRAwAPIYRVc0lgb3+rn445zz8QPiiIiK9ow0D0AREREIB7hEREVNrfQfr/D8/UoiIibW+g/X+H5+pRERFUNA5A+CIiIqoilLWncj7z/FTIiKUsb6j5/xygYB5/kg+XopkREUCSPDIAz3wpHE9QwTg4x8/Tx+fwU+MjB3z+f70VuS4HHBBwPswc/r09EByAfNRUAMADyUUVRnAz3wM+fPnyiIiKqIiIiIiIiIiIiIiIit0RERERERERERERERERERERERERERERERERERFXb2HwH4Kgq7ew+A/BEUURERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERFx+H8fw/vRERFeBgAegwiIiKqIiIiIiIiIiIiIiIiIiIiIiDPic+vZERUXxBxBIzjO2wHgMYOdsADHx33UHR9WQ5oIPng+qqluRjOPPbOe3mfRTIPXsf15p2x8MfDt8sKRjekYwAAcjGPh+Ax5oScOIG/SexB3HYDfA23+fj4zoqEEj4kYPwzjP6z/MBwfuzz37d+MeSoAZDiQDh22T29e/j4efgoNeQQDnBPpjG+cjJ+Hic+AVwpOgb422IHc4z499/hsrAzGRwcjA78dsYGcfZ/Mq1+5xaRwARkZ4xxkDjyx8FOhOAT5DKDPiMendQ333+G3b8M/crwMADvhXKVw6gCPv9VM44BOM+n5z+CiiskOG4BLS7gEd+4z+GT8vjwqYGSfM/wB38lBp6gD5qKIrI92QHHcfXHPbHfuqoiIudEREREREREREVrjhpI8kUod9Ytx8O/ln5/Lt2UyIuBgdkbnF2XZHB47cfZj07fciIiL6CM+ZHr8f1+giIiIBgDv28/18fwCIqbnkHA29cZ8vl9qqKBGRj4fn9yoRkt9B5dvT4FUOfI4+PdUg52QM9z+fDYfZn0KrKUNDf4qZXYAztGB6fYPmrWBwHvHJP4fr9eglG4z5knuR9+f7vRTIitLckE+WfjkcfnjlXoiIm0ZB7Y9OOeP5IiKGRkDxOceuO6iqGRuSAQSO4zjHb7+47IiIiv7oiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiKgAGceZz9qIiIqoiIiIiIiIiIiIiIiIiIiK3REREREREREREREREREREREREREREREREREREVdvYfAfgqCrt7D4D8ERRREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREUrur/ACcfMH9xCg4EuafzscqbG+fTH8Ps3+1FYCSXA8YPBHfB5/uUGkkZOPL8PVTKAAHZRRXDIAz3RERMD0VUREVMD0H3IiIiqiIiIiIiIiIiIRngoiIipgeg+4IiIiqiIiIiIiIiIigRkEZxnx/OFa521pcOceWe+T68/Z6ooopW56RlTIx25rXdsgFERSFpy0t8O+/h5d/3HbZTq1shJcHDaWkDvnPAJ+4n1x8eCUUpaCQfEbjv69x4jdTIi4g0DJA7/r9f4YIiIvob9VvyH5IiIiqiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIit0RERERERERERERERERERERERERERERERERERFXb2HwH4Kgq7ew+A/BEUUREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREVPUgc/miIiKqIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiKmXODsYzk7DHhvvn5d/P0VRFwSNLy1ocW7Tk/HkccEds/ruiIiLmAwAPQYRERFaWBxySePu8u34j7T9pERFTYPU/rH9/6ByRERcg4AHoiIiIiIiIiIiIiIiIiIiIiIiIiIiJ3RERERERERERERERERERERERERERERW6IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIirt7D4D8FQVdvYfAfgiKKIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIip9n64/kPuRERFVERSuBJaR4Hf7v4KJAcMH8cH5Lh8R3v8Aug7XNAxnBBx9v3A+nxRRTOfwRStb0537qpe4OYC3DSPePJwePT0P8fgimRS9P1urJ7Yx+fz9gUSM+JHwOEa55YTtwQcNGeXAYyTn15/l6lFEUGjpGM53yqeI4OALeC3JPOckDA+/IPfjlFFFK1vTnfPyUxGfPvnb9/oqh73M3bMOz9U+Y4z/AB+5ERQcMgjOM+Pf7kAwAO+Pl/FC8h+C0Y25zznPHHAOe5/DlFFFK1pHfx8PLuo43B8vtPzRrnlgcW4JIyOT7vqBnvjn80UUUHDIwmNsemPuVC9we4FvAHDvidox8scn7BxhFFFK0EDB/wBijjfPpj78q4OftYS3BcQHD0BI5+717E/BFFFK5ocMdvX87/eouHUCM4z4qwyPBeNnYDbjzzjg/L1H4IoooAYAGc4UA3BJz38PLt/D8e6u3Pww7R7wG4eYJx59sfiim/P5+5FAjJBz2KOHUMZxvlWmR4DssyQQAB59snOR6nsMHHdFFEAwAPIYUMDf17q/L8s93gj3s9wePs/n9xRRzvjx7oSB3IHxUMfWDs9hjH2/xUrwTjHh+f3KwyuDXHblwdgNwRlvHPrnv93ZFOilA2APcY+0eO3n5KZX73fWLQGYznPPIHceXJPrx3weERFIGkO9PzsVOrWSPeD7gBBxyTjHHqAfXntwiIoOBIIBwfNFY6ZzThsZeBwSDnnjPn8T5/PzwVBERfSiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiKu3sPgPwVBV29h8B+CIooiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiKDs4+r3/AD5qKLjkyW45G7jIPI80UjQ7uTtjYePz/OVOiJGwMaBkk5zk984Gfs4+SIiIryMkfDn8kRERVRERFQjJHfjny9c/hj+/uiIiKqIiIqYGc/D7O/5oiIir+vkiIiK3aMl3c/Z+Hx49URERXIiIit2jJP4fLGPyRERFd9v9/wCvgiIiKgHOfMjB9PL+XqiIigSB3VHODQScgDHPrnHb7/5diiiiJkHscqwHa4E49/OPXy/mP0ERERHDa7OTgkktPby8ufs445+aIiIqyDgEEgjjAOM8gj7sfdnzwiIiI1wAAPB8+O/x4RW6Ii5ERERERERERERERERERERERERERERERERERV29h8B+CoKu3sPgPwRFFERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERQOfA4+WVFFa4AgAkj5HBP6+H2IiIioc49wjIwMnngfnwfzREREbv/tY+z7P7/7uERERXohIHdQByNvh6fbj7NkIz9v5+CBoaMDPzK4C9+/DcbPXnJ4Hrnt+P3lFFERcrTloJ80TIHc4RQIB7qK4i9+4gY2jjPr29c9uPnk58sEREXMD7oJ9AT5+XKKBIGxOFFSloPy2H5/iplweI8k+TecYGTxjvwfQ4I75+SIiIucH3QTxwM5Pw9UUCQO57qKlc3JzlTdlwtMj3kOaNnduMeWO+c/wKIpQ3HiT6dh+O6mRHAOdueeWHDceY47jPw55H5IiIioiIiL6EREREVuiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIq7ew+A/BUFXb2HwH4IiiiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIpW9W/V8u37lMi+d7dzw7nA7DnB7YP5ff9qIiIuVpy0DnjAyOM4x+foERERXoiIiIiIis2N+P3/r9E/DBERFeBjgIiIit2D0PHIOfln8hn8PgRERVwMY8sY+xEREVuxvx+/wDX6J+GCIiK7Axg8j9emERERAAO364A/giIiKmxuSfU5P4fy/XGCIiKmxvx/X6/H5YIiIr0REREVuiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIq7ew+A/BUFXb2HwH4IiiiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiK3REREREREREREREREREREREREREREREREREREVdvYfAfgqCrt7D4D8ERRRERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERFboiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiKu3sPgPwVBV29h8B+CIooiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIit0RERERERERERERERERERERERERERERERERERFXb2HwH4Kgq7ew+A/BEUURERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/ZAABRDBQAAABTYW1zdW5nX0NhcHR1cmVfSW5mb1NjcmVlbnNob3QAAKENEQAAAENhcHR1cmVkX0FwcF9JbmZvZXlKamIyMXdJam9pWTI5dExuTmhiWE4xYm1jdVlXNWtjbTlwWkM1aGNIQXVjMjFoY25SallYQjBkWEpsWEM5amIyMHVjMkZ0YzNWdVp5NWhibVJ5YjJsa0xtRndjQzVtYkdGemFHRnVibTkwWVhSbExrWnNZWE5vUVc1dWIzUmhkR1ZCWTNScGRtbDBlU0o5AAChCxgAAABQaG90b0VkaXRvcl9SZV9FZGl0X0RhdGF7Im9yaWdpbmFsUGE=",
@@ -1646,11 +1817,12 @@ const LAB_META = [
 function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const meta = LAB_META.find(m => m.id === lab.id);
   const [idx, setIdx] = React.useState(0);
+  const [loaded, setLoaded] = React.useState(false);
 
   const containerStyle = banner
     ? { width:"100%", height:"100%", display:"flex", alignItems:"stretch", justifyContent:"center", background:"#fff", overflow:"hidden" }
     : { width:size, height:size, borderRadius:radius, flexShrink:0, background:"#fff", overflow:"hidden",
-        boxShadow:"0 4px 16px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06)",
+        border:"1px solid #E5E7EB",
         display:"flex", alignItems:"center", justifyContent:"center" };
 
   const imgStyle = banner
@@ -1670,15 +1842,19 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   const srcs = embedded ? [embedded, ...(meta?.srcs||[])] : (meta?.srcs||[]);
 
   if (idx < srcs.length) return (
-    <div style={containerStyle}>
-      <img key={srcs[idx]} src={srcs[idx]} alt={lab.name} onError={() => setIdx(i => i + 1)} style={imgStyle}/>
+    <div style={{ ...containerStyle, position:"relative" }}>
+      {!loaded && <div className="sk" style={{ position:"absolute",inset:0,borderRadius:radius,zIndex:1 }}/>}
+      <img key={srcs[idx]} src={srcs[idx]} alt={lab.name}
+        onError={() => { setIdx(i => i + 1); setLoaded(false); }}
+        onLoad={() => setLoaded(true)}
+        style={{ ...imgStyle, opacity:loaded?1:0, transition:"opacity .3s" }}/>
     </div>
   );
 
   const accent = meta?.accent || "#1158A6";
   const bg = meta?.bg || "#EEF4FF";
   return (
-    <div style={{ ...(banner ? { width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center" } : { width:size,height:size,borderRadius:radius,flexShrink:0,boxShadow:"0 4px 16px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.05)" }), background:bg, flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+    <div style={{ ...(banner ? { width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center" } : { width:size,height:size,borderRadius:radius,flexShrink:0,border:"1px solid #E5E7EB" }), background:bg, flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
       <span style={{ fontFamily:"Manrope,sans-serif", fontWeight:900, fontSize:banner?48:size*.34, color:accent, lineHeight:1 }}>
         {(meta?.short || lab.name).slice(0,2)}
       </span>
@@ -1686,7 +1862,41 @@ function LabLogo({ lab, size=90, radius=18, banner=false }) {
   );
 }
 
-const LabsNearMeSection = ({ T, navTo }) => (
+const DEFAULT_MARQUEE_LOGOS = [
+  { id:1, name:"Apollo Diagnostics",  src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in" },
+  { id:2, name:"SRL / Agilus",        src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200" },
+  { id:3, name:"Metropolis",          src:"https://logo.clearbit.com/metropolisindia.com?size=200" },
+  { id:4, name:"Dr. Lal PathLabs",    src:"https://logo.clearbit.com/lalpathlabs.com?size=200" },
+  { id:5, name:"Thyrocare",           src:"https://logo.clearbit.com/thyrocare.com?size=200" },
+  { id:6, name:"Vijaya Diagnostics",  src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com" },
+];
+// Embedded b64 lookup by name — ensures default logos always show even when
+// localStorage has entries without b64 (e.g. after admin saves for first time)
+const MARQUEE_NAME_B64 = {
+  "Apollo Diagnostics":  () => LAB_LOGOS_B64[1],
+  "SRL / Agilus":        () => LAB_LOGOS_B64[2],
+  "Metropolis":          () => LAB_LOGOS_B64[3],
+  "Dr. Lal PathLabs":    () => LAB_LOGOS_B64[4],
+  "Thyrocare":           () => LAB_LOGOS_B64[5],
+  "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
+};
+
+const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
+  // Supabase only — no localStorage fallback
+  const logos = React.useMemo(() => {
+    if (sbMarqueeLogos && sbMarqueeLogos.length > 0) {
+      return sbMarqueeLogos.map(l => ({
+        ...l,
+        // fill in b64 from hardcoded map if the saved entry doesn't have one
+        b64: l.b64 || (MARQUEE_NAME_B64[l.name] ? MARQUEE_NAME_B64[l.name]() : null),
+      }));
+    }
+    return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
+  }, [sbMarqueeLogos]);
+  // Double the list for seamless loop
+  const doubled = [...logos, ...logos];
+
+  return (
   <section style={{ padding:"16px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
     <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", marginBottom:18 }}>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
@@ -1718,32 +1928,24 @@ const LabsNearMeSection = ({ T, navTo }) => (
       <div className="marquee-labs-track"
         onClick={e=>e.currentTarget.classList.toggle("paused")}
         onMouseLeave={e=>e.currentTarget.classList.remove("paused")}>
-        {[
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-          { name:"Apollo Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=apollodiagnostics.in", b64: LAB_LOGOS_B64[1] },
-          { name:"SRL / Agilus",       src:"https://logo.clearbit.com/agilusdiagnostics.com?size=200",             b64: LAB_LOGOS_B64[2] },
-          { name:"Metropolis",         src:"https://logo.clearbit.com/metropolisindia.com?size=200",               b64: LAB_LOGOS_B64[3], small:true },
-          { name:"Dr. Lal PathLabs",   src:"https://logo.clearbit.com/lalpathlabs.com?size=200",                   b64: LAB_LOGOS_B64[4] },
-          { name:"Thyrocare",          src:"https://logo.clearbit.com/thyrocare.com?size=200",                     b64: LAB_LOGOS_B64[5] },
-          { name:"Vijaya Diagnostics", src:"https://www.google.com/s2/favicons?sz=256&domain=vijayadiagnostic.com",b64: LAB_LOGOS_B64[6], small:true },
-        ].map((l,i)=>(
+        {doubled.map((l,i)=>(
           <div key={i} className="marquee-lab-logo">
-            <img src={l.b64||l.src} alt={l.name}
-              style={l.small ? {height:"40px",maxWidth:"110px"} : undefined}
-              onError={e=>{ if(e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
-            />
+            {(l.b64||l.src)
+              ? <img src={l.b64||l.src} alt={l.name}
+                  onError={e=>{ e.target.style.display='none'; e.target.nextSibling && (e.target.nextSibling.style.display='flex'); }}
+                />
+              : null}
+            <div style={{ display:"none", width:64, height:64, borderRadius:12, background:"#EFF6FF", border:"1px solid #BFDBFE", alignItems:"center", justifyContent:"center" }}>
+              <span style={{ fontSize:"1.3rem" }}>🏥</span>
+            </div>
             <span>{l.name}</span>
           </div>
         ))}
       </div>
     </div>
   </section>
-)
+  );
+}
 
 
 /* ─── MODULE-LEVEL REPLACEMENTS FOR LabCard, LabsPage, LabDetail ────────────
@@ -1751,62 +1953,110 @@ const LabsNearMeSection = ({ T, navTo }) => (
    render. This fixes Add/Book buttons losing click handlers on cart updates.
 ────────────────────────────────────────────────────────────────────────── */
 
-function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo }) {
+function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, selectedTest, addCart, setCartOpen }) {
   const minPrice = l.tests?.length ? Math.min(...l.tests.map(t=>t.price)) : null;
-  const reportTime = l.reportTime || "24 hrs";
+  const reportTime = l.reportTime || "";
+
+  // Find the matching test for the selected test in this lab
+  const matchedTest = selectedTest ? (
+    l.tests.find(t => t.name.toLowerCase() === selectedTest.name.toLowerCase())
+    || l.tests.find(t => t.name.toLowerCase().includes(selectedTest.name.toLowerCase()) || selectedTest.name.toLowerCase().includes(t.name.toLowerCase()))
+    || l.tests.find(t => t.cat === selectedTest.cat)
+  ) : null;
+
+  // Price to show: matched test price if a test is selected, else min price
+  const displayPrice = matchedTest ? matchedTest.price : minPrice;
+  const displayLabel = matchedTest ? matchedTest.name : null;
+
+  // When a test is pre-selected, clicking the card/Book Now auto-adds it and opens cart
+  const handleBookDirect = (e) => {
+    if (!selectedTest || !addCart) return false;
+    e?.stopPropagation?.();
+    const match = matchedTest || l.tests[0];
+    if (match) { addCart(l, match); if (setCartOpen) setCartOpen(true); return true; }
+    return false;
+  };
+
   return (
     <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}
-      onClick={()=>{ setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
+      onClick={(e)=>{ if(selectedTest){ handleBookDirect(e); return; } setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
       <div style={{ padding:"20px 18px 18px" }}>
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
           <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
           <div style={{ flex:1,minWidth:0 }}>
             <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
-            <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5 }}>Diagnostic Lab</div>
+            <div style={{ fontSize:".78rem",color:"#6B7280",marginBottom:5 }}>
+              {[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}
+            </div>
             <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A",marginBottom:5 }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
               {l.tests.length} Tests Available
             </div>
-            <div style={{ display:"flex",alignItems:"center",gap:4,background:"#FEF9C3",borderRadius:6,padding:"3px 8px",width:"fit-content" }}>
-              <span style={{ color:"#F59E0B",fontSize:".88rem" }}>★</span>
-              <span style={{ fontWeight:800,fontSize:".81rem",color:"#92400E" }}>{l.rating}</span>
-              <span style={{ fontSize:".75rem",color:"#78350F" }}>({l.reviews} reviews)</span>
-            </div>
+            {(()=>{
+              const rating = l.rating||4.5;
+              const full = Math.floor(rating);
+              const pct  = Math.round((rating - full)*100);
+              const gid  = `lsg-${l.id}`;
+              return (
+                <div style={{ display:"flex",alignItems:"center",gap:5 }}>
+                  <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                  <div style={{ display:"flex",gap:1 }}>
+                    {Array.from({length:5},(_,i)=>{
+                      const sid=`${gid}-${i}`;
+                      if(i<full) return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                      if(i===full&&pct>0) return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${pct}%`} stopColor="#F59E0B"/><stop offset={`${pct}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                      return <svg key={i} width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
         <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-        <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
-          <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
-          <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
-          <span style={{ color:"#6B7280" }}>{l.city}</span>
-        </div>
-        <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117",marginBottom:14 }}>
-          ~₹{minPrice?.toLocaleString()}
-          <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>Starting Price</span>
-        </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
-        <div style={{ display:"flex",gap:10 }}>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              {l.timing||"6AM – 10PM"}
+
+        {/* Selected test price */}
+        {displayLabel && (
+          <div style={{ marginBottom:14 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,color:"#1158A6",marginBottom:6 }}>
+              🔬 {displayLabel}
             </div>
-            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-              onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+            <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117" }}>
+              ₹{displayPrice?.toLocaleString()}
+              <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>for this test</span>
+            </div>
           </div>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
-            </div>
-            <button onClick={e=>{ e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
+        )}
+
+        {reportTime && (
+          <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:10,textAlign:"center" }}>REPORTS IN {reportTime.toUpperCase()}</div>
+        )}
+        <div style={{ display:"flex",justifyContent:"center",alignItems:"center",marginBottom:12,gap:18 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {l.timing||"6AM – 10PM"}
+          </div>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
+          </div>
+        </div>
+        <div style={{ display:"flex",justifyContent:"center" }}>
+          {selectedTest ? (
+            <button onClick={e=>{ e.stopPropagation(); const match = matchedTest || l.tests[0]; if(match){ addCart(l, match); if(setCartOpen) setCartOpen(true); } }}
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
               onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>Book Now</button>
-          </div>
+              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+              Book Now
+            </button>
+          ) : (
+            <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+              View Tests &amp; Prices
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -1834,32 +2084,137 @@ function LabBanner({ lab }) {
 }
 
 /* ─── SKELETON LOADER ─────────────────────────────────────────────────────── */
-function LabCardSkeleton() {
+function LabCardSkeleton({ delay = 0 }) {
   return (
-    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"22px 18px 20px" }}>
-      <style>{`@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}.sk{background:linear-gradient(90deg,#F1F5F9 25%,#E8EEF5 50%,#F1F5F9 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}`}</style>
-      <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
-        <div className="sk" style={{ width:86,height:86,borderRadius:10,flexShrink:0 }}/>
-        <div style={{ flex:1 }}>
-          <div className="sk" style={{ height:16,width:"70%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:12,width:"40%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:12,width:"55%",marginBottom:8 }}/>
-          <div className="sk" style={{ height:22,width:"30%",borderRadius:50 }}/>
+    <div style={{ background:"#fff",borderRadius:16,border:"1px solid #F0F4F8",padding:"20px 18px",marginBottom:12,overflow:"hidden",opacity:0,animation:`revealUp .4s ease ${delay}ms both` }}>
+      {/* Top row: logo + details */}
+      <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:14 }}>
+        <div className="sk" style={{ width:72,height:72,borderRadius:14,flexShrink:0 }}/>
+        <div style={{ flex:1,paddingTop:2 }}>
+          <div className="sk" style={{ height:15,width:"65%",marginBottom:10 }}/>
+          <div className="sk" style={{ height:11,width:"42%",marginBottom:8 }}/>
+          <div className="sk" style={{ height:11,width:"55%",marginBottom:10 }}/>
+          <div className="sk" style={{ height:20,width:"28%",borderRadius:99 }}/>
         </div>
       </div>
-      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-      <div className="sk" style={{ height:12,width:"60%",marginBottom:14 }}/>
-      <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-      <div style={{ display:"flex",gap:10 }}>
-        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
-        <div style={{ width:1,background:"#F1F5F9",margin:"0 4px" }}/>
-        <div style={{ flex:1 }}><div className="sk" style={{ height:12,width:"80%",marginBottom:8 }}/><div className="sk" style={{ height:34,borderRadius:8 }}/></div>
+      {/* Divider */}
+      <div style={{ height:1,background:"#F0F4F8",margin:"0 0 14px" }}/>
+      {/* Bottom row: 2 stat chips + button */}
+      <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+        <div className="sk" style={{ height:32,width:90,borderRadius:8,flexShrink:0 }}/>
+        <div className="sk" style={{ height:32,width:90,borderRadius:8,flexShrink:0 }}/>
+        <div style={{ flex:1 }}/>
+        <div className="sk" style={{ height:36,width:88,borderRadius:10,flexShrink:0 }}/>
       </div>
     </div>
   );
 }
 
-function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs }) {
+function DesktopCartPanel({ cart, total, mrpTotal, saving, delCart, setCartOpen, navTo }) {
+  return (
+    <div style={{ position:"sticky", top:72, width:420, flexShrink:0, background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", boxShadow:"0 4px 28px rgba(17,88,166,.11)", fontFamily:"'Manrope',sans-serif", overflow:"hidden", maxHeight:"calc(100vh - 88px)", display:"flex", flexDirection:"column" }}>
+
+      {/* Header */}
+      <div style={{ background:"linear-gradient(90deg,#EEF4FF,#F0F9FF)", borderBottom:"1px solid #DBEAFE", padding:"16px 20px", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ width:34, height:34, borderRadius:10, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <div>
+            <div style={{ fontWeight:900, fontSize:"1.05rem", color:"#0D1117" }}>Your Cart</div>
+            <div style={{ fontSize:".71rem", color:"#6B7280", fontWeight:500 }}>{cart.length === 0 ? "No items yet" : `${cart.length} test${cart.length>1?"s":""} selected`}</div>
+          </div>
+        </div>
+        {cart.length > 0 && <span style={{ background:"#1158A6", color:"#fff", borderRadius:50, padding:"3px 12px", fontSize:".76rem", fontWeight:700 }}>{cart.length}</span>}
+      </div>
+
+      {/* Scrollable body */}
+      <div style={{ flex:1, overflowY:"auto", minHeight:0 }}>
+        {cart.length === 0 ? (
+          <div style={{ padding:"56px 24px", textAlign:"center" }}>
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#E5E7EB" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom:16 }}><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <div style={{ fontWeight:700, color:"#374151", marginBottom:8, fontSize:"1rem" }}>No items in cart</div>
+            <div style={{ fontSize:".82rem", color:"#9CA3AF", lineHeight:1.7 }}>Add tests from the list<br/>to see them here</div>
+          </div>
+        ) : (
+          <div style={{ padding:"14px 16px", display:"flex", flexDirection:"column", gap:14 }}>
+            {cart.map(item => {
+              const info = getTestInfo(item.tname);
+              return (
+                <div key={item.tid} style={{ borderRadius:12, border:"1px solid #E5E7EB", overflow:"hidden", background:"#fff" }}>
+                  {/* Test name + price + remove */}
+                  <div style={{ padding:"12px 14px", display:"flex", alignItems:"flex-start", gap:10, background:"#F8FAFC", borderBottom:"1px solid #F1F5F9" }}>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontWeight:800, fontSize:".92rem", color:"#0D1117", lineHeight:1.3, marginBottom:3 }}>{item.tname}</div>
+                      <div style={{ fontSize:".73rem", color:"#6B7280" }}>{item.lname}</div>
+                    </div>
+                    <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:5, flexShrink:0 }}>
+                      <span style={{ fontWeight:900, fontSize:"1rem", color:"#0D1117" }}>₹{item.price.toLocaleString()}</span>
+                      <button onClick={()=>delCart(item.tid)}
+                        style={{ background:"#FEF2F2", border:"1px solid #FECACA", borderRadius:6, cursor:"pointer", padding:"2px 9px", color:"#EF4444", fontSize:".71rem", fontWeight:700, fontFamily:"'Manrope',sans-serif" }}>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Test info — only when single item in cart */}
+                  {cart.length === 1 && info && (
+                    <div style={{ padding:"12px 14px", display:"flex", flexDirection:"column", gap:10 }}>
+                      <div style={{ display:"flex", gap:9 }}>
+                        <div style={{ width:3, borderRadius:4, background:"#BFDBFE", flexShrink:0, marginTop:2 }}/>
+                        <div>
+                          <div style={{ fontWeight:700, fontSize:".69rem", color:"#1158A6", marginBottom:3, textTransform:"uppercase", letterSpacing:".06em" }}>What is this test?</div>
+                          <div style={{ fontSize:".8rem", color:"#4B5563", lineHeight:1.7 }}>{info.what}</div>
+                        </div>
+                      </div>
+                      <div style={{ display:"flex", gap:9 }}>
+                        <div style={{ width:3, borderRadius:4, background:"#6EE7B7", flexShrink:0, marginTop:2 }}/>
+                        <div>
+                          <div style={{ fontWeight:700, fontSize:".69rem", color:"#059669", marginBottom:3, textTransform:"uppercase", letterSpacing:".06em" }}>Why is this test done?</div>
+                          <div style={{ fontSize:".8rem", color:"#4B5563", lineHeight:1.7 }}>{info.why}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Footer — totals + checkout */}
+      {cart.length > 0 && (
+        <div style={{ borderTop:"1px solid #E5E7EB", flexShrink:0, background:"#fff" }}>
+          <div style={{ padding:"12px 18px", display:"flex", flexDirection:"column", gap:6 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", fontSize:".82rem", color:"#9CA3AF" }}>
+              <span>MRP Total</span>
+              <span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+            </div>
+            {saving > 0 && (
+              <div style={{ display:"flex", justifyContent:"space-between", fontSize:".82rem", color:"#16A34A", fontWeight:700 }}>
+                <span>You Save</span>
+                <span>−₹{saving.toLocaleString()}</span>
+              </div>
+            )}
+            <div style={{ display:"flex", justifyContent:"space-between", fontWeight:900, fontSize:"1.05rem", color:"#0D1117", borderTop:"1px solid #F1F5F9", paddingTop:8, marginTop:2 }}>
+              <span>Total</span>
+              <span>₹{total.toLocaleString()}</span>
+            </div>
+          </div>
+          <div style={{ padding:"0 16px 16px" }}>
+            <button onClick={()=>navTo("cart")} className="btn-anim"
+              style={{ width:"100%", background:"#1158A6", color:"#fff", border:"none", borderRadius:12, padding:"14px 0", fontWeight:800, fontSize:".95rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif", boxShadow:"0 4px 16px rgba(17,88,166,.3)" }}>
+              Book Now →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedTest, setSelectedTest, addCart, setCartOpen, allLabs, isDesktop, cartSlot }) {
   const [sortBy,     setSortBy]     = useState("rating");
   const [sortOpen,   setSortOpen]   = useState(false);
   const sortRef = React.useRef(null);
@@ -1869,6 +2224,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   const [searchQ,    setSearchQ]    = useState("");
   const [labSugOpen, setLabSugOpen] = useState(false);
   const [loading,    setLoading]    = useState(true);
+  const [showAllLabs, setShowAllLabs] = useState(false);
   const labSearchRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -1912,31 +2268,43 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 
   const filtered = enriched
     .filter(l => l.active !== false)
+    .filter(l => {
+      if (!selectedTest) return true;
+      const n = selectedTest.name.toLowerCase();
+      return (l.tests || []).some(t =>
+        t.name.toLowerCase() === n ||
+        t.name.toLowerCase().includes(n) ||
+        n.includes(t.name.toLowerCase()) ||
+        (selectedTest.cat && t.cat === selectedTest.cat)
+      );
+    })
     .filter(l => !filterOpen || l.open)
     .filter(l => !filterHome || l.homecoll)
     .filter(l => !filterNabl || l.nabl)
     .filter(l => !searchQ || l.name.toLowerCase().includes(searchQ.toLowerCase()) || l.address.toLowerCase().includes(searchQ.toLowerCase()))
     .sort((a,b) =>
-      sortBy === "rating" ? b.rating - a.rating :
-      sortBy === "price"  ? (a.tests?.length ? Math.min(...a.tests.map(t=>t.price)) : 9999) - (b.tests?.length ? Math.min(...b.tests.map(t=>t.price)) : 9999) :
-      (parseFloat(a.dist) || 9999) - (parseFloat(b.dist) || 9999)
+      sortBy === "price" ? (a.tests?.length ? Math.min(...a.tests.map(t=>t.price)) : 9999) - (b.tests?.length ? Math.min(...b.tests.map(t=>t.price)) : 9999) :
+      b.rating - a.rating
     );
 
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#fff", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"12px 16px 12px" }}>
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
           <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", color:"#0D1117", margin:0, letterSpacing:"-.02em" }}>Our Trusted Lab Partners</h1>
         </div>
       </div>
 
-      {/* ── BODY: FULL WIDTH LAB LIST ── */}
-      <div style={{ background:"#F5F7FF", minHeight:"80vh", padding:"16px 0" }}>
+      {/* ── BODY ── */}
+      <div style={{ background:"#fff", minHeight:"80vh", padding:"16px 0" }}>
+        {/* Desktop two-column wrapper */}
+        <div style={isDesktop ? { display:"flex", gap:28, alignItems:"flex-start", maxWidth:1280, margin:"0 auto", padding:"0 24px" } : {}}>
+        <div style={isDesktop ? { flex:1, minWidth:0 } : {}}>
         {/* Search + Sort row */}
         <div style={{ padding:"0 16px" }}>
         <div style={{ display:"flex",gap:4,marginBottom:16,alignItems:"center",maxWidth:580 }}>
@@ -1966,9 +2334,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
           {sortOpen && (
             <div style={{ position:"absolute",top:"calc(100% + 6px)",right:0,background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:300,minWidth:180,overflow:"hidden" }}>
               {[
-                {key:"rating", label:"⭐ Rating (High → Low)"},
-                {key:"price",  label:"💰 Price (Low → High)"},
-                {key:"dist",   label:"📍 Distance (Nearest)"},
+                {key:"rating", label:"Rating (High → Low)"},
               ].map(opt=>(
                 <button key={opt.key} onClick={()=>{ setSortBy(opt.key); setSortOpen(false); }}
                   style={{ display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",padding:"11px 16px",background:sortBy===opt.key?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F3F4F6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".88rem",fontWeight:sortBy===opt.key?700:500,color:sortBy===opt.key?"#1158A6":"#374151",transition:"background .1s" }}
@@ -1983,18 +2349,39 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
         </div>
         </div>
         </div>
+        {selectedTest && (
+          <div style={{ margin:"0 16px 12px",background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:12,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12 }}>
+            <div>
+              <span style={{ fontSize:".72rem",fontWeight:700,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase" }}>Selected Test</span>
+              <div style={{ fontWeight:800,color:"#0D1117",fontSize:".95rem",marginTop:2 }}>{selectedTest.name}</div>
+              <div style={{ fontSize:".76rem",color:"#6B7280",marginTop:2 }}>Tap "Book Now →" on any lab to book directly</div>
+            </div>
+            <button onClick={()=>setSelectedTest(null)} style={{ background:"none",border:"1px solid #CBD5E8",borderRadius:8,padding:"6px 12px",fontSize:".78rem",fontWeight:700,color:"#374151",cursor:"pointer",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>Clear ✕</button>
+          </div>
+        )}
         <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
-          {loading && [1,2,3,4].map(i=><LabCardSkeleton key={i}/>)}
+          {loading && [0,1,2,3].map(i=><LabCardSkeleton key={i} delay={i*80}/>)}
           {!loading && filtered.length===0 && (
             <div style={{ background:"#fff",borderRadius:16,border:"1px solid #E5E7EB",padding:48,textAlign:"center",color:"#9CA3AF" }}>
               <div style={{ fontSize:"2.5rem",marginBottom:10 }}>🔬</div>
               No labs match your filters.
             </div>
           )}
-          {!loading && filtered.map(l => (
-            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo}/>
+          {!loading && (showAllLabs ? filtered : filtered.slice(0,7)).map(l => (
+            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart} setCartOpen={setCartOpen}/>
           ))}
+          {!loading && filtered.length > 7 && (
+            <button onClick={()=>setShowAllLabs(v=>!v)}
+              style={{ display:"block",width:"100%",padding:"14px 20px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",margin:"4px 0 12px",transition:"background .14s" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
+              onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+              {showAllLabs ? "Show Less ↑" : `Show ${filtered.length - 7} More Labs ↓`}
+            </button>
+          )}
         </div>
+        </div>{/* end flex-1 list column */}
+        {isDesktop && cartSlot}
+        </div>{/* end desktop two-column wrapper */}
       </div>
     </div>
   );
@@ -2015,7 +2402,7 @@ const TEST_SUBTITLES = {
   "Thyroid Profile":"Thyroid Profile – Total T3, T4 & Thyroid Stimulating Hormone (TSH)",
   "Thyroid Profile Total":"Thyroid Profile Total – T3, T4 & TSH",
   "TSH":"Thyroid Stimulating Hormone (TSH) – Thyroid Function Screening",
-  "T3 T4 TSH":"Thyroid Profile – Free T3, Free T4 & TSH",
+  "T3 T4 TSH":"Thyroid Profile – T3, T4 & Thyroid Stimulating Hormone (TSH)",
   "Lipid Profile":"Lipid Profile – Total Cholesterol, HDL, LDL, VLDL & Triglycerides",
   "Cholesterol":"Total Cholesterol – Cardiovascular Risk Assessment",
   "Blood Sugar Fasting":"Fasting Blood Glucose (FBG) – Diabetes Screening",
@@ -2088,7 +2475,7 @@ function getTestSubtitle(name) {
   return name;
 }
 
-function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen }) {
+function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filtTests, addCart, delCart, has, pct, navTo, setCartOpen, isDesktop, cartSlot }) {
   if (!lab) return null;
   const cats = ["All",...new Set(lab.tests.map(t=>t.cat))];
   const [showAllTests, setShowAllTests] = React.useState(false);
@@ -2096,82 +2483,121 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
   React.useEffect(()=>{ setShowAllTests(false); }, [catF, testQ]);
   const visibleTests = showAllTests ? filtTests : filtTests.slice(0, TESTS_LIMIT);
   return (
-  <div style={{ minHeight:"80vh",background:"#fff" }}>
-    {/* Lab info section — includes back button */}
-    <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
-      <div>
-        {/* Back button row inside the section */}
-        <div style={{ display:"flex",gap:8,alignItems:"center",padding:"10px 16px 0" }}>
-          <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <span style={{ fontSize:".84rem",color:"#6B7280",fontWeight:600 }}>Back to Labs</span>
-        </div>
-        {/* Logo card */}
-        {(()=>{ const meta=LAB_META.find(m=>m.id===lab.id); const src=lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||''; return (
-          <div style={{ margin:"10px 16px 0",height:200,border:"1px solid #E5E7EB",borderRadius:12,
-            backgroundImage:src?`url(${src})`:'none',
-            background:src?undefined:(meta?.bg||"#EEF4FF"),
-            backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat",
-            display:"flex",alignItems:"center",justifyContent:"center" }}>
-            {!src && <span style={{ fontFamily:"Manrope,sans-serif",fontWeight:900,fontSize:56,color:meta?.accent||"#1158A6" }}>{(meta?.short||lab.name).slice(0,2)}</span>}
-          </div>
-        ); })()}
-        <div style={{ padding:"12px 16px 14px" }}>
-          {/* Name */}
-          <div style={{ fontWeight:900,fontSize:"1.1rem",color:"#0D1117",lineHeight:1.25,marginBottom:6,letterSpacing:"-.02em" }}>{lab.name}</div>
-          {/* Rating */}
-          {(()=>{
-            const rating = lab.rating||4.5;
-            const full = Math.floor(rating);
-            const half = rating - full >= 0.5;
-            return (
-              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                <span style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
-                <div style={{ display:"flex",gap:2 }}>
-                  {Array.from({length:5},(_,i)=>(
-                    <svg key={i} width="18" height="18" viewBox="0 0 24 24">
-                      {i < full
-                        ? <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1"/>
-                        : i === full && half
-                          ? <><defs><linearGradient id="hgd"><stop offset="50%" stopColor="#F59E0B"/><stop offset="50%" stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="url(#hgd)" stroke="#F59E0B" strokeWidth="1"/></>
-                          : <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="#D1D5DB" strokeWidth="1"/>
-                      }
-                    </svg>
-                  ))}
+  <div className="lab-detail-enter" style={{ minHeight:"80vh",background:"#fff" }}>
+    {/* Lab info section */}
+    <div style={{ background:"#F8FAFC",borderBottom:"1px solid #E5E7EB",fontFamily:"'Manrope',sans-serif" }}>
+      {(()=>{
+        const meta   = LAB_META.find(m=>m.id===lab.id);
+        const src    = lab.logoBase64||lab.logoUrl||LAB_LOGOS_B64[lab.id]||(meta?.srcs?.[0])||'';
+        const accent = meta?.accent||"#1158A6";
+        const rating = lab.rating||4.5;
+        const full   = Math.floor(rating);
+        const partial= Math.round((rating-full)*100);
+        const gid    = `sg-${lab.id}`;
+        return (
+          <div style={{ padding:"0" }}>
+            {/* Single combined card — full width, includes back button */}
+            <div style={{ background:"#fff",borderTop:"1px solid #E5E7EB",borderBottom:"1px solid #E5E7EB",overflow:"hidden",marginBottom:12 }}>
+              {/* Back button inside card */}
+              <button onClick={()=>navTo("labs")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:"12px 16px 4px",color:"#6B7280",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".84rem" }} aria-label="Back">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+                Labs
+              </button>
+              {/* Top: logo + name + rating */}
+              <div style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"8px 16px 12px" }}>
+                <div style={{ width:80,height:80,borderRadius:14,border:"1px solid #E5E7EB",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0,position:"relative" }}>
+                  {src
+                    ? (()=>{
+                        const [imgLoaded, setImgLoaded] = React.useState(false);
+                        return <>
+                          {!imgLoaded && <div className="sk" style={{ position:"absolute",inset:0,borderRadius:14 }}/>}
+                          <img src={src} alt={lab.name} onLoad={()=>setImgLoaded(true)} style={{ width:"100%",height:"100%",objectFit:"contain",opacity:imgLoaded?1:0,transition:"opacity .3s" }}/>
+                        </>;
+                      })()
+                    : <span style={{ fontWeight:900,fontSize:28,color:accent }}>{(meta?.short||lab.name).slice(0,2)}</span>
+                  }
                 </div>
-                <span style={{ fontWeight:700,fontSize:".92rem",color:"#1158A6" }}>{(lab.reviews||0).toLocaleString()} Reviews</span>
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ fontWeight:900,fontSize:"1.05rem",color:"#0D1117",lineHeight:1.3,marginBottom:4,letterSpacing:"-.02em" }}>{lab.name}</div>
+                  <div style={{ fontSize:".76rem",color:"#6B7280",marginBottom:6 }}>Diagnostic Lab · {lab.city}</div>
+                  <div style={{ display:"flex",alignItems:"center",gap:4 }}>
+                    <div style={{ display:"flex",gap:1 }}>
+                      {Array.from({length:5},(_,i)=>{
+                        const sid=`${gid}-${i}`;
+                        if(i<full) return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
+                        if(i===full&&partial>0) return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${partial}%`} stopColor="#F59E0B"/><stop offset={`${partial}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
+                        return <svg key={i} width="15" height="15" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
+                      })}
+                    </div>
+                    <span style={{ fontWeight:800,fontSize:".8rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
+                    <span style={{ fontSize:".75rem",color:"#9CA3AF" }}>({(lab.reviews||0).toLocaleString()})</span>
+                  </div>
+                </div>
               </div>
-            );
-          })()}
-          {/* Address */}
-          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.5,marginBottom:14 }}>
-            {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
+
+              {/* Address */}
+              <div style={{ display:"flex",alignItems:"flex-start",gap:6,fontSize:".81rem",color:"#6B7280",lineHeight:1.5,padding:"0 16px 12px" }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0,marginTop:1 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {[lab.area, lab.address, lab.city].filter(Boolean).join(", ")||"—"}
+              </div>
+
+              {/* Divider */}
+              <div style={{ height:1,background:"#F1F5F9" }}/>
+
+              {/* Stats row */}
+              <div style={{ display:"flex" }}>
+                {/* Timing cell — shows weekday + Sunday if available */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:"1px solid #F1F5F9" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:3 }}>Timing</div>
+                  <div style={{ fontSize:".68rem",fontWeight:800,color:"#0D1117",lineHeight:1.4 }}>
+                    {lab.sunday_timing ? (
+                      <div style={{ display:"flex",alignItems:"stretch",gap:0,justifyContent:"center" }}>
+                        <div style={{ textAlign:"center",flex:1 }}>
+                          <div style={{ fontSize:".55rem",color:"#9CA3AF",fontWeight:700,marginBottom:2 }}>Mon–Sat</div>
+                          <div style={{ fontSize:".66rem" }}>{lab.timing||"6AM–10PM"}</div>
+                        </div>
+                        <div style={{ width:1,background:"#E5E7EB",margin:"0 6px",flexShrink:0 }}/>
+                        <div style={{ textAlign:"center",flex:1 }}>
+                          <div style={{ fontSize:".55rem",color:"#9CA3AF",fontWeight:700,marginBottom:2 }}>Sunday</div>
+                          <div style={{ fontSize:".66rem" }}>{lab.sunday_timing}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      lab.timing||"6AM–10PM"
+                    )}
+                  </div>
+                </div>
+                {/* Tests cell */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center",borderRight:"1px solid #F1F5F9" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v10L5 18a3 3 0 002.6 3.5h8.8A3 3 0 0019 18l-3-5V3"/><line x1="7" y1="3" x2="17" y2="3"/></svg>
+                  </div>
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>Tests</div>
+                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{lab.tests.length} available</div>
+                </div>
+                {/* Collection cell */}
+                <div style={{ flex:1,padding:"11px 8px",textAlign:"center" }}>
+                  <div style={{ display:"flex",justifyContent:"center",marginBottom:4 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+                  </div>
+                  <div style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:700,textTransform:"uppercase",letterSpacing:".05em",marginBottom:2 }}>Collection</div>
+                  <div style={{ fontSize:".72rem",fontWeight:800,color:"#0D1117",lineHeight:1.3 }}>{lab.homeCollection!==false?"Home & Walk-in":"Walk-in Only"}</div>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <div style={{ height:1,background:"#F1F5F9",marginBottom:14 }}/>
-          {/* Timing + Tests grid */}
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:0 }}>
-            <div>
-              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Timing</div>
-              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.timing||"6AM – 10PM"}</div>
-            </div>
-            <div>
-              <div style={{ fontSize:".75rem",fontWeight:700,color:"#6B7280",marginBottom:3,textTransform:"uppercase",letterSpacing:".05em" }}>Tests</div>
-              <div style={{ fontSize:".95rem",fontWeight:700,color:"#0D1117" }}>{lab.tests.length}</div>
-            </div>
-          </div>
-          {/* Badges */}
-          {(lab.nabl || lab.homeCollection) && (
-            <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap" }}>
-              {lab.nabl && <Pill>✓ NABL Accredited</Pill>}
-              {lab.homeCollection && <Pill bg="#E0F2FE" fg="#0369A1">🏠 Home Collection</Pill>}
-            </div>
-          )}
-        </div>
-      </div>
+        );
+      })()}
     </div>
 
     <div style={{ padding:"16px 0" }}>
+      {/* Desktop two-column wrapper */}
+      <div style={isDesktop ? { display:"flex", gap:28, alignItems:"flex-start", maxWidth:1280, margin:"0 auto", padding:"0 24px" } : {}}>
+      <div style={isDesktop ? { flex:1, minWidth:0 } : {}}>
       {/* search */}
       <div style={{ position:"relative",marginBottom:14,maxWidth:440,padding:"0 12px" }}>
         <svg style={{ position:"absolute",left:25,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }} width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.7"/><path d="M13.5 13.5L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.7" strokeLinecap="round"/></svg>
@@ -2191,50 +2617,58 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
         ))}
       </div>
 
-      {/* test cards */}
-      <div style={{ padding:"0 16px" }}>
+      {/* test cards — paddingBottom makes room for sticky Book Now bar */}
+      <div style={{ padding:`0 16px`, paddingBottom: cart.length > 0 ? 90 : 16 }}>
         {filtTests.length===0 ? (
           <div style={{ padding:48,textAlign:"center",color:"#94A3B8" }}>
             <IBlood s={56}/><div style={{ marginTop:10 }}>No tests found.</div>
           </div>
         ) : visibleTests.map(t=>{
-          const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=getTestSubtitle(t.name);
+          const added=has(t.id); const d=pct(t.price,t.mrp); const subtitle=t.subtitle||getTestSubtitle(t.name);
           return (
-            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,padding:"16px",marginBottom:10,boxShadow:"0 1px 4px rgba(0,0,0,.04)",fontFamily:"'Manrope',sans-serif" }}>
-              {/* Top row: name + price */}
-              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:6 }}>
-                <div style={{ flex:1,textAlign:"left" }}>
-                  <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1.05rem",lineHeight:1.3,marginBottom:5 }}>{t.name}</div>
-                  <span style={{ display:"inline-block",background:"#F1F5F9",color:"#1E3A6E",borderRadius:8,padding:"3px 10px",fontSize:".72rem",fontWeight:700,lineHeight:1.4 }}>{subtitle}</span>
-                </div>
-                <div style={{ flexShrink:0,textAlign:"right" }}>
-                  <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.15rem" }}>₹{t.price}</div>
-                  <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
-                    <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".75rem" }}>₹{t.mrp}</span>
-                    <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
+            <div key={t.id} style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:10,overflow:"hidden",fontFamily:"'Manrope',sans-serif" }}>
+              {/* Top section: name + price */}
+              <div style={{ padding:"14px 16px 12px" }}>
+                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12 }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontWeight:800,color:"#0D1117",fontSize:"1rem",lineHeight:1.3,marginBottom:4 }}>{t.name}</div>
+                    <span style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:6,padding:"2px 9px",fontSize:".7rem",fontWeight:700 }}>{subtitle}</span>
+                  </div>
+                  <div style={{ flexShrink:0,textAlign:"right" }}>
+                    <div style={{ fontWeight:900,color:"#0D1117",fontSize:"1.1rem" }}>₹{t.price}</div>
+                    {d > 0 && (
+                      <div style={{ display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end",marginTop:2 }}>
+                        <span style={{ color:"#9CA3AF",textDecoration:"line-through",fontSize:".73rem" }}>₹{t.mrp}</span>
+                        <span style={{ background:"#EFF6FF",color:"#2563EB",borderRadius:4,padding:"1px 5px",fontSize:".62rem",fontWeight:700 }}>{d}% off</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-              {/* 2-column info — plain */}
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"3px 0",marginBottom:14 }}>
-                <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>Sample Type</div>
-                <div style={{ fontSize:".78rem",color:"#9CA3AF" }}>TAT</div>
-                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>BLOOD</div>
-                <div style={{ fontSize:".88rem",fontWeight:700,color:"#0D1117" }}>12 - 48 hours</div>
-              </div>
-              {/* Add / Added button — fully left aligned */}
-              <div style={{ display:"flex",justifyContent:"flex-start" }}>
-              {added ? (
-                <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:50,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                  Added
-                </button>
-              ) : (
-                <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:7,background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"10px 24px",fontWeight:800,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                  Add To Cart
-                </button>
-              )}
+              {/* Divider line */}
+              <div style={{ height:1,background:"#F1F5F9" }}/>
+              {/* Bottom section: info + button */}
+              <div style={{ padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12 }}>
+                <div style={{ display:"flex",gap:16 }}>
+                  <div>
+                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>TAT</div>
+                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>12–48 hrs</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:".68rem",color:"#9CA3AF",marginBottom:1 }}>Sample</div>
+                    <div style={{ fontSize:".82rem",fontWeight:700,color:"#374151" }}>Blood</div>
+                  </div>
+                </div>
+                {added ? (
+                  <button onClick={()=>delCart(t.id)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#FEF3C7",color:"#B45309",border:"1.5px solid #F59E0B",borderRadius:8,padding:"8px 18px",fontWeight:800,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    Added
+                  </button>
+                ) : (
+                  <button className="btn-anim" onClick={()=>addCart(lab,t)} style={{ display:"inline-flex",alignItems:"center",gap:6,background:"#1158A6",color:"#fff",border:"none",borderRadius:8,padding:"8px 18px",fontWeight:800,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",flexShrink:0 }}>
+                    + Add
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -2245,10 +2679,13 @@ function LabDetailML({ lab, T, cart, total, testQ, setTestQ, catF, setCatF, filt
           </button>
         )}
       </div>
+      </div>{/* end flex-1 list column */}
+      {isDesktop && cartSlot}
+      </div>{/* end desktop two-column wrapper */}
     </div>
 
-    {/* ── Sticky Book Now bar ── */}
-    {cart.length > 0 && (
+    {/* ── Sticky Book Now bar — mobile only ── */}
+    {!isDesktop && cart.length > 0 && (
       <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:999,background:"#fff",borderTop:"1px solid #E5E7EB",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,fontFamily:"'Manrope',sans-serif" }}>
         <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
           <span style={{ color:"#6B7280",fontSize:".72rem",fontWeight:600 }}>{cart.length} test{cart.length>1?"s":""} selected</span>
@@ -2284,6 +2721,12 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   const trackRef = React.useRef(null);
   const [canLeft,  setCanLeft]  = React.useState(false);
   const [canRight, setCanRight] = React.useState(true);
+  const [isDesk,   setIsDesk]   = React.useState(() => window.innerWidth >= 1024);
+  React.useEffect(() => {
+    const fn = () => setIsDesk(window.innerWidth >= 1024);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
 
   const onScroll = () => {
     const el = trackRef.current; if (!el) return;
@@ -2324,20 +2767,20 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
         <div style={{ position:"relative" }}>
 
           <div ref={trackRef} onScroll={onScroll}
-            style={{ display:"flex", gap:8, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4, paddingTop:4 }}>
+            style={{ display:"flex", gap: isDesk ? 20 : 8, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4, paddingTop:4 }}>
             {POPULAR_CATS.map(({ cat, label, Icon }) => (
               <div key={cat} className="pt-tile"
                 onClick={()=>{ setCatF(cat); setSelectedTest({name:label, cat}); navTo("labs"); }}
-                style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"18px 10px 16px", minWidth:110, maxWidth:130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
+                style={{ display:"flex", flexDirection:"column", alignItems:"center", padding: isDesk ? "24px 16px 20px" : "18px 10px 16px", minWidth: isDesk ? 140 : 110, maxWidth: isDesk ? 170 : 130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="transparent"; }}>
-                <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)", transition:"box-shadow .2s" }}
-                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.2)"}
-                  onMouseLeave={e=>e.currentTarget.style.boxShadow="0 2px 14px rgba(0,0,0,.09)"}>
-                  <Icon s={86}/>
+                <div style={{ width: isDesk ? 104 : 86, height: isDesk ? 104 : 86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom: isDesk ? 16 : 12, flexShrink:0, border:"1px solid #E5E7EB", transition:"border-color .2s" }}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor="#BFDBFE"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="#E5E7EB"}>
+                  <Icon s={isDesk ? 104 : 86}/>
                 </div>
-                <div style={{ fontWeight:700, color:"#1F2937", fontSize:".8rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
-                <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
+                <div style={{ fontWeight:700, color:"#1F2937", fontSize: isDesk ? ".9rem" : ".8rem", textAlign:"center", lineHeight:1.3, marginBottom: isDesk ? 8 : 5 }}>{label}</div>
+                <div style={{ fontSize: isDesk ? ".76rem" : ".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase", background: isDesk ? "#EFF6FF" : "none", padding: isDesk ? "4px 12px" : 0, borderRadius: isDesk ? 50 : 0, border: isDesk ? "1px solid #BFDBFE" : "none" }}>Book Now</div>
               </div>
             ))}
           </div>
@@ -2355,8 +2798,8 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
     <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
         <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px", textAlign:"left" }}>
-          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:6,padding:4 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", marginBottom:6, letterSpacing:"-.03em" }}>All Specialities</h1>
           <p style={{ color:"#6B7280", fontSize:".88rem" }}>Browse popular test categories and compare prices across all certified labs</p>
@@ -2371,7 +2814,7 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
               style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"22px 12px 18px", background:"#fff", borderRadius:18, border:"1px solid #EEF2FF", cursor:"pointer", transition:"transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s" }}
               onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; e.currentTarget.style.boxShadow="0 8px 24px rgba(17,88,166,.13)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="#fff"; e.currentTarget.style.boxShadow="none"; }}>
-              <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, boxShadow:"0 2px 14px rgba(0,0,0,.09)" }}>
+              <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, border:"1px solid #E5E7EB" }}>
                 <Icon s={86}/>
               </div>
               <div style={{ fontWeight:700, color:"#1F2937", fontSize:".85rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
@@ -2384,11 +2827,91 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
   );
 }
 
+/* ─── BOOKING STEPS PANEL — hero right column (desktop only) ────────────── */
+const HOW_TO_STEPS = [
+  { n:1, title:"Search Tests & Packages",
+    desc:"Type any test name, health package, or category. Browse 1,500+ tests from certified labs — all in one place." },
+  { n:2, title:"Compare Prices, Reviews & TAT",
+    desc:"See real prices, patient ratings, and turnaround times across all partner labs. Pick the best match for you." },
+  { n:3, title:"Book a Slot at Your Convenience",
+    desc:"Choose a date and time that suits you. A qualified and experienced phlebotomist comes home — free collection, no waiting rooms." },
+];
+
+function BookingStepsPanel() {
+  const [active, setActive] = React.useState(0);
+  const [animKey, setAnimKey] = React.useState(0);
+
+  const goTo = React.useCallback((i) => {
+    setActive(i);
+    setAnimKey(k => k + 1);
+  }, []);
+
+  React.useEffect(() => {
+    const t = setInterval(() => {
+      goTo((active + 1) % HOW_TO_STEPS.length);
+    }, 3400);
+    return () => clearInterval(t);
+  }, [active, goTo]);
+
+  const s = HOW_TO_STEPS[active];
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%", paddingLeft:8 }}>
+      {/* Header */}
+      <div style={{ marginBottom:16 }}>
+        <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".14em", textTransform:"uppercase", marginBottom:4 }}>How to Book</div>
+        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.15rem", color:"#0A1628", lineHeight:1.2 }}>Book your test in 3 easy steps</div>
+      </div>
+
+      {/* Arrow left + card + arrow right */}
+      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+        <button onClick={() => goTo((active - 1 + HOW_TO_STEPS.length) % HOW_TO_STEPS.length)}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:"4px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", opacity:.7 }}
+          onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=.7}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <div key={animKey} className="step-slide" style={{ flex:1, background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"22px 22px 20px" }}>
+          <div style={{ width:50, height:50, borderRadius:14, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14, boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+            <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", lineHeight:1 }}>{s.n}</span>
+          </div>
+          <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:"1rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
+          <div style={{ color:"#6B7280", fontSize:".84rem", lineHeight:1.7 }}>{s.desc}</div>
+        </div>
+
+        <button onClick={() => goTo((active + 1) % HOW_TO_STEPS.length)}
+          style={{ background:"none", border:"none", cursor:"pointer", padding:"4px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", opacity:.7 }}
+          onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=.7}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      {/* Step dots — centered */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, marginTop:14 }}>
+        {HOW_TO_STEPS.map((_, i) => (
+          <div key={i} onClick={() => goTo(i)}
+            style={{ width: i===active ? 24 : 8, height:8, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── HERO SEARCH with live dropdown ───────────────────────────────────────
    Builds a flat deduplicated suggestion list from LABS data.
    Shows: matching tests, matching lab names, category chips.
    All at module level so it never remounts.
 ────────────────────────────────────────────────────────────────────────── */
+
+const ALL_PACKAGES = [
+  { title:"Full Body Checkup",   sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular",    badgeColor:"#EF4444", cat:"Packages" },
+  { title:"Diabetes Care",       sub:"12 Tests · Verified Partner",  price:399,  mrp:899,  off:56, badge:"55% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+  { title:"Heart Health",        sub:"22 Tests · Verified Partner",  price:1799, mrp:2999, off:40, badge:"Cardiology",      badgeColor:"#1158A6", cat:"Cardiac"  },
+  { title:"Thyroid Profile",     sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified",        badgeColor:"#0369A1", cat:"Thyroid"  },
+  { title:"Women's Wellness",    sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women",       badgeColor:"#9333EA", cat:"Packages" },
+  { title:"Senior Citizen",      sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF",         badgeColor:"#EA580C", cat:"Packages" },
+];
+
 
 // Build search index once at module level
 const SEARCH_INDEX = (() => {
@@ -2399,10 +2922,14 @@ const SEARCH_INDEX = (() => {
     lab.tests.forEach(t => {
       if (!seen.has(t.name)) {
         seen.add(t.name);
-        items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat });
+        items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat, price:t.price });
       }
     });
     items.push({ type:"lab", label:lab.name, sub:`${lab.city} · ${lab.tests.length} tests`, cat:"" });
+  });
+  // Packages
+  ALL_PACKAGES.forEach(p => {
+    items.push({ type:"package", label:p.title, sub:`${p.sub} · ₹${p.price}`, cat:p.cat, price:p.price });
   });
   // Category names
   ["Blood Tests","Thyroid","Diabetes","Heart Health","Vitamins","Kidney","Liver","Full Body Packages","Cancer Markers","Hormones"].forEach(cat => {
@@ -2411,126 +2938,259 @@ const SEARCH_INDEX = (() => {
   return items;
 })();
 
-function HeroSearch({ q, setQ, setLabQ, navTo, T }) {
+const TRENDING_CHIPS = [
+  { label:"CBC",             cat:"Blood Tests" },
+  { label:"Thyroid Profile", cat:"Thyroid" },
+  { label:"Vitamin D",       cat:"Vitamins" },
+  { label:"Lipid Profile",   cat:"Heart Health" },
+  { label:"Kidney Function", cat:"Kidney" },
+  { label:"Liver Function",  cat:"Liver" },
+];
+
+/* ── Blur-up lazy image ─────────────────────────────────────────────────── */
+function LazyImg({ src, alt, style, className="" }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!src) return;
+    const img = new Image();
+    img.src = src;
+    img.onload = () => { if (ref.current) ref.current.classList.add("loaded"); };
+  }, [src]);
+  return (
+    <img ref={ref} src={src} alt={alt||""} className={`img-lazy ${className}`} style={style}/>
+  );
+}
+
+function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T, allLabs }) {
   const [open, setOpen] = React.useState(false);
+  const [activeIdx, setActiveIdx] = React.useState(-1);
+  const [tab, setTab] = React.useState("tests"); // "tests" | "labs"
   const wrapRef = React.useRef(null);
+  const inputRef = React.useRef(null);
 
-  // Default suggestions shown when input is empty
-  const DEFAULT_SUGGESTIONS = [
-    { label:"Full Body Checkup",   type:"test" },
-    { label:"CBC (Blood Count)",    type:"test" },
-    { label:"Thyroid Profile",      type:"test" },
-    { label:"Diabetes (HbA1c)",     type:"test" },
-    { label:"Vitamin D",            type:"test" },
-    { label:"Lipid Profile",        type:"test" },
-    { label:"Liver Function Test",  type:"test" },
-  ];
+  // Build search index dynamically from actual website data
+  const searchIndex = React.useMemo(() => {
+    const labs = (allLabs || LABS).filter(l => l.active !== false);
+    const items = [];
+    const seenTests = new Set();
+    labs.forEach(lab => {
+      (lab.tests || []).forEach(t => {
+        if (!seenTests.has(t.name)) {
+          seenTests.add(t.name);
+          items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat, price:t.price });
+        }
+      });
+      items.push({ type:"lab", label:lab.name, sub:`${lab.city} · ${(lab.tests||[]).length} tests`, cat:"" });
+    });
+    ALL_PACKAGES.forEach(p => {
+      items.push({ type:"package", label:p.title, sub:`${p.sub} · ₹${p.price}`, cat:p.cat, price:p.price });
+    });
+    // Only include categories that have at least one test in the active labs
+    const activeCats = new Set(items.filter(i=>i.type==="test").map(i=>i.cat));
+    ["Blood Tests","Thyroid","Diabetes","Heart Health","Vitamins","Kidney","Liver","Full Body Packages","Cancer Markers","Hormones"]
+      .filter(cat => activeCats.has(cat))
+      .forEach(cat => items.push({ type:"category", label:cat, sub:"Category", cat }));
+    return items;
+  }, [allLabs]);
 
-  // Build suggestions: default when empty, search results when typing
-  const suggestions = q.trim().length < 1 ? DEFAULT_SUGGESTIONS : (() => {
+  const suggestions = React.useMemo(() => {
+    if (q.trim().length < 1) return [];
     const qlo = q.toLowerCase();
-    // Broad match: label contains any word of the query
     const words = qlo.split(/\s+/).filter(Boolean);
     const match = item => words.some(w => item.label.toLowerCase().includes(w));
-    // Get all matches, tests first then labs then categories
-    const tests = SEARCH_INDEX.filter(i=>i.type==="test"     && match(i)).slice(0,6);
-    const labs  = SEARCH_INDEX.filter(i=>i.type==="lab"      && match(i)).slice(0,3);
-    const cats  = SEARCH_INDEX.filter(i=>i.type==="category" && match(i)).slice(0,2);
-    const picked = new Set([...tests,...labs,...cats].map(x=>x.label));
-    const extra  = SEARCH_INDEX.filter(i=>match(i)&&!picked.has(i.label)).slice(0,5);
-    const results = [...tests,...labs,...cats,...extra].slice(0,8);
-    // Always pad up to 5 with popular defaults if not enough results
-    if (results.length < 5) {
-      const padded = [...results];
-      for (const d of DEFAULT_SUGGESTIONS) {
-        if (padded.length >= 5) break;
-        if (!padded.find(r=>r.label===d.label)) padded.push(d);
-      }
-      return padded;
+    if (tab === "labs") {
+      return searchIndex.filter(i => i.type === "lab" && match(i)).slice(0, 8);
     }
-    return results;
-  })();
+    const tests = searchIndex.filter(i => i.type === "test"     && match(i)).slice(0, 5);
+    const pkgs  = searchIndex.filter(i => i.type === "package"  && match(i)).slice(0, 3);
+    const cats  = searchIndex.filter(i => i.type === "category" && match(i)).slice(0, 2);
+    return [...tests, ...pkgs, ...cats].slice(0, 8);
+  }, [q, tab, searchIndex]);
 
-  // Close on outside click
   React.useEffect(() => {
-    const handler = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) { setOpen(false); setActiveIdx(-1); } };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const go = (text) => { if(!text.trim()) return; setQ(text); setLabQ(text); setOpen(false); navTo("labs"); };
-
-  const typeIcon = (type) => {
-    if (type === "lab") return "🏥";
-    if (type === "category") return "📋";
-    return "🔬";
+  const pick = (item) => {
+    setOpen(false); setActiveIdx(-1);
+    if (item.type === "lab") {
+      setLabQ(item.label); setQ(item.label); navTo("labs");
+    } else if (item.type === "category") {
+      setLabQ(item.label); setQ(item.label); navTo("labs");
+    } else {
+      setSelectedTest({ name: item.label, cat: item.cat || "" });
+      setQ(item.label); setLabQ("");
+      navTo("labs");
+    }
   };
+
+  const goText = (text) => {
+    if (!text.trim()) return;
+    if (tab === "labs") { setLabQ(text); setQ(text); setOpen(false); navTo("labs"); return; }
+    const exact = searchIndex.find(i => i.label.toLowerCase() === text.toLowerCase());
+    if (exact) { pick(exact); return; }
+    const partial = searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
+      || searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()));
+    if (partial) { pick(partial); return; }
+    setLabQ(text); setQ(text); setOpen(false); navTo("labs");
+  };
+
+  const onKey = e => {
+    if (!open || suggestions.length === 0) { if (e.key === "Enter") goText(q); return; }
+    if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx(i => Math.min(i+1, suggestions.length-1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActiveIdx(i => Math.max(i-1, -1)); }
+    else if (e.key === "Enter") { e.preventDefault(); if (activeIdx >= 0) pick(suggestions[activeIdx]); else goText(q); }
+    else if (e.key === "Escape") { setOpen(false); setActiveIdx(-1); }
+  };
+
+  const tabStyle = (active) => ({
+    flex: 1,
+    padding: "11px 0",
+    border: "none",
+    background: "none",
+    fontFamily: "'Manrope', sans-serif",
+    fontWeight: 700,
+    fontSize: ".85rem",
+    cursor: "pointer",
+    color: active ? "#1158A6" : "#6B7280",
+    borderBottom: active ? "2.5px solid #1158A6" : "2.5px solid transparent",
+    transition: "all .15s",
+  });
+
+  // grouped results for tests tab
+  const testItems = suggestions.filter(s => s.type === "test" || s.type === "category");
+  const pkgItems  = suggestions.filter(s => s.type === "package");
 
   return (
     <div ref={wrapRef} style={{ position:"relative", maxWidth:580, width:"100%", margin:"0 auto", boxSizing:"border-box" }}>
-      {/* Search bar + separate button row */}
-      <div className="hero-search-bar" style={{ display:"flex",gap:6,alignItems:"center" }}>
-        {/* Input box */}
-        <div style={{ flex:1,background:"#fff",borderRadius:14,display:"flex",alignItems:"center",border:"2px solid #E5E7EB",overflow:"hidden",boxShadow:"0 2px 12px rgba(17,88,166,.08)",transition:"border .18s,box-shadow .18s" }}
-          onFocusCapture={e=>{ e.currentTarget.style.border="2px solid #1158A6"; e.currentTarget.style.boxShadow="0 0 0 4px rgba(17,88,166,.12)"; }}
-          onBlurCapture={e=>{ e.currentTarget.style.border="2px solid #E5E7EB"; e.currentTarget.style.boxShadow="0 2px 12px rgba(17,88,166,.08)"; }}>
-          <svg style={{ flexShrink:0,margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
+
+      {/* Tab bar + input combined card */}
+      <div style={{ background:"#fff", borderRadius:16, boxShadow:"0 4px 24px rgba(17,88,166,.13)", overflow:"hidden" }}>
+        {/* Tabs */}
+        <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
+          <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
+            <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
+              {/* Pill / capsule icon — represents medicine/test */}
+              <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="tests"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 3H5v10l6.29 6.29a1 1 0 0 0 1.41 0l6.3-6.3a1 1 0 0 0 0-1.41L13 5.5V3"/>
+                  <path d="M9 3h4"/><circle cx="6.5" cy="11.5" r="1"/>
+                </svg>
+              </span>
+              Tests &amp; Packages
+            </span>
+          </button>
+          <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
+          <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
+            <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
+              <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2v6l3.79 9.26A1 1 0 0 1 17 19H7a1 1 0 0 1-.79-1.74L10 8V2"/>
+                  <path d="M8.5 2h7"/><path d="M7 16h10"/>
+                </svg>
+              </span>
+              Labs
+            </span>
+          </button>
+        </div>
+
+        {/* Input row */}
+        <div style={{ display:"flex", alignItems:"center" }}>
+          <svg style={{ flexShrink:0, margin:"0 14px" }} width="17" height="17" viewBox="0 0 20 20" fill="none">
             <circle cx="8.5" cy="8.5" r="5.75" stroke="#9CA3AF" strokeWidth="1.8"/>
             <path d="M13.5 13.5 L17.5 17.5" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round"/>
           </svg>
-          <input
+          <input ref={inputRef}
             value={q}
-            onChange={e=>{ setQ(e.target.value); setOpen(true); }}
+            onChange={e=>{ setQ(e.target.value); setOpen(true); setActiveIdx(-1); }}
             onFocus={()=>setOpen(true)}
-            onKeyDown={e=>{ if(e.key==="Enter"){ go(q); } if(e.key==="Escape") setOpen(false); }}
-            placeholder="Search tests, packages or labs…"
+            onKeyDown={onKey}
+            placeholder={tab==="labs" ? "Search labs by name or area…" : "Search tests or packages…"}
             className="hero-search-input-field"
-            style={{ flex:1,border:"none",outline:"none",padding:"14px 8px 14px 0",fontSize:".95rem",color:"#111",fontFamily:"'Manrope',sans-serif",background:"transparent" }}
+            style={{ flex:1, border:"none", outline:"none", padding:"14px 8px", fontSize:".95rem", color:"#111", fontFamily:"'Manrope',sans-serif", background:"transparent" }}
             autoComplete="off"
           />
           {q && (
-            <button onClick={()=>{ setQ(""); setOpen(false); }}
-              style={{ background:"none",border:"none",cursor:"pointer",padding:"0 12px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
+            <button onClick={()=>{ setQ(""); setOpen(false); inputRef.current?.focus(); }}
+              style={{ background:"none",border:"none",cursor:"pointer",padding:"0 10px",color:"#9CA3AF",fontSize:"1rem",display:"flex",alignItems:"center",flexShrink:0 }}>
               ✕
             </button>
           )}
+          <button onClick={()=>goText(q)} className="btn-anim"
+            style={{ background:"#1158A6",color:"#fff",border:"none",margin:6,borderRadius:10,padding:"12px 22px",flexShrink:0,fontSize:".88rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",whiteSpace:"nowrap" }}>
+            Search
+          </button>
         </div>
-        {/* Separate Search button */}
-        <button onClick={()=>go(q)} className="btn-anim hero-search-btn"
-          style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:14,padding:"14px 26px",flexShrink:0,fontSize:".9rem",fontWeight:700,cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:"0 4px 14px rgba(17,88,166,.35)",whiteSpace:"nowrap" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.boxShadow="0 6px 20px rgba(17,88,166,.45)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.boxShadow="0 4px 14px rgba(17,88,166,.35)"; }}>
-          Search
-        </button>
       </div>
 
-      {/* Dropdown — always shows 5+ suggestions on focus */}
-      {open && (
-        <div style={{ position:"absolute",top:"calc(100% + 8px)",left:0,right:0,background:"#fff",borderRadius:16,border:"none",boxShadow:"0 12px 40px rgba(0,0,0,.14), 0 2px 8px rgba(17,88,166,.08)",zIndex:500,overflow:"hidden" }}>
-          {q.trim().length < 1 && (
-            <div style={{ padding:"10px 18px 6px",fontSize:".72rem",fontWeight:800,color:"#9CA3AF",letterSpacing:".08em",textTransform:"uppercase" }}>
-              Popular Searches
-            </div>
-          )}
-          {suggestions.map((s, i) => (
-            <button key={i} onClick={()=>go(s.label)}
-              style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 18px",background:"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",fontSize:".88rem",fontWeight:600,color:"#111",transition:"background .12s" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#F0F6FF"}
-              onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              <span style={{ fontSize:".88rem", flexShrink:0 }}>{typeIcon(s.type)}</span>
-              <span style={{ flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
-              {s.type === "lab" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Lab</span>}
-              {s.type === "category" && <span style={{ fontSize:".7rem",fontWeight:700,color:"#7C3AED",background:"#F5F3FF",borderRadius:4,padding:"2px 7px",flexShrink:0 }}>Category</span>}
+      {/* Popular chips */}
+      {!q && (
+        <div style={{ display:"flex",gap:8,marginTop:14,flexWrap:"wrap",alignItems:"center",justifyContent:"center" }}>
+          <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
+          {TRENDING_CHIPS.map(chip=>(
+            <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
+              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:20,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+              onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
+              {chip.label}
             </button>
           ))}
-          {q.trim().length > 0 && (
-            <div style={{ padding:"9px 18px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
-              <button onClick={()=>go(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
-                See all results for &ldquo;{q}&rdquo;
-              </button>
-            </div>
+        </div>
+      )}
+
+      {/* Dropdown */}
+      {open && suggestions.length > 0 && (
+        <div style={{ position:"absolute",top:"calc(100% - 14px)",left:0,right:0,background:"#fff",borderRadius:"0 0 16px 16px",boxShadow:"0 12px 40px rgba(0,0,0,.13)",zIndex:500,overflow:"hidden",borderTop:"1px solid #F1F5F9",maxHeight:360,overflowY:"auto" }}>
+          {tab === "labs" ? (
+            <>
+              {suggestions.map((s, i) => (
+                <button key={s.label} onClick={()=>pick(s)}
+                  style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0FFF4":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                  onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0FFF4"; }}
+                  onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
+                  <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                </button>
+              ))}
+            </>
+          ) : (
+            <>
+              {testItems.length > 0 && (
+                <>
+                  {testItems.map((s, i) => (
+                    <button key={s.label} onClick={()=>pick(s)}
+                      style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                      onMouseEnter={e=>{ setActiveIdx(i); e.currentTarget.style.background="#F0F6FF"; }}
+                      onMouseLeave={e=>{ if(activeIdx!==i) e.currentTarget.style.background="none"; }}>
+                      <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                  ))}
+                </>
+              )}
+              {pkgItems.length > 0 && (
+                <>
+                  {pkgItems.map((s, i) => (
+                    <button key={s.label} onClick={()=>pick(s)}
+                      style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i+testItems.length===activeIdx?"#FFFBEB":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
+                      onMouseEnter={e=>{ setActiveIdx(i+testItems.length); e.currentTarget.style.background="#FFFBEB"; }}
+                      onMouseLeave={e=>{ if(activeIdx!==i+testItems.length) e.currentTarget.style.background="none"; }}>
+                      <span style={{ flex:1,fontWeight:600,fontSize:".87rem",color:"#111",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{s.label}</span>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                  ))}
+                </>
+              )}
+            </>
           )}
+          <div style={{ padding:"9px 16px",borderTop:"1px solid #F3F4F6",background:"#FAFBFF" }}>
+            <button onClick={()=>goText(q)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:".8rem",fontWeight:700,color:"#1158A6",fontFamily:"'Manrope',sans-serif",padding:0,display:"flex",alignItems:"center",gap:6 }}>
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
+              See all results for &ldquo;{q}&rdquo;
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -2585,22 +3245,24 @@ function _CarouselDots({ trackRef, total }) {
    Clean payment method selector. UPI / Card / Net Banking / Pay at Lab.
    No actual payment processing — UI only (connect UPI when ready).
 ────────────────────────────────────────────────────────────────────────── */
-function PaymentSelector({ total, onPay, onBack }) {
+function PaymentSelector({ total, onPay, onBack, mode }) {
   const [method, setMethod] = React.useState("");
   const [upi, setUpi]       = React.useState("");
   const [paying, setPaying] = React.useState(false);
 
-  const methods = [
+  const allMethods = [
     { id:"upi",      icon:"📱", label:"UPI",            sub:"Google Pay, PhonePe, Paytm & more" },
     { id:"card",     icon:"💳", label:"Credit / Debit Card", sub:"Visa, Mastercard, RuPay" },
     { id:"netbank",  icon:"🏦", label:"Net Banking",     sub:"All major banks supported"        },
     { id:"paylater", icon:"🏥", label:"Pay at Lab",      sub:"Pay cash or card at the centre"   },
   ];
+  // Home collection requires upfront payment — hide "Pay at Lab"
+  const methods = mode === "home" ? allMethods.filter(m => m.id !== "paylater") : allMethods;
 
   const handlePay = () => {
     if (!method) return;
     setPaying(true);
-    setTimeout(() => { setPaying(false); onPay(); }, 900);
+    setTimeout(() => { setPaying(false); onPay(method); }, 900);
   };
 
   return (
@@ -2619,7 +3281,6 @@ function PaymentSelector({ total, onPay, onBack }) {
               <div style={{ fontWeight:700,fontSize:".9rem",color:"#0D1117" }}>{m.label}</div>
               <div style={{ fontSize:".74rem",color:"#9CA3AF" }}>{m.sub}</div>
             </div>
-            {m.id==="paylater"&&<span style={{ fontSize:".68rem",fontWeight:700,color:"#16A34A",background:"#DCFCE7",borderRadius:20,padding:"2px 9px",flexShrink:0 }}>FREE</span>}
           </div>
         ))}
       </div>
@@ -2652,12 +3313,12 @@ function PaymentSelector({ total, onPay, onBack }) {
 
       {/* Action buttons */}
       <div style={{ display:"flex",gap:10,marginTop:4 }}>
-        <button onClick={onBack} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:4 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button onClick={onBack} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg></button>
         <button onClick={handlePay} disabled={!method||paying}
           style={{ flex:2,background:method?(paying?"#4B8DE0":"#1158A6"):"#94A3B8",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:method?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",boxShadow:method?"0 4px 14px rgba(17,88,166,.3)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
           {paying
             ? <><span style={{ width:16,height:16,border:"2px solid rgba(255,255,255,.4)",borderTop:"2px solid #fff",borderRadius:"50%",display:"inline-block",animation:"spin 0.7s linear infinite" }}/> Processing…</>
-            : <>{method==="paylater"?"Confirm & Reserve Slot":`Pay ₹${total.toLocaleString()}`}</>
+            : <>{method==="paylater"?<>Confirm &amp; Reserve · <span style={{fontWeight:600,fontSize:".8em",opacity:.85}}>Amount Pending</span></>:`Pay ₹${total.toLocaleString()}`}</>
           }
         </button>
       </div>
@@ -2666,6 +3327,337 @@ function PaymentSelector({ total, onPay, onBack }) {
 }
 
 /* ─── BOOKING FIELD (top-level so it never remounts on parent re-render) ─── */
+// ─── Location cache ───────────────────────────────────────────────────────────
+const _locCache = { lat: null, lng: null, address: null, accuracy: null, ts: 0 };
+const LOC_TTL  = 3 * 60 * 1000; // 3 min — don't re-request GPS within this window
+const ACC_GOOD = 50;             // metres — accept immediately if GPS reaches this
+const DEADLINE = 12000;          // ms  — hard cutoff, use best fix we have by then
+
+// ─── Geocoding ────────────────────────────────────────────────────────────────
+const GMAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY || "";
+
+async function _fetchJSON(url) {
+  const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Google Maps: extract one component type from address_components ──────────
+function _gc(components, type) {
+  const c = components.find(x => x.types.includes(type));
+  return c ? c.long_name : "";
+}
+
+// ── Google Maps Geocoding + nearby POI (CORS-safe from browser) ──────────────
+async function _googleGeocode(lat, lng) {
+  const base = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=${GMAPS_KEY}`;
+
+  // Two parallel calls:
+  //   1. General reverse geocode  → address_components
+  //   2. POI filter               → nearest named establishment/landmark
+  const [general, poi] = await Promise.allSettled([
+    _fetchJSON(base),
+    _fetchJSON(`${base}&result_type=point_of_interest|establishment|premise`),
+  ]);
+
+  if (general.status !== "fulfilled" || !general.value.results?.length) {
+    throw new Error("google_no_results");
+  }
+
+  // Merge components from ALL results so we capture the most specific data
+  // (Google returns multiple results at different granularities)
+  const allComps = {};
+  for (const result of general.value.results) {
+    for (const comp of result.address_components) {
+      for (const type of comp.types) {
+        if (!allComps[type]) allComps[type] = comp.long_name; // first = most specific
+      }
+    }
+  }
+
+  // Nearest landmark name from POI call
+  const poiName = poi.status === "fulfilled"
+    ? poi.value.results?.[0]?.name || ""
+    : "";
+
+  const comps = general.value.results[0].address_components;
+
+  return {
+    streetNumber : _gc(comps, "street_number"),
+    route        : _gc(comps, "route")
+                || allComps["route"] || "",
+    premise      : _gc(comps, "premise")
+                || allComps["premise"] || "",
+    sublocality2 : allComps["sublocality_level_2"] || "",
+    sublocality1 : _gc(comps, "sublocality_level_1")
+                || allComps["sublocality_level_1"] || "",
+    neighborhood : allComps["neighborhood"] || "",
+    locality     : _gc(comps, "locality")
+                || allComps["locality"] || "",
+    state        : _gc(comps, "administrative_area_level_1")
+                || allComps["administrative_area_level_1"] || "",
+    pin          : _gc(comps, "postal_code")
+                || allComps["postal_code"] || "",
+    landmark     : poiName,
+  };
+}
+
+// ── BigDataCloud fallback (free, no key, reasonable India coverage) ───────────
+async function _bigdataGeocode(lat, lng) {
+  const d = await _fetchJSON(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+  );
+  return {
+    streetNumber : "",
+    route        : d.locality || "",
+    premise      : "",
+    sublocality2 : "",
+    sublocality1 : d.locality || "",
+    neighborhood : "",
+    locality     : d.city || d.locality || "",
+    state        : d.principalSubdivision || "",
+    pin          : d.postcode || "",
+    landmark     : "",
+  };
+}
+
+// ── Nominatim fallback (zoom=18, last resort) ─────────────────────────────────
+async function _nominatimGeocode(lat, lng) {
+  const d = await _fetchJSON(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&extratags=1&accept-language=en&lat=${lat}&lon=${lng}&zoom=18`
+  );
+  const a = d.address || {};
+  return {
+    streetNumber : a.house_number || "",
+    route        : a.road || a.residential || a.pedestrian || "",
+    premise      : a.building || a.amenity || "",
+    sublocality2 : "",
+    sublocality1 : a.neighbourhood || a.suburb || a.quarter || "",
+    neighborhood : a.neighbourhood || "",
+    locality     : a.city || a.town || a.village || "",
+    state        : a.state || "",
+    pin          : a.postcode || "",
+    landmark     : (d.name && d.name !== a.road) ? d.name : "",
+  };
+}
+
+async function reverseGeocodeAll(lat, lng) {
+  // Google Maps if key is configured, otherwise fall through to free services
+  if (GMAPS_KEY) {
+    try { return await _googleGeocode(lat, lng); } catch { /* fall through */ }
+  }
+  // BigDataCloud first (better India city/pin data), then Nominatim
+  try { return await _bigdataGeocode(lat, lng); } catch { /* fall through */ }
+  return _nominatimGeocode(lat, lng);
+}
+
+function buildAddressString({ streetNumber, route, premise, sublocality2, sublocality1, neighborhood, locality, state, pin, landmark }) {
+  // ── Build each segment, most specific → least specific ───────────────────
+  // Line 1: street number + road
+  const streetPart = [streetNumber, route].filter(Boolean).join(", ");
+
+  // Sublocality: prefer level 2 (more granular) then level 1
+  const areaPart = sublocality2 || sublocality1 || neighborhood || "";
+
+  // Nearby landmark (prefix "near")
+  const nearPart = landmark ? `near ${landmark}` : (premise || "");
+
+  const parts = [
+    streetPart,   // e.g. "1-711, Moghulpura Fire Station Road"
+    nearPart,     // e.g. "near Moghalpura Fire Station"
+    areaPart,     // e.g. "Moghalpura"
+    locality,     // e.g. "Hyderabad"
+    state,        // e.g. "Telangana"
+    pin,          // e.g. "500002"
+  ].filter(Boolean);
+
+  return parts.join(", ");
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+function AddressDetector({ value, onChange }) {
+  const [phase,    setPhase]    = useState("idle"); // idle|locking|geocoding|success|error
+  const [accuracy, setAccuracy] = useState(null);
+  const [errMsg,   setErrMsg]   = useState("");
+  const watchIdRef  = useRef(null);
+  const bestPosRef  = useRef(null);
+  const timerRef    = useRef(null);
+  const finishedRef = useRef(false); // Bug 2 fix: guard against double-call
+
+  useEffect(() => () => _cleanup(), []);
+
+  function _cleanup() {
+    if (watchIdRef.current != null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    clearTimeout(timerRef.current);
+  }
+
+  async function _geocodeAndFinish(pos) {
+    // Bug 2 fix: only the first caller proceeds
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    _cleanup();
+    setPhase("geocoding");
+    const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
+    try {
+      const parts = await reverseGeocodeAll(lat, lng);
+      const addr  = buildAddressString(parts);
+      _locCache.lat = lat; _locCache.lng = lng;
+      _locCache.address = addr; _locCache.accuracy = Math.round(acc); _locCache.ts = Date.now();
+      onChange(addr);
+      setAccuracy(Math.round(acc));
+      setPhase("success");
+    } catch {
+      setErrMsg("Could not fetch address details. Please type it manually.");
+      setPhase("error");
+    }
+  }
+
+  async function detect() {
+    if (phase === "locking" || phase === "geocoding") return;
+
+    // Serve from cache if fresh
+    if (_locCache.address && Date.now() - _locCache.ts < LOC_TTL) {
+      onChange(_locCache.address);
+      setAccuracy(_locCache.accuracy);
+      setPhase("success");
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      setErrMsg("GPS not available on this browser. Please type your address.");
+      setPhase("error");
+      return;
+    }
+
+    finishedRef.current = false;
+    bestPosRef.current  = null;
+    setPhase("locking");
+    setErrMsg("");
+    setAccuracy(null);
+
+    // Bug 1 & 3 fix: timeout:Infinity prevents watchPosition from self-erroring.
+    // We control the deadline ourselves via setTimeout below.
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const acc = pos.coords.accuracy;
+        setAccuracy(Math.round(acc));
+        if (!bestPosRef.current || acc < bestPosRef.current.coords.accuracy) {
+          bestPosRef.current = pos;
+        }
+        // Accept immediately if GPS is precise enough
+        if (acc <= ACC_GOOD) _geocodeAndFinish(pos);
+      },
+      (err) => {
+        // Only handle permission denied (code 1) — other codes mean no signal yet,
+        // our deadline timer handles those cases.
+        if (err.code === 1) {
+          _cleanup();
+          setErrMsg("Location permission denied. Enable it in Chrome Settings → Site Settings → Location.");
+          setPhase("error");
+        }
+        // codes 2 & 3: GPS just hasn't fixed yet — keep waiting for deadline
+      },
+      // Bug 1 fix: timeout:Infinity — never let watchPosition self-error on timeout
+      { enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 }
+    );
+
+    // Hard deadline: use best fix seen, even if > ACC_GOOD
+    timerRef.current = setTimeout(() => {
+      if (bestPosRef.current) {
+        _geocodeAndFinish(bestPosRef.current);
+      } else {
+        _cleanup();
+        if (!finishedRef.current) {
+          finishedRef.current = true;
+          setErrMsg("GPS signal too weak indoors. Move near a window or step outside, then try again.");
+          setPhase("error");
+        }
+      }
+    }, DEADLINE);
+  }
+
+  const isWorking  = phase === "locking" || phase === "geocoding";
+  const phaseLabel = phase === "geocoding" ? "Fetching address…"
+    : accuracy ? `Finding precise location… ±${accuracy}m` : "Requesting GPS permission…";
+
+  return (
+    <div>
+      {phase !== "success" && (
+        <button type="button" onClick={detect} disabled={isWorking}
+          style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",
+            padding:"11px 16px",marginBottom:10,border:"1.5px dashed #1158A6",borderRadius:10,
+            background:isWorking?"#EEF4FF":"#F5F7FF",color:"#1158A6",fontWeight:700,
+            fontSize:".83rem",cursor:isWorking?"not-allowed":"pointer",
+            fontFamily:"'Manrope',sans-serif",transition:"all .15s" }}>
+          {isWorking
+            ? <><svg style={{animation:"spin 1s linear infinite"}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>{phaseLabel}</>
+            : <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Use Current Location</>
+          }
+        </button>
+      )}
+
+
+      {/* Accuracy bar — visible while locking */}
+      {phase === "locking" && accuracy && (
+        <div style={{ marginBottom:8,fontSize:".73rem",color:"#6B7280",fontWeight:600,display:"flex",alignItems:"center",gap:8 }}>
+          <div style={{ flex:1,height:4,background:"#E5E7EB",borderRadius:2,overflow:"hidden" }}>
+            <div style={{ height:"100%",borderRadius:2,transition:"width .4s",
+              width:`${Math.max(5,Math.min(100,100-(accuracy/3)))}%`,
+              background: accuracy<=ACC_GOOD?"#16A34A":accuracy<=100?"#F59E0B":"#EF4444" }}/>
+          </div>
+          <span style={{color:accuracy<=ACC_GOOD?"#16A34A":accuracy<=100?"#D97706":"#DC2626"}}>±{accuracy}m</span>
+          {accuracy > ACC_GOOD && <span style={{color:"#9CA3AF",fontWeight:500}}>Improving…</span>}
+        </div>
+      )}
+
+      {/* Weak signal hint */}
+      {phase === "locking" && accuracy && accuracy > ACC_MAX && (
+        <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:8,padding:"8px 12px",marginBottom:8,fontSize:".75rem",color:"#92400E",fontWeight:600 }}>
+          📡 Weak GPS signal. Move near a window or step outside for better accuracy.
+        </div>
+      )}
+
+      {/* Error banner */}
+      {phase === "error" && (
+        <div style={{ background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:8,padding:"9px 13px",marginBottom:10,fontSize:".78rem",color:"#DC2626",fontWeight:600,display:"flex",gap:7,alignItems:"flex-start" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {errMsg}
+        </div>
+      )}
+
+      {/* Success pill + accuracy badge */}
+      {phase === "success" && (
+        <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap" }}>
+          <div style={{ background:"#DCFCE7",color:"#16A34A",fontSize:".73rem",fontWeight:700,padding:"3px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:5 }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Location detected
+          </div>
+          {accuracy && <span style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>±{accuracy}m accuracy</span>}
+          <button type="button" onClick={()=>{ setPhase("idle"); setAccuracy(null); onChange(""); }}
+            style={{ background:"none",border:"none",color:"#9CA3AF",fontSize:".73rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontWeight:600,padding:0,marginLeft:"auto" }}>
+            Re-detect
+          </button>
+        </div>
+      )}
+
+      {/* Always-visible editable textarea */}
+      <textarea rows={3}
+        style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",
+          fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",
+          outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s",lineHeight:1.6 }}
+        placeholder="Door No 24, Afif Plaza, Fire Station Rd, near Moghalpura, Hyderabad, Telangana 500002"
+        value={value}
+        onChange={e=>onChange(e.target.value)}
+        onFocus={e=>e.target.style.borderColor="#1158A6"}
+        onBlur={e=>e.target.style.borderColor="#DBEAFE"}
+      />
+    </div>
+  );
+}
+
 const BookingField = ({ label, req, ...p }) => (
   <div>
     <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:6,color:"#374151",letterSpacing:".01em" }}>{label}{req&&<span style={{color:"#EF4444"}}> *</span>}</label>
@@ -2677,295 +3669,273 @@ const BookingField = ({ label, req, ...p }) => (
 );
 
 /* ─── BOOKING PAGE (top-level so typing doesn't lose focus) ─────────────── */
-function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm }) {
+function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm, labSettings }) {
   const [loc, setLoc] = useState(form);
+  const [bkSlotFocus, setBkSlotFocus] = useState(false);
+  const [bkSlotQuery, setBkSlotQuery] = useState('');
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
-  const ok1 = loc.name.trim().length>=2 && /^(\+91[\s\-]?)?[6-9]\d{9}$/.test(loc.phone.replace(/\s/g,'')) && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim());
+
+  // Validation per step
+  const homeAddrOk = loc.houseNo?.trim().length>0 && loc.area?.trim().length>1 && loc.city?.trim().length>1 && loc.pincode?.replace(/\D/g,'').length===6;
+  const ok1 = loc.name.trim().length>=2 && loc.phone.replace(/\D/g,'').length>=8 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(loc.email.trim())
+              && (loc.mode==="clinic" || (loc.mode==="home" && homeAddrOk));
   const ok2 = loc.date && loc.slot;
-  const ok3 = loc.mode==="clinic" || (loc.mode==="home" && loc.address);
-  const steps = ["Patient","Schedule","Collection","Review","Payment"];
+
+  // lab.timing / lab.sunday_timing already contain the merged admin + Supabase values from allLabs
+  const _effectiveTiming = lab?.timing || '';
+  const _effectiveSundayTiming = lab?.sunday_timing || '';
+  const isSunday = loc.date ? new Date(loc.date + 'T00:00:00').getDay() === 0 : false;
+  const LAB_SLOTS = isSunday && _effectiveSundayTiming
+    ? slotsFromTiming(_effectiveSundayTiming)
+    : slotsFromTiming(_effectiveTiming);
+  const steps = ["Details","Schedule","Review & Pay"];
+
+  const BtnBack = ({onClick}) => (
+    <button onClick={onClick} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+    </button>
+  );
+  const BtnNext = ({disabled,onClick,children}) => (
+    <button disabled={disabled} onClick={onClick}
+      style={{ flex:2,background:disabled?"#E5E7EB":"#1158A6",color:disabled?"#9CA3AF":"#fff",border:"none",borderRadius:50,padding:"13px 0",fontWeight:800,fontSize:".9rem",cursor:disabled?"not-allowed":"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:disabled?"none":"0 4px 14px rgba(17,88,166,.3)" }}
+      onMouseEnter={e=>!disabled&&(e.currentTarget.style.background="#0F2D6B")}
+      onMouseLeave={e=>!disabled&&(e.currentTarget.style.background="#1158A6")}>
+      {children}
+    </button>
+  );
+
+  // Safety guard: if step is somehow out of range, reset to 1
+  const safeStep = (step >= 1 && step <= 3) ? step : 1;
+  if (safeStep !== step) { setStep(1); return null; }
+
+  // If cart is empty or lab missing, show a friendly redirect
+  if (!lab || cart.length === 0) {
+    return (
+      <div style={{ minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
+        <div style={{ textAlign:"center" }}>
+          <div style={{ fontSize:"3rem",marginBottom:12 }}>🧪</div>
+          <div style={{ fontWeight:800,fontSize:"1.1rem",color:"#0D1117",marginBottom:8 }}>No tests selected</div>
+          <div style={{ color:"#6B7280",marginBottom:20,fontSize:".88rem" }}>Please add tests to your cart before booking.</div>
+          <button onClick={()=>navTo("labs")} style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"12px 28px",fontWeight:800,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>Browse Labs</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding:"40px 0 52px",minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
-      <div style={{ maxWidth:680,margin:"0 auto",padding:"0 20px" }}>
+    <div style={{ padding:"32px 0 60px",minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ maxWidth:600,margin:"0 auto",padding:"0 16px" }}>
 
-        <button onClick={()=>navTo("lab")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,padding:4 }} aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-
-        <div style={{ marginBottom:24 }}>
-          <h1 style={{ fontWeight:800,fontSize:"1.5rem",color:"#0D1117",marginBottom:4 }}>Complete Your Booking</h1>
-          <p style={{ color:"#9CA3AF",fontSize:".86rem" }}>
-            {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
-            <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
-            &nbsp;·&nbsp; <span style={{ color:"#1158A6",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</span>
-          </p>
+        {/* Header */}
+        <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:20 }}>
+          <button onClick={()=>navTo(lab?"lab":"labs")} style={{ background:"none",border:"none",width:32,height:32,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,padding:0 }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+          </button>
+          <div>
+            <div style={{ fontWeight:800,fontSize:"1.1rem",color:"#0D1117" }}>Book Test</div>
+            <div style={{ fontSize:".75rem",color:"#6B7280" }}>
+              {lab?.name} &nbsp;·&nbsp; {cart.length} test{cart.length>1?"s":""} &nbsp;·&nbsp;
+              <strong style={{ color:"#1158A6" }}>₹{total.toLocaleString()}</strong>
+              {saving > 0 && <>&nbsp;·&nbsp;<span style={{ color:"#16A34A",fontWeight:700 }}>Save ₹{saving.toLocaleString()}</span></>}
+            </div>
+          </div>
         </div>
 
-        {/* STEP BAR */}
-        <div style={{ background:"#fff",borderRadius:16,padding:"18px 24px",marginBottom:20,border:"1.5px solid #EEF2FF",boxShadow:"0 2px 10px rgba(17,88,166,.06)",display:"flex",alignItems:"center" }}>
+        {/* Step bar — 3 steps */}
+        <div style={{ display:"flex",alignItems:"center",marginBottom:20,padding:"0 4px" }}>
           {steps.map((l,i)=>(
-            <div key={l} style={{ display:"flex",alignItems:"center",flex:i<4?1:"none" }}>
-              <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:5 }}>
-                <div style={{ width:34,height:34,borderRadius:50,background:step>i+1?"#16A34A":step===i+1?"#1158A6":"#F1F5F9",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".8rem",transition:"all .28s",boxShadow:step===i+1?"0 0 0 4px rgba(17,88,166,.18), 0 3px 10px rgba(17,88,166,.3)":step>i+1?"0 2px 8px rgba(22,163,74,.3)":"none" }}>
-                  {step>i+1?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
+            <React.Fragment key={l}>
+              <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:0 }}>
+                <div style={{ width:30,height:30,borderRadius:50,background:step>i+1?"#16A34A":step===i+1?"#1158A6":"#E5E7EB",color:step>=i+1?"#fff":"#9CA3AF",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:".78rem",transition:"all .25s",flexShrink:0 }}>
+                  {step>i+1?<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>:i+1}
                 </div>
-                <span style={{ fontSize:".65rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#16A34A":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
+                <span style={{ fontSize:".6rem",fontWeight:700,color:step===i+1?"#1158A6":step>i+1?"#16A34A":"#9CA3AF",whiteSpace:"nowrap" }}>{l}</span>
               </div>
-              {i<4&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:18,borderRadius:99,transition:"background .28s" }}/>}
-            </div>
+              {i<2&&<div style={{ flex:1,height:2,background:step>i+1?"#1158A6":"#E5E7EB",margin:"0 6px",marginBottom:14,borderRadius:99,transition:"background .25s" }}/>}
+            </React.Fragment>
           ))}
         </div>
 
-        {/* STEP CARD */}
-        <div style={{ background:"#fff",borderRadius:18,padding:"28px 28px",border:"1.5px solid #EEF2FF",boxShadow:"0 4px 20px rgba(17,88,166,.07)" }}>
+        {/* Card */}
+        <div style={{ background:"#fff",borderRadius:20,padding:"24px 20px",border:"1.5px solid #EEF2FF",boxShadow:"0 4px 20px rgba(17,88,166,.07)" }}>
 
-          {/* STEP 1 — Patient */}
+          {/* ── STEP 1: Patient Info + Collection ── */}
           {step===1&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Patient Information</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 1 of 4</div>
-                </div>
-              </div>
-              <div style={{ display:"grid",gap:14 }}>
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:18 }}>Patient Details &amp; Collection</div>
+
+              <div style={{ display:"grid",gap:13,marginBottom:18 }}>
                 <BookingField label="Full Name" req placeholder="Patient's full name" value={loc.name} onChange={e=>sl("name",e.target.value)}/>
                 <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:12 }}>
                   <BookingField label="Phone" req type="tel" placeholder="+91 XXXXXXXXXX" value={loc.phone} onChange={e=>sl("phone",e.target.value)}/>
                   <BookingField label="Email" req type="email" placeholder="email@example.com" value={loc.email} onChange={e=>sl("email",e.target.value)}/>
                 </div>
-                <BookingField label="Age & Gender (optional)" placeholder="e.g. 34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
-              </div>
-              <button disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}
-                style={{ marginTop:22,width:"100%",background:ok1?"#1158A6":"#E5E7EB",color:ok1?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"14px",fontWeight:800,fontSize:".92rem",cursor:ok1?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok1?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                onMouseEnter={e=>ok1&&(e.currentTarget.style.background="#0F2D6B")}
-                onMouseLeave={e=>ok1&&(e.currentTarget.style.background="#1158A6")}>
-                Continue →
-              </button>
-            </div>
-          )}
-
-          {/* STEP 2 — Schedule */}
-          {step===2&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Date & Time Slot</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 2 of 4</div>
-                </div>
-              </div>
-              <div style={{ marginBottom:18 }}>
-                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
-                <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8 }}>
-                  {Array.from({length:14},(_,i)=>{
-                    const d=new Date(); d.setDate(d.getDate()+i);
-                    const val=d.toISOString().split("T")[0];
-                    const day=d.toLocaleDateString("en-IN",{weekday:"short"});
-                    const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
-                    const isToday=i===0;
-                    const sel=loc.date===val;
-                    return (
-                      <button key={val} onClick={()=>sl("date",val)}
-                        style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
-                        <span style={{ fontSize:".6rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
-                        <span style={{ fontSize:".78rem",fontWeight:800 }}>{date}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div>
-                <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Time Slot <span style={{color:"#EF4444"}}>*</span></label>
-                <div style={{ display:"flex",flexWrap:"wrap",gap:8 }}>
-                  {TIME_SLOTS.map(s=>(
-                    <button key={s} onClick={()=>setLoc(f=>({...f,slot:s}))}
-                      style={{ padding:"9px 16px",borderRadius:50,border:`1.5px solid ${loc.slot===s?"#1158A6":"#E5E7EB"}`,background:loc.slot===s?"#1158A6":"#F5F7FF",color:loc.slot===s?"#fff":"#374151",fontWeight:700,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div style={{ display:"flex",gap:10,marginTop:22 }}>
-                <button onClick={()=>setStep(1)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:4 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <button disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}
-                  style={{ flex:2,background:ok2?"#1158A6":"#E5E7EB",color:ok2?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok2?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok2?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok2&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok2&&(e.currentTarget.style.background="#1158A6")}>
-                  Continue →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3 — Collection */}
-          {step===3&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#1158A6,#3B82F6)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 14px rgba(17,88,166,.35)" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5z"/><polyline points="9 3 9 8 19 8"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Sample Collection</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 3 of 4 · How would you like your sample collected?</div>
-                </div>
+                <BookingField label="Age &amp; Gender (optional)" placeholder="34 / Female" value={loc.age} onChange={e=>sl("age",e.target.value)}/>
               </div>
 
-              <div style={{ display:"flex",flexDirection:"column",gap:12,marginBottom:20 }}>
-
-                {/* Visit Lab — Labs Near Me style */}
-                <div onClick={()=>setLoc(f=>({...f,mode:"clinic"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="clinic"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:"pointer",transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="clinic"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="clinic"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Walk-in at the Lab</div>
-                    <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Visit the lab at your convenience</div>
-                  </div>
-                  {loc.mode==="clinic"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>}
-                </div>
-
-                {/* Home Collection — Labs Near Me style */}
-                <div onClick={()=>lab?.homeCollection&&setLoc(f=>({...f,mode:"home"}))}
-                  style={{ background:"#fff",borderRadius:18,border:`1.5px solid ${loc.mode==="home"?"#1158A6":"#DBEAFE"}`,padding:"22px 28px",display:"flex",alignItems:"center",gap:20,boxShadow:loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 16px rgba(17,88,166,.07)",cursor:lab?.homeCollection?"pointer":"not-allowed",opacity:lab?.homeCollection?1:.5,transition:"all .2s",width:"100%" }}
-                  onMouseEnter={e=>{ if(!lab?.homeCollection)return; e.currentTarget.style.boxShadow="0 8px 28px rgba(17,88,166,.13)"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow=loc.mode==="home"?"0 4px 18px rgba(17,88,166,.13)":"0 2px 10px rgba(17,88,166,.06)"; e.currentTarget.style.borderColor=loc.mode==="home"?"#1158A6":"#DBEAFE"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:800,fontSize:".97rem",color:"#0D1117" }}>Home Sample Collection</div>
-                    <div style={{ fontSize:".75rem",color:"#9CA3AF",marginTop:2 }}>Phlebotomist visits your doorstep</div>
-                  </div>
-                  {loc.mode==="home"&&<div style={{ width:32,height:32,borderRadius:50,background:"#1158A6",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 3px 10px rgba(17,88,166,.35)",flexShrink:0 }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1.5,7 5,10.5 12.5,3" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>}
-                </div>
+              {/* Collection toggle */}
+              <div style={{ fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:10 }}>Sample Collection <span style={{color:"#EF4444"}}>*</span></div>
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14 }}>
+                {[["clinic","Walk-in","Visit the lab"],["home","Home Collection","We come to you"]].map(([mode,title,sub])=>{
+                  const sel=loc.mode===mode;
+                  return (
+                    <div key={mode} onClick={()=>setLoc(f=>({...f,mode,address:mode==="clinic"?"":f.address}))}
+                      style={{ borderRadius:14,border:`2px solid ${sel?"#1158A6":"#E5E7EB"}`,padding:"16px 12px",cursor:"pointer",background:sel?"#EFF6FF":"#FAFAFA",transition:"all .15s",textAlign:"center" }}>
+                      <div style={{ fontWeight:800,fontSize:".85rem",color:sel?"#1158A6":"#0D1117" }}>{title}</div>
+                      <div style={{ fontSize:".7rem",color:"#9CA3AF",marginTop:3 }}>{sub}</div>
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* Address input */}
               {loc.mode==="home"&&(
-                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"18px 20px",marginBottom:16,animation:"slideUp .2s" }}>
-                  <label style={{ display:"flex",alignItems:"center",gap:7,fontWeight:700,fontSize:".82rem",color:"#1158A6",marginBottom:10 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Pickup Address <span style={{color:"#EF4444",marginLeft:2}}>*</span>
-                  </label>
-                  <textarea rows={3}
-                    style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:10,padding:"11px 14px",fontSize:".87rem",fontFamily:"'Manrope',sans-serif",background:"#fff",color:"#111",outline:"none",resize:"vertical",boxSizing:"border-box",transition:"border-color .15s" }}
-                    placeholder="Flat / house no., building, street, area, city…"
-                    value={loc.address}
-                    onChange={e=>sl("address",e.target.value)}
-                    onFocus={e=>e.target.style.borderColor="#1158A6"}
-                    onBlur={e=>e.target.style.borderColor="#DBEAFE"}
-                  />
+                <div style={{ background:"#F5F7FF",border:"1.5px solid #DBEAFE",borderRadius:14,padding:"16px",marginBottom:4,animation:"slideUp .2s" }}>
+                  <div style={{ display:"flex",alignItems:"center",gap:6,fontWeight:700,fontSize:".78rem",color:"#1158A6",marginBottom:12 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Pickup Address <span style={{color:"#EF4444"}}>*</span>
+                  </div>
+                  <div style={{ display:"grid",gap:10 }}>
+                    <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
+                      <BookingField label="House / Flat No." req placeholder="4B / Plot 12" value={loc.houseNo||""} onChange={e=>sl("houseNo",e.target.value)}/>
+                      <BookingField label="Area / Street" req placeholder="Jubilee Hills" value={loc.area||""} onChange={e=>sl("area",e.target.value)}/>
+                    </div>
+                    <BookingField label="Nearby Landmark (optional)" placeholder="Near Apollo Hospital" value={loc.landmark||""} onChange={e=>sl("landmark",e.target.value)}/>
+                    <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
+                      <BookingField label="City" req placeholder="Hyderabad" value={loc.city||""} onChange={e=>sl("city",e.target.value)}/>
+                      <BookingField label="Pincode" req placeholder="500 001" value={loc.pincode||""} onChange={e=>sl("pincode",e.target.value.replace(/\D/g,"").slice(0,6))} type="tel"/>
+                    </div>
+                  </div>
                 </div>
               )}
 
-              <div style={{ display:"flex",gap:10,marginTop:6 }}>
-                <button onClick={()=>setStep(2)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:4 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <button disabled={!ok3} onClick={()=>{ setForm(loc); setStep(4); }}
-                  style={{ flex:2,background:ok3?"#1158A6":"#E5E7EB",color:ok3?"#fff":"#9CA3AF",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".88rem",cursor:ok3?"pointer":"not-allowed",fontFamily:"'Manrope',sans-serif",transition:"all .18s",boxShadow:ok3?"0 4px 14px rgba(17,88,166,.3)":"none" }}
-                  onMouseEnter={e=>ok3&&(e.currentTarget.style.background="#0F2D6B")}
-                  onMouseLeave={e=>ok3&&(e.currentTarget.style.background="#1158A6")}>
-                  Review Order →
-                </button>
+              <div style={{ display:"flex",gap:10,marginTop:20 }}>
+                <BtnNext disabled={!ok1} onClick={()=>{ setForm(loc); setStep(2); }}>Next: Pick Date &amp; Time →</BtnNext>
               </div>
             </div>
           )}
 
-          {/* STEP 4 — Review */}
-          {step===4&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#EEF4FF",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Review & Confirm</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 4 of 5</div>
-                </div>
+          {/* ── STEP 2: Date + Time ── */}
+          {step===2&&(
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:18 }}>Date &amp; Time Slot</div>
+
+              <label style={{ display:"block",fontWeight:700,fontSize:".78rem",marginBottom:10,color:"#374151" }}>Preferred Date <span style={{color:"#EF4444"}}>*</span></label>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:7,marginBottom:20 }}>
+                {Array.from({length:14},(_,i)=>{
+                  const d=new Date(); d.setDate(d.getDate()+i);
+                  const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+                  const day=d.toLocaleDateString("en-IN",{weekday:"short"});
+                  const date=d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+                  const sel=loc.date===val; const isToday=i===0;
+                  return (
+                    <button key={val} onClick={()=>setLoc(f=>({...f,date:val,slot:""}))}
+                      style={{ padding:"8px 4px",borderRadius:10,border:`1.5px solid ${sel?"#1158A6":"#E5E7EB"}`,background:sel?"#1158A6":isToday?"#F0F6FF":"#fff",color:sel?"#fff":isToday?"#1158A6":"#374151",fontFamily:"'Manrope',sans-serif",cursor:"pointer",transition:"all .14s",display:"flex",flexDirection:"column",alignItems:"center",gap:2 }}>
+                      <span style={{ fontSize:".58rem",fontWeight:600,opacity:.8 }}>{isToday?"Today":day}</span>
+                      <span style={{ fontSize:".76rem",fontWeight:800 }}>{date}</span>
+                    </button>
+                  );
+                })}
               </div>
-              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",marginBottom:12,border:"1px solid #EEF2FF" }}>
-                <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Booking Details</div>
-                {[["Patient",form.name],["Phone",form.phone],["Email",form.email],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Mode",form.mode==="home"?"Home Collection":"Visit Lab"],form.mode==="home"&&["Address",form.address]].filter(Boolean).map(([l,v])=>(
-                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
+
+              {(()=>{
+                const displayTiming = isSunday && _effectiveSundayTiming ? _effectiveSundayTiming : _effectiveTiming;
+                const query = bkSlotQuery || '';
+                const filtered = LAB_SLOTS.filter(s => !query || s.toLowerCase().includes(query.toLowerCase()));
+                const slotSelected = loc.slot && LAB_SLOTS.includes(loc.slot);
+                return (
+                  <div style={{ position:"relative" }}>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8 }}>
+                      <label style={{ fontWeight:700,fontSize:".78rem",color:"#374151" }}>Preferred Time <span style={{color:"#EF4444"}}>*</span></label>
+                      {displayTiming&&<span style={{ fontSize:".66rem",fontWeight:700,color:"#1158A6",background:"#EFF6FF",borderRadius:6,padding:"2px 7px" }}>🕐 {isSunday?"Sun":"Weekday"}: {displayTiming}</span>}
+                    </div>
+                    <div style={{ position:"relative",display:"flex",alignItems:"center",marginBottom:4 }}>
+                      <svg style={{ position:"absolute",left:11,pointerEvents:"none" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <input type="text" placeholder="Type or tap a time slot…"
+                        value={slotSelected?loc.slot:query}
+                        onFocus={()=>{ setBkSlotFocus(true); if(slotSelected){ setBkSlotQuery(''); setLoc(f=>({...f,slot:''})); } }}
+                        onBlur={()=>setTimeout(()=>setBkSlotFocus(false),160)}
+                        onChange={e=>{ setBkSlotQuery(e.target.value); setLoc(f=>({...f,slot:''})); }}
+                        style={{ width:"100%",padding:"11px 36px 11px 32px",borderRadius:10,border:`1.5px solid ${bkSlotFocus?"#1158A6":"#E5E7EB"}`,fontSize:".88rem",fontWeight:600,fontFamily:"'Manrope',sans-serif",outline:"none",background:"#F8FAFC",color:"#1F2937",boxSizing:"border-box" }}/>
+                      {(query||slotSelected)&&<button onClick={()=>{ setBkSlotQuery(''); setLoc(f=>({...f,slot:''})); }} style={{ position:"absolute",right:10,background:"none",border:"none",cursor:"pointer",color:"#9CA3AF",fontSize:"1rem" }}>✕</button>}
+                    </div>
+                    {bkSlotFocus&&(
+                      <div style={{ position:"absolute",top:"calc(100% - 2px)",left:0,right:0,background:"#fff",border:"1.5px solid #E5E7EB",borderRadius:12,boxShadow:"0 8px 28px rgba(0,0,0,.12)",zIndex:999,maxHeight:210,overflowY:"auto" }}>
+                        {filtered.length===0
+                          ?<div style={{ padding:"14px 16px",fontSize:".83rem",color:"#9CA3AF",textAlign:"center" }}>No slots match</div>
+                          :filtered.map((s,i)=>{
+                            const act=loc.slot===s;
+                            return <div key={s} onMouseDown={()=>{ setLoc(f=>({...f,slot:s})); setBkSlotQuery(''); setBkSlotFocus(false); }}
+                              style={{ padding:"11px 16px",fontSize:".88rem",fontWeight:act?700:500,color:act?"#1158A6":"#374151",background:act?"#EFF6FF":"transparent",cursor:"pointer",borderBottom:i<filtered.length-1?"1px solid #F3F4F6":"none",display:"flex",alignItems:"center",gap:8 }}
+                              onMouseEnter={e=>!act&&(e.currentTarget.style.background="#F8FAFC")}
+                              onMouseLeave={e=>!act&&(e.currentTarget.style.background="transparent")}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={act?"#1158A6":"#9CA3AF"} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                              {s}
+                              {act&&<svg style={{marginLeft:"auto"}} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                            </div>;
+                          })
+                        }
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              <div style={{ display:"flex",gap:10,marginTop:22 }}>
+                <BtnBack onClick={()=>setStep(1)}/>
+                <BtnNext disabled={!ok2} onClick={()=>{ setForm(loc); setStep(3); }}>Review &amp; Pay →</BtnNext>
+              </div>
+            </div>
+          )}
+
+          {/* ── STEP 3: Review + Payment ── */}
+          {step===3&&(
+            <div style={{ animation:"slideUp .25s" }}>
+              <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:16 }}>Review &amp; Pay</div>
+
+              {/* Booking summary */}
+              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 16px",marginBottom:12,border:"1px solid #EEF2FF" }}>
+                <div style={{ fontWeight:700,fontSize:".7rem",color:"#9CA3AF",letterSpacing:".07em",textTransform:"uppercase",marginBottom:10 }}>Booking Summary</div>
+                {[["Patient",form.name],["Phone",form.phone],["Lab",lab?.name],["Date",form.date],["Time",form.slot],["Collection",form.mode==="home"?"Home Collection":"Walk-in"],form.mode==="home"&&["Address",[form.houseNo,form.area,form.landmark&&`Near ${form.landmark}`,form.city,form.pincode].filter(Boolean).join(', ')]].filter(Boolean).map(([l,v])=>(
+                  <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #EEF2FF",fontSize:".82rem" }}>
                     <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
-                    <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"58%",textAlign:"right" }}>{v}</span>
+                    <span style={{ fontWeight:700,color:"#0D1117",maxWidth:"60%",textAlign:"right",wordBreak:"break-word" }}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",marginBottom:18,border:"1px solid #EEF2FF" }}>
-                <div style={{ fontWeight:700,fontSize:".75rem",color:"#9CA3AF",letterSpacing:".06em",textTransform:"uppercase",marginBottom:10 }}>Selected Tests</div>
+
+              {/* Tests + total */}
+              <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 16px",marginBottom:16,border:"1px solid #EEF2FF" }}>
+                <div style={{ fontWeight:700,fontSize:".7rem",color:"#9CA3AF",letterSpacing:".07em",textTransform:"uppercase",marginBottom:10 }}>Tests</div>
                 {cart.map(item=>(
-                  <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:7,fontSize:".83rem" }}>
-                    <span style={{ color:"#374151",fontWeight:600 }}>{item.tname}</span>
-                    <div style={{ display:"flex",gap:10,alignItems:"center" }}>
-                      <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".78rem" }}>₹{item.mrp}</span>
+                  <div key={item.tid} style={{ display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:".82rem" }}>
+                    <span style={{ color:"#374151",fontWeight:600,maxWidth:"65%" }}>{item.tname}</span>
+                    <div style={{ display:"flex",gap:8,alignItems:"center" }}>
+                      {item.mrp > item.price && <span style={{ color:"#CBD5E1",textDecoration:"line-through",fontSize:".76rem" }}>₹{item.mrp}</span>}
                       <span style={{ fontWeight:800,color:"#1158A6" }}>₹{item.price}</span>
                     </div>
                   </div>
                 ))}
                 <div style={{ borderTop:"1.5px dashed #DBEAFE",paddingTop:10,marginTop:8 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".8rem",marginBottom:3 }}>
-                    <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
-                  </div>
-                  <div style={{ display:"flex",justifyContent:"space-between",color:"#2563EB",fontSize:".82rem",marginBottom:8,fontWeight:700 }}>
-                    <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
-                  </div>
+                  {saving > 0 && <>
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".79rem",marginBottom:3 }}>
+                      <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
+                    </div>
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#16A34A",fontSize:".8rem",marginBottom:8,fontWeight:700 }}>
+                      <span>You Save</span><span>−₹{saving.toLocaleString()}</span>
+                    </div>
+                  </>}
                   <div style={{ display:"flex",justifyContent:"space-between",fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>
-                    <span>Total Payable</span>
-                    <span style={{ color:"#1158A6",fontSize:"1.2rem",fontWeight:800 }}>₹{total.toLocaleString()}</span>
+                    <span>Total</span>
+                    <span style={{ color:"#1158A6",fontSize:"1.15rem" }}>₹{total.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
-              <div style={{ display:"flex",gap:10 }}>
-                <button onClick={()=>setStep(3)} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:4 }} aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <button onClick={()=>setStep(5)}
-                  style={{ flex:2,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"13px",fontWeight:800,fontSize:".92rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",boxShadow:"0 4px 14px rgba(17,88,166,.3)",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  Continue to Payment →
-                </button>
-              </div>
+
+              {/* Payment inline */}
+              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(2)} mode={loc.mode}/>
             </div>
           )}
 
-          {/* STEP 5 — Payment */}
-          {step===5&&(
-            <div style={{ animation:"slideUp .28s" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:22 }}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#F0FDF4",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117" }}>Choose Payment Method</div>
-                  <div style={{ fontSize:".75rem",color:"#9CA3AF" }}>Step 5 of 5 · Secure checkout</div>
-                </div>
-              </div>
-
-              {/* Amount summary strip */}
-              <div style={{ background:"linear-gradient(135deg,#EFF6FF,#DBEAFE)",borderRadius:14,padding:"14px 18px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #BFDBFE" }}>
-                <div>
-                  <div style={{ fontSize:".72rem",color:"#6B7280",fontWeight:600 }}>Amount Payable</div>
-                  <div style={{ fontFamily:"'DM Serif Display',serif",fontWeight:700,fontSize:"1.6rem",color:"#0D1117",lineHeight:1 }}>₹{total.toLocaleString()}</div>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <div style={{ fontSize:".7rem",color:"#16A34A",fontWeight:700 }}>You save ₹{saving.toLocaleString()}</div>
-                  <div style={{ fontSize:".69rem",color:"#6B7280" }}>MRP ₹{mrpTotal.toLocaleString()}</div>
-                </div>
-              </div>
-
-              {/* Payment methods */}
-              <PaymentSelector total={total} onPay={confirm} onBack={()=>setStep(4)}/>
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -2974,96 +3944,102 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
 /* ─── PROMO CAROUSEL ─────────────────────────────────────────────────────── */
 function PromoCarousel({ navTo }) {
-  const trackRef = useRef(null);
-  const [idx, setIdx] = useState(0);
-  const total = 2;
-
-  const goTo = (i) => {
-    const n = (i + total) % total;
-    setIdx(n);
-    if (trackRef.current) {
-      trackRef.current.scrollTo({ left: n * trackRef.current.offsetWidth, behavior: "smooth" });
-    }
-  };
+  // Infinite loop: [clone-card2, card1, card2, clone-card1], start at idx=1
+  const [idx, setIdx] = useState(1);
+  const [animated, setAnimated] = useState(true);
+  const [isDesk, setIsDesk] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
-    const t = setInterval(() => goTo(idx + 1), 4000);
+    const h = () => setIsDesk(window.innerWidth >= 1024);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  useEffect(() => {
+    if (isDesk) return; // no auto-swipe on desktop
+    const t = setInterval(() => setIdx(s => s + 1), 4000);
     return () => clearInterval(t);
+  }, [isDesk]);
+
+  useEffect(() => {
+    if (idx === 3) {
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setIdx(1);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 520);
+      return () => clearTimeout(id);
+    }
+    if (idx === 0) {
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setIdx(2);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 520);
+      return () => clearTimeout(id);
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
   }, [idx]);
 
-  const arrBtn = (dir) => ({
-    position:"absolute", top:"50%", transform:"translateY(-50%)",
-    [dir<0?"left":"right"]: 8,
-    width:34, height:34, borderRadius:"50%", background:"rgba(255,255,255,.92)",
-    border:"1.5px solid #E0EAFF", boxShadow:"0 2px 10px rgba(17,88,166,.13)",
-    display:"flex", alignItems:"center", justifyContent:"center",
-    cursor:"pointer", zIndex:10, transition:"opacity .2s",
-  });
-
-  return (
-    <div style={{ position:"relative", marginBottom:10 }}>
-
-      <div ref={trackRef} style={{ display:"flex", overflowX:"hidden", scrollSnapType:"x mandatory", gap:0, borderRadius:20 }}>
-        {/* Card 1 — Home Sample Pickup */}
-        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 10px 0 0", boxSizing:"border-box" }}>
-          <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0",height:"100%" }}>
-            <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
-              <div>
-                <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Free Home Visit</div>
-                <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Quick Home<br/>Sample Pickup</h3>
-                <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
-              </div>
-              <button onClick={()=>navTo("labs")}
-                style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
-                onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
-                BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-              </button>
-            </div>
-            <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
-              <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
-                <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
-                <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                <rect x="88" y="58" width="30" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                <rect x="122" y="58" width="26" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                <rect x="88" y="104" width="60" height="90" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
-                <circle cx="84" cy="142" r="5" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                <rect x="72" y="198" width="92" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
-                <rect x="52" y="170" width="22" height="28" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.2"/>
-                <ellipse cx="63" cy="170" rx="13" ry="6" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
-                <path d="M63 164 Q55 150 48 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                <ellipse cx="48" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(-20 48 138)"/>
-                <path d="M63 162 Q70 148 76 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                <ellipse cx="76" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(20 76 138)"/>
-                <circle cx="46" cy="74" r="20" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
-                <path d="M26 68 Q26 50 46 48 Q66 50 66 68 L64 60 Q54 46 46 46 Q38 46 28 60 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
-                <path d="M22 108 Q22 98 46 96 Q70 98 70 108 L74 198 H18 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
-                <path d="M40 98 L32 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M52 98 L60 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="30" cy="112" r="10" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.2"/>
-                <rect x="27" y="107" width="6" height="10" rx="1" fill="#EF4444"/>
-                <rect x="24.5" y="109.5" width="11" height="5" rx="1" fill="#EF4444"/>
-                <path d="M70 112 Q84 126 80 156" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
-                <path d="M70 112 Q84 126 80 156" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                <rect x="67" y="150" width="28" height="22" rx="4" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.5"/>
-                <rect x="77" y="146" width="8" height="8" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
-                <line x1="78" y1="158" x2="88" y2="158" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                <line x1="83" y1="153" x2="83" y2="163" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                <ellipse cx="39" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                <ellipse cx="53" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
-                <circle cx="40" cy="77" r="3" fill="#1E293B"/>
-                <circle cx="54" cy="77" r="3" fill="#1E293B"/>
-                <circle cx="41" cy="75.5" r="1.2" fill="white"/>
-                <circle cx="55" cy="75.5" r="1.2" fill="white"/>
-                <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
-              </svg>
-            </div>
-          </div>
+  const Card1 = () => (
+    <div style={{ borderRadius:20,overflow:"hidden",background:"#F0FDF9",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(16,185,129,.10)",border:"1px solid #A7F3D0",height:"100%" }}>
+      <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
+        <div>
+          <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Home Visit</div>
+          <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Quick Home<br/>Sample Pickup</h3>
+          <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Qualified and experienced phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
         </div>
-        {/* Card 2 — Fast Report Delivery */}
-        <div style={{ flex:"0 0 50%", scrollSnapAlign:"start", padding:"0 0 0 10px", boxSizing:"border-box" }}>
-          <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE",height:"100%" }}>
+        <button onClick={()=>navTo("labs")}
+          style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:10,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
+          onMouseEnter={e=>{ e.currentTarget.style.background="#047857"; e.currentTarget.style.transform="translateY(-1px)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="#059669"; e.currentTarget.style.transform="translateY(0)"; }}>
+          BOOK NOW <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+      <div className="promo-img-col" style={{ width:170,flexShrink:0,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:0 }}>
+        <svg viewBox="0 0 180 210" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:"100%",height:"auto"}}>
+          <ellipse cx="118" cy="135" rx="56" ry="70" fill="#D1FAE5" opacity="0.7"/>
+          <rect x="80" y="48" width="76" height="154" rx="4" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+          <rect x="88" y="58" width="30" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+          <rect x="122" y="58" width="26" height="40" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+          <rect x="88" y="104" width="60" height="90" rx="3" fill="#F0FDF4" stroke="#BBF7D0" strokeWidth="1"/>
+          <circle cx="84" cy="142" r="5" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
+          <rect x="72" y="198" width="92" height="8" rx="3" fill="#BBF7D0" stroke="#1E293B" strokeWidth="1"/>
+          <rect x="52" y="170" width="22" height="28" rx="3" fill="#A7F3D0" stroke="#1E293B" strokeWidth="1.2"/>
+          <ellipse cx="63" cy="170" rx="13" ry="6" fill="#6EE7B7" stroke="#1E293B" strokeWidth="1"/>
+          <path d="M63 164 Q55 150 48 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
+          <ellipse cx="48" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(-20 48 138)"/>
+          <path d="M63 162 Q70 148 76 140" stroke="#059669" strokeWidth="2" strokeLinecap="round" fill="none"/>
+          <ellipse cx="76" cy="138" rx="8" ry="5" fill="#34D399" stroke="#1E293B" strokeWidth="1" transform="rotate(20 76 138)"/>
+          <circle cx="46" cy="74" r="20" fill="#FDDCB5" stroke="#1E293B" strokeWidth="1.5"/>
+          <path d="M26 68 Q26 50 46 48 Q66 50 66 68 L64 60 Q54 46 46 46 Q38 46 28 60 Z" fill="#2C1A0E" stroke="#1E293B" strokeWidth="1"/>
+          <path d="M22 108 Q22 98 46 96 Q70 98 70 108 L74 198 H18 Z" fill="white" stroke="#1E293B" strokeWidth="1.5"/>
+          <path d="M40 98 L32 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M52 98 L60 116 L46 122" stroke="#1E293B" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          <circle cx="30" cy="112" r="10" fill="#FEE2E2" stroke="#1E293B" strokeWidth="1.2"/>
+          <rect x="27" y="107" width="6" height="10" rx="1" fill="#EF4444"/>
+          <rect x="24.5" y="109.5" width="11" height="5" rx="1" fill="#EF4444"/>
+          <path d="M70 112 Q84 126 80 156" stroke="white" strokeWidth="18" strokeLinecap="round" fill="none"/>
+          <path d="M70 112 Q84 126 80 156" stroke="#1E293B" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+          <rect x="67" y="150" width="28" height="22" rx="4" fill="#FEF3C7" stroke="#1E293B" strokeWidth="1.5"/>
+          <rect x="77" y="146" width="8" height="8" rx="2" fill="#FDE68A" stroke="#1E293B" strokeWidth="1"/>
+          <line x1="78" y1="158" x2="88" y2="158" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="83" y1="153" x2="83" y2="163" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+          <ellipse cx="39" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
+          <ellipse cx="53" cy="76" rx="4.5" ry="5" fill="white" stroke="#1E293B" strokeWidth="1"/>
+          <circle cx="40" cy="77" r="3" fill="#1E293B"/>
+          <circle cx="54" cy="77" r="3" fill="#1E293B"/>
+          <circle cx="41" cy="75.5" r="1.2" fill="white"/>
+          <circle cx="55" cy="75.5" r="1.2" fill="white"/>
+          <path d="M40 87 Q46 93 52 87" stroke="#1E293B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+          <path d="M28 80 Q28 96 46 96 Q64 96 64 80 Q46 74 28 80Z" fill="#DBEAFE" stroke="#1E293B" strokeWidth="1"/>
+        </svg>
+      </div>
+    </div>
+  );
+
+  const Card2 = () => (
+    <div style={{ borderRadius:20,overflow:"hidden",background:"#EFF6FF",position:"relative",minHeight:200,display:"flex",alignItems:"stretch",boxShadow:"0 4px 20px rgba(17,88,166,.10)",border:"1px solid #BFDBFE",height:"100%" }}>
             <div style={{ flex:1,padding:"28px 24px 24px",display:"flex",flexDirection:"column",justifyContent:"space-between",zIndex:1 }}>
               <div>
                 <div style={{ display:"inline-block",background:"#EFF6FF",border:"1px solid #93C5FD",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#1158A6",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Digital Reports</div>
@@ -3071,7 +4047,7 @@ function PromoCarousel({ navTo }) {
                 <p style={{ fontSize:".78rem",color:"#1E40AF",lineHeight:1.6,maxWidth:200 }}>Secure digital reports on WhatsApp &amp; email. Delivered promptly.</p>
               </div>
               <button onClick={()=>navTo("labs")}
-                style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:50,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
+                style={{ alignSelf:"flex-start",marginTop:16,background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(17,88,166,.35)",transition:"all .18s" }}
                 onMouseEnter={e=>{ e.currentTarget.style.background="#0F2D6B"; e.currentTarget.style.transform="translateY(-1px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.transform="translateY(0)"; }}>
                 VIEW TESTS <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -3105,7 +4081,28 @@ function PromoCarousel({ navTo }) {
               </svg>
             </div>
           </div>
-        </div>
+  );
+
+  // Desktop: both cards side by side, no carousel
+  if (isDesk) {
+    return (
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:10 }}>
+        <Card1/><Card2/>
+      </div>
+    );
+  }
+
+  // Mobile: infinite loop carousel [clone-Card2, Card1, Card2, clone-Card1], start at idx=1
+  return (
+    <div style={{ position:"relative", marginBottom:10, borderRadius:20, overflow:"hidden", width:"100%" }}>
+      <div style={{ display:"flex", width:"400%", transition: animated ? "transform .5s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${idx * -25}%)`, willChange:"transform" }}>
+        <div style={{ width:"25%", flexShrink:0 }}><Card2/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card1/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card2/></div>
+        <div style={{ width:"25%", flexShrink:0 }}><Card1/></div>
+      </div>
+      <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:8 }}>
+        {[0,1].map(i=>{ const active=(idx===1&&i===0)||(idx===2&&i===1); return <div key={i} onClick={()=>{ setAnimated(true); setIdx(i+1); }} style={{ width:active?20:6,height:6,borderRadius:3,background:active?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>; })}
       </div>
     </div>
   );
@@ -3119,7 +4116,7 @@ const FEATURE_SLIDES = [
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label:"Home Collection", desc:"Phlebotomist at your doorstep" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label:"Fast Reports", desc:"Results in as little as 6 hours" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>, label:"Digital Reports", desc:"WhatsApp & email delivery" },
-      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"NABL Certified", desc:"All partner labs accredited" },
+      { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, label:"Verified Partner", desc:"All partner labs accredited" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>, label:"Best Prices", desc:"Transparent, no hidden fees" },
       { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0891B2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>, label:"24/7 Support", desc:"Expert help round the clock" },
     ]
@@ -3136,13 +4133,43 @@ const FEATURE_SLIDES = [
 ];
 
 function FeaturesCarousel() {
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState(1); // 0=clone-of-last, 1=real-slide-0, 2=real-slide-1, 3=clone-of-first
+  const [animated, setAnimated] = useState(true);
   const [mob, setMob] = useState(window.innerWidth <= 640);
+  const [isDesk, setIsDesk] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % 2), 4500);
-    return () => clearInterval(t);
+    const h = () => { setMob(window.innerWidth <= 640); setIsDesk(window.innerWidth >= 1024); };
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
   }, []);
+
+  useEffect(() => {
+    if (isDesk) return; // no auto-swipe on desktop
+    const t = setInterval(() => setSlide(s => s + 1), 4500);
+    return () => clearInterval(t);
+  }, [isDesk]);
+
+  // When we land on a clone, silently jump to the real slide
+  useEffect(() => {
+    if (slide === 3) {
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setSlide(1);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 570);
+      return () => clearTimeout(id);
+    }
+    if (slide === 0) {
+      const id = setTimeout(() => {
+        setAnimated(false);
+        setSlide(2);
+        requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+      }, 570);
+      return () => clearTimeout(id);
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+  }, [slide]);
 
   useEffect(() => {
     const h = () => setMob(window.innerWidth <= 640);
@@ -3234,7 +4261,7 @@ function FeaturesCarousel() {
           Why LabEase<br/>is Helpful?
         </h3>
         <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 7 : 10, maxWidth: mob ? 260 : "none" }}>
-          {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
+          {["Compare real prices across multiple labs before booking","Book a slot in minutes with doorstep sample collection","Get digital reports delivered directly to you"].map((b,i) => (
             <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:8, fontSize: mob ? ".76rem" : ".85rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
               <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:4 }}/>
               {b}
@@ -3275,48 +4302,116 @@ function FeaturesCarousel() {
   );
 
   /* Slide 2 — 6 Features */
-  const SlideFeatures = () => (
-    <div style={{ ...CARD, padding: mob ? "14px 14px" : "28px 44px", height: mob ? 220 : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
+  const SlideFeatures = () => {
+    const pad   = mob ? "14px 14px" : isDesk ? "20px 28px" : "28px 44px";
+    const cols  = mob ? "1fr 1fr"   : isDesk ? "1fr 1fr"   : "1fr 1fr 1fr";
+    const gapV  = mob ? "8px 12px"  : isDesk ? "14px 20px" : "28px 52px";
+    const circ  = mob ? 32          : isDesk ? 44           : 62;
+    const gapI  = mob ? 7           : isDesk ? 10           : 18;
+    return (
+    <div style={{ ...CARD, padding: pad, height: mob ? 220 : 220, boxSizing:"border-box", display:"flex", alignItems:"center", overflow:"hidden" }}>
       <Wave/>
-      <div style={{ display:"grid", gridTemplateColumns: mob ? "1fr 1fr" : "1fr 1fr 1fr", gap: mob ? "8px 12px" : "28px 52px", width:"100%", zIndex:1 }}>
+      <div style={{ display:"grid", gridTemplateColumns: cols, gap: gapV, width:"100%", zIndex:1 }}>
         {[
-          { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
+          { Ic:ITestTubes,  t1:"Wide Range of",          t2:"Tests Available" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
-          { Ic:IBadgeCheck, t1:"Verified & NABL",      t2:"Accredited Labs" },
+          { Ic:IBadgeCheck, t1:"Verified",              t2:"Partner Labs" },
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
           { Ic:IDiscount,   t1:"Attractive Discounts", t2:"& Offers" },
         ].map(({ Ic, t1, t2 }, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap: mob ? 7 : 18, minWidth:0 }}>
-            <div style={{ width: mob ? 32 : 62, height: mob ? 32 : 62, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
+          <div key={i} style={{ display:"flex", alignItems:"center", gap: gapI, minWidth:0 }}>
+            <div style={{ width: circ, height: circ, borderRadius:"50%", border:"2px solid rgba(134,239,172,.6)", background:"rgba(134,239,172,.08)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 0 0 1px rgba(134,239,172,.15)" }}>
               <Ic/>
             </div>
             <div style={{ minWidth:0, overflow:"hidden" }}>
-              <div style={{ fontSize: mob ? ".58rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t1}</div>
-              <div style={{ fontSize: mob ? ".68rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t2}</div>
+              <div style={{ fontSize: mob ? ".58rem" : isDesk ? ".75rem" : ".85rem", color:"rgba(255,255,255,.6)", lineHeight:1.2, marginBottom:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t1}</div>
+              <div style={{ fontSize: mob ? ".68rem" : isDesk ? ".88rem" : "1rem", fontWeight:700, color:"#fff", lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{t2}</div>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+    );
+  };
 
+  // Desktop: both slides side by side, no carousel — same max-width as PromoCarousel above
+  if (isDesk) {
+    return (
+      <section style={{ padding:"32px 0 28px", background:"#EBF0FA" }}>
+        <div style={{ maxWidth:1600, margin:"0 auto", padding:"0 24px" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+            <SlideWhy/><SlideFeatures/>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Mobile: carousel
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#EBF0FA" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
         <div style={{ position:"relative" }}>
           <div style={{ height:220, overflow:"hidden", borderRadius:18 }}>
-            <div style={{ display:"flex", height:"100%", transition:"transform .55s cubic-bezier(.4,0,.2,1)", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
+            {/* Layout: [clone-SlideFeatures, SlideWhy, SlideFeatures, clone-SlideWhy] */}
+            <div style={{ display:"flex", height:"100%", transition: animated ? "transform .55s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${slide * -100}%)`, willChange:"transform" }}>
+              <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideFeatures/></div>
               <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
               <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideFeatures/></div>
+              <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
             </div>
           </div>
-
           <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:10 }}>
-            {[0,1].map(i=><div key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?20:6,height:6,borderRadius:3,background:i===slide?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>)}
+            {[0,1].map(i=>{const active=(slide===1&&i===0)||(slide===2&&i===1); return <div key={i} onClick={()=>{ setAnimated(true); setSlide(i+1); }} style={{ width:active?20:6,height:6,borderRadius:3,background:active?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>;} )}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ─── PACKAGES PAGE ─────────────────────────────────────────────────────── */
+function PackagesPage({ navTo, setSelectedTest }) {
+  return (
+    <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
+      <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
+        <div style={{ maxWidth:760, margin:"0 auto", padding:"0 20px" }}>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:6,padding:4,color:"#374151",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".9rem" }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+            Back
+          </button>
+          <h1 style={{ fontWeight:900, fontSize:"clamp(1.4rem,3vw,1.9rem)", color:"#0D1117", letterSpacing:"-.03em", marginBottom:6, marginTop:8 }}>Health Packages</h1>
+          <p style={{ fontSize:".88rem", color:"#6B7280" }}>Comprehensive screening packages at transparent prices. All include home sample collection.</p>
+        </div>
+      </div>
+      <div style={{ maxWidth:760, margin:"0 auto", padding:"24px 20px 60px" }}>
+        {activePackages.map((pkg, i) => (
+          <div key={pkg.title} style={{ background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", marginBottom:16, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
+            <div style={{ padding:"20px 20px 18px" }}>
+              <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, marginBottom:12 }}>
+                <div style={{ flex:1 }}>
+                  <span style={{ display:"inline-block", background:pkg.badgeColor, color:"#fff", borderRadius:6, padding:"2px 10px", fontSize:".65rem", fontWeight:800, letterSpacing:".05em", marginBottom:8 }}>{pkg.badge}</span>
+                  <h2 style={{ fontWeight:900, fontSize:"1.1rem", color:"#0D1117", marginBottom:4, letterSpacing:"-.02em" }}>{pkg.title}</h2>
+                  <p style={{ fontSize:".82rem", color:"#6B7280", margin:0 }}>{pkg.sub}</p>
+                </div>
+                <div style={{ textAlign:"right", flexShrink:0 }}>
+                  <div style={{ fontWeight:900, fontSize:"1.3rem", color:"#0D1117" }}>₹{pkg.price.toLocaleString()}</div>
+                  <div style={{ fontSize:".76rem", color:"#CBD5E1", textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</div>
+                  <div style={{ fontSize:".72rem", fontWeight:800, color:"#16A34A", marginTop:2 }}>{pkg.off}% OFF</div>
+                </div>
+              </div>
+              <button
+                onClick={()=>{ setSelectedTest({name:pkg.title, cat:pkg.cat}); navTo("labs"); }}
+                style={{ width:"100%", background:"#1158A6", color:"#fff", border:"none", borderRadius:10, padding:"13px", fontWeight:800, fontSize:".92rem", cursor:"pointer", fontFamily:"'Manrope',sans-serif", letterSpacing:".02em" }}
+                onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+                onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+                Book Now — ₹{pkg.price.toLocaleString()} →
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -3339,8 +4434,22 @@ export class ErrorBoundary extends React.Component {
 
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
-  const [page,   setPage]   = useState("home");
-  const [lab,    setLab]    = useState(null);
+  const [page,   setPage]   = useState(() => {
+    try {
+      const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+      let path = window.location.pathname;
+      if (base && path.startsWith(base)) path = path.slice(base.length);
+      const params = new URLSearchParams(window.location.search);
+      const pParam = params.get('p');
+      if (pParam) path = pParam;
+      const slug = path.replace(/^\/+|\/+$/g, '');
+      return (slug && SEO_SLUG_TO_PAGE[slug]) || "home";
+    } catch { return "home"; }
+  });
+  const [labId,  setLabId]  = useState(null);
+  const [labSettings, setLabSettings] = useState({});
+  const [sbExtraLabs, setSbExtraLabs] = useState([]);
+  const [sbAdminSettings, setSbAdminSettings] = useState({});
   const [cart,   setCart]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('le_cart') || '[]'); } catch { return []; }
   });
@@ -3350,76 +4459,98 @@ export default function App() {
   const [homeF,  setHomeF]  = useState(false);
   const [nablF,  setNablF]  = useState(false);
   const [step,   setStep]   = useState(1);
-  const [form,   setForm]   = useState({ name:"",phone:"",email:"",age:"",date:"",slot:"",mode:"clinic",address:"" });
+  const [form,   setForm]   = useState({ name:"",phone:"",email:"",age:"",date:"",slot:"",mode:"clinic",address:"",houseNo:"",area:"",landmark:"",city:"",pincode:"" });
   const [done,   setDone]   = useState(null);
   const [toast,  setToast]  = useState(null);
   const [cartOpen,    setCartOpen]   = useState(false);
+  const [isDesktop,   setIsDesktop]  = useState(() => window.innerWidth >= 1024);
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [prepGuideOpen, setPrepGuideOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [partnerOpen, setPartnerOpen] = useState(false);
+  const [careersOpen, setCareersOpen] = useState(false);
+  const [blogOpen, setBlogOpen] = useState(false);
+  const [blogPost, setBlogPost] = useState(null);
   const [sideMenu,    setSideMenu]   = useState(false);
   const [selectedTest, setSelectedTest] = useState(null); // {name, cat} when user clicks a specific test
   const [isMobile,    setIsMobile]   = useState(window.innerWidth <= 768);
+  const isMobileRef = useRef(isMobile);
+  isMobileRef.current = isMobile;
   useEffect(() => {
     const h = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", h);
     return () => window.removeEventListener("resize", h);
   }, []);
-  // Trigger re-render when admin panel updates localStorage (cross-tab)
-  const [, setOvTick] = useState(0);
+
+  // Realtime sync: admin changes on any device/browser push instantly to all clients
   useEffect(() => {
-    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs'];
-    const handler = (e) => { if (keys.includes(e.key)) setOvTick(n => n + 1); };
-    window.addEventListener('storage', handler);
-    // Poll only when data actually changes — avoids re-render every tick (which breaks inputs)
-    let snap = keys.map(k => localStorage.getItem(k)).join('|');
-    const poll = setInterval(() => {
-      const curr = keys.map(k => localStorage.getItem(k)).join('|');
-      if (curr !== snap) { snap = curr; setOvTick(n => n + 1); }
-    }, 2000);
-    return () => { window.removeEventListener('storage', handler); clearInterval(poll); };
-  }, []);
-  // Read ALL admin overrides fresh from localStorage on every render
-  const adminOv = (() => {
-    try {
-      return {
-        prices:    JSON.parse(localStorage.getItem('le_price_overrides')    || '{}'),
-        testNames: JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}'),
-        labNames:  JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}'),
-        labStatus: JSON.parse(localStorage.getItem('le_lab_overrides')       || '{}'),
-        extraLabs: (() => {
-          // Read from le_extra_labs first; fall back to reading new IDs from le_labs
-          const extra = JSON.parse(localStorage.getItem('le_extra_labs') || '[]');
-          if (extra.length > 0) return extra;
-          const allAdminLabs = JSON.parse(localStorage.getItem('le_labs') || '[]');
-          const knownIds = new Set([1,2,3,4,5,6]);
-          return allAdminLabs.filter(l => !knownIds.has(l.id));
-        })(),
-      };
-    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[]}; }
-  })();
-  // Apply price/name overrides to LABS on every render
-  const adminLabLogos = (() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const map = {};
-      saved.forEach(l => { if(l.logo) map[l.id] = l.logo; });
-      return map;
-    } catch(e) { return {}; }
-  })();
-  LABS.forEach(lab => {
-    if (adminOv.labStatus[lab.id] !== undefined) lab.active = adminOv.labStatus[lab.id];
-    if (adminOv.labNames[lab.id]  !== undefined) lab.name   = adminOv.labNames[lab.id];
-    if (adminLabLogos[lab.id])                   lab.logoBase64 = adminLabLogos[lab.id];
-    lab.tests.forEach(t => {
-      const po = adminOv.prices[t.id];
-      if (po) {
-        if (po.price !== undefined) t.price = po.price;
-        if (po.mrp   !== undefined) t.mrp   = po.mrp;
-      }
-      if (adminOv.testNames[t.id] !== undefined) t.name = adminOv.testNames[t.id];
+    const unsub = subscribeLabData({
+      onExtraLabs: labs => setSbExtraLabs(labs),
+      onLabSettings: s => setLabSettings(s),
     });
-  });
+    return unsub;
+  }, []);
+
+  // Realtime sync for admin overrides (price, names, status, timings) — Supabase only
+  useEffect(() => {
+    const unsub = subscribeAdminSettings(settings => {
+      setSbAdminSettings(settings);
+    });
+    return unsub;
+  }, []);
+  // Read ALL admin overrides from Supabase only (sbAdminSettings) — pure Supabase, no localStorage
+  const adminOv = (() => {
+    const get    = (key) => sbAdminSettings[key] ?? {};
+    const getArr = (key) => sbAdminSettings[key] ?? [];
+    return {
+      prices:        get('le_price_overrides'),
+      testNames:     get('le_test_name_overrides'),
+      labNames:      get('le_lab_name_overrides'),
+      timings:       get('le_timing_overrides'),
+      sundayTimings: get('le_sunday_timing_overrides'),
+      labStatus:     get('le_lab_overrides'),
+      extraLabs: (() => {
+        const allAdminLabs = getArr('le_labs');
+        const knownIds = new Set([1,2,3,4,5,6]);
+        return allAdminLabs.filter(l => !knownIds.has(l.id));
+      })(),
+    };
+  })();
+  // Build logo/data maps from Supabase-synced le_labs
+  const adminLabLogos = (() => {
+    const saved = sbAdminSettings['le_labs'] ?? [];
+    const map = {};
+    saved.forEach(l => { if(l.logo) map[l.id] = l.logo; });
+    return map;
+  })();
+  const adminLabMap = (() => {
+    const saved = sbAdminSettings['le_labs'] ?? [];
+    const map = {};
+    saved.forEach(l => { map[l.id] = l; });
+    return map;
+  })();
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [navCity, setNavCity] = useState("Detect Location");
+  const [navLocLoading, setNavLocLoading] = useState(false);
+  function detectNavLocation() {
+    if(!navigator.geolocation) return;
+    setNavLocLoading(true);
+    navigator.geolocation.getCurrentPosition(async pos=>{
+      try{
+        const {latitude:lat,longitude:lng}=pos.coords;
+        const r=await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+        const d=await r.json();
+        const city=d.city||d.locality||d.principalSubdivision||"Your Location";
+        setNavCity(city);
+      }catch(e){ setNavCity("Your Location"); }
+      finally{ setNavLocLoading(false); }
+    },()=>{ setNavLocLoading(false); },{timeout:10000,enableHighAccuracy:true});
+  }
   const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
   const [user,     setUser]     = useState(null);
   const [authForm, setAuthForm] = useState({ name:"", email:"", phone:"", password:"" });
@@ -3450,6 +4581,13 @@ export default function App() {
   }, []);
 
   const sf = (k,v) => setForm(f => ({...f,[k]:v}));
+  // Active packages: Supabase only, fall back to hardcoded defaults
+  const activePackages = (() => {
+    const sb = sbAdminSettings.le_packages;
+    if (sb && Array.isArray(sb) && sb.length) return sb;
+    return ALL_PACKAGES;
+  })();
+
   const total    = cart.reduce((s,x) => s+x.price,0);
   const mrpTotal = cart.reduce((s,x) => s+x.mrp,0);
   const saving   = mrpTotal-total;
@@ -3464,7 +4602,30 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem('le_cart', JSON.stringify(cart)); } catch {}
   }, [cart]);
-  const navTo   = p  => { setPage(p); window.scrollTo(0,0); if(p!=="labs") setSelectedTest(null); };
+  const pageUrl = p => {
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+    const slug = SEO_PAGE_TO_SLUG[p];
+    return slug ? `${base}/${slug}` : `${base}/`;
+  };
+  const navTo = p => {
+    window.history.pushState({ page: p }, '', pageUrl(p));
+    setPage(p);
+    window.scrollTo(0, 0);
+    if (p !== "labs") setSelectedTest(null);
+  };
+  useEffect(() => {
+    const onPop = e => {
+      const pg = e.state?.page || "home";
+      setPage(pg);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("popstate", onPop);
+    // Replace initial state to match the resolved starting page (and clean up any ?p= redirect param)
+    if (!window.history.state?.page) {
+      window.history.replaceState({ page }, '', pageUrl(page));
+    }
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   const openAuth = (mode="login") => { setAuthMode(mode); setAuthErr(""); setAuthForm({name:"",email:"",phone:"",password:""}); setAuthOpen(true); };
   const closeAuth = () => { setAuthOpen(false); setAuthErr(""); };
@@ -3521,9 +4682,9 @@ export default function App() {
     setToast("Signed out successfully.");
   };
 
-  const confirm = async () => {
-    const id = "LB"+Math.random().toString(36).slice(2,8).toUpperCase();
-    setDone({...form,id,cart:[...cart],total,saving});
+  const confirm = async (payMethod) => {
+    const id = "LB-" + Date.now().toString(36).slice(-4).toUpperCase() + Math.random().toString(36).slice(2,4).toUpperCase();
+    setDone({...form,id,cart:[...cart],total,saving,payMethod});
     const booking = {
       id,
       patient: form.name,
@@ -3537,22 +4698,28 @@ export default function App() {
     };
     // Save to Supabase if connected
     if (supabase) {
-      await createBooking({
+      const payload = {
+        booking_ref: id,
         user_id: user?.id || null,
-        lab_id: cart[0]?.lid || null,
         lab_name: cart[0]?.lname || '',
         patient_name: form.name,
         patient_phone: form.phone,
-        patient_age: form.age,
+        patient_age: form.age ? String(form.age) : null,
         patient_gender: form.gender || '',
-        address: form.address,
+        address: form.mode==="home" ? [form.houseNo,form.area,form.landmark&&`Near ${form.landmark}`,form.city,form.pincode].filter(Boolean).join(', ') : (form.address||''),
         slot_date: form.date || null,
         slot_time: form.slot || '',
         collection: form.mode,
         status: 'confirmed',
-        total,
+        total: Number(total),
         items: cart,
-      });
+      };
+      const sbResult = await createBooking(payload);
+      if (sbResult?.id) {
+        setDone(d => ({...d, supabase_id: sbResult.id}));
+      } else {
+        console.warn('Supabase booking save failed — check RLS policies and table schema');
+      }
     }
     // Always save to localStorage as backup (admin panel uses it)
     try {
@@ -3565,21 +4732,44 @@ export default function App() {
     navTo("confirm");
   };
 
-  const allLabs = LABS.concat(adminOv.extraLabs.map(el => ({
+  // Build all labs as fresh objects so admin overrides (timing, sunday_timing, etc.) are always current
+  const allLabs = LABS.map(lab => {
+    const adm = adminLabMap[lab.id] || {};
+    const tests = lab.tests.map(t => {
+      const po = adminOv.prices[t.id];
+      return {
+        ...t,
+        name:  adminOv.testNames[t.id] !== undefined ? adminOv.testNames[t.id] : t.name,
+        price: po?.price !== undefined ? po.price : t.price,
+        mrp:   po?.mrp   !== undefined ? po.mrp   : t.mrp,
+      };
+    });
+    return {
+      ...lab,
+      active:       adminOv.labStatus[lab.id] !== undefined ? adminOv.labStatus[lab.id] : lab.active,
+      name:         adminOv.labNames[lab.id]   !== undefined ? adminOv.labNames[lab.id]  : lab.name,
+      logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
+      timing:       labSettings[String(lab.id)]?.timing        || adminOv.timings[lab.id]       || lab.timing,
+      sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
+      tests,
+    };
+  }).concat(sbExtraLabs.map(el => ({
     ...el,
-    active: adminOv.labStatus[el.id] !== undefined ? adminOv.labStatus[el.id] : (el.active !== false),
-    address: el.address || el.city || '',
-    distance: el.distance || el.dist || '—',
-    timing: el.timing || '6:00 AM – 10:00 PM',
+    active:       el.active !== false,
+    address:      el.address || el.city || '',
+    distance:     el.distance || '—',
+    timing:       labSettings[String(el.id)]?.timing        || adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
+    sunday_timing:labSettings[String(el.id)]?.sunday_timing || adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
-    nabl: el.nabl || false,
-    color: el.color || '#1158A6',
-    logoBase64: el.logo || el.logoBase64 || '',
-    founded: el.founded || new Date().getFullYear().toString(),
-    reportTime: el.reportTime || 'Same Day',
-    tests: Array.isArray(el.tests) ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:el.price||199,mrp:el.mrp||499,cat:'General',time:'Same Day'}],
-    reviews: el.reviews || 0,
+    nabl:         el.nabl || false,
+    color:        el.color || '#1158A6',
+    logoBase64:   el.logoBase64 || '',
+    founded:      el.founded || new Date().getFullYear().toString(),
+    reportTime:   el.reportTime || 'Same Day',
+    tests: Array.isArray(el.tests) && el.tests.length > 0 ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}],
+    reviews:      el.reviews || 0,
   })));
+  const lab = allLabs.find(l => l.id === labId) || allLabs.find(l => l.id === cart[0]?.lid) || null;
   const filtLabs = allLabs.filter(l=>{
     const q=labQ.toLowerCase();
     if(q && !l.name.toLowerCase().includes(q) && !l.address.toLowerCase().includes(q)) return false;
@@ -3607,7 +4797,12 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      HOME PAGE
   ═══════════════════════════════════════════════════════════════ */
-  const Home = () => {
+  // useCallback gives Home a stable function reference across App re-renders,
+  // so React never unmounts+remounts the Home component on unrelated state changes
+  // (which caused hero animations to replay — the "loads twice" symptom).
+  // isMobile is the only mutable closure; we read it via isMobileRef.current.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const Home = useCallback(() => {
     const [q,setQ]       = useState("");
     const [faq,setFaq]   = useState(null);
     const [pkgMsg, setPkgMsg] = useState(false);
@@ -3626,41 +4821,37 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobile?20:36,paddingBottom:isMobile?16:36,paddingLeft:isMobile?0:24,paddingRight:isMobile?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobile?16:40 }}>
-          <div style={{ maxWidth:isMobile?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobile?16:0,paddingRight:isMobile?16:0 }}>
+        <div style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
+          <div style={{ width:"100%",boxSizing:"border-box",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
             {/* eyebrow pill */}
-            <div className="hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
               <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
             </div>
 
+            {/* location indicator */}
+            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Hyderabad</span>
+            </div>
+
             {/* headline */}
-            <h1 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
               Book Lab Tests from<br/>
               <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
             </h1>
 
             {/* sub */}
-            <p style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
-              Compare prices across NABL-accredited labs. Free home collection, transparent pricing, digital reports in hours.
+            <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+              Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
-            {/* search bar */}
-            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} navTo={navTo} T={T}/>
 
-            {/* quick chips */}
-            <div style={{ display:"flex",gap:8,marginTop:18,flexWrap:"wrap",alignItems:"center",justifyContent:"center",boxSizing:"border-box" }}>
-              <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
-              {["CBC","Thyroid","Vitamin D","Diabetes","Lipid Profile"].map(t=>(
-                <button key={t} onClick={()=>{ setLabQ(t); navTo("labs"); }}
-                  style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
-                  {t}
-                </button>
-              ))}
-            </div>
+            {/* search bar */}
+            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T} allLabs={allLabs}/>
+
           </div>
+          {isDesktop && <BookingStepsPanel/>}
         </div>
 
       </section>
@@ -3668,7 +4859,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ}/>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbMarqueeLogos={sbAdminSettings.le_marquee_logos}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
@@ -3751,17 +4942,17 @@ export default function App() {
           {/* 6-card grid */}
           <div className="featured-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:16 }}>
             {[
-              { title:"Full Body Checkup", sub:"65+ Tests · NABL Certified", price:1999, mrp:3499, off:43, badge:"Most Popular", badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop",
+              { title:"Full Body Checkup", sub:"65+ Tests · Verified Partner", price:1999, mrp:3499, off:43, badge:"Most Popular", badgeColor:"#EF4444", img:"https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","Haemoglobin (Hb)","Total WBC Count","Platelet Count","RBC Count","PCV / Haematocrit","MCV, MCH, MCHC","Fasting Blood Sugar","Post Prandial Sugar","HbA1c (Diabetes)","Urea (BUN)","Creatinine","Uric Acid","Calcium","Phosphorus","Sodium","Potassium","Chloride","Bilirubin Total","Bilirubin Direct","SGOT (AST)","SGPT (ALT)","Alkaline Phosphatase","GGT","Total Protein","Albumin","Globulin","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL","TSH (Thyroid)","T3 (Triiodothyronine)","T4 (Thyroxine)","Vitamin D (25-OH)","Vitamin B12","Iron","TIBC","Ferritin","PSA (Males)","Urine Routine","Urine Microscopy","ESR","CRP (C-Reactive Protein)","RA Factor","ASO Titre","LDH","Amylase","Lipase","Urine Sugar","Urine Protein","Urine Ketones","24-Hr Urine Creatinine","ECG","Chest X-Ray","BMI & Body Composition","Blood Pressure","SpO2","Opthalmologist Check","Dental Check","Diet Counselling","Physician Consultation"] },
-              { title:"Diabetes Care", sub:"12 Tests · NABL Certified", price:399, mrp:899, off:56, badge:"55% OFF", badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700",
+              { title:"Diabetes Care", sub:"12 Tests · Verified Partner", price:399, mrp:899, off:56, badge:"55% OFF", badgeColor:"#EA580C", img:"https://images.pexels.com/photos/6303712/pexels-photo-6303712.jpeg?auto=compress&cs=tinysrgb&w=700",
                 tests:["Fasting Blood Sugar (FBS)","Post Prandial Blood Sugar (PPBS)","HbA1c (Glycated Haemoglobin)","Urea","Creatinine","eGFR (Kidney Function)","Urine Microalbumin","Urine Creatinine Ratio","Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol"] },
-              { title:"Heart Health", sub:"22 Tests · NABL Certified", price:1799, mrp:2999, off:40, badge:"Cardiology", badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700",
+              { title:"Heart Health", sub:"22 Tests · Verified Partner", price:1799, mrp:2999, off:40, badge:"Cardiology", badgeColor:"#1158A6", img:"https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=700",
                 tests:["Cholesterol Total","Triglycerides","HDL Cholesterol","LDL Cholesterol","VLDL Cholesterol","LDL/HDL Ratio","Total/HDL Ratio","Non-HDL Cholesterol","Complete Blood Count (CBC)","Fasting Blood Sugar","HbA1c","Creatinine","eGFR","Sodium","Potassium","Magnesium","CRP (hs-CRP)","Homocysteine","Lipoprotein(a)","TSH (Thyroid)","Vitamin D","ECG (Resting 12-Lead)"] },
-              { title:"Thyroid Profile", sub:"T3, T4, TSH · NABL Certified", price:399, mrp:799, off:50, badge:"NABL", badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop",
+              { title:"Thyroid Profile", sub:"T3, T4, TSH · Verified Partner", price:399, mrp:799, off:50, badge:"Verified", badgeColor:"#0369A1", img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=85&auto=format&fit=crop",
                 tests:["TSH (Thyroid Stimulating Hormone)","T3 (Total Triiodothyronine)","T4 (Total Thyroxine)","Free T3 (FT3)","Free T4 (FT4)","Anti-TPO Antibody","Anti-Thyroglobulin Antibody","Thyroglobulin","Complete Blood Count","Fasting Blood Sugar","Cholesterol Total","Calcium"] },
-              { title:"Women's Wellness", sub:"40+ Tests · NABL Certified", price:2299, mrp:3999, off:43, badge:"For Women", badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop",
+              { title:"Women's Wellness", sub:"40+ Tests · Verified Partner", price:2299, mrp:3999, off:43, badge:"For Women", badgeColor:"#9333EA", img:"https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","Haemoglobin","Iron","TIBC","Ferritin","Fasting Blood Sugar","HbA1c","TSH (Thyroid)","T3","T4","FSH (Follicle Stimulating Hormone)","LH (Luteinising Hormone)","Oestradiol (E2)","Prolactin","Progesterone","AMH (Ovarian Reserve)","DHEA-Sulphate","Testosterone (Total)","Cortisol","Vitamin D (25-OH)","Vitamin B12","Folic Acid","Calcium","Phosphorus","Magnesium","Urea","Creatinine","Uric Acid","SGOT","SGPT","Alkaline Phosphatase","Cholesterol Total","Triglycerides","HDL","LDL","Urine Routine","Urine Microscopy","Pap Smear (Cervical)","CA-125 (Ovarian Marker)","CRP (hs-CRP)","Blood Pressure & BMI"] },
-              { title:"Senior Citizen", sub:"55+ Tests · NABL Certified", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
+              { title:"Senior Citizen", sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","ESR","CRP (hs-CRP)","Fasting Blood Sugar","Post Prandial Sugar","HbA1c","Urea","Creatinine","eGFR","Uric Acid","Sodium","Potassium","Calcium","Phosphorus","Magnesium","SGOT","SGPT","Alkaline Phosphatase","GGT","Bilirubin Total","Total Protein","Albumin","Cholesterol Total","Triglycerides","HDL","LDL","VLDL","TSH","Free T3","Free T4","Vitamin D (25-OH)","Vitamin B12","Iron","Ferritin","PSA Total (Males)","CA-125 (Females)","Urine Routine","Urine Microscopy","ECG (Resting)","Chest X-Ray","Bone Density (DEXA)","FOBT (Stool Blood)","Opthalmologist Review","Audiometry","Blood Pressure & Pulse","SpO2","BMI & Body Weight","Physician Consultation","Dietitian Consultation","Physiotherapy Assessment","Dental Review","Spirometry (Lung Function)","Carotid Doppler","Ankle-Brachial Index"] },
             ].map((pkg,i)=>(
               <div key={pkg.title}
@@ -3814,33 +5005,33 @@ export default function App() {
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
-          {/* 4-step row — 2 per row, no gap */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
+          {/* 4-step row — 4 per row on desktop, 2 per row on mobile */}
+          <div style={{ display:"grid", gridTemplateColumns: isDesktop ? "repeat(4,1fr)" : "repeat(2,1fr)", gap: isDesktop ? 4 : 0, position:"relative" }}>
 
             {[
               {
                 n:"01", label:"Search & Book", accent:"#1158A6", bg:"#EFF6FF",
-                desc:"Browse tests and packages. Compare prices across 6 NABL-certified labs instantly.",
-                icon:( <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                desc:"Browse tests and packages. Compare prices across 6 verified partner labs instantly.",
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&q=80&fit=crop" alt="Search and Book" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"02", label:"Schedule Pickup", accent:"#0EA5E9", bg:"#F0F9FF",
                 desc:"Pick a convenient date & time. Our phlebotomist comes to your doorstep — completely free.",
-                icon:( <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200&q=80&fit=crop" alt="Schedule" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
-                desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
-                icon:( <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                desc:"A qualified and experienced phlebotomist arrives with sterile kits and collects your sample safely.",
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
                 n:"04", label:"Get Your Reports", accent:"#16A34A", bg:"#F0FDF4",
                 desc:"Digital reports sent to your WhatsApp & email within hours. Download anytime.",
-                icon:( <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
+                icon:( <LazyImg src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 4px 0", position:"relative", zIndex:1 }}>
-                <div style={{ marginBottom:12, transition:"transform .2s" }}
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding: isDesktop ? "8px 6px 0" : "8px 4px 0", position:"relative", zIndex:1 }}>
+                <div style={{ marginBottom: isDesktop ? 8 : 12, transition:"transform .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; }}>
                   {s.icon}
@@ -3870,12 +5061,12 @@ export default function App() {
           </div>
           <div className="why-grid" style={{ display:"grid", gridTemplateColumns:`repeat(${gridCols},1fr)`, gap:gridCols===2?10:20 }}>
             {[
-              {Icon:IAutoimmune,t:"NABL Accredited",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
+              {Icon:IAutoimmune,t:"Verified Partner",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FED7AA",ic:"#EA580C"},
-              {Icon:IBlood,     t:"Free Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
+              {Icon:IBlood,     t:"Home Collection",d:"Qualified and experienced phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
               {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#BFDBFE",ic:"#1158A6"},
               {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#E9D5FF",ic:"#9333EA"},
-              {Icon:IHeadset,  t:"24/7 Support",d:"Expert help available round the clock via chat or phone.",color:"#A7F3D0",ic:"#059669"},
+              {Icon:IBooking,  t:"Easy Booking",d:"Book lab tests in just a few simple steps — quick, easy, and hassle-free.",color:"#A7F3D0",ic:"#059669"},
             ].map(w=>(
               <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
@@ -3928,7 +5119,7 @@ export default function App() {
         <div style={{ maxWidth:580,margin:"0 auto" }}>
           <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.15)",borderRadius:50,padding:"6px 18px",marginBottom:22 }}>
             <span style={{ width:7,height:7,borderRadius:"50%",background:"#34D399",flexShrink:0,display:"inline-block" }}/>
-            <span style={{ fontSize:".72rem",fontWeight:700,color:"rgba(255,255,255,.9)",letterSpacing:".1em",textTransform:"uppercase" }}>NABL Certified · Available 24/7</span>
+            <span style={{ fontSize:".72rem",fontWeight:700,color:"rgba(255,255,255,.9)",letterSpacing:".1em",textTransform:"uppercase" }}>Verified Partner · Available 24/7</span>
           </div>
           <h2 style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.9rem,4vw,2.7rem)",fontWeight:900,color:"#fff",marginBottom:14,lineHeight:1.15,letterSpacing:"-.03em" }}>
             Your Health, Simplified.
@@ -3936,9 +5127,7 @@ export default function App() {
           <p style={{ color:"rgba(255,255,255,.72)",marginBottom:12,fontSize:".95rem",lineHeight:1.78,maxWidth:440,margin:"0 auto 12px" }}>
             Transparent pricing · Free doorstep collection · Digital reports in hours.
           </p>
-          <p style={{ color:"rgba(255,255,255,.9)",fontWeight:800,fontSize:"1.05rem",marginBottom:32 }}>
-            Trusted by <span style={{ color:"#FCD34D" }}>50,000+</span> patients across India
-          </p>
+
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
             <button onClick={()=>navTo("labs")} className="btn-anim"
               style={{ background:"#fff",color:"#1158A6",border:"none",borderRadius:50,padding:"14px 36px",fontWeight:800,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".95rem",transition:"all .2s",display:"inline-flex",alignItems:"center",gap:8,boxShadow:"0 4px 20px rgba(0,0,0,.15)" }}
@@ -3970,11 +5159,11 @@ export default function App() {
                 <sup style={{ fontSize:".5rem",color:"#4B5563",fontWeight:600,marginLeft:2 }}>™</sup>
               </div>
               <p style={{ fontSize:".84rem",lineHeight:1.75,color:"#64748B",marginBottom:20,maxWidth:240 }}>
-                India's most transparent diagnostic booking platform. Compare prices across NABL-certified labs and book in under 2 minutes.
+                India's most transparent diagnostic booking platform. Compare prices across verified partner labs and book in under 2 minutes.
               </p>
               {/* Badges */}
               <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-                {[["✓","NABL Accredited"],["✓","ISO 15189"]].map(([ic,t])=>(
+                {[["✓","Verified Partner"],["✓","ISO 15189"]].map(([ic,t])=>(
                   <span key={t} style={{ display:"inline-flex",alignItems:"center",gap:5,background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.09)",borderRadius:6,padding:"4px 10px",fontSize:".68rem",fontWeight:700,color:"#94A3B8" }}>
                     <span style={{ color:"#4ADE80" }}>{ic}</span>{t}
                   </span>
@@ -3985,7 +5174,7 @@ export default function App() {
             <div>
               <div style={{ fontSize:".72rem",fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",color:"#475569",marginBottom:18 }}>Services</div>
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
-                {["Book a Lab Test","Home Sample Collection","Upload Prescription","Compare Lab Prices","Track Reports"].map(l=>(
+                {["Book a Lab Test","Home Sample Collection","Compare Lab Prices"].map(l=>(
                   <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
                     onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
                     onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
@@ -3998,6 +5187,7 @@ export default function App() {
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px" }}>
                 {["About Us","Partner With Us","Careers","Blog","Press"].map(l=>(
                   <div key={l} style={{ fontSize:".83rem",color:"#64748B",cursor:"pointer",transition:"color .14s" }}
+                    onClick={()=>{ if(l==="About Us") setAboutOpen(true); if(l==="Partner With Us") setPartnerOpen(true); if(l==="Careers") setCareersOpen(true); if(l==="Blog") setBlogOpen(true); }}
                     onMouseEnter={e=>e.currentTarget.style.color="#E2E8F0"}
                     onMouseLeave={e=>e.currentTarget.style.color="#64748B"}>{l}</div>
                 ))}
@@ -4037,15 +5227,16 @@ export default function App() {
       </footer>
     </div>
     );
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ─── POLICY PAGE ───────────────────────────────────────────── */
   const PolicyPage = ({ title, content, navTo }) => (
     <div style={{ minHeight:"100vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"20px 0" }}>
         <div style={{ maxWidth:760,margin:"0 auto",padding:"0 20px" }}>
-          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:16,padding:4 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <h1 style={{ fontWeight:900,fontSize:"clamp(1.4rem,3vw,1.9rem)",color:"#0D1117",letterSpacing:"-.03em",marginBottom:6 }}>{title}</h1>
           <p style={{ fontSize:".84rem",color:"#9CA3AF" }}>Last updated: June 2026 · LabEase Diagnostics Pvt. Ltd.</p>
@@ -4068,46 +5259,28 @@ export default function App() {
 
   /* ─── SHARED LAB CARD — shim ─────────────────────────────────── */
   const LabCard = ({ l }) => (
-    <LabCardML l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} navTo={navTo}/>
+    <LabCardML l={l} T={T} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} navTo={navTo}/>
   );
 
-  /* ═══════════════════════════════════════════════════════════════
-     LABS LIST PAGE — shim
-  ═══════════════════════════════════════════════════════════════ */
-  const LabsPage = () => (
-    <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={setLab}
-      setTestQ={setTestQ} navTo={navTo} cart={cart}
-      selectedTest={selectedTest} setSelectedTest={setSelectedTest}
-      addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}/>
-  );
-
-  /* ═══════════════════════════════════════════════════════════════
-     LAB DETAIL PAGE — shim
-  ═══════════════════════════════════════════════════════════════ */
-  const LabDetail = () => (
-    <LabDetailML lab={lab} T={T} cart={cart} total={total}
-      testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
-      filtTests={filtTests} addCart={addCart} delCart={delCart}
-      has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}/>
-  );
 
   /* ═══════════════════════════════════════════════════════════════
      CART PAGE
   ═══════════════════════════════════════════════════════════════ */
   const CartPage = () => {
     const [prepOpen, setPrepOpen] = React.useState(false);
+    const [aboutPageOpen, setAboutPageOpen] = React.useState(false);
     return (
       <div style={{ minHeight:"80vh",background:"#F5F7FF",fontFamily:"'Manrope',sans-serif",padding:"32px 16px" }}>
         <div style={{ maxWidth:560,margin:"0 auto" }}>
           {/* Back */}
-          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:24,padding:4 }} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
           </button>
           <div style={{ background:"#fff",borderRadius:20,boxShadow:"0 4px 24px rgba(0,0,0,.08)",overflow:"hidden" }}>
             {/* Header */}
             <div style={{ background:"#1158A6",padding:"22px 24px",display:"flex",alignItems:"center",gap:12 }}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <div style={{ color:"#fff",fontWeight:800,fontSize:"1.15rem",fontFamily:"'DM Serif Display',serif" }}>Your Cart</div>
+              <div style={{ color:"#fff",fontWeight:900,fontSize:"1.15rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em" }}>Your Cart</div>
               <span style={{ marginLeft:"auto",background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 12px",fontWeight:700,fontSize:".82rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
             </div>
             {cart.length===0 ? (
@@ -4153,6 +5326,11 @@ export default function App() {
                   <button onClick={()=>setPrepOpen(true)} style={{ width:"100%",background:"#FFFBEB",color:"#92400E",border:"1.5px solid #FDE68A",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
                     📋 Preparation Guide
                   </button>
+                  {cart.some(item=>getTestInfo(item.tname)) && (
+                    <button onClick={()=>setAboutPageOpen(true)} style={{ width:"100%",background:"#EFF6FF",color:"#1158A6",border:"1.5px solid #BFDBFE",borderRadius:12,padding:"13px 0",fontWeight:700,fontSize:".92rem",fontFamily:"'Manrope',sans-serif",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
+                      🧬 About This Test
+                    </button>
+                  )}
                   <button onClick={()=>navTo("booking")} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:12,padding:"14px 0",fontSize:".95rem" }}>
                     Proceed to Booking →
                   </button>
@@ -4175,12 +5353,13 @@ export default function App() {
               <div style={{ background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,padding:"10px 14px",fontSize:".78rem",color:"#1E40AF",marginBottom:18 }}>
                 ℹ️ Please follow these instructions before your sample collection appointment.
               </div>
-              {cart.map(item=>{
+              {cart.length===1 && cart.slice(0,1).map(item=>{
                 const prep = getTestPrep(item.tname);
                 const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
                 const isSpecial = prep.prep !== "No special requirement.";
                 return (
                   <div key={item.tid} style={{ marginBottom:14,borderRadius:14,border:"1px solid #E5E7EB",overflow:"hidden" }}>
+
                     <div style={{ background:"#F5F7FF",padding:"11px 16px",borderBottom:"1px solid #E5E7EB" }}>
                       <div style={{ fontWeight:700,fontSize:".88rem" }}>{item.tname}</div>
                       <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
@@ -4200,6 +5379,45 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* About This Test overlay */}
+        {aboutPageOpen && (
+          <div style={{ position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(6px)" }}
+            onClick={()=>setAboutPageOpen(false)}>
+            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:580,maxHeight:"88vh",overflowY:"auto",padding:"24px 20px 36px",fontFamily:"'Manrope',sans-serif" }}>
+              <div style={{ width:36,height:4,background:"#E5E7EB",borderRadius:4,margin:"0 auto 20px" }}/>
+              <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
+                <div style={{ fontWeight:800,fontSize:"1.08rem" }}>🧬 About This Test</div>
+                <button onClick={()=>setAboutPageOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:"#9CA3AF",lineHeight:1,padding:"2px 4px",fontWeight:300 }}>×</button>
+              </div>
+              {cart.length===1 && cart.slice(0,1).map(item=>{
+                const info = getTestInfo(item.tname);
+                if (!info) return null;
+                return (
+                  <div key={item.tid} style={{ marginBottom:14,borderRadius:14,border:"1px solid #BFDBFE",overflow:"hidden" }}>
+                    <div style={{ background:"#EFF6FF",padding:"11px 16px",borderBottom:"1px solid #BFDBFE" }}>
+                      <div style={{ fontWeight:700,fontSize:".88rem",color:"#1158A6" }}>{item.tname}</div>
+                      <div style={{ color:"#6B7280",fontSize:".73rem" }}>{item.lname}</div>
+                    </div>
+                    <div style={{ padding:"14px 16px",display:"flex",flexDirection:"column",gap:12 }}>
+                      <div>
+                        <div style={{ fontWeight:700,fontSize:".75rem",color:"#374151",marginBottom:4,textTransform:"uppercase",letterSpacing:".05em" }}>What is this test?</div>
+                        <div style={{ fontSize:".84rem",color:"#4B5563",lineHeight:1.7 }}>{info.what}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontWeight:700,fontSize:".75rem",color:"#374151",marginBottom:4,textTransform:"uppercase",letterSpacing:".05em" }}>Why is this test done?</div>
+                        <div style={{ fontSize:".84rem",color:"#4B5563",lineHeight:1.7 }}>{info.why}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <button onClick={()=>{ setAboutPageOpen(false); navTo("booking"); }} className="btn-anim" style={{ ...T.btn(),width:"100%",justifyContent:"center",borderRadius:12,padding:"14px 0",fontSize:".95rem",marginTop:4 }}>
+                Proceed to Booking →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -4207,7 +5425,7 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      BOOKING PAGE
   ═══════════════════════════════════════════════════════════════ */
-  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>;
+  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>;
 
   /* ═══════════════════════════════════════════════════════════════
      CONFIRM PAGE
@@ -4232,7 +5450,7 @@ export default function App() {
 
         {/* summary */}
         <div style={{ background:"#F5F7FF",borderRadius:12,padding:"14px 18px",textAlign:"left",marginBottom:22,border:"1px solid #EEF2FF" }}>
-          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",done?.cart?.map(t=>t.tname).join(", ")],["Total Paid",`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
+          {[["Patient",done?.name],["Lab",lab?.name],["Date & Time",`${done?.date} at ${done?.slot}`],["Mode",done?.mode==="home"?"Home Collection":"Visit Lab"],["Tests",done?.cart?.map(t=>t.tname).join(", ")],["Amount",done?.payMethod==="paylater"?"Pending · Pay at Lab":`₹${done?.total?.toLocaleString()}`]].map(([l,v])=>(
             <div key={l} style={{ display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #EEF2FF",fontSize:".83rem" }}>
               <span style={{ color:"#9CA3AF",fontWeight:600 }}>{l}</span>
               <span style={{ fontWeight:700,color:"#0D1117" }}>{v}</span>
@@ -4244,7 +5462,7 @@ export default function App() {
         <button onClick={()=>{
           const tests = done?.cart?.map((t,i)=>`<tr><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px">${i+1}. ${t.tname}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;color:#6B7280;text-decoration:line-through">₹${t.mrp?.toLocaleString()}</td><td style="padding:7px 12px;border-bottom:1px solid #EEF2FF;font-size:13px;text-align:right;font-weight:700;color:#15803D">₹${t.price?.toLocaleString()}</td></tr>`).join('');
           const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${esc(done?.id)}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${esc(done?.id)}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${esc(done?.name)}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${esc(done?.email)||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${esc(done?.phone)||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${esc(lab?.name)}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${esc(done?.date)} at ${esc(done?.slot)}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · NABL Accredited Labs · Free Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
+          const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>LabEase Receipt – ${esc(done?.id)}</title><style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;background:#fff;color:#0D1117}@media print{body{padding:16px}}.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1158A6;padding-bottom:16px;margin-bottom:24px}.brand{font-size:28px;font-weight:900;color:#1158A6;letter-spacing:-0.5px}.brand span{font-size:11px;font-weight:500;color:#6B7280;display:block;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px}.ref-box{background:#EEF4FF;border:1.5px solid #DBEAFE;border-radius:10px;padding:12px 20px;text-align:center}.ref-label{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}.ref-id{font-size:22px;font-weight:800;color:#1158A6;letter-spacing:0.1em}.section-title{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px}.info-label{color:#9CA3AF;font-weight:600}.info-value{font-weight:700}.tests-table{width:100%;border-collapse:collapse;margin-bottom:24px}.tests-table th{background:#F9FAFB;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left}.total-row{background:#EEF4FF;font-weight:800;font-size:15px}.total-row td{padding:10px 12px;color:#1158A6}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #EEF2FF;text-align:center;font-size:11px;color:#9CA3AF}</style></head><body><div class="header"><div class="brand">LabEase<span>Official Booking Receipt</span></div><div class="ref-box"><div class="ref-label">Booking Reference</div><div class="ref-id">${esc(done?.id)}</div></div></div><div class="section-title">Patient & Booking Details</div><div class="info-row"><span class="info-label">Patient Name</span><span class="info-value">${esc(done?.name)}</span></div><div class="info-row"><span class="info-label">Email</span><span class="info-value">${esc(done?.email)||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${esc(done?.phone)||'—'}</span></div><div class="info-row"><span class="info-label">Lab</span><span class="info-value">${esc(lab?.name)}</span></div><div class="info-row"><span class="info-label">Date & Time</span><span class="info-value">${esc(done?.date)} at ${esc(done?.slot)}</span></div><div class="info-row" style="margin-bottom:24px"><span class="info-label">Mode</span><span class="info-value">${done?.mode==="home"?"Home Collection":"Visit Lab"}</span></div><div class="section-title" style="margin-top:20px">Tests Booked</div><table class="tests-table"><thead><tr><th>Test Name</th><th style="text-align:right">MRP</th><th style="text-align:right">You Pay</th></tr></thead><tbody>${tests}<tr class="total-row"><td>Total Paid</td><td></td><td style="text-align:right">₹${done?.total?.toLocaleString()}</td></tr></tbody></table><div class="footer">Thank you for choosing LabEase · Verified Partner Labs · Home Sample Collection<br/>For support: support@labease.in</div></body></html>`;
           const w = window.open('','_blank','width=800,height=900');
           w.document.write(html);
           w.document.close();
@@ -4310,8 +5528,8 @@ export default function App() {
         {/* ── page header ── */}
         <div style={{ background:"#fff",borderBottom:"1px solid var(--line)",padding:"20px 0" }}>
           <div style={{ ...T.wrap }}>
-            <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14,padding:4 }} aria-label="Back">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <button onClick={()=>navTo("home")} style={{ background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:4,flexShrink:0 }} aria-label="Back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
             </button>
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:10 }}>
               <div>
@@ -4358,7 +5576,7 @@ export default function App() {
               <div style={{ fontWeight:800,fontSize:".85rem",color:"var(--ink)",marginBottom:12 }}>Accreditation</div>
               <label style={{ display:"flex",alignItems:"center",gap:9,cursor:"pointer" }}>
                 <input type="checkbox" checked={filterNabl} onChange={e=>setFilterNabl(e.target.checked)} style={{ accentColor:"var(--teal)",width:15,height:15 }}/>
-                <span style={{ fontSize:".84rem",fontWeight:600,color:filterNabl?"var(--teal)":"var(--muted)" }}>NABL Accredited</span>
+                <span style={{ fontSize:".84rem",fontWeight:600,color:filterNabl?"var(--teal)":"var(--muted)" }}>Verified Partner</span>
               </label>
             </div>
 
@@ -4404,7 +5622,7 @@ export default function App() {
               return (
                 <div key={l.idx} className="hover-lift"
                   style={{ background:"#fff",borderRadius:16,border:"1px solid var(--line)",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,.05)",cursor:"pointer" }}
-                  onClick={()=>{ if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");} }}>
+                  onClick={()=>{ if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");} }}>
 
                   <div style={{ display:"flex",gap:0 }}>
                     {/* left accent bar */}
@@ -4426,7 +5644,7 @@ export default function App() {
                           {/* name + badges */}
                           <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5 }}>
                             <span style={{ fontWeight:800,fontSize:"1rem",color:"var(--ink)" }}>{l.name}</span>
-                            {l.full?.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ NABL</span>}
+                            {l.full?.nabl && <span style={{ background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 8px",fontSize:".64rem",fontWeight:700 }}>✓ Verified</span>}
                             <span style={{ fontSize:".64rem",fontWeight:700,padding:"2px 8px",borderRadius:20,background:l.open?"#DCFCE7":"#FEE2E2",color:l.open?"#15803D":"#DC2626" }}>
                               {l.open?"● Open Now":"● Closed"}
                             </span>
@@ -4466,17 +5684,11 @@ export default function App() {
                               <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"1.3rem",color:"var(--ink)",lineHeight:1.1,letterSpacing:"-.03em" }}>₹{minPrice}</div>
                             </div>
                           )}
-                          <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:"#F1F5F9",color:"#374151",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
-                            onMouseEnter={e=>e.currentTarget.style.filter="brightness(.95)"}
-                            onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            Book Now
-                          </button>
-                          <button onClick={e=>{e.stopPropagation();if(l.full){setLab(l.full);setCatF("All");setTestQ("");navTo("lab");}}}
-                            style={{ background:col,color:"#fff",border:"none",borderRadius:9,padding:"8px 22px",fontWeight:700,cursor:"pointer",fontSize:".82rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
+                          <button onClick={e=>{e.stopPropagation();if(l.full){setLabId(l.full?.id);setCatF("All");setTestQ("");navTo("lab");}}}
+                            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:9,padding:"10px 22px",fontWeight:700,cursor:"pointer",fontSize:".84rem",fontFamily:"'Manrope',sans-serif",width:"100%",transition:"filter .15s" }}
                             onMouseEnter={e=>e.currentTarget.style.filter="brightness(1.1)"}
                             onMouseLeave={e=>e.currentTarget.style.filter="brightness(1)"}>
-                            View Tests & Prices
+                            View Tests &amp; Prices
                           </button>
                         </div>
                       </div>
@@ -4512,7 +5724,7 @@ export default function App() {
      NAV + SHELL
   ═══════════════════════════════════════════════════════════════ */
   return (
-    <div style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
+    <div className={_isFirstLoad ? "" : "app-ready"} style={{ fontFamily:"'Manrope',sans-serif",minHeight:"100vh",background:"#F5F7FF" }}>
       <G/>
 
       {(sideMenu||profileDrop)&&<div onClick={()=>{setSideMenu(false);setProfileDrop(false);}} style={{ position:"fixed",inset:0,zIndex:198,background:"transparent" }}/>}
@@ -4526,8 +5738,8 @@ export default function App() {
           </button>
           {/* Logo */}
           <div onClick={()=>{ navTo("home"); setSideMenu(false); setProfileDrop(false); }} style={{ cursor:"pointer",display:"flex",alignItems:"baseline",gap:1 }}>
-            <span style={{ ...T.serif,fontSize:"1.6rem",color:"#60A5FA" }}>Lab</span>
-            <span style={{ ...T.serif,fontSize:"1.6rem",color:"#1E3A8A" }}>Ease</span>
+            <span style={{ ...T.serif,fontSize:"2rem",color:"#60A5FA" }}>Lab</span>
+            <span style={{ ...T.serif,fontSize:"2rem",color:"#1E3A8A" }}>Ease</span>
             <sup style={{ fontSize:".58rem",color:"#9CA3AF",fontWeight:500,marginLeft:1 }}>™</sup>
           </div>
         </div>
@@ -4587,7 +5799,7 @@ export default function App() {
       </nav>
       {/* ── Sticky trust bar ── */}
       <div style={{ position:"fixed",top:64,left:0,right:0,zIndex:199,background:"linear-gradient(90deg,#0C1F4A 0%,#163268 50%,#0C1F4A 100%)",height:36,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px",gap:0 }}>
-        {[["NABL Accredited Labs"],["Free Home Collection"]].map(([txt],i,arr)=>(
+        {[["Verified Partner Labs"],["Home Collection"]].map(([txt],i,arr)=>(
           <React.Fragment key={txt}>
             <span style={{ color:"#fff",fontSize:".68rem",fontWeight:700,letterSpacing:".08em",opacity:1,whiteSpace:"nowrap" }}>{txt}</span>
             {i<arr.length-1&&<div style={{ width:1,height:14,background:"rgba(255,255,255,.3)",margin:"0 12px",flexShrink:0 }}/>}
@@ -4596,13 +5808,24 @@ export default function App() {
       </div>
       <div style={{height:102}}/>{/* spacer for fixed navbar + trust bar */}
 
+      <div key={page} className="page-enter">
       {page==="home"    && <Home/>}
-      {page==="labs"    && <LabsPage/>}
+      {page==="labs"    && <LabsPageML T={T} catF={catF} setCatF={setCatF} setLab={(l)=>setLabId(l?.id)}
+          setTestQ={setTestQ} navTo={navTo} cart={cart}
+          selectedTest={selectedTest} setSelectedTest={setSelectedTest}
+          addCart={addCart} setCartOpen={setCartOpen} allLabs={allLabs}
+          isDesktop={isDesktop}
+          cartSlot={<DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>}/>}
       {page==="alltests" && <AllTestsPage setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>}
       {page==="nearme"  && <NearMePage/>}
-      {page==="lab"     && <LabDetail/>}
+      {page==="lab"     && <LabDetailML lab={lab} T={T} cart={cart} total={total}
+          testQ={testQ} setTestQ={setTestQ} catF={catF} setCatF={setCatF}
+          filtTests={filtTests} addCart={addCart} delCart={delCart}
+          has={has} pct={pct} navTo={navTo} setCartOpen={setCartOpen}
+          isDesktop={isDesktop}
+          cartSlot={<DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>}/>}
       {page==="cart"    && <CartPage/>}
-      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm}/>}
+      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>}
       {page==="confirm" && <Confirm/>}
       {page==="privacy" && <PolicyPage title="Privacy Policy" navTo={navTo} content={[
         ["Information We Collect","We collect your name, phone number, email address, and appointment details when you book a lab test through LabEase. We may also collect location data to show you nearby labs."],
@@ -4614,7 +5837,7 @@ export default function App() {
       ]}/>}
       {page==="terms" && <PolicyPage title="Terms of Service" navTo={navTo} content={[
         ["Acceptance of Terms","By using LabEase, you agree to these Terms of Service. If you do not agree, please do not use our platform."],
-        ["Services","LabEase is a diagnostic test booking platform. We facilitate bookings between patients and NABL-certified labs. We are not a diagnostic laboratory ourselves."],
+        ["Services","LabEase is a diagnostic test booking platform. We facilitate bookings between patients and verified partner labs. We are not a diagnostic laboratory ourselves."],
         ["Bookings & Cancellations","Bookings can be cancelled up to 2 hours before the scheduled collection time. Cancellations after this window may not be eligible for a full refund."],
         ["User Responsibilities","You agree to provide accurate personal and health information. LabEase is not liable for incorrect information provided during booking."],
         ["Limitation of Liability","LabEase shall not be liable for any medical decisions made based on lab results. Always consult a qualified healthcare professional."],
@@ -4628,6 +5851,221 @@ export default function App() {
         ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
         ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
       ]}/>}
+      {page==="packages" && <PackagesPage navTo={navTo} setSelectedTest={setSelectedTest}/>}
+      {page==="seo-blood-test-at-home" && <BloodTestAtHome navTo={navTo}/>}
+      {page==="seo-cbc-test" && <CbcTest navTo={navTo}/>}
+      {page==="seo-thyroid-profile-test" && <ThyroidTest navTo={navTo}/>}
+      {page==="seo-full-body-checkup" && <FullBodyCheckup navTo={navTo}/>}
+      {page==="seo-vitamin-d-test" && <VitaminDTest navTo={navTo}/>}
+      {page==="seo-hba1c-test" && <HbA1cTest navTo={navTo}/>}
+      {page==="seo-dengue-test" && <DengueTest navTo={navTo}/>}
+      {page==="seo-blood-test-at-home-in-hyderabad" && <BloodTestHyderabad navTo={navTo}/>}
+      </div>
+
+      {/* ABOUT US MODAL */}
+      {aboutOpen && (
+        <div onClick={()=>setAboutOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:540,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            {/* Header */}
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"28px 28px 24px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setAboutOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ display:"flex",alignItems:"baseline",gap:3,marginBottom:6 }}>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"2rem",color:"#93C5FD" }}>Lab</span>
+                <span style={{ fontFamily:"'DM Serif Display',serif",fontSize:"1.7rem",color:"#fff" }}>Ease</span>
+                <sup style={{ fontSize:".5rem",color:"rgba(255,255,255,.5)",marginLeft:2 }}>™</sup>
+              </div>
+              <p style={{ color:"rgba(255,255,255,.8)",fontSize:".88rem",margin:0,lineHeight:1.6 }}>India's most transparent diagnostic booking platform</p>
+            </div>
+
+            <div style={{ padding:"24px 28px 32px" }}>
+
+              {/* Mission */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>🎯</span> Our Mission
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  At LabEase, we believe every person deserves honest, affordable access to diagnostic healthcare. We built this platform to eliminate hidden prices, confusing lab options, and the hassle of booking — so you can focus on what matters most: your health.
+                </p>
+              </div>
+
+              {/* What we do */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>🔬</span> What We Do
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  LabEase is a diagnostic test booking platform that connects patients with verified partner labs across India. Search for any test or health package, compare real prices and turnaround times across labs, and book a slot in under 2 minutes — with doorstep sample collection available.
+                </p>
+              </div>
+
+              {/* Why we exist */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>💡</span> Why We Exist
+                </div>
+                <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,margin:0 }}>
+                  Lab test prices in India vary wildly — the same CBC test can cost ₹150 at one lab and ₹900 at another. Most people have no way to compare. LabEase was built to fix exactly that: full price transparency, real patient ratings, and a booking experience that puts you in control.
+                </p>
+              </div>
+
+
+              {/* Values */}
+              <div style={{ marginBottom:24 }}>
+                <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:12,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ fontSize:"1.2rem" }}>❤️</span> Our Values
+                </div>
+                <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
+                  {[
+                    ["🔍","Transparency","Real prices. No hidden fees. Ever."],
+                    ["✅","Accuracy","Only verified partner labs with trusted, accurate results."],
+                    ["⚡","Convenience","Book in under 2 minutes, sample collected at home."],
+                    ["🤝","Trust","Your health data is private and always secure."],
+                  ].map(([icon,title,desc])=>(
+                    <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start",background:"#F9FAFB",borderRadius:12,padding:"12px 14px" }}>
+                      <span style={{ fontSize:"1.1rem",flexShrink:0 }}>{icon}</span>
+                      <div>
+                        <div style={{ fontWeight:700,fontSize:".85rem",color:"#0D1117",marginBottom:2 }}>{title}</div>
+                        <div style={{ fontSize:".8rem",color:"#6B7280" }}>{desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact */}
+              <div style={{ background:"#F0FDF4",border:"1px solid #BBF7D0",borderRadius:14,padding:"16px 18px",textAlign:"center" }}>
+                <div style={{ fontWeight:700,fontSize:".85rem",color:"#166534",marginBottom:4 }}>Get in Touch</div>
+                <div style={{ fontSize:".8rem",color:"#374151" }}>📧 support@labease.in &nbsp;·&nbsp; 📞 1800-103-0001</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PARTNER WITH US MODAL */}
+      {partnerOpen && (
+        <div onClick={()=>setPartnerOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setPartnerOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>🤝 Partner With Us</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Grow your lab with LabEase</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,marginBottom:20 }}>
+                We're building a network of trusted diagnostic labs across India. If you run a diagnostic center or clinic and want to reach more patients, we'd love to connect.
+              </p>
+              <div style={{ display:"flex",flexDirection:"column",gap:10,marginBottom:24 }}>
+                {[["🏥","Who can apply","Diagnostic centers, pathology labs, and clinics of any size."],["📋","What we need","Your lab details, location, and the tests you offer."],["📞","What happens next","Our team will reach out within 2–3 business days to discuss next steps."]].map(([icon,title,desc])=>(
+                  <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start",background:"#F9FAFB",borderRadius:12,padding:"12px 14px" }}>
+                    <span style={{ fontSize:"1.1rem",flexShrink:0 }}>{icon}</span>
+                    <div>
+                      <div style={{ fontWeight:700,fontSize:".84rem",color:"#0D1117",marginBottom:2 }}>{title}</div>
+                      <div style={{ fontSize:".8rem",color:"#6B7280" }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:14,padding:"18px 20px" }}>
+                <div style={{ fontWeight:700,fontSize:".88rem",color:"#1158A6",marginBottom:10 }}>Send us your details</div>
+                {[["Lab / Clinic Name","text","e.g. Sunrise Diagnostics"],["City","text","e.g. Hyderabad"],["Phone Number","tel","e.g. 9876543210"],["Email Address","email","e.g. lab@example.com"]].map(([label,type,ph])=>(
+                  <div key={label} style={{ marginBottom:12 }}>
+                    <div style={{ fontSize:".75rem",fontWeight:700,color:"#374151",marginBottom:4 }}>{label}</div>
+                    <input type={type} placeholder={ph} style={{ width:"100%",border:"1.5px solid #DBEAFE",borderRadius:8,padding:"10px 12px",fontSize:".85rem",fontFamily:"'Manrope',sans-serif",outline:"none",boxSizing:"border-box",color:"#0D1117" }}/>
+                  </div>
+                ))}
+                <button style={{ width:"100%",background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,fontSize:".9rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",marginTop:4 }}
+                  onClick={()=>{ alert("Thank you! We'll be in touch within 2–3 business days."); setPartnerOpen(false); }}>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CAREERS MODAL */}
+      {careersOpen && (
+        <div onClick={()=>setCareersOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setCareersOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>💼 Careers at LabEase</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Join us in making healthcare simpler</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              <p style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75,marginBottom:20 }}>
+                We're a small team working to make diagnostic healthcare more transparent and accessible for everyone in India. We value people who care about the impact of their work.
+              </p>
+              <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:14,padding:"18px 20px",marginBottom:20,textAlign:"center" }}>
+                <div style={{ fontWeight:800,fontSize:".95rem",color:"#92400E",marginBottom:6 }}>No open positions right now</div>
+                <div style={{ fontSize:".83rem",color:"#78350F",lineHeight:1.65 }}>But we're always happy to hear from talented people. If you're passionate about healthcare, technology, or operations — send us your resume and we'll keep you in mind.</div>
+              </div>
+              <div style={{ background:"#EFF6FF",border:"1px solid #DBEAFE",borderRadius:14,padding:"16px 20px",textAlign:"center" }}>
+                <div style={{ fontWeight:700,fontSize:".85rem",color:"#1158A6",marginBottom:4 }}>Send your resume to</div>
+                <div style={{ fontSize:".88rem",color:"#374151",fontWeight:600 }}>careers@labease.in</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BLOG MODAL */}
+      {blogOpen && !blogPost && (
+        <div onClick={()=>setBlogOpen(false)} style={{ position:"fixed",inset:0,zIndex:6000,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:520,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ background:"linear-gradient(135deg,#1158A6,#2563EB)",padding:"26px 28px 22px",borderRadius:"24px 24px 0 0",position:"relative" }}>
+              <button onClick={()=>setBlogOpen(false)} style={{ position:"absolute",top:16,right:16,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.18)",border:"none",cursor:"pointer",color:"#fff",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700 }}>✕</button>
+              <div style={{ fontWeight:900,fontSize:"1.3rem",color:"#fff",marginBottom:4 }}>📖 LabEase Blog</div>
+              <div style={{ color:"rgba(255,255,255,.75)",fontSize:".85rem" }}>Simple health information, no jargon</div>
+            </div>
+            <div style={{ padding:"24px 28px 32px" }}>
+              {[
+                { tag:"Blood Test", title:"What is a CBC Test?", desc:"A Complete Blood Count test checks your red cells, white cells, and platelets — and why your doctor orders it.", what:"A CBC (Complete Blood Count) is a blood test that measures the different cells in your blood — red blood cells, white blood cells, and platelets. It gives your doctor a quick overview of your overall health.", why:"Doctors order a CBC to check for infections, anaemia, clotting problems, or to monitor an existing condition. It is one of the most common tests ordered during a routine health check." },
+                { tag:"Thyroid", title:"What is a Thyroid Test?", desc:"Your thyroid controls your metabolism, energy, and mood. Here's what a thyroid test actually checks.", what:"A thyroid test measures the levels of thyroid hormones (TSH, T3, T4) in your blood. The thyroid gland in your neck produces these hormones, which control how your body uses energy.", why:"Doctors order a thyroid test if you're feeling unusually tired, gaining or losing weight without reason, feeling cold all the time, or experiencing mood changes. It helps detect an underactive or overactive thyroid." },
+                { tag:"Diabetes", title:"What is an HbA1c Test?", desc:"Unlike a regular sugar test, HbA1c shows your average blood sugar over 3 months — here's why that matters.", what:"HbA1c (Glycated Haemoglobin) is a blood test that shows your average blood sugar level over the past 2–3 months. It measures how much sugar has attached itself to haemoglobin in your red blood cells.", why:"Doctors use this test to diagnose diabetes and prediabetes, and to monitor how well diabetes is being managed over time. It is more reliable than a single fasting sugar test because it reflects long-term blood sugar control." },
+                { tag:"Vitamins", title:"What is a Vitamin D Test?", desc:"Vitamin D deficiency is extremely common in India. This test tells you where your levels stand.", what:"A Vitamin D test (25-OH Vitamin D) measures the amount of Vitamin D in your blood. Vitamin D is essential for strong bones, immune function, and muscle health.", why:"Doctors order this test if you have bone pain, fatigue, frequent infections, or muscle weakness. Vitamin D deficiency is very common in India due to limited sun exposure and diet, and is easily corrected with supplements once diagnosed." },
+                { tag:"Liver", title:"What is a Liver Function Test?", desc:"Your liver does hundreds of jobs silently. A Liver Function Test checks how well it's doing.", what:"A Liver Function Test (LFT) is a group of blood tests that check enzymes, proteins, and bilirubin produced or processed by the liver. It gives a picture of how well your liver is working.", why:"Doctors order an LFT to check for liver damage, infections like hepatitis, the effects of alcohol, or to monitor medications that can affect the liver. It is also done as part of routine full-body checkups." },
+              ].map((post,i)=>(
+                <div key={i} onClick={()=>setBlogPost(post)} style={{ border:"1px solid #E5E7EB",borderRadius:14,padding:"16px 18px",marginBottom:12,cursor:"pointer",transition:"box-shadow .15s" }}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(17,88,166,.12)"}
+                  onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                  <div style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 10px",fontSize:".68rem",fontWeight:700,marginBottom:8 }}>{post.tag}</div>
+                  <div style={{ fontWeight:800,fontSize:".95rem",color:"#0D1117",marginBottom:4 }}>{post.title}</div>
+                  <div style={{ fontSize:".82rem",color:"#6B7280",lineHeight:1.6 }}>{post.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BLOG POST MODAL */}
+      {blogPost && (
+        <div onClick={()=>setBlogPost(null)} style={{ position:"fixed",inset:0,zIndex:6001,background:"rgba(13,17,25,.65)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(10px)",animation:"fadeIn .2s" }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:"#fff",borderRadius:24,width:"100%",maxWidth:500,maxHeight:"90vh",overflowY:"auto",fontFamily:"'Manrope',sans-serif",boxShadow:"0 32px 80px rgba(0,0,0,.28)",animation:"scaleIn .22s cubic-bezier(.34,1.56,.64,1)" }}>
+            <div style={{ padding:"24px 24px 12px",borderBottom:"1px solid #F1F5F9",position:"sticky",top:0,background:"#fff",borderRadius:"24px 24px 0 0",display:"flex",alignItems:"center",gap:12 }}>
+              <button onClick={()=>setBlogPost(null)} style={{ background:"#F3F4F6",border:"none",borderRadius:"50%",width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+              </button>
+              <div style={{ display:"inline-block",background:"#EFF6FF",color:"#1158A6",borderRadius:20,padding:"2px 10px",fontSize:".68rem",fontWeight:700 }}>{blogPost.tag}</div>
+            </div>
+            <div style={{ padding:"20px 24px 32px" }}>
+              <div style={{ fontWeight:900,fontSize:"1.15rem",color:"#0D1117",marginBottom:20,lineHeight:1.4 }}>{blogPost.title}</div>
+              <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:14,marginBottom:20 }}>
+                <div style={{ fontWeight:800,fontSize:".88rem",color:"#1158A6",marginBottom:6 }}>What is it?</div>
+                <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.8 }}>{blogPost.what}</div>
+              </div>
+              <div style={{ borderLeft:"3.5px solid #16A34A",paddingLeft:14 }}>
+                <div style={{ fontWeight:800,fontSize:".88rem",color:"#16A34A",marginBottom:6 }}>Why is it taken?</div>
+                <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.8 }}>{blogPost.why}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CART DRAWER */}
       {cartOpen && (
@@ -4637,7 +6075,7 @@ export default function App() {
             {/* Header */}
             <div style={{ background:"#1158A6",padding:"18px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0 }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 3H3"/><path d="M5.5 3l1.5 9h10l1.5-6H7.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/><path d="M7 12l-1.5-9"/></svg>
-              <span style={{ color:"#fff",fontWeight:400,fontSize:"1.3rem",fontFamily:"'DM Serif Display',serif",flex:1,letterSpacing:".01em" }}>Your Cart</span>
+              <span style={{ color:"#fff",fontWeight:900,fontSize:"1.3rem",fontFamily:"'Manrope',sans-serif",letterSpacing:"-.02em",flex:1 }}>Your Cart</span>
               <span style={{ background:"rgba(255,255,255,.2)",color:"#fff",borderRadius:99,padding:"2px 10px",fontWeight:700,fontSize:".78rem" }}>{cart.length} {cart.length===1?"test":"tests"}</span>
               <button onClick={()=>{ setCartOpen(false); setPrepGuideOpen(false); }} style={{ background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,.8)",fontSize:"1.7rem",lineHeight:1,padding:"2px 4px",fontWeight:300,marginLeft:8 }}>×</button>
             </div>
@@ -4670,6 +6108,24 @@ export default function App() {
                     </div>
                   ))}
 
+                  {/* About This Test — plain text with left border, like the image */}
+                  {cart.length===1 && cart.slice(0,1).map(item=>{
+                    const info = getTestInfo(item.tname);
+                    if (!info) return null;
+                    return (
+                      <div key={item.tid} style={{ marginTop:18 }}>
+                        <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:12,marginBottom:14 }}>
+                          <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6 }}>What Is {item.tname}?</div>
+                          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75 }}>{info.what}</div>
+                        </div>
+                        <div style={{ borderLeft:"3.5px solid #1158A6",paddingLeft:12 }}>
+                          <div style={{ fontWeight:800,fontSize:"1rem",color:"#0D1117",marginBottom:6 }}>Why Is This Test Done?</div>
+                          <div style={{ fontSize:".88rem",color:"#374151",lineHeight:1.75 }}>{info.why}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
                   {/* Preparation Guide — separate section */}
                   <div style={{ marginTop:16,borderRadius:12,border:"1.5px solid #E5E7EB",overflow:"hidden" }}>
                     <button onClick={()=>setPrepGuideOpen(o=>!o)}
@@ -4678,7 +6134,7 @@ export default function App() {
                     </button>
                     {prepGuideOpen && (
                       <div style={{ padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
-                        {cart.map(item=>{
+                        {cart.length===1 && cart.slice(0,1).map(item=>{
                           const prep = getTestPrep(item.tname);
                           const sampleIcon = prep.sample.startsWith("Blood") ? "🩸" : prep.sample.startsWith("Urine") ? "🧪" : prep.sample.startsWith("Stool") ? "🧫" : prep.sample.startsWith("Imaging") ? "📷" : prep.sample.startsWith("Non-invasive") ? "⚡" : "🔬";
                           const isSpecial = prep.prep !== "No special requirement.";

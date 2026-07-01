@@ -89,8 +89,108 @@ export async function createBooking(booking) {
     .insert(booking)
     .select()
     .single();
-  if (error) { console.error('createBooking:', error); return null; }
+  if (error) {
+    console.error('createBooking error:', JSON.stringify(error));
+    console.error('payload sent:', JSON.stringify(booking));
+    return null;
+  }
   return data;
+}
+
+export async function getExtraLabs() {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from('extra_labs').select('*').order('id');
+  if (error) { console.error('getExtraLabs:', error); return []; }
+  return (data || []).map(row => ({
+    id: 'sb_' + row.id,
+    _supabase_id: row.id,
+    name: row.name,
+    city: row.city || '',
+    address: row.address || '',
+    phone: row.phone || '',
+    rating: parseFloat(row.rating) || 4.5,
+    reviews: row.reviews || 0,
+    timing: row.timing || '6:00 AM – 10:00 PM',
+    sunday_timing: row.sunday_timing || '',
+    reportTime: row.report_time || 'Same Day',
+    homeCollection: row.home_collection || false,
+    nabl: row.nabl || false,
+    color: row.color || '#1158A6',
+    logoBase64: row.logo_base64 || '',
+    tests: Array.isArray(row.tests) ? row.tests : [],
+    active: row.active !== false,
+    distance: row.distance || '—',
+    founded: row.founded || '',
+  }));
+}
+
+export async function saveExtraLab(lab) {
+  if (!supabase) return null;
+  const row = {
+    name: lab.name,
+    city: lab.city || '',
+    address: lab.address || '',
+    phone: lab.phone || '',
+    rating: parseFloat(lab.rating) || 4.5,
+    reviews: lab.reviews || 0,
+    timing: lab.timing || '',
+    sunday_timing: lab.sunday_timing || '',
+    report_time: lab.reportTime || 'Same Day',
+    home_collection: lab.homeCollection || false,
+    nabl: lab.nabl || false,
+    color: lab.color || '#1158A6',
+    logo_base64: lab.logoBase64 || '',
+    tests: lab.tests || [],
+    active: lab.active !== false,
+    distance: lab.distance || '—',
+    founded: lab.founded || '',
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from('extra_labs').insert(row).select().single();
+  if (error) { console.error('saveExtraLab:', error); return null; }
+  return data;
+}
+
+export async function updateExtraLab(supabaseId, updates) {
+  if (!supabase) return;
+  const { error } = await supabase.from('extra_labs').update({
+    name: updates.name,
+    city: updates.city || '',
+    address: updates.address || '',
+    phone: updates.phone || '',
+    rating: parseFloat(updates.rating) || 4.5,
+    timing: updates.timing || '',
+    sunday_timing: updates.sunday_timing || '',
+    report_time: updates.reportTime || 'Same Day',
+    home_collection: updates.homeCollection || false,
+    nabl: updates.nabl || false,
+    color: updates.color || '#1158A6',
+    logo_base64: updates.logoBase64 || '',
+    tests: updates.tests || [],
+    active: updates.active !== false,
+    updated_at: new Date().toISOString(),
+  }).eq('id', supabaseId);
+  if (error) console.error('updateExtraLab:', error);
+}
+
+export async function getLabSettings() {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from('lab_settings').select('*');
+  if (error) { console.error('getLabSettings:', error); return {}; }
+  const map = {};
+  (data || []).forEach(row => { map[row.lab_id] = row; });
+  return map;
+}
+
+export async function saveLabSetting(labId, timing, sundayTiming) {
+  if (!supabase) return;
+  const { error } = await supabase.from('lab_settings').upsert({
+    lab_id: String(labId),
+    timing: timing || '',
+    sunday_timing: sundayTiming || '',
+    updated_at: new Date().toISOString(),
+  });
+  if (error) console.error('saveLabSetting:', error);
 }
 
 export async function getUserBookings(userId) {
@@ -182,5 +282,74 @@ function normalizeLab(row) {
       mrp: t.mrp,
       time: t.time,
     })),
+  };
+}
+
+// ── Realtime ──────────────────────────────────────────────────
+// Subscribe to live changes on extra_labs and lab_settings.
+// onExtraLabs(labs) and onLabSettings(map) are called immediately
+// with fresh data, then again whenever any row changes anywhere.
+// Returns an unsubscribe function.
+export function subscribeLabData({ onExtraLabs, onLabSettings }) {
+  if (!supabase) return () => {};
+
+  // Initial fetch
+  getExtraLabs().then(labs => onExtraLabs(labs));
+  getLabSettings().then(s => { if (s) onLabSettings(s); });
+
+  const channel = supabase
+    .channel('lab-data-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'extra_labs' }, () => {
+      getExtraLabs().then(labs => onExtraLabs(labs));
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'lab_settings' }, () => {
+      getLabSettings().then(s => { if (s) onLabSettings(s); });
+    })
+    .subscribe();
+
+  return () => { supabase.removeChannel(channel); };
+}
+
+// ── Admin Settings (cross-device sync) ───────────────────────
+// Stores key/value pairs like le_price_overrides, le_lab_overrides, etc.
+// so admin changes made on any device/browser propagate to all clients.
+
+export async function getAdminSettings() {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from('admin_settings').select('key, value');
+  if (error) { console.error('getAdminSettings:', error); return {}; }
+  const map = {};
+  (data || []).forEach(row => { map[row.key] = row.value; });
+  return map;
+}
+
+export async function saveAdminSetting(key, value) {
+  if (!supabase) return;
+  const { error } = await supabase.from('admin_settings').upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  if (error) console.error('saveAdminSetting:', error);
+}
+
+export function subscribeAdminSettings(onChange) {
+  if (!supabase) return () => {};
+
+  // Initial fetch
+  getAdminSettings().then(settings => onChange(settings));
+
+  // Realtime subscription (works when Supabase Realtime is enabled for admin_settings)
+  const channel = supabase
+    .channel('admin-settings-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'admin_settings' }, () => {
+      getAdminSettings().then(settings => onChange(settings));
+    })
+    .subscribe();
+
+  // Polling fallback every 12 seconds — ensures changes show up even if Realtime isn't configured
+  const poll = setInterval(() => {
+    getAdminSettings().then(settings => onChange(settings));
+  }, 12000);
+
+  return () => {
+    supabase.removeChannel(channel);
+    clearInterval(poll);
   };
 }
