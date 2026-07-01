@@ -2258,6 +2258,16 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
 
   const filtered = enriched
     .filter(l => l.active !== false)
+    .filter(l => {
+      if (!selectedTest) return true;
+      const n = selectedTest.name.toLowerCase();
+      return (l.tests || []).some(t =>
+        t.name.toLowerCase() === n ||
+        t.name.toLowerCase().includes(n) ||
+        n.includes(t.name.toLowerCase()) ||
+        (selectedTest.cat && t.cat === selectedTest.cat)
+      );
+    })
     .filter(l => !filterOpen || l.open)
     .filter(l => !filterHome || l.homecoll)
     .filter(l => !filterNabl || l.nabl)
