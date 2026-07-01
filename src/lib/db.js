@@ -331,12 +331,25 @@ export async function saveAdminSetting(key, value) {
 
 export function subscribeAdminSettings(onChange) {
   if (!supabase) return () => {};
+
+  // Initial fetch
   getAdminSettings().then(settings => onChange(settings));
+
+  // Realtime subscription (works when Supabase Realtime is enabled for admin_settings)
   const channel = supabase
     .channel('admin-settings-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'admin_settings' }, () => {
       getAdminSettings().then(settings => onChange(settings));
     })
     .subscribe();
-  return () => { supabase.removeChannel(channel); };
+
+  // Polling fallback every 12 seconds — ensures changes show up even if Realtime isn't configured
+  const poll = setInterval(() => {
+    getAdminSettings().then(settings => onChange(settings));
+  }, 12000);
+
+  return () => {
+    supabase.removeChannel(channel);
+    clearInterval(poll);
+  };
 }
