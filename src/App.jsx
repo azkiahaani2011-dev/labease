@@ -2047,28 +2047,24 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           </div>
         )}
 
-        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
-        <div style={{ display:"flex",gap:10 }}>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              {l.timing||"6AM – 10PM"}
-            </div>
-            <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-              style={{ background:"#E8F0FE",color:"#1158A6",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",transition:"background .15s",width:"100%" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#DBEAFE"}
-              onMouseLeave={e=>e.currentTarget.style.background="#E8F0FE"}>View Tests</button>
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {l.timing||"6AM – 10PM"}
           </div>
-          <div style={{ flex:1 }}>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500,marginBottom:6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
-            </div>
-            <button onClick={e=>{ if(handleBookDirect(e)) return; e.stopPropagation(); setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}
-              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"100%" }}
-              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>{selectedTest ? "Book Now →" : "Book Now"}</button>
+          <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
           </div>
+        </div>
+        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12 }}>REPORTS IN {reportTime.toUpperCase()}</div>
+        <div style={{ display:"flex",justifyContent:"center" }}>
+          <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
+            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+            View Tests &amp; Prices
+          </button>
         </div>
       </div>
     </div>
