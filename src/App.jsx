@@ -3084,7 +3084,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
           <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
           {TRENDING_CHIPS.map(chip=>(
             <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
-              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:8,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:20,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
               onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
               onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
               {chip.label}
