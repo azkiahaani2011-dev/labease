@@ -4775,64 +4775,29 @@ export default function App() {
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
         <div style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
-          <div style={{ width:"100%",boxSizing:"border-box",textAlign:isMobileRef.current?"center":"left",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
+          <div style={{ width:"100%",boxSizing:"border-box",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
+            {/* eyebrow pill */}
+            <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
+              <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
+              <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
+            </div>
 
-            {isMobileRef.current ? (<>
-              {/* ── MOBILE: keep original layout ── */}
-              <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
-                <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
-                <span style={{ color:"#1158A6",fontSize:".73rem",fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Home sample collection now available 24/7</span>
-              </div>
-              <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Hyderabad</span>
-              </div>
-              <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
-                Book Lab Tests from<br/>
-                <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
-              </h1>
-              <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
-                Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
-              </p>
-            </>) : (<>
-              {/* ── DESKTOP: premium redesign ── */}
+            {/* location indicator */}
+            <div className="hero-content hero-content-delay-1" style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:5,marginBottom:12,color:"#1158A6",fontFamily:"'Manrope',sans-serif",fontWeight:600,fontSize:".85rem" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Hyderabad</span>
+            </div>
 
-              {/* Eyebrow label */}
-              <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:6,marginBottom:20 }}>
-                <span style={{ display:"inline-block",width:8,height:8,borderRadius:"50%",background:"#22C55E",boxShadow:"0 0 0 3px rgba(34,197,94,.2)" }}/>
-                <span style={{ fontSize:".72rem",fontWeight:700,color:"#374151",letterSpacing:".1em",textTransform:"uppercase" }}>Hyderabad · Free Home Collection · 24/7</span>
-              </div>
+            {/* headline */}
+            <h1 className="hero-content hero-content-delay-2" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(1.85rem,3.8vw,2.85rem)",color:"#0A1628",lineHeight:1.16,marginBottom:14,fontWeight:900,letterSpacing:"-.03em" }}>
+              Book Lab Tests from<br/>
+              <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>Trusted Labs Near You</span>
+            </h1>
 
-              {/* Headline */}
-              <h1 className="hero-content hero-content-delay-1" style={{ fontFamily:"'Manrope',sans-serif",fontSize:"clamp(2.2rem,3.6vw,3.2rem)",color:"#0A1628",lineHeight:1.1,marginBottom:10,fontWeight:900,letterSpacing:"-.04em" }}>
-                Book Lab Tests<br/>
-                <span style={{ background:"linear-gradient(90deg,#1158A6 0%,#2563EB 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>at Home, Instantly.</span>
-              </h1>
-
-              {/* Subtext */}
-              <p className="hero-content hero-content-delay-2" style={{ color:"#5A6478",fontSize:".95rem",lineHeight:1.75,marginBottom:22,maxWidth:420 }}>
-                Compare prices, ratings &amp; turnaround time across certified labs. Transparent pricing, no hidden fees.
-              </p>
-
-              {/* Stat chips row */}
-              <div className="hero-content hero-content-delay-3" style={{ display:"flex",alignItems:"center",gap:0,marginBottom:22,background:"rgba(255,255,255,.7)",borderRadius:14,border:"1px solid rgba(17,88,166,.12)",backdropFilter:"blur(8px)",padding:"10px 0",width:"fit-content" }}>
-                {[
-                  { icon:"🧪", num:"1,500+", label:"Tests" },
-                  { icon:"📦", num:"50+",    label:"Packages" },
-                  { icon:"🏥", num:"6",      label:"Certified Labs" },
-                ].map((s,i)=>(
-                  <React.Fragment key={i}>
-                    {i>0 && <div style={{ width:1,height:32,background:"rgba(17,88,166,.15)" }}/>}
-                    <div style={{ padding:"0 22px",textAlign:"center" }}>
-                      <div style={{ fontSize:"1.05rem",marginBottom:1 }}>{s.icon}</div>
-                      <div style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:".95rem",color:"#0D1117",lineHeight:1 }}>{s.num}</div>
-                      <div style={{ fontSize:".65rem",fontWeight:600,color:"#6B7280",letterSpacing:".04em",textTransform:"uppercase",marginTop:2 }}>{s.label}</div>
-                    </div>
-                  </React.Fragment>
-                ))}
-              </div>
-
-            </>)}
+            {/* sub */}
+            <p className="hero-content hero-content-delay-3" style={{ color:"#5A6478",fontSize:".96rem",lineHeight:1.78,marginBottom:18,maxWidth:460,margin:"0 auto 18px" }}>
+              Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
+            </p>
 
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T}/>
