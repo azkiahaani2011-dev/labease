@@ -4340,90 +4340,43 @@ export default function App() {
     return unsub;
   }, []);
 
-  // Realtime sync for admin overrides (price, names, status, timings)
+  // Realtime sync for admin overrides (price, names, status, timings) — Supabase only
   useEffect(() => {
     const unsub = subscribeAdminSettings(settings => {
       setSbAdminSettings(settings);
-      // Mirror to localStorage so same-device code still works
-      const keyMap = {
-        le_price_overrides: settings.le_price_overrides,
-        le_test_name_overrides: settings.le_test_name_overrides,
-        le_lab_name_overrides: settings.le_lab_name_overrides,
-        le_lab_overrides: settings.le_lab_overrides,
-        le_timing_overrides: settings.le_timing_overrides,
-        le_sunday_timing_overrides: settings.le_sunday_timing_overrides,
-        le_labs: settings.le_labs,
-        le_marquee_logos: settings.le_marquee_logos,
-        le_packages: settings.le_packages,
-      };
-      Object.entries(keyMap).forEach(([k, v]) => {
-        if (v !== undefined) try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
-      });
     });
     return unsub;
   }, []);
-
-  // Trigger re-render when admin panel updates localStorage (cross-tab)
-  const [, setOvTick] = useState(0);
-  useEffect(() => {
-    const keys = ['le_price_overrides','le_lab_overrides','le_test_name_overrides','le_lab_name_overrides','le_extra_labs','le_labs','le_timing_overrides','le_sunday_timing_overrides'];
-    const handler = (e) => { if (keys.includes(e.key)) setOvTick(n => n + 1); };
-    window.addEventListener('storage', handler);
-    // Poll only when data actually changes — avoids re-render every tick (which breaks inputs)
-    let snap = keys.map(k => localStorage.getItem(k)).join('|');
-    const poll = setInterval(() => {
-      const curr = keys.map(k => localStorage.getItem(k)).join('|');
-      if (curr !== snap) { snap = curr; setOvTick(n => n + 1); }
-    }, 2000);
-    return () => { window.removeEventListener('storage', handler); clearInterval(poll); };
-  }, []);
-  // Read ALL admin overrides — prefer Supabase (sbAdminSettings) over localStorage
-  // so changes from any device/browser propagate immediately to all users
+  // Read ALL admin overrides from Supabase only (sbAdminSettings) — pure Supabase, no localStorage
   const adminOv = (() => {
-    try {
-      const get = (key) => {
-        // sbAdminSettings is keyed by the same le_* names
-        if (sbAdminSettings[key] !== undefined) return sbAdminSettings[key];
-        return JSON.parse(localStorage.getItem(key) || '{}');
-      };
-      const getArr = (key) => {
-        if (sbAdminSettings[key] !== undefined) return sbAdminSettings[key];
-        return JSON.parse(localStorage.getItem(key) || '[]');
-      };
-      return {
-        prices:        get('le_price_overrides'),
-        testNames:     get('le_test_name_overrides'),
-        labNames:      get('le_lab_name_overrides'),
-        timings:       get('le_timing_overrides'),
-        sundayTimings: get('le_sunday_timing_overrides'),
-        labStatus:     get('le_lab_overrides'),
-        extraLabs: (() => {
-          const extra = getArr('le_extra_labs');
-          if (extra.length > 0) return extra;
-          const allAdminLabs = getArr('le_labs');
-          const knownIds = new Set([1,2,3,4,5,6]);
-          return allAdminLabs.filter(l => !knownIds.has(l.id));
-        })(),
-      };
-    } catch(e) { return {prices:{},testNames:{},labNames:{},labStatus:{},extraLabs:[],timings:{},sundayTimings:{}}; }
+    const get    = (key) => sbAdminSettings[key] ?? {};
+    const getArr = (key) => sbAdminSettings[key] ?? [];
+    return {
+      prices:        get('le_price_overrides'),
+      testNames:     get('le_test_name_overrides'),
+      labNames:      get('le_lab_name_overrides'),
+      timings:       get('le_timing_overrides'),
+      sundayTimings: get('le_sunday_timing_overrides'),
+      labStatus:     get('le_lab_overrides'),
+      extraLabs: (() => {
+        const allAdminLabs = getArr('le_labs');
+        const knownIds = new Set([1,2,3,4,5,6]);
+        return allAdminLabs.filter(l => !knownIds.has(l.id));
+      })(),
+    };
   })();
-  // Apply price/name overrides to LABS on every render
+  // Build logo/data maps from Supabase-synced le_labs
   const adminLabLogos = (() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const map = {};
-      saved.forEach(l => { if(l.logo) map[l.id] = l.logo; });
-      return map;
-    } catch(e) { return {}; }
+    const saved = sbAdminSettings['le_labs'] ?? [];
+    const map = {};
+    saved.forEach(l => { if(l.logo) map[l.id] = l.logo; });
+    return map;
   })();
-  // Build a map of all admin-saved lab data (keyed by id)
   const adminLabMap = (() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('le_labs') || '[]');
-      const map = {};
-      saved.forEach(l => { map[l.id] = l; });
-      return map;
-    } catch { return {}; }
+    const saved = sbAdminSettings['le_labs'] ?? [];
+    const map = {};
+    saved.forEach(l => { map[l.id] = l; });
+    return map;
   })();
   const [profileDrop, setProfileDrop] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -4473,11 +4426,10 @@ export default function App() {
   }, []);
 
   const sf = (k,v) => setForm(f => ({...f,[k]:v}));
-  // Active packages: prefer Supabase override, then localStorage, then hardcoded defaults
+  // Active packages: Supabase only, fall back to hardcoded defaults
   const activePackages = (() => {
     const sb = sbAdminSettings.le_packages;
     if (sb && Array.isArray(sb) && sb.length) return sb;
-    try { const ls = JSON.parse(localStorage.getItem('le_packages')); if (ls && ls.length) return ls; } catch {}
     return ALL_PACKAGES;
   })();
 

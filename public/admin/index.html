@@ -257,16 +257,12 @@ function genBookings() {
 }
 
 function genLabs() {
-  const saved = localStorage.getItem('le_labs');
-  if (saved) return JSON.parse(saved);
   const ratings = [4.7, 4.5, 4.6, 4.8, 4.3, 4.6];
   const testCounts = [80, 65, 72, 90, 55, 68];
   const phones = ['040-23456789','080-34567890','022-45678901','011-56789012','044-67890123','040-78901234'];
-  const data = LAB_NAMES.map(function(name, i) {
+  return LAB_NAMES.map(function(name, i) {
     return { id: i+1, name: name, city: CITIES[i], rating: ratings[i], tests: testCounts[i], phone: phones[i], active: i !== 4 };
   });
-  localStorage.setItem('le_labs', JSON.stringify(data));
-  return data;
 }
 
 // All tests from the main app, keyed by test ID (labPrefix+num)
@@ -347,16 +343,7 @@ var ALL_LAB_TESTS = [
 ];
 
 function genTests() {
-  // Apply any saved price overrides from admin
-  var overrides = {};
-  try { overrides = JSON.parse(localStorage.getItem('le_price_overrides') || '{}'); } catch(e){}
-  return ALL_LAB_TESTS.map(function(t) {
-    var ov = overrides[t.id] || {};
-    return Object.assign({}, t, {
-      price: ov.price !== undefined ? ov.price : t.price,
-      mrp:   ov.mrp   !== undefined ? ov.mrp   : t.mrp,
-    });
-  });
+  return ALL_LAB_TESTS.map(function(t) { return Object.assign({}, t); });
 }
 
 function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
@@ -916,30 +903,35 @@ function Tests(props) {
 
   var labNames = ['All','Apollo','SRL','Metropolis','Dr Lal','Thyrocare','Vijaya'];
 
+  // Apply overrides from Supabase settings for display
+  var priceOv = (props.sbSettings && props.sbSettings['le_price_overrides']) || {};
+  var nameOv  = (props.sbSettings && props.sbSettings['le_test_name_overrides']) || {};
+  var displayTests = props.tests.map(function(t) {
+    var pov = priceOv[t.id] || {};
+    return Object.assign({}, t, {
+      price: pov.price !== undefined ? pov.price : t.price,
+      mrp:   pov.mrp   !== undefined ? pov.mrp   : t.mrp,
+      name:  nameOv[t.id]  !== undefined ? nameOv[t.id]  : t.name,
+    });
+  });
+
   function startEdit(t) { setEditing(t.id); setForm({mrp:t.mrp, price:t.price, name:t.name}); }
   function saveEdit(id) {
     var newPrice = parseInt(form.price);
     var newMrp   = parseInt(form.mrp);
     var newName  = form.name;
-    // Update local test list
-    var next = props.tests.map(function(t){ return t.id===id ? Object.assign({},t,{price:newPrice,mrp:newMrp,name:newName}) : t; });
-    props.setTests(next);
-    // Write to le_price_overrides so main UI picks it up
-    var ov = {};
-    try { ov = JSON.parse(localStorage.getItem('le_price_overrides')||'{}'); } catch(e){}
+    // Write price override to Supabase
+    var ov = Object.assign({}, (props.sbSettings && props.sbSettings['le_price_overrides']) || {});
     ov[id] = {price:newPrice, mrp:newMrp};
-    localStorage.setItem('le_price_overrides', JSON.stringify(ov));
-    // Sync price override to Supabase
-    if (sb) { sb.from('price_overrides').upsert({test_id: id, price: newPrice}).then(function(){}); }
-    // Write to le_test_name_overrides so main UI picks up name change
-    var tnov = {};
-    try { tnov = JSON.parse(localStorage.getItem('le_test_name_overrides')||'{}'); } catch(e){}
+    syncAdminSetting('le_price_overrides', ov);
+    // Write name override to Supabase
+    var tnov = Object.assign({}, (props.sbSettings && props.sbSettings['le_test_name_overrides']) || {});
     tnov[id] = newName;
-    localStorage.setItem('le_test_name_overrides', JSON.stringify(tnov));
+    syncAdminSetting('le_test_name_overrides', tnov);
     setEditing(null);
   }
 
-  var filtered = props.tests.filter(function(t) {
+  var filtered = displayTests.filter(function(t) {
     var mq = !search || t.name.toLowerCase().indexOf(search.toLowerCase())>-1 || t.cat.toLowerCase().indexOf(search.toLowerCase())>-1;
     var ml = labFilter==='All' || t.lab===labFilter;
     return mq && ml;
@@ -1337,18 +1329,13 @@ var DEFAULT_PACKAGES = [
   {id:'pkg_6',title:'Senior Citizen',sub:'55+ Tests · Verified Partner',price:2499,mrp:4499,off:44,badge:'45% OFF',badgeColor:'#EA580C',cat:'Packages',tests:['CBC','Thyroid Profile','Blood Sugar (Fasting)','HbA1c','Lipid Profile','Liver Function Test','Kidney Function Test','Vitamin D','Vitamin B12','Uric Acid','ESR','Urine Complete Examination']},
 ];
 
-function Packages() {
-  var sl=useState(function(){try{var s=JSON.parse(localStorage.getItem('le_packages')||'null');return s&&s.length?s:DEFAULT_PACKAGES;}catch{return DEFAULT_PACKAGES;}}),pkgs=sl[0],setPkgs=sl[1];
-  // Always fetch latest from Supabase on mount
+function Packages(props) {
+  var sl=useState(DEFAULT_PACKAGES),pkgs=sl[0],setPkgs=sl[1];
+  // Sync from Supabase settings whenever they arrive/change
   useEffect(function(){
-    if(!supaAdmin)return;
-    supaAdmin.from('admin_settings').select('value').eq('key','le_packages').single().then(function(r){
-      if(!r.error&&r.data&&r.data.value&&Array.isArray(r.data.value)&&r.data.value.length){
-        setPkgs(r.data.value);
-        try{localStorage.setItem('le_packages',JSON.stringify(r.data.value));}catch(e){}
-      }
-    });
-  },[]);
+    var sb = props.sbSettings && props.sbSettings['le_packages'];
+    if (sb && Array.isArray(sb) && sb.length) setPkgs(sb);
+  }, [props.sbSettings]);
   var se=useState(null),editing=se[0],setEditing=se[1];
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
   var sm=useState(''),msg=sm[0],setMsg=sm[1];
@@ -1359,7 +1346,7 @@ function Packages() {
 
   function save(next){
     setPkgs(next);
-    localStorage.setItem('le_packages',JSON.stringify(next));
+    syncAdminSetting('le_packages', next);
     setMsg('Saved!');setTimeout(function(){setMsg('');},2000);
   }
 
@@ -1514,19 +1501,13 @@ function Packages() {
   );
 }
 
-function TrustedLogos() {
-  function load(){try{return JSON.parse(localStorage.getItem('le_marquee_logos')||'null');}catch{return null;}}
-  var sl=useState(function(){return load()||DEFAULT_MARQUEE;}),logos=sl[0],setLogos=sl[1];
-  // Always fetch latest from Supabase on mount
+function TrustedLogos(props) {
+  var sl=useState(DEFAULT_MARQUEE),logos=sl[0],setLogos=sl[1];
+  // Sync from Supabase settings whenever they arrive/change
   useEffect(function(){
-    if(!supaAdmin)return;
-    supaAdmin.from('admin_settings').select('value').eq('key','le_marquee_logos').single().then(function(r){
-      if(!r.error&&r.data&&r.data.value&&Array.isArray(r.data.value)&&r.data.value.length){
-        setLogos(r.data.value);
-        try{localStorage.setItem('le_marquee_logos',JSON.stringify(r.data.value));}catch(e){}
-      }
-    });
-  },[]);
+    var sb = props.sbSettings && props.sbSettings['le_marquee_logos'];
+    if (sb && Array.isArray(sb) && sb.length) setLogos(sb);
+  }, [props.sbSettings]);
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
   var se=useState(null),editing=se[0],setEditing=se[1]; // id being edited
   var sn=useState(''),newName=sn[0],setNewName=sn[1];
@@ -1537,7 +1518,7 @@ function TrustedLogos() {
   var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
 
-  function save(next){setLogos(next);localStorage.setItem('le_marquee_logos',JSON.stringify(next));}
+  function save(next){setLogos(next);syncAdminSetting('le_marquee_logos',next);}
 
   function addNew(){
     if(!newLogo){setSaveErr('Please upload a logo first.');return;}
@@ -1715,28 +1696,28 @@ function App() {
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [labs, setLabs] = useState(function(){return genLabs();});
   const [tests, setTests] = useState(function(){return genTests();});
+  const [sbSettings, setSbSettings] = useState({});
 
-  // On startup: fetch ALL admin_settings from Supabase and hydrate localStorage + component state
-  // so every device always sees the latest data, not stale local state
+  // On startup: fetch ALL admin_settings from Supabase into sbSettings state
+  // and subscribe to Realtime so every device sees live changes instantly
   useEffect(function() {
     if (!supaAdmin) return;
-    supaAdmin.from('admin_settings').select('key, value').then(function(r) {
-      if (r.error || !r.data) return;
-      var updated = {};
-      r.data.forEach(function(row) {
-        updated[row.key] = row.value;
-        try {
-          // Write directly using the original setItem (bypass our SYNC wrapper to avoid re-upsert)
-          Object.getPrototypeOf(localStorage).setItem.call(localStorage, row.key, JSON.stringify(row.value));
-        } catch(e) {}
+    function fetchAll() {
+      supaAdmin.from('admin_settings').select('key, value').then(function(r) {
+        if (r.error || !r.data) return;
+        var updated = {};
+        r.data.forEach(function(row) { updated[row.key] = row.value; });
+        setSbSettings(updated);
+        if (updated['le_labs'] && Array.isArray(updated['le_labs'])) {
+          setLabs(updated['le_labs']);
+        }
       });
-      // Re-hydrate labs state if Supabase has a newer version
-      if (updated['le_labs'] && Array.isArray(updated['le_labs'])) {
-        setLabs(updated['le_labs']);
-      }
-      // Trigger storage event so sub-components re-read
-      window.dispatchEvent(new Event('storage'));
-    });
+    }
+    fetchAll();
+    var channel = supaAdmin.channel('admin-settings-panel')
+      .on('postgres_changes', {event:'*', schema:'public', table:'admin_settings'}, fetchAll)
+      .subscribe();
+    return function() { supaAdmin.removeChannel(channel); };
   }, []);
 
   useEffect(function() {
@@ -1771,10 +1752,10 @@ function App() {
         </div>
         {page==='dashboard' && <Dashboard bookings={bookings} />}
         {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} bookingsLoading={bookingsLoading} />}
-        {page==='labs' && <Labs labs={labs} setLabs={setLabs} />}
-        {page==='tests' && <Tests tests={tests} setTests={setTests} />}
-        {page==='packages' && <Packages />}
-        {page==='trusted'  && <TrustedLogos />}
+        {page==='labs' && <Labs labs={labs} setLabs={setLabs} sbSettings={sbSettings} />}
+        {page==='tests' && <Tests tests={tests} setTests={setTests} sbSettings={sbSettings} />}
+        {page==='packages' && <Packages sbSettings={sbSettings} />}
+        {page==='trusted'  && <TrustedLogos sbSettings={sbSettings} />}
         {page==='settings' && <Settings />}
       </div>
     </div>
