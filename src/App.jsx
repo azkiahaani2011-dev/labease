@@ -1244,26 +1244,6 @@ const LABS = [
     ]},
 ];
 
-// Apply admin panel price & lab overrides from localStorage
-(function applyAdminOverrides() {
-  try {
-    const priceOv    = JSON.parse(localStorage.getItem('le_price_overrides')    || '{}');
-    const labOv      = JSON.parse(localStorage.getItem('le_lab_overrides')      || '{}');
-    const testNameOv = JSON.parse(localStorage.getItem('le_test_name_overrides') || '{}');
-    const labNameOv  = JSON.parse(localStorage.getItem('le_lab_name_overrides')  || '{}');
-    LABS.forEach(lab => {
-      if (labOv[lab.id]     !== undefined) lab.active = labOv[lab.id];
-      if (labNameOv[lab.id] !== undefined) lab.name   = labNameOv[lab.id];
-      lab.tests.forEach(t => {
-        if (priceOv[t.id]) {
-          if (priceOv[t.id].price !== undefined) t.price = priceOv[t.id].price;
-          if (priceOv[t.id].mrp   !== undefined) t.mrp   = priceOv[t.id].mrp;
-        }
-        if (testNameOv[t.id] !== undefined) t.name = testNameOv[t.id];
-      });
-    });
-  } catch(e) {}
-})();
 
 const NEAR_ME = [
   { name:"Apollo Diagnostics", area:"Indiranagar", dist:"0.4 km", open:true,  rating:4.8, homecoll:true  },
@@ -1901,19 +1881,17 @@ const MARQUEE_NAME_B64 = {
 };
 
 const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
-  // Use Supabase logos if available, otherwise fall back to localStorage, then defaults
+  // Supabase only — no localStorage fallback
   const logos = React.useMemo(() => {
-    const saved = sbMarqueeLogos && sbMarqueeLogos.length ? sbMarqueeLogos : (() => {
-      try { return JSON.parse(localStorage.getItem('le_marquee_logos') || 'null'); } catch { return null; }
-    })();
-    if (saved && saved.length > 0) {
-      return saved.map(l => ({
+    if (sbMarqueeLogos && sbMarqueeLogos.length > 0) {
+      return sbMarqueeLogos.map(l => ({
         ...l,
+        // fill in b64 from hardcoded map if the saved entry doesn't have one
         b64: l.b64 || (MARQUEE_NAME_B64[l.name] ? MARQUEE_NAME_B64[l.name]() : null),
       }));
     }
     return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
-  }, [sbMarqueeLogos]); // eslint-disable-line
+  }, [sbMarqueeLogos]);
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
@@ -1951,9 +1929,14 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
         onMouseLeave={e=>e.currentTarget.classList.remove("paused")}>
         {doubled.map((l,i)=>(
           <div key={i} className="marquee-lab-logo">
-            <img src={l.b64||l.src} alt={l.name}
-              onError={e=>{ if(l.src && e.target.src!==l.src){ e.target.src=l.src; } else { e.target.style.display='none'; } }}
-            />
+            {(l.b64||l.src)
+              ? <img src={l.b64||l.src} alt={l.name}
+                  onError={e=>{ e.target.style.display='none'; e.target.nextSibling && (e.target.nextSibling.style.display='flex'); }}
+                />
+              : null}
+            <div style={{ display:"none", width:64, height:64, borderRadius:12, background:"#EFF6FF", border:"1px solid #BFDBFE", alignItems:"center", justifyContent:"center" }}>
+              <span style={{ fontSize:"1.3rem" }}>🏥</span>
+            </div>
             <span>{l.name}</span>
           </div>
         ))}
@@ -2858,15 +2841,15 @@ function BookingStepsPanel() {
         <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.15rem", color:"#0A1628", lineHeight:1.2 }}>Book your test in 3 easy steps</div>
       </div>
 
-      {/* Single big card */}
+      {/* Single card */}
       <div key={animKey} className="step-slide"
-        style={{ background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"32px 28px 30px", aspectRatio:"1/0.85" }}>
-        {/* Big number circle */}
-        <div style={{ width:64, height:64, borderRadius:16, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, boxShadow:"0 4px 16px rgba(17,88,166,.35)" }}>
-          <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.7rem", lineHeight:1 }}>{s.n}</span>
+        style={{ background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"22px 22px 20px" }}>
+        {/* Number circle */}
+        <div style={{ width:50, height:50, borderRadius:14, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14, boxShadow:"0 4px 14px rgba(17,88,166,.3)" }}>
+          <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.4rem", lineHeight:1 }}>{s.n}</span>
         </div>
-        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem", color:"#0D1117", marginBottom:12, lineHeight:1.3 }}>{s.title}</div>
-        <div style={{ color:"#6B7280", fontSize:".88rem", lineHeight:1.75 }}>{s.desc}</div>
+        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:"1rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
+        <div style={{ color:"#6B7280", fontSize:".84rem", lineHeight:1.7 }}>{s.desc}</div>
       </div>
 
       {/* Step dots + prev/next */}
