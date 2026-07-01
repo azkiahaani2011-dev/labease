@@ -2232,6 +2232,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
   const [searchQ,    setSearchQ]    = useState("");
   const [labSugOpen, setLabSugOpen] = useState(false);
   const [loading,    setLoading]    = useState(true);
+  const [showAllLabs, setShowAllLabs] = useState(false);
   const labSearchRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -2364,9 +2365,17 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
               No labs match your filters.
             </div>
           )}
-          {!loading && filtered.map(l => (
+          {!loading && (showAllLabs ? filtered : filtered.slice(0,7)).map(l => (
             <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart}/>
           ))}
+          {!loading && filtered.length > 7 && (
+            <button onClick={()=>setShowAllLabs(v=>!v)}
+              style={{ display:"block",width:"100%",padding:"14px 20px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,cursor:"pointer",fontFamily:"'Manrope',sans-serif",fontSize:".84rem",fontWeight:700,color:"#1158A6",textAlign:"center",margin:"4px 0 12px",transition:"background .14s" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#EFF6FF"}
+              onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+              {showAllLabs ? "Show Less ↑" : `Show ${filtered.length - 7} More Labs ↓`}
+            </button>
+          )}
         </div>
         </div>{/* end flex-1 list column */}
         {isDesktop && cartSlot}
@@ -2937,7 +2946,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
     flex: 1,
     padding: "11px 0",
     border: "none",
-    background: active ? "#EEF4FF" : "none",
+    background: "none",
     fontFamily: "'Manrope', sans-serif",
     fontWeight: 700,
     fontSize: ".85rem",
