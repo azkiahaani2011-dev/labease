@@ -1735,7 +1735,9 @@ function App() {
     var channel = supaAdmin.channel('admin-settings-panel')
       .on('postgres_changes', {event:'*', schema:'public', table:'admin_settings'}, fetchAll)
       .subscribe();
-    return function() { supaAdmin.removeChannel(channel); };
+    // Polling fallback — syncs across devices even if Realtime isn't enabled
+    var poll = setInterval(fetchAll, 10000);
+    return function() { supaAdmin.removeChannel(channel); clearInterval(poll); };
   }, []);
 
   useEffect(function() {
