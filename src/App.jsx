@@ -2823,84 +2823,70 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
 }
 
 /* ─── BOOKING STEPS PANEL — hero right column (desktop only) ────────────── */
-function BookingStepsPanel() {
-  const [step, setStep] = React.useState(0);
-  const [tick, setTick] = React.useState(0); // increment to re-trigger animation
+const HOW_TO_STEPS = [
+  { n:1, title:"Choose Your Test",         desc:"Search and select from a wide range of blood tests and health packages — all in one place." },
+  { n:2, title:"Book a Time Slot",          desc:"Pick a time that works for you. We'll send a trained professional straight to your door." },
+  { n:3, title:"Sample Collection at Home", desc:"A certified phlebotomist visits you at your chosen time — safe, quick, and completely painless." },
+  { n:4, title:"Get Your Reports Online",   desc:"Receive accurate, easy-to-read digital reports within 24–48 hours. No queues. No waiting rooms." },
+];
 
-  const STEPS = [
-    { n:"01", label:"Search & Choose",   color:"#1158A6", border:"#BFDBFE", bg:"#EFF6FF",
-      desc:"Browse 1,500+ tests. Compare prices across 6 verified partner labs in seconds.",
-      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> },
-    { n:"02", label:"Schedule Pickup",   color:"#059669", border:"#6EE7B7", bg:"#ECFDF5",
-      desc:"Choose your date & time slot. A certified phlebotomist visits your doorstep completely free.",
-      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> },
-    { n:"03", label:"Sample Collected",  color:"#7C3AED", border:"#C4B5FD", bg:"#F5F3FF",
-      desc:"Trained phlebotomist collects your sample using sterile kits. Safe, quick & painless.",
-      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v11l-2 3h10l-2-3V3"/></svg> },
-    { n:"04", label:"Get Your Reports",  color:"#DC2626", border:"#FECACA", bg:"#FEF2F2",
-      desc:"Secure digital reports sent to WhatsApp & email. Results in as little as 6 hours.",
-      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg> },
-  ];
+function BookingStepsPanel() {
+  const trackRef = React.useRef(null);
+  const [active, setActive] = React.useState(0);
+  const timerRef = React.useRef(null);
 
   const goTo = React.useCallback((i) => {
-    setStep(i);
-    setTick(t => t + 1);
+    setActive(i);
+    const el = trackRef.current;
+    if (el) {
+      const card = el.children[i];
+      if (card) card.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
+    }
   }, []);
 
   React.useEffect(() => {
-    const t = setInterval(() => goTo((step + 1) % 4), 3400);
-    return () => clearInterval(t);
-  }, [step, goTo]);
-
-  const s = STEPS[step];
+    timerRef.current = setInterval(() => {
+      setActive(prev => {
+        const next = (prev + 1) % HOW_TO_STEPS.length;
+        const el = trackRef.current;
+        if (el) {
+          const card = el.children[next];
+          if (card) card.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
+        }
+        return next;
+      });
+    }, 3200);
+    return () => clearInterval(timerRef.current);
+  }, []);
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%", paddingLeft:8 }}>
-      <div style={{ background:"rgba(255,255,255,.82)", borderRadius:22, border:"1.5px solid rgba(17,88,166,.13)", backdropFilter:"blur(14px)", padding:"28px 26px 24px", boxShadow:"0 6px 40px rgba(17,88,166,.12), inset 0 1px 0 rgba(255,255,255,.9)" }}>
+    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%" }}>
+      {/* Header */}
+      <div style={{ marginBottom:14, paddingLeft:4 }}>
+        <div style={{ fontSize:".7rem", fontWeight:800, color:"#1158A6", letterSpacing:".12em", textTransform:"uppercase", marginBottom:4 }}>How It Works</div>
+        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.18rem", color:"#0A1628", lineHeight:1.2 }}>Book a test in 4 easy steps</div>
+      </div>
 
-        {/* Header */}
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
-          <div>
-            <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".12em", textTransform:"uppercase", marginBottom:3 }}>How to Book</div>
-            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem", color:"#0D1117", lineHeight:1.2 }}>Book in 4 easy steps</div>
-          </div>
-          <div style={{ width:36, height:36, borderRadius:10, background:"linear-gradient(135deg,#1158A6,#2563EB)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 12px rgba(17,88,166,.3)" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-        </div>
-
-        {/* Progress bars */}
-        <div style={{ display:"flex", gap:5, marginBottom:22 }}>
-          {STEPS.map((_, i) => (
-            <div key={i} onClick={() => goTo(i)} style={{ height:4, flex:1, borderRadius:2, background: i <= step ? "#1158A6" : "#E2E8F0", transition:"background .4s", cursor:"pointer", position:"relative", overflow:"hidden" }}>
-              {i === step && <div style={{ position:"absolute", inset:0, borderRadius:2, background:"linear-gradient(90deg,#1158A6,#60A5FA)", animation:"slideFromRight .4s linear both" }}/>}
+      {/* Cards track */}
+      <div ref={trackRef} style={{ display:"flex", gap:12, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4 }}>
+        {HOW_TO_STEPS.map((s, i) => (
+          <div key={i} onClick={() => goTo(i)}
+            style={{ minWidth:"calc(50% - 6px)", maxWidth:"calc(50% - 6px)", flexShrink:0, scrollSnapAlign:"start", background:"#fff", borderRadius:18, border: i===active ? "2px solid #1158A6" : "1.5px solid #E8EDF5", boxShadow: i===active ? "0 4px 24px rgba(17,88,166,.15)" : "0 2px 10px rgba(0,0,0,.06)", padding:"22px 18px 20px", cursor:"pointer", transition:"border .25s, box-shadow .25s" }}>
+            {/* Number circle */}
+            <div style={{ width:46, height:46, borderRadius:"50%", background:"#0F2B5B", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14 }}>
+              <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem" }}>{s.n}</span>
             </div>
-          ))}
-        </div>
-
-        {/* Step card — key changes to retrigger slide animation */}
-        <div key={tick} className="step-slide" style={{ display:"flex", gap:16, alignItems:"flex-start", marginBottom:22 }}>
-          <div style={{ width:54, height:54, borderRadius:14, background:s.bg, border:`1.5px solid ${s.border}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-            <s.Icon/>
+            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:".92rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
+            <div style={{ color:"#6B7280", fontSize:".78rem", lineHeight:1.65 }}>{s.desc}</div>
           </div>
-          <div style={{ flex:1 }}>
-            <div style={{ fontSize:".68rem", fontWeight:800, color:s.color, letterSpacing:".1em", textTransform:"uppercase", marginBottom:4 }}>Step {s.n}</div>
-            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:".98rem", color:"#0D1117", marginBottom:6, lineHeight:1.25 }}>{s.label}</div>
-            <div style={{ color:"#6B7280", fontSize:".82rem", lineHeight:1.6 }}>{s.desc}</div>
-          </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Step list pills */}
-        <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-          {STEPS.map((st, i) => (
-            <div key={i} onClick={() => goTo(i)} style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 12px", borderRadius:10, background: i===step ? "rgba(17,88,166,.06)" : "transparent", border: i===step ? "1px solid rgba(17,88,166,.14)" : "1px solid transparent", cursor:"pointer", transition:"all .2s" }}>
-              <div style={{ width:22, height:22, borderRadius:"50%", background: i===step ? "#1158A6" : "#F1F5F9", color: i===step ? "#fff" : "#9CA3AF", display:"flex", alignItems:"center", justifyContent:"center", fontSize:".6rem", fontWeight:800, flexShrink:0, transition:"all .2s" }}>{st.n}</div>
-              <div style={{ fontWeight: i===step ? 700 : 500, fontSize:".82rem", color: i===step ? "#1F2937" : "#9CA3AF", transition:"all .2s" }}>{st.label}</div>
-              {i===step && <svg style={{ marginLeft:"auto", flexShrink:0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>}
-            </div>
-          ))}
-        </div>
-
+      {/* Dot indicators */}
+      <div style={{ display:"flex", gap:6, marginTop:12, paddingLeft:4 }}>
+        {HOW_TO_STEPS.map((_, i) => (
+          <div key={i} onClick={() => goTo(i)} style={{ width: i===active ? 20 : 7, height:7, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
+        ))}
       </div>
     </div>
   );
