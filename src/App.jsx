@@ -105,8 +105,8 @@ const G = () => (
     .lab-detail-enter { animation: slideUpFull .45s cubic-bezier(.22,1,.36,1) both; }
 
     /* ── Booking steps slide-in from right ── */
-    @keyframes slideFromRight { from{opacity:0;transform:translateX(32px)} to{opacity:1;transform:translateX(0)} }
-    .step-slide { animation: slideFromRight .38s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes slideFromRight { from{opacity:0;transform:translateX(48px)} to{opacity:1;transform:translateX(0)} }
+    .step-slide { animation: slideFromRight .7s cubic-bezier(.25,.46,.45,.94) both; }
 
     /* ── After first load: kill ALL entrance animations instantly ── */
     .app-ready .page-enter        { animation: none !important; }
@@ -2864,8 +2864,8 @@ function BookingStepsPanel() {
         </button>
       </div>
 
-      {/* Step dots */}
-      <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:14 }}>
+      {/* Step dots — centered */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, marginTop:14 }}>
         {HOW_TO_STEPS.map((_, i) => (
           <div key={i} onClick={() => goTo(i)}
             style={{ width: i===active ? 24 : 8, height:8, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
@@ -3028,8 +3028,8 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
               {/* Pill / capsule icon — represents medicine/test */}
               <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="tests"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/>
-                  <path d="M8.5 8.5 15.5 15.5"/>
+                  <path d="M9 3H5v10l6.29 6.29a1 1 0 0 0 1.41 0l6.3-6.3a1 1 0 0 0 0-1.41L13 5.5V3"/>
+                  <path d="M9 3h4"/><circle cx="6.5" cy="11.5" r="1"/>
                 </svg>
               </span>
               Tests &amp; Packages
@@ -3040,8 +3040,8 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
               <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                  <line x1="12" y1="7" x2="12" y2="11"/><line x1="10" y1="9" x2="14" y2="9"/>
+                  <rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                  <line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/>
                 </svg>
               </span>
               Labs
