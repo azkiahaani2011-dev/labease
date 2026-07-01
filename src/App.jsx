@@ -3841,11 +3841,19 @@ function PromoCarousel({ navTo }) {
   // Infinite loop: [clone-card2, card1, card2, clone-card1], start at idx=1
   const [idx, setIdx] = useState(1);
   const [animated, setAnimated] = useState(true);
+  const [isDesk, setIsDesk] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
+    const h = () => setIsDesk(window.innerWidth >= 1024);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  useEffect(() => {
+    if (isDesk) return; // no auto-swipe on desktop
     const t = setInterval(() => setIdx(s => s + 1), 4000);
     return () => clearInterval(t);
-  }, []);
+  }, [isDesk]);
 
   useEffect(() => {
     if (idx === 3) {
@@ -3969,7 +3977,16 @@ function PromoCarousel({ navTo }) {
           </div>
   );
 
-  // Infinite loop layout: [clone-Card2, Card1, Card2, clone-Card1], start at idx=1
+  // Desktop: both cards side by side, no carousel
+  if (isDesk) {
+    return (
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:10 }}>
+        <Card1/><Card2/>
+      </div>
+    );
+  }
+
+  // Mobile: infinite loop carousel [clone-Card2, Card1, Card2, clone-Card1], start at idx=1
   return (
     <div style={{ position:"relative", marginBottom:10, borderRadius:20, overflow:"hidden", width:"100%" }}>
       <div style={{ display:"flex", width:"400%", transition: animated ? "transform .5s cubic-bezier(.4,0,.2,1)" : "none", transform:`translateX(${idx * -25}%)`, willChange:"transform" }}>
@@ -4013,11 +4030,19 @@ function FeaturesCarousel() {
   const [slide, setSlide] = useState(1); // 0=clone-of-last, 1=real-slide-0, 2=real-slide-1, 3=clone-of-first
   const [animated, setAnimated] = useState(true);
   const [mob, setMob] = useState(window.innerWidth <= 640);
+  const [isDesk, setIsDesk] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
+    const h = () => { setMob(window.innerWidth <= 640); setIsDesk(window.innerWidth >= 1024); };
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  useEffect(() => {
+    if (isDesk) return; // no auto-swipe on desktop
     const t = setInterval(() => setSlide(s => s + 1), 4500);
     return () => clearInterval(t);
-  }, []);
+  }, [isDesk]);
 
   // When we land on a clone, silently jump to the real slide
   useEffect(() => {
@@ -4196,6 +4221,20 @@ function FeaturesCarousel() {
     </div>
   );
 
+  // Desktop: both slides side by side, no carousel
+  if (isDesk) {
+    return (
+      <section style={{ padding:"32px 0 28px", background:"#EBF0FA" }}>
+        <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+            <SlideWhy/><SlideFeatures/>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Mobile: carousel
   return (
     <section style={{ padding: mob ? "20px 0 18px" : "32px 0 28px", background:"#EBF0FA" }}>
       <div style={{ maxWidth:1100, margin:"0 auto", padding: mob ? "0 12px" : "0 24px" }}>
@@ -4209,7 +4248,6 @@ function FeaturesCarousel() {
               <div style={{ minWidth:"100%", flexShrink:0, height:"100%" }}><SlideWhy/></div>
             </div>
           </div>
-
           <div style={{ display:"flex",justifyContent:"center",gap:6,marginTop:10 }}>
             {[0,1].map(i=>{const active=(slide===1&&i===0)||(slide===2&&i===1); return <div key={i} onClick={()=>{ setAnimated(true); setSlide(i+1); }} style={{ width:active?20:6,height:6,borderRadius:3,background:active?"#1158A6":"#CBD5E1",cursor:"pointer",transition:"all .3s" }}/>;} )}
           </div>
@@ -4848,8 +4886,8 @@ export default function App() {
             <p style={{ color:"#64748B",fontSize:".9rem",maxWidth:460,margin:"0 auto",lineHeight:1.7 }}>Book a lab test in minutes and get accurate results delivered to your door — all from your phone.</p>
           </div>
 
-          {/* 4-step row — 2 per row, no gap */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:0, position:"relative" }}>
+          {/* 4-step row — 4 per row on desktop, 2 per row on mobile */}
+          <div style={{ display:"grid", gridTemplateColumns: isDesktop ? "repeat(4,1fr)" : "repeat(2,1fr)", gap: isDesktop ? 4 : 0, position:"relative" }}>
 
             {[
               {
@@ -4873,8 +4911,8 @@ export default function App() {
                 icon:( <LazyImg src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80&fit=crop" alt="Reports" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
             ].map((s,i)=>(
-              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"8px 4px 0", position:"relative", zIndex:1 }}>
-                <div style={{ marginBottom:12, transition:"transform .2s" }}
+              <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", padding: isDesktop ? "8px 6px 0" : "8px 4px 0", position:"relative", zIndex:1 }}>
+                <div style={{ marginBottom: isDesktop ? 8 : 12, transition:"transform .2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; }}>
                   {s.icon}
