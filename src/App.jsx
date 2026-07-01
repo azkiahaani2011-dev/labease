@@ -2824,69 +2824,67 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
 
 /* ─── BOOKING STEPS PANEL — hero right column (desktop only) ────────────── */
 const HOW_TO_STEPS = [
-  { n:1, title:"Choose Your Test",         desc:"Search and select from a wide range of blood tests and health packages — all in one place." },
-  { n:2, title:"Book a Time Slot",          desc:"Pick a time that works for you. We'll send a trained professional straight to your door." },
-  { n:3, title:"Sample Collection at Home", desc:"A certified phlebotomist visits you at your chosen time — safe, quick, and completely painless." },
-  { n:4, title:"Get Your Reports Online",   desc:"Receive accurate, easy-to-read digital reports within 24–48 hours. No queues. No waiting rooms." },
+  { n:1, title:"Search Tests & Packages",
+    desc:"Type any test name, health package, or category. Browse 1,500+ tests from certified labs — all in one place." },
+  { n:2, title:"Compare Prices, Reviews & TAT",
+    desc:"See real prices, patient ratings, and turnaround times across all partner labs. Pick the best match for you." },
+  { n:3, title:"Book a Slot at Your Convenience",
+    desc:"Choose a date and time that suits you. A certified phlebotomist comes home — free collection, no waiting rooms." },
 ];
 
 function BookingStepsPanel() {
-  const trackRef = React.useRef(null);
   const [active, setActive] = React.useState(0);
-  const timerRef = React.useRef(null);
+  const [animKey, setAnimKey] = React.useState(0);
 
   const goTo = React.useCallback((i) => {
     setActive(i);
-    const el = trackRef.current;
-    if (el) {
-      const card = el.children[i];
-      if (card) card.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
-    }
+    setAnimKey(k => k + 1);
   }, []);
 
   React.useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setActive(prev => {
-        const next = (prev + 1) % HOW_TO_STEPS.length;
-        const el = trackRef.current;
-        if (el) {
-          const card = el.children[next];
-          if (card) card.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
-        }
-        return next;
-      });
-    }, 3200);
-    return () => clearInterval(timerRef.current);
-  }, []);
+    const t = setInterval(() => {
+      goTo((active + 1) % HOW_TO_STEPS.length);
+    }, 3400);
+    return () => clearInterval(t);
+  }, [active, goTo]);
+
+  const s = HOW_TO_STEPS[active];
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%" }}>
+    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%", paddingLeft:8 }}>
       {/* Header */}
-      <div style={{ marginBottom:14, paddingLeft:4 }}>
-        <div style={{ fontSize:".7rem", fontWeight:800, color:"#1158A6", letterSpacing:".12em", textTransform:"uppercase", marginBottom:4 }}>How It Works</div>
-        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.18rem", color:"#0A1628", lineHeight:1.2 }}>Book a test in 4 easy steps</div>
+      <div style={{ marginBottom:16 }}>
+        <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".14em", textTransform:"uppercase", marginBottom:4 }}>How to Book</div>
+        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.15rem", color:"#0A1628", lineHeight:1.2 }}>Book your test in 3 easy steps</div>
       </div>
 
-      {/* Cards track */}
-      <div ref={trackRef} style={{ display:"flex", gap:12, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4 }}>
-        {HOW_TO_STEPS.map((s, i) => (
-          <div key={i} onClick={() => goTo(i)}
-            style={{ minWidth:"calc(50% - 6px)", maxWidth:"calc(50% - 6px)", flexShrink:0, scrollSnapAlign:"start", background:"#fff", borderRadius:18, border: i===active ? "2px solid #1158A6" : "1.5px solid #E8EDF5", boxShadow: i===active ? "0 4px 24px rgba(17,88,166,.15)" : "0 2px 10px rgba(0,0,0,.06)", padding:"22px 18px 20px", cursor:"pointer", transition:"border .25s, box-shadow .25s" }}>
-            {/* Number circle */}
-            <div style={{ width:46, height:46, borderRadius:"50%", background:"#0F2B5B", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14 }}>
-              <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem" }}>{s.n}</span>
-            </div>
-            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:".92rem", color:"#0D1117", marginBottom:8, lineHeight:1.3 }}>{s.title}</div>
-            <div style={{ color:"#6B7280", fontSize:".78rem", lineHeight:1.65 }}>{s.desc}</div>
-          </div>
-        ))}
+      {/* Single big card */}
+      <div key={animKey} className="step-slide"
+        style={{ background:"#fff", borderRadius:20, border:"2px solid #1158A6", boxShadow:"0 8px 32px rgba(17,88,166,.18)", padding:"32px 28px 30px", aspectRatio:"1/0.85" }}>
+        {/* Big number circle */}
+        <div style={{ width:64, height:64, borderRadius:16, background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, boxShadow:"0 4px 16px rgba(17,88,166,.35)" }}>
+          <span style={{ color:"#fff", fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.7rem", lineHeight:1 }}>{s.n}</span>
+        </div>
+        <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem", color:"#0D1117", marginBottom:12, lineHeight:1.3 }}>{s.title}</div>
+        <div style={{ color:"#6B7280", fontSize:".88rem", lineHeight:1.75 }}>{s.desc}</div>
       </div>
 
-      {/* Dot indicators */}
-      <div style={{ display:"flex", gap:6, marginTop:12, paddingLeft:4 }}>
+      {/* Step dots + prev/next */}
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:14 }}>
         {HOW_TO_STEPS.map((_, i) => (
-          <div key={i} onClick={() => goTo(i)} style={{ width: i===active ? 20 : 7, height:7, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
+          <div key={i} onClick={() => goTo(i)}
+            style={{ width: i===active ? 24 : 8, height:8, borderRadius:4, background: i===active ? "#1158A6" : "#CBD5E1", transition:"all .3s", cursor:"pointer" }}/>
         ))}
+        <div style={{ marginLeft:"auto", display:"flex", gap:8 }}>
+          <button onClick={() => goTo((active - 1 + HOW_TO_STEPS.length) % HOW_TO_STEPS.length)}
+            style={{ width:34, height:34, borderRadius:"50%", border:"1.5px solid #BFDBFE", background:"#EFF6FF", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button onClick={() => goTo((active + 1) % HOW_TO_STEPS.length)}
+            style={{ width:34, height:34, borderRadius:"50%", border:"1.5px solid #1158A6", background:"#1158A6", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   );
