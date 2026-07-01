@@ -149,9 +149,27 @@ var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 // Sync an admin override key to Supabase admin_settings so all devices update instantly
 // Write a setting directly to Supabase (no localStorage involved)
+function showSyncStatus(ok, msg) {
+  var el = document.getElementById('sync-status-toast');
+  if (!el) { el = document.createElement('div'); el.id='sync-status-toast'; Object.assign(el.style,{position:'fixed',bottom:24,right:24,zIndex:9999,padding:'10px 18px',borderRadius:10,fontFamily:'Manrope,sans-serif',fontWeight:700,fontSize:14,boxShadow:'0 4px 20px rgba(0,0,0,.18)',transition:'opacity .3s'}); document.body.appendChild(el); }
+  el.textContent = msg;
+  el.style.background = ok ? '#D1FAE5' : '#FEE2E2';
+  el.style.color = ok ? '#065F46' : '#991B1B';
+  el.style.border = ok ? '1.5px solid #6EE7B7' : '1.5px solid #FCA5A5';
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){ el.style.opacity='0'; }, ok ? 2000 : 6000);
+}
 function syncAdminSetting(key, value) {
-  if (!supaAdmin) return;
-  supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){ if(r.error) console.error('syncAdminSetting:', r.error); });
+  if (!supaAdmin) { showSyncStatus(false, '❌ Supabase not connected — check credentials'); return; }
+  supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){
+    if (r.error) {
+      console.error('syncAdminSetting:', r.error);
+      showSyncStatus(false, '❌ Save failed: ' + (r.error.message || r.error.code || 'Unknown error — check Supabase setup'));
+    } else {
+      showSyncStatus(true, '✅ Saved to Supabase');
+    }
+  });
 }
 
 function saveTimingToSupabase(labId, timing, sundayTiming) {
