@@ -3040,8 +3040,8 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
               <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                  <line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/>
+                  <path d="M14 2v6l3.79 9.26A1 1 0 0 1 17 19H7a1 1 0 0 1-.79-1.74L10 8V2"/>
+                  <path d="M8.5 2h7"/><path d="M7 16h10"/>
                 </svg>
               </span>
               Labs
