@@ -3099,7 +3099,6 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         <div style={{ position:"absolute",top:"calc(100% - 14px)",left:0,right:0,background:"#fff",borderRadius:"0 0 16px 16px",boxShadow:"0 12px 40px rgba(0,0,0,.13)",zIndex:500,overflow:"hidden",borderTop:"1px solid #F1F5F9",maxHeight:360,overflowY:"auto" }}>
           {tab === "labs" ? (
             <>
-              <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#059669",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB" }}>Labs</div>
               {suggestions.map((s, i) => (
                 <button key={s.label} onClick={()=>pick(s)}
                   style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0FFF4":"none",border:"none",borderBottom:i<suggestions.length-1?"1px solid #F9FAFB":"none",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
@@ -3114,7 +3113,6 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
             <>
               {testItems.length > 0 && (
                 <>
-                  <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#1158A6",letterSpacing:".1em",textTransform:"uppercase",background:"#F9FAFB" }}>Tests</div>
                   {testItems.map((s, i) => (
                     <button key={s.label} onClick={()=>pick(s)}
                       style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i===activeIdx?"#F0F6FF":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
@@ -3128,7 +3126,6 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
               )}
               {pkgItems.length > 0 && (
                 <>
-                  <div style={{ padding:"7px 16px 3px",fontSize:".67rem",fontWeight:800,color:"#92400E",letterSpacing:".1em",textTransform:"uppercase",background:"#FFFBF0",borderTop:"1px solid #F3F4F6" }}>Packages</div>
                   {pkgItems.map((s, i) => (
                     <button key={s.label} onClick={()=>pick(s)}
                       style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 16px",background:i+testItems.length===activeIdx?"#FFFBEB":"none",border:"none",borderBottom:"1px solid #F9FAFB",cursor:"pointer",fontFamily:"'Manrope',sans-serif",textAlign:"left",transition:"background .1s" }}
@@ -4801,23 +4798,20 @@ export default function App() {
 
             {/* ── Desktop category nav bar ── */}
             {!isMobileRef.current && (
-              <div style={{ display:"flex",alignItems:"center",background:"#0F2B5B",borderRadius:10,marginBottom:16,overflow:"hidden",width:"fit-content" }}>
+              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:16,flexWrap:"wrap" }}>
                 {[
                   { label:"Popular Packages",  action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
                   { label:"Lifestyle Packages", action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
                   { label:"Popular Tests",      action:()=>navTo("alltests") },
                   { label:"Family Care",        action:()=>{ setCatF("Family Health"); navTo("labs"); } },
                   { label:"Health Scans",       action:()=>{ setCatF("Imaging"); navTo("labs"); } },
-                ].map((item, i, arr) => (
-                  <React.Fragment key={i}>
-                    <button onClick={item.action}
-                      style={{ background:"none",border:"none",cursor:"pointer",padding:"13px 20px",fontFamily:"'Manrope',sans-serif",fontWeight:700,fontSize:".84rem",color:"rgba(255,255,255,.9)",letterSpacing:".01em",whiteSpace:"nowrap",transition:"background .15s,color .15s" }}
-                      onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.color="#fff"; }}
-                      onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="rgba(255,255,255,.9)"; }}>
-                      {item.label}
-                    </button>
-                    {i < arr.length - 1 && <div style={{ width:1,height:18,background:"rgba(255,255,255,.25)",flexShrink:0 }}/>}
-                  </React.Fragment>
+                ].map((item, i) => (
+                  <button key={i} onClick={item.action}
+                    style={{ background:"#0F2B5B",border:"2px solid rgba(255,255,255,.18)",borderRadius:8,cursor:"pointer",padding:"10px 18px",fontFamily:"'Manrope',sans-serif",fontWeight:700,fontSize:".84rem",color:"#fff",letterSpacing:".01em",whiteSpace:"nowrap",transition:"all .15s",boxShadow:"0 2px 8px rgba(15,43,91,.25)" }}
+                    onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.borderColor="#1158A6"; e.currentTarget.style.boxShadow="0 4px 16px rgba(17,88,166,.4)"; }}
+                    onMouseLeave={e=>{ e.currentTarget.style.background="#0F2B5B"; e.currentTarget.style.borderColor="rgba(255,255,255,.18)"; e.currentTarget.style.boxShadow="0 2px 8px rgba(15,43,91,.25)"; }}>
+                    {item.label}
+                  </button>
                 ))}
               </div>
             )}
