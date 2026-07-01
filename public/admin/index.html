@@ -148,21 +148,11 @@ var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
 var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 // Sync an admin override key to Supabase admin_settings so all devices update instantly
-var SYNC_KEYS = ['le_price_overrides','le_test_name_overrides','le_lab_name_overrides','le_lab_overrides','le_timing_overrides','le_sunday_timing_overrides','le_labs','le_marquee_logos','le_packages'];
+// Write a setting directly to Supabase (no localStorage involved)
 function syncAdminSetting(key, value) {
   if (!supaAdmin) return;
   supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){ if(r.error) console.error('syncAdminSetting:', r.error); });
 }
-// Wrap localStorage.setItem to auto-sync admin keys to Supabase
-(function() {
-  var origSet = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(key, val) {
-    origSet(key, val);
-    if (SYNC_KEYS.indexOf(key) !== -1) {
-      try { syncAdminSetting(key, JSON.parse(val)); } catch(e) { syncAdminSetting(key, val); }
-    }
-  };
-})();
 
 function saveTimingToSupabase(labId, timing, sundayTiming) {
   if (!supaAdmin) return;
@@ -680,33 +670,35 @@ function Labs(props) {
   function saveEdit(id) {
     var testsArr = editTests.filter(function(t){return t.name&&t.name.trim();}).map(function(t,i){return {id:'x'+id+'_'+i,name:t.name.trim(),price:parseFloat(t.price)||0,mrp:parseFloat(t.mrp)||parseFloat(t.price)||0,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,form,{rating:parseFloat(form.rating)||4.5,tests:testsArr.length?testsArr:l.tests}):l;});
-    props.setLabs(next); localStorage.setItem('le_labs',JSON.stringify(next));
+    props.setLabs(next);
+    // Persist to Supabase only
+    syncAdminSetting('le_labs', next);
     // update extra lab in Supabase if it's not a built-in lab
     var knownIds=new Set([1,2,3,4,5,6]);
     var updated=next.find(function(l){return l.id===id;});
     if(!knownIds.has(id)&&updated&&updated._supabase_id){
       updateExtraLabInSupabase(updated._supabase_id, updated);
     }
-    // lab name override for original labs
-    var lnov={};try{lnov=JSON.parse(localStorage.getItem('le_lab_name_overrides')||'{}');}catch(e){}
-    lnov[id]=form.name; localStorage.setItem('le_lab_name_overrides',JSON.stringify(lnov));
-    var tov={};try{tov=JSON.parse(localStorage.getItem('le_timing_overrides')||'{}');}catch(e){}
-    tov[id]=form.timing||''; localStorage.setItem('le_timing_overrides',JSON.stringify(tov));
-    var stov={};try{stov=JSON.parse(localStorage.getItem('le_sunday_timing_overrides')||'{}');}catch(e){}
-    stov[id]=form.sunday_timing||''; localStorage.setItem('le_sunday_timing_overrides',JSON.stringify(stov));
+    // lab name / timing overrides — read from props.sbSettings (Supabase state)
+    var lnov=Object.assign({},props.sbSettings['le_lab_name_overrides']||{});
+    lnov[id]=form.name; syncAdminSetting('le_lab_name_overrides',lnov);
+    var tov=Object.assign({},props.sbSettings['le_timing_overrides']||{});
+    tov[id]=form.timing||''; syncAdminSetting('le_timing_overrides',tov);
+    var stov=Object.assign({},props.sbSettings['le_sunday_timing_overrides']||{});
+    stov[id]=form.sunday_timing||''; syncAdminSetting('le_sunday_timing_overrides',stov);
     saveTimingToSupabase(id, form.timing||'', form.sunday_timing||'');
     setEditing(null);
   }
   function toggle(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
     props.setLabs(next);
-    localStorage.setItem('le_labs', JSON.stringify(next));
     var toggled = next.find(function(l){return l.id===id;});
+    // Persist to Supabase only
+    syncAdminSetting('le_labs', next);
     if (toggled) {
-      var labOv = {};
-      try { labOv = JSON.parse(localStorage.getItem('le_lab_overrides')||'{}'); } catch(e){}
+      var labOv = Object.assign({}, props.sbSettings['le_lab_overrides']||{});
       labOv[id] = toggled.active;
-      localStorage.setItem('le_lab_overrides', JSON.stringify(labOv));
+      syncAdminSetting('le_lab_overrides', labOv);
     }
   }
   function saveNewLab() {
