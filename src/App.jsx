@@ -3000,17 +3000,16 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
 
   const tabStyle = (active) => ({
     flex: 1,
-    padding: "10px 0",
-    border: active ? "2px solid #1158A6" : "2px solid #E5E7EB",
-    borderRadius: 10,
-    background: active ? "#EFF6FF" : "#fff",
+    padding: "11px 0",
+    border: "none",
+    background: "none",
     fontFamily: "'Manrope', sans-serif",
     fontWeight: 700,
     fontSize: ".85rem",
     cursor: "pointer",
     color: active ? "#1158A6" : "#6B7280",
-    transition: "all .18s",
-    margin: "8px 6px 4px",
+    borderBottom: active ? "2.5px solid #1158A6" : "2.5px solid transparent",
+    transition: "all .15s",
   });
 
   // grouped results for tests tab
@@ -3023,7 +3022,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
       {/* Tab bar + input combined card */}
       <div style={{ background:"#fff", borderRadius:16, boxShadow:"0 4px 24px rgba(17,88,166,.13)", overflow:"hidden" }}>
         {/* Tabs */}
-        <div style={{ display:"flex" }}>
+        <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
               {/* Pill / capsule icon — represents medicine/test */}
@@ -3036,6 +3035,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
               Tests &amp; Packages
             </span>
           </button>
+          <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
             <span style={{ display:"flex",alignItems:"center",gap:8,justifyContent:"center" }}>
               <span style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:26,height:26,borderRadius:8,background:tab==="labs"?"#DBEAFE":"#F3F4F6",transition:"background .15s" }}>
@@ -3084,7 +3084,7 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
           <span style={{ fontSize:".72rem",color:"#9CA3AF",fontWeight:600 }}>Popular:</span>
           {TRENDING_CHIPS.map(chip=>(
             <button key={chip.label} onClick={()=>pick({ type:"test", label:chip.label, cat:chip.cat })}
-              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:50,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
+              style={{ background:"#fff",border:"1px solid #DBEAFE",borderRadius:8,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .14s" }}
               onMouseEnter={e=>{ e.currentTarget.style.background="#1158A6"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1158A6"; }}
               onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#1158A6"; e.currentTarget.style.borderColor="#DBEAFE"; }}>
               {chip.label}
