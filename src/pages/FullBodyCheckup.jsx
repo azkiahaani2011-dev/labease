@@ -214,7 +214,7 @@ export default function FullBodyCheckup({ navTo }) {
           },
           {
             q: "Can a full body checkup be done at home?",
-            a: "Yes. LabEase's home collection service covers full body checkups. A certified phlebotomist visits your home in the morning, collects all required blood and urine samples, and your comprehensive report is delivered digitally, usually within 24 hours.",
+            a: "Yes. LabEase's home collection service covers full body checkups. A qualified and experienced phlebotomist visits your home in the morning, collects all required blood and urine samples, and your comprehensive report is delivered digitally, usually within 24 hours.",
           },
           {
             q: "Which full body checkup package is best for me?",

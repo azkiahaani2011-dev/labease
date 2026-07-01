@@ -2834,7 +2834,7 @@ const HOW_TO_STEPS = [
   { n:2, title:"Compare Prices, Reviews & TAT",
     desc:"See real prices, patient ratings, and turnaround times across all partner labs. Pick the best match for you." },
   { n:3, title:"Book a Slot at Your Convenience",
-    desc:"Choose a date and time that suits you. A certified phlebotomist comes home — free collection, no waiting rooms." },
+    desc:"Choose a date and time that suits you. A qualified and experienced phlebotomist comes home — free collection, no waiting rooms." },
 ];
 
 function BookingStepsPanel() {
@@ -3987,7 +3987,7 @@ function PromoCarousel({ navTo }) {
         <div>
           <div style={{ display:"inline-block",background:"#ECFDF5",border:"1px solid #6EE7B7",borderRadius:50,padding:"3px 12px",fontSize:".66rem",fontWeight:800,color:"#059669",letterSpacing:".06em",textTransform:"uppercase",marginBottom:12 }}>Home Visit</div>
           <h3 style={{ fontFamily:"'Manrope',sans-serif",fontWeight:900,fontSize:"clamp(1rem,2.2vw,1.3rem)",color:"#064E3B",lineHeight:1.25,marginBottom:8 }}>Quick Home<br/>Sample Pickup</h3>
-          <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Certified phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
+          <p style={{ fontSize:".78rem",color:"#065F46",lineHeight:1.6,maxWidth:200 }}>Qualified and experienced phlebotomist visits your home at your chosen slot. Sterile, safe &amp; quick.</p>
         </div>
         <button onClick={()=>navTo("labs")}
           style={{ alignSelf:"flex-start",marginTop:16,background:"#059669",color:"#fff",border:"none",borderRadius:10,padding:"9px 22px",fontWeight:800,fontSize:".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",display:"flex",alignItems:"center",gap:7,boxShadow:"0 4px 14px rgba(5,150,105,.35)",transition:"all .18s" }}
@@ -5021,7 +5021,7 @@ export default function App() {
               },
               {
                 n:"03", label:"Sample Collection", accent:"#8B5CF6", bg:"#F5F3FF",
-                desc:"A certified phlebotomist arrives with sterile kits and collects your sample safely.",
+                desc:"A qualified and experienced phlebotomist arrives with sterile kits and collects your sample safely.",
                 icon:( <LazyImg src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80&fit=crop" alt="Sample Collection" style={{width:88,height:96,objectFit:"cover",borderRadius:16,display:"block"}}/> )
               },
               {
@@ -5063,7 +5063,7 @@ export default function App() {
             {[
               {Icon:IAutoimmune,t:"Verified Partner",d:"All partner labs meet the highest national quality standards.",color:"#DBEAFE",ic:"#1158A6"},
               {Icon:IPackage,   t:"Transparent Pricing",d:"The price you see is the price you pay — no hidden fees.",color:"#FED7AA",ic:"#EA580C"},
-              {Icon:IBlood,     t:"Home Collection",d:"Certified phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
+              {Icon:IBlood,     t:"Home Collection",d:"Qualified and experienced phlebotomists collect samples from your doorstep.",color:"#FECACA",ic:"#DC2626"},
               {Icon:ICardiac,   t:"Fast Reports",d:"Urgent tests returned in as little as 6 hours to your inbox.",color:"#BFDBFE",ic:"#1158A6"},
               {Icon:ILock,     t:"Data Security",d:"End-to-end encrypted health data. Never shared or sold.",color:"#E9D5FF",ic:"#9333EA"},
               {Icon:IBooking,  t:"Easy Booking",d:"Book lab tests in just a few simple steps — quick, easy, and hassle-free.",color:"#A7F3D0",ic:"#059669"},

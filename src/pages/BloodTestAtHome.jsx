@@ -65,7 +65,7 @@ export default function BloodTestAtHome({ navTo }) {
       {/* Section 1 */}
       <SectionHeading>What Is a Home Blood Test?</SectionHeading>
       <p style={{ color: "#374151", lineHeight: 1.7, marginBottom: 16 }}>
-        A home blood test is exactly what it sounds like — a certified phlebotomist visits your
+        A home blood test is exactly what it sounds like — a qualified and experienced phlebotomist visits your
         home, collects a small blood sample, and the sample is transported to a verified
         laboratory for analysis. You receive your report digitally, usually within a few hours.
         It eliminates hospital visits, long queues, and travel stress — making it ideal for
