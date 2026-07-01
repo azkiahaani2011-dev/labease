@@ -2005,51 +2005,46 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           <div style={{ flex:1,minWidth:0 }}>
             <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
             <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5 }}>Diagnostic Lab</div>
-            <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".83rem",fontWeight:700,color:"#16A34A",marginBottom:5 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-              {l.tests.length} Tests Available
-            </div>
-            {(()=>{
-              const rating = l.rating||4.5;
-              const full = Math.floor(rating);
-              const pct  = Math.round((rating - full)*100);
-              const gid  = `lsg-${l.id}`;
-              return (
-                <div style={{ display:"flex",alignItems:"center",gap:5 }}>
-                  <span style={{ fontWeight:900,fontSize:"1rem",color:"#0D1117" }}>{rating.toFixed(1)}</span>
-                  <div style={{ display:"flex",gap:1 }}>
-                    {Array.from({length:5},(_,i)=>{
-                      const sid=`${gid}-${i}`;
-                      if(i<full) return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F59E0B" stroke="none"/></svg>;
-                      if(i===full&&pct>0) return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><defs><linearGradient id={sid} x1="0" y1="0" x2="1" y2="0"><stop offset={`${pct}%`} stopColor="#F59E0B"/><stop offset={`${pct}%`} stopColor="#D1D5DB"/></linearGradient></defs><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={`url(#${sid})`} stroke="none"/></svg>;
-                      return <svg key={i} width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#D1D5DB" stroke="none"/></svg>;
-                    })}
-                  </div>
-                </div>
-              );
-            })()}
+            <div style={{ fontSize:".82rem",color:"#6B7280" }}>Diagnostic Lab</div>
           </div>
         </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
-        <div style={{ fontSize:".85rem",color:"#374151",marginBottom:3,fontWeight:500 }}>
-          <span style={{ fontWeight:700 }}>{l.area||l.city||"—"}</span>
-          <span style={{ color:"#D1D5DB",margin:"0 6px" }}>•</span>
-          <span style={{ color:"#6B7280" }}>{l.city}</span>
+        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 12px" }}/>
+
+        {/* Location */}
+        <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".82rem",color:"#374151",marginBottom:10 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{ fontWeight:600 }}>{[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}</span>
         </div>
-        <div style={{ marginBottom:14 }}>
-          {displayLabel && (
+        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 10px" }}/>
+
+        {/* Tests count + Rating */}
+        <div style={{ display:"flex",alignItems:"center",gap:0,marginBottom:10 }}>
+          <div style={{ flex:1,display:"flex",alignItems:"center",gap:5,fontSize:".82rem",color:"#374151",fontWeight:600 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+            {l.tests.length} Tests Available
+          </div>
+          <div style={{ width:1,background:"#E5E7EB",height:20,margin:"0 12px" }}/>
+          <div style={{ display:"flex",alignItems:"center",gap:4,fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            {(l.rating||4.5).toFixed(1)}
+            <span style={{ fontWeight:400,color:"#9CA3AF",fontSize:".75rem" }}>({l.reviews||0})</span>
+          </div>
+        </div>
+        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 12px" }}/>
+
+        {/* Selected test price */}
+        {displayLabel && (
+          <div style={{ marginBottom:12 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,color:"#1158A6",marginBottom:6 }}>
               🔬 {displayLabel}
             </div>
-          )}
-          <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117" }}>
-            ₹{displayPrice?.toLocaleString()}
-            <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>
-              {displayLabel ? "for this test" : "Starting Price"}
-            </span>
+            <div style={{ fontSize:"1rem",fontWeight:800,color:"#0D1117" }}>
+              ₹{displayPrice?.toLocaleString()}
+              <span style={{ fontWeight:400,fontSize:".78rem",color:"#9CA3AF",marginLeft:5 }}>for this test</span>
+            </div>
           </div>
-        </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
+        )}
+
         <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:8 }}>REPORTS IN {reportTime.toUpperCase()}</div>
         <div style={{ display:"flex",gap:10 }}>
           <div style={{ flex:1 }}>
@@ -2851,11 +2846,23 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
         {/* Tabs */}
         <div style={{ display:"flex", borderBottom:"1px solid #F1F5F9" }}>
           <button style={tabStyle(tab==="tests")} onClick={()=>{ setTab("tests"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            Tests &amp; Packages
+            <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={tab==="tests"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 2h6"/><path d="M10 2v6.5l-3.5 9A2 2 0 0 0 8.3 20h7.4a2 2 0 0 0 1.8-2.5L14 8.5V2"/>
+                <path d="M6.5 14.5h11"/>
+              </svg>
+              Tests &amp; Packages
+            </span>
           </button>
           <div style={{ width:1, background:"#E5E7EB", margin:"8px 0" }}/>
           <button style={tabStyle(tab==="labs")} onClick={()=>{ setTab("labs"); setQ(""); setActiveIdx(-1); inputRef.current?.focus(); }}>
-            Labs
+            <span style={{ display:"flex",alignItems:"center",gap:7,justifyContent:"center" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={tab==="labs"?"#1158A6":"#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2v6l-3 6a4 4 0 0 0 3.5 6h9a4 4 0 0 0 3.5-6l-3-6V2"/>
+                <path d="M6 2h12"/><path d="M5 14h14"/>
+              </svg>
+              Labs
+            </span>
           </button>
         </div>
 
