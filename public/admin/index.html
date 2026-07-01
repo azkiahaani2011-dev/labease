@@ -148,7 +148,7 @@ var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
 var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 // Sync an admin override key to Supabase admin_settings so all devices update instantly
-var SYNC_KEYS = ['le_price_overrides','le_test_name_overrides','le_lab_name_overrides','le_lab_overrides','le_timing_overrides','le_sunday_timing_overrides','le_labs'];
+var SYNC_KEYS = ['le_price_overrides','le_test_name_overrides','le_lab_name_overrides','le_lab_overrides','le_timing_overrides','le_sunday_timing_overrides','le_labs','le_marquee_logos','le_packages'];
 function syncAdminSetting(key, value) {
   if (!supaAdmin) return;
   supaAdmin.from('admin_settings').upsert({ key: key, value: value, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){ if(r.error) console.error('syncAdminSetting:', r.error); });
@@ -419,6 +419,7 @@ function Sidebar(props) {
     {key:'bookings',label:'Bookings',icon:React.createElement(IconBook,null)},
     {key:'labs',label:'Labs',icon:React.createElement(IconLab,null)},
     {key:'tests',label:'Tests & Pricing',icon:React.createElement(IconTest,null)},
+    {key:'packages',label:'Health Packages',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('path',{d:'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'}),React.createElement('polyline',{points:'3.27 6.96 12 12.01 20.73 6.96'}),React.createElement('line',{x1:12,y1:22.08,x2:12,y2:12}))},
     {key:'trusted',label:'Trusted Logos',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('rect',{x:3,y:3,width:18,height:18,rx:3}),React.createElement('path',{d:'M3 9h18M9 21V9'}))},
     {key:'settings',label:'Settings',icon:React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('circle',{cx:12,cy:12,r:3}),React.createElement('path',{d:'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'}))},
   ];
@@ -1335,6 +1336,182 @@ function LogoEditorInline(props) {
   );
 }
 
+var DEFAULT_PACKAGES = [
+  {id:'pkg_1',title:'Full Body Checkup',sub:'65+ Tests · Verified Partner',price:1999,mrp:3499,off:43,badge:'Most Popular',badgeColor:'#EF4444',cat:'Packages',tests:['CBC','Blood Sugar (Fasting)','Thyroid Profile','Liver Function Test','Kidney Function Test','Lipid Profile','Vitamin D','Vitamin B12','Urine Complete Examination','HbA1c']},
+  {id:'pkg_2',title:'Diabetes Care',sub:'12 Tests · Verified Partner',price:399,mrp:899,off:56,badge:'55% OFF',badgeColor:'#EA580C',cat:'Packages',tests:['Blood Sugar (Fasting)','Blood Sugar (PP)','HbA1c','Urine Microalbumin','Kidney Function Test','Lipid Profile']},
+  {id:'pkg_3',title:'Heart Health',sub:'22 Tests · Verified Partner',price:1799,mrp:2999,off:40,badge:'Cardiology',badgeColor:'#1158A6',cat:'Cardiac',tests:['Lipid Profile','Homocysteine','hs-CRP','ECG','Troponin I','BNP','Complete Blood Count','Blood Sugar (Fasting)']},
+  {id:'pkg_4',title:'Thyroid Profile',sub:'T3, T4, TSH · Verified Partner',price:399,mrp:799,off:50,badge:'Verified',badgeColor:'#0369A1',cat:'Thyroid',tests:['T3','T4','TSH']},
+  {id:'pkg_5',title:"Women's Wellness",sub:'40+ Tests · Verified Partner',price:2299,mrp:3999,off:43,badge:'For Women',badgeColor:'#9333EA',cat:'Packages',tests:['CBC','Thyroid Profile','Vitamin D','Vitamin B12','Iron Studies','Calcium','Prolactin','FSH','LH','Estrogen','Progesterone','HbA1c']},
+  {id:'pkg_6',title:'Senior Citizen',sub:'55+ Tests · Verified Partner',price:2499,mrp:4499,off:44,badge:'45% OFF',badgeColor:'#EA580C',cat:'Packages',tests:['CBC','Thyroid Profile','Blood Sugar (Fasting)','HbA1c','Lipid Profile','Liver Function Test','Kidney Function Test','Vitamin D','Vitamin B12','Uric Acid','ESR','Urine Complete Examination']},
+];
+
+function Packages() {
+  var sl=useState(function(){try{var s=JSON.parse(localStorage.getItem('le_packages')||'null');return s&&s.length?s:DEFAULT_PACKAGES;}catch{return DEFAULT_PACKAGES;}}),pkgs=sl[0],setPkgs=sl[1];
+  var se=useState(null),editing=se[0],setEditing=se[1];
+  var sa=useState(false),adding=sa[0],setAdding=sa[1];
+  var sm=useState(''),msg=sm[0],setMsg=sm[1];
+
+  var emptyPkg={id:'',title:'',sub:'',price:'',mrp:'',badge:'',badgeColor:'#1158A6',cat:'Packages',tests:[]};
+  var sform=useState(emptyPkg),form=sform[0],setForm=sform[1];
+  var snewTest=useState(''),newTest=snewTest[0],setNewTest=snewTest[1];
+
+  function save(next){
+    setPkgs(next);
+    localStorage.setItem('le_packages',JSON.stringify(next));
+    setMsg('Saved!');setTimeout(function(){setMsg('');},2000);
+  }
+
+  function startEdit(pkg){
+    setEditing(pkg.id);
+    setForm(Object.assign({},pkg,{tests:(pkg.tests||[]).slice()}));
+    setAdding(false);
+  }
+
+  function startAdd(){
+    setAdding(true);
+    setEditing(null);
+    setForm(Object.assign({},emptyPkg,{id:'pkg_'+Date.now()}));
+    setNewTest('');
+  }
+
+  function cancelEdit(){setEditing(null);setAdding(false);setForm(emptyPkg);}
+
+  function saveEdit(){
+    if(!form.title.trim()){alert('Package name is required.');return;}
+    var p=parseFloat(form.price);var m=parseFloat(form.mrp);
+    if(isNaN(p)||p<0){alert('Enter a valid price.');return;}
+    if(isNaN(m)||m<p){alert('MRP must be ≥ price.');return;}
+    var off=m>0?Math.round((m-p)/m*100):0;
+    var updated=Object.assign({},form,{price:p,mrp:m,off:off});
+    if(adding){
+      save(pkgs.concat([updated]));
+    } else {
+      save(pkgs.map(function(pk){return pk.id===editing?updated:pk;}));
+    }
+    cancelEdit();
+  }
+
+  function remove(id){if(window.confirm('Remove this package?'))save(pkgs.filter(function(pk){return pk.id!==id;}));}
+
+  function addTestToForm(){
+    var t=newTest.trim();
+    if(!t)return;
+    if(form.tests.indexOf(t)===-1)setForm(function(f){return Object.assign({},f,{tests:f.tests.concat([t])});});
+    setNewTest('');
+  }
+
+  function removeTestFromForm(t){setForm(function(f){return Object.assign({},f,{tests:f.tests.filter(function(x){return x!==t;})});});}
+
+  function resetToDefault(){if(window.confirm('Reset all packages to default?'))save(DEFAULT_PACKAGES);}
+
+  var fld={width:'100%',padding:'9px 12px',borderRadius:8,border:'1.5px solid #E5E7EB',fontSize:14,fontFamily:'inherit',boxSizing:'border-box',outline:'none'};
+
+  return (
+    React.createElement('div',{style:{padding:28}},
+      React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+        React.createElement('div',{style:{fontSize:22,fontWeight:800,color:'#0D1117'}},'Healthcare Packages'),
+        React.createElement('div',{style:{display:'flex',gap:8}},
+          React.createElement('button',{className:'btn btn-outline btn-sm',onClick:resetToDefault},'Reset to Default'),
+          React.createElement('button',{className:'btn btn-primary',onClick:startAdd},'+ Add Package')
+        )
+      ),
+      React.createElement('div',{style:{fontSize:13,color:'#6B7280',marginBottom:24}},'Edit package prices, badge labels, and included tests. Changes sync instantly to all devices.'),
+      msg&&React.createElement('div',{style:{background:'#D1FAE5',color:'#065F46',border:'1px solid #6EE7B7',borderRadius:8,padding:'10px 16px',marginBottom:16,fontWeight:600}},msg),
+
+      /* Add / Edit form */
+      (adding||editing)&&React.createElement('div',{style:{background:'#F8FAFC',border:'1.5px solid #DBEAFE',borderRadius:14,padding:22,marginBottom:24}},
+        React.createElement('div',{style:{fontWeight:800,fontSize:16,color:'#1158A6',marginBottom:16}},adding?'Add New Package':'Edit Package'),
+        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}},
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Package Name *'),
+            React.createElement('input',{style:fld,value:form.title,placeholder:'e.g. Full Body Checkup',onChange:function(e){setForm(function(f){return Object.assign({},f,{title:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Sub-label'),
+            React.createElement('input',{style:fld,value:form.sub,placeholder:'e.g. 65+ Tests · Verified Partner',onChange:function(e){setForm(function(f){return Object.assign({},f,{sub:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Price (₹) *'),
+            React.createElement('input',{style:fld,type:'number',value:form.price,placeholder:'e.g. 1999',onChange:function(e){setForm(function(f){return Object.assign({},f,{price:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'MRP (₹) *'),
+            React.createElement('input',{style:fld,type:'number',value:form.mrp,placeholder:'e.g. 3499',onChange:function(e){setForm(function(f){return Object.assign({},f,{mrp:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Badge Text'),
+            React.createElement('input',{style:fld,value:form.badge,placeholder:'e.g. Most Popular',onChange:function(e){setForm(function(f){return Object.assign({},f,{badge:e.target.value});})}})
+          ),
+          React.createElement('div',null,
+            React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:4}},'Badge Color'),
+            React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center'}},
+              React.createElement('input',{type:'color',value:form.badgeColor,style:{width:40,height:36,border:'1.5px solid #E5E7EB',borderRadius:6,cursor:'pointer'},onChange:function(e){setForm(function(f){return Object.assign({},f,{badgeColor:e.target.value})});}}),
+              React.createElement('input',{style:Object.assign({},fld,{flex:1}),value:form.badgeColor,onChange:function(e){setForm(function(f){return Object.assign({},f,{badgeColor:e.target.value});})}})
+            )
+          )
+        ),
+        /* Tests list */
+        React.createElement('div',{style:{marginBottom:12}},
+          React.createElement('label',{style:{fontSize:12,fontWeight:700,color:'#374151',display:'block',marginBottom:6}},'Included Tests'),
+          React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginBottom:8}},
+            form.tests.map(function(t){
+              return React.createElement('span',{key:t,style:{background:'#EFF6FF',color:'#1158A6',border:'1px solid #BFDBFE',borderRadius:20,padding:'4px 10px',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}},
+                t,
+                React.createElement('button',{onClick:function(){removeTestFromForm(t);},style:{background:'none',border:'none',cursor:'pointer',color:'#EF4444',fontSize:14,lineHeight:1,padding:'0 0 0 2px',fontWeight:700}},'×')
+              );
+            })
+          ),
+          React.createElement('div',{style:{display:'flex',gap:8}},
+            React.createElement('input',{style:Object.assign({},fld,{flex:1}),value:newTest,placeholder:'Type test name and press Add',onChange:function(e){setNewTest(e.target.value);},onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();addTestToForm();}}}),
+            React.createElement('button',{className:'btn btn-outline btn-sm',onClick:addTestToForm,style:{whiteSpace:'nowrap'}},'+ Add Test')
+          )
+        ),
+        React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end'}},
+          React.createElement('button',{className:'btn btn-outline btn-sm',onClick:cancelEdit},'Cancel'),
+          React.createElement('button',{className:'btn btn-primary',onClick:saveEdit},adding?'Create Package':'Save Changes')
+        )
+      ),
+
+      /* Package cards */
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))',gap:16}},
+        pkgs.map(function(pkg){
+          return React.createElement('div',{key:pkg.id,style:{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:14,overflow:'hidden'}},
+            React.createElement('div',{style:{background:'linear-gradient(90deg,#EEF4FF,#F0F9FF)',padding:'14px 16px',borderBottom:'1px solid #E5E7EB',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}},
+              React.createElement('div',null,
+                React.createElement('div',{style:{fontWeight:800,fontSize:15,color:'#0D1117',marginBottom:3}},pkg.title),
+                React.createElement('div',{style:{fontSize:12,color:'#6B7280'}},pkg.sub),
+                React.createElement('span',{style:{display:'inline-block',background:pkg.badgeColor,color:'#fff',borderRadius:20,padding:'2px 10px',fontSize:11,fontWeight:700,marginTop:6}},pkg.badge)
+              ),
+              React.createElement('div',{style:{textAlign:'right',flexShrink:0}},
+                React.createElement('div',{style:{fontWeight:900,fontSize:18,color:'#0D1117'}},'₹'+pkg.price.toLocaleString()),
+                React.createElement('div',{style:{textDecoration:'line-through',color:'#9CA3AF',fontSize:12}},'₹'+pkg.mrp.toLocaleString()),
+                React.createElement('div',{style:{color:'#16A34A',fontWeight:700,fontSize:12}},pkg.off+'% off')
+              )
+            ),
+            React.createElement('div',{style:{padding:'10px 16px',borderBottom:'1px solid #F1F5F9'}},
+              React.createElement('div',{style:{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:6}},'Included Tests ('+((pkg.tests||[]).length)+')'),
+              React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:4}},
+                (pkg.tests||[]).slice(0,6).map(function(t){return React.createElement('span',{key:t,style:{background:'#F1F5F9',borderRadius:12,padding:'2px 8px',fontSize:11,color:'#374151'}},t);}),
+                (pkg.tests||[]).length>6&&React.createElement('span',{style:{background:'#F1F5F9',borderRadius:12,padding:'2px 8px',fontSize:11,color:'#6B7280'}},'+'+((pkg.tests||[]).length-6)+' more')
+              )
+            ),
+            React.createElement('div',{style:{padding:'10px 16px',display:'flex',gap:8,justifyContent:'flex-end'}},
+              React.createElement('button',{className:'btn btn-outline btn-sm',onClick:function(){startEdit(pkg);}},
+                React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',style:{marginRight:4}},React.createElement('path',{d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'}),React.createElement('path',{d:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'})),
+                'Edit'
+              ),
+              React.createElement('button',{className:'btn btn-sm',style:{background:'#FEF2F2',color:'#EF4444',border:'1px solid #FECACA'},onClick:function(){remove(pkg.id);}},
+                React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',style:{marginRight:4}},React.createElement('polyline',{points:'3 6 5 6 21 6'}),React.createElement('path',{d:'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'}),React.createElement('path',{d:'M10 11v6M14 11v6'}),React.createElement('path',{d:'M9 6V4h6v2'})),
+                'Remove'
+              )
+            )
+          );
+        })
+      )
+    )
+  );
+}
+
 function TrustedLogos() {
   function load(){try{return JSON.parse(localStorage.getItem('le_marquee_logos')||'null');}catch{return null;}}
   var sl=useState(function(){return load()||DEFAULT_MARQUEE;}),logos=sl[0],setLogos=sl[1];
@@ -1561,6 +1738,7 @@ function App() {
         {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} bookingsLoading={bookingsLoading} />}
         {page==='labs' && <Labs labs={labs} setLabs={setLabs} />}
         {page==='tests' && <Tests tests={tests} setTests={setTests} />}
+        {page==='packages' && <Packages />}
         {page==='trusted'  && <TrustedLogos />}
         {page==='settings' && <Settings />}
       </div>

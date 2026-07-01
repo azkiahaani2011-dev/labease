@@ -4241,7 +4241,7 @@ function PackagesPage({ navTo, setSelectedTest }) {
         </div>
       </div>
       <div style={{ maxWidth:760, margin:"0 auto", padding:"24px 20px 60px" }}>
-        {ALL_PACKAGES.map((pkg, i) => (
+        {activePackages.map((pkg, i) => (
           <div key={pkg.title} style={{ background:"#fff", borderRadius:16, border:"1px solid #E5E7EB", marginBottom:16, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,.05)" }}>
             <div style={{ padding:"20px 20px 18px" }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, marginBottom:12 }}>
@@ -4360,6 +4360,8 @@ export default function App() {
         le_timing_overrides: settings.le_timing_overrides,
         le_sunday_timing_overrides: settings.le_sunday_timing_overrides,
         le_labs: settings.le_labs,
+        le_marquee_logos: settings.le_marquee_logos,
+        le_packages: settings.le_packages,
       };
       Object.entries(keyMap).forEach(([k, v]) => {
         if (v !== undefined) try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
@@ -4478,6 +4480,14 @@ export default function App() {
   }, []);
 
   const sf = (k,v) => setForm(f => ({...f,[k]:v}));
+  // Active packages: prefer Supabase override, then localStorage, then hardcoded defaults
+  const activePackages = (() => {
+    const sb = sbAdminSettings.le_packages;
+    if (sb && Array.isArray(sb) && sb.length) return sb;
+    try { const ls = JSON.parse(localStorage.getItem('le_packages')); if (ls && ls.length) return ls; } catch {}
+    return ALL_PACKAGES;
+  })();
+
   const total    = cart.reduce((s,x) => s+x.price,0);
   const mrpTotal = cart.reduce((s,x) => s+x.mrp,0);
   const saving   = mrpTotal-total;
