@@ -104,6 +104,10 @@ const G = () => (
     @keyframes slideUpFull { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
     .lab-detail-enter { animation: slideUpFull .45s cubic-bezier(.22,1,.36,1) both; }
 
+    /* ── Booking steps slide-in from right ── */
+    @keyframes slideFromRight { from{opacity:0;transform:translateX(32px)} to{opacity:1;transform:translateX(0)} }
+    .step-slide { animation: slideFromRight .38s cubic-bezier(.22,1,.36,1) both; }
+
     /* ── After first load: kill ALL entrance animations instantly ── */
     .app-ready .page-enter        { animation: none !important; }
     .app-ready .hero-content      { animation: none !important; opacity: 1 !important; transform: none !important; }
@@ -2712,6 +2716,12 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
   const trackRef = React.useRef(null);
   const [canLeft,  setCanLeft]  = React.useState(false);
   const [canRight, setCanRight] = React.useState(true);
+  const [isDesk,   setIsDesk]   = React.useState(() => window.innerWidth >= 1024);
+  React.useEffect(() => {
+    const fn = () => setIsDesk(window.innerWidth >= 1024);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
 
   const onScroll = () => {
     const el = trackRef.current; if (!el) return;
@@ -2752,20 +2762,20 @@ function PopularTestsCarousel({ setCatF, navTo, setSelectedTest }) {
         <div style={{ position:"relative" }}>
 
           <div ref={trackRef} onScroll={onScroll}
-            style={{ display:"flex", gap:8, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4, paddingTop:4 }}>
+            style={{ display:"flex", gap: isDesk ? 20 : 8, overflowX:"auto", scrollSnapType:"x mandatory", WebkitOverflowScrolling:"touch", scrollbarWidth:"none", msOverflowStyle:"none", paddingBottom:4, paddingTop:4 }}>
             {POPULAR_CATS.map(({ cat, label, Icon }) => (
               <div key={cat} className="pt-tile"
                 onClick={()=>{ setCatF(cat); setSelectedTest({name:label, cat}); navTo("labs"); }}
-                style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"18px 10px 16px", minWidth:110, maxWidth:130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
+                style={{ display:"flex", flexDirection:"column", alignItems:"center", padding: isDesk ? "24px 16px 20px" : "18px 10px 16px", minWidth: isDesk ? 140 : 110, maxWidth: isDesk ? 170 : 130, flexShrink:0, scrollSnapAlign:"start", cursor:"pointer", borderRadius:16, transition:"transform .22s cubic-bezier(.34,1.56,.64,1),background .18s" }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-6px)"; e.currentTarget.style.background="#F0F6FF"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="transparent"; }}>
-                <div style={{ width:86, height:86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:12, flexShrink:0, border:"1px solid #E5E7EB", transition:"border-color .2s" }}
+                <div style={{ width: isDesk ? 104 : 86, height: isDesk ? 104 : 86, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", marginBottom: isDesk ? 16 : 12, flexShrink:0, border:"1px solid #E5E7EB", transition:"border-color .2s" }}
                   onMouseEnter={e=>e.currentTarget.style.borderColor="#BFDBFE"}
                   onMouseLeave={e=>e.currentTarget.style.borderColor="#E5E7EB"}>
-                  <Icon s={86}/>
+                  <Icon s={isDesk ? 104 : 86}/>
                 </div>
-                <div style={{ fontWeight:700, color:"#1F2937", fontSize:".8rem", textAlign:"center", lineHeight:1.3, marginBottom:5 }}>{label}</div>
-                <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase" }}>Book Now</div>
+                <div style={{ fontWeight:700, color:"#1F2937", fontSize: isDesk ? ".9rem" : ".8rem", textAlign:"center", lineHeight:1.3, marginBottom: isDesk ? 8 : 5 }}>{label}</div>
+                <div style={{ fontSize: isDesk ? ".76rem" : ".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".05em", textTransform:"uppercase", background: isDesk ? "#EFF6FF" : "none", padding: isDesk ? "4px 12px" : 0, borderRadius: isDesk ? 50 : 0, border: isDesk ? "1px solid #BFDBFE" : "none" }}>Book Now</div>
               </div>
             ))}
           </div>
@@ -2807,6 +2817,90 @@ function AllTestsPage({ setCatF, navTo, setSelectedTest }) {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── BOOKING STEPS PANEL — hero right column (desktop only) ────────────── */
+function BookingStepsPanel() {
+  const [step, setStep] = React.useState(0);
+  const [tick, setTick] = React.useState(0); // increment to re-trigger animation
+
+  const STEPS = [
+    { n:"01", label:"Search & Choose",   color:"#1158A6", border:"#BFDBFE", bg:"#EFF6FF",
+      desc:"Browse 1,500+ tests. Compare prices across 6 verified partner labs in seconds.",
+      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> },
+    { n:"02", label:"Schedule Pickup",   color:"#059669", border:"#6EE7B7", bg:"#ECFDF5",
+      desc:"Choose your date & time slot. A certified phlebotomist visits your doorstep completely free.",
+      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> },
+    { n:"03", label:"Sample Collected",  color:"#7C3AED", border:"#C4B5FD", bg:"#F5F3FF",
+      desc:"Trained phlebotomist collects your sample using sterile kits. Safe, quick & painless.",
+      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v11l-2 3h10l-2-3V3"/></svg> },
+    { n:"04", label:"Get Your Reports",  color:"#DC2626", border:"#FECACA", bg:"#FEF2F2",
+      desc:"Secure digital reports sent to WhatsApp & email. Results in as little as 6 hours.",
+      Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg> },
+  ];
+
+  const goTo = React.useCallback((i) => {
+    setStep(i);
+    setTick(t => t + 1);
+  }, []);
+
+  React.useEffect(() => {
+    const t = setInterval(() => goTo((step + 1) % 4), 3400);
+    return () => clearInterval(t);
+  }, [step, goTo]);
+
+  const s = STEPS[step];
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", height:"100%", paddingLeft:8 }}>
+      <div style={{ background:"rgba(255,255,255,.82)", borderRadius:22, border:"1.5px solid rgba(17,88,166,.13)", backdropFilter:"blur(14px)", padding:"28px 26px 24px", boxShadow:"0 6px 40px rgba(17,88,166,.12), inset 0 1px 0 rgba(255,255,255,.9)" }}>
+
+        {/* Header */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
+          <div>
+            <div style={{ fontSize:".68rem", fontWeight:800, color:"#1158A6", letterSpacing:".12em", textTransform:"uppercase", marginBottom:3 }}>How to Book</div>
+            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:900, fontSize:"1.1rem", color:"#0D1117", lineHeight:1.2 }}>Book in 4 easy steps</div>
+          </div>
+          <div style={{ width:36, height:36, borderRadius:10, background:"linear-gradient(135deg,#1158A6,#2563EB)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 12px rgba(17,88,166,.3)" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+        </div>
+
+        {/* Progress bars */}
+        <div style={{ display:"flex", gap:5, marginBottom:22 }}>
+          {STEPS.map((_, i) => (
+            <div key={i} onClick={() => goTo(i)} style={{ height:4, flex:1, borderRadius:2, background: i <= step ? "#1158A6" : "#E2E8F0", transition:"background .4s", cursor:"pointer", position:"relative", overflow:"hidden" }}>
+              {i === step && <div style={{ position:"absolute", inset:0, borderRadius:2, background:"linear-gradient(90deg,#1158A6,#60A5FA)", animation:"slideFromRight .4s linear both" }}/>}
+            </div>
+          ))}
+        </div>
+
+        {/* Step card — key changes to retrigger slide animation */}
+        <div key={tick} className="step-slide" style={{ display:"flex", gap:16, alignItems:"flex-start", marginBottom:22 }}>
+          <div style={{ width:54, height:54, borderRadius:14, background:s.bg, border:`1.5px solid ${s.border}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+            <s.Icon/>
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:".68rem", fontWeight:800, color:s.color, letterSpacing:".1em", textTransform:"uppercase", marginBottom:4 }}>Step {s.n}</div>
+            <div style={{ fontFamily:"'Manrope',sans-serif", fontWeight:800, fontSize:".98rem", color:"#0D1117", marginBottom:6, lineHeight:1.25 }}>{s.label}</div>
+            <div style={{ color:"#6B7280", fontSize:".82rem", lineHeight:1.6 }}>{s.desc}</div>
+          </div>
+        </div>
+
+        {/* Step list pills */}
+        <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+          {STEPS.map((st, i) => (
+            <div key={i} onClick={() => goTo(i)} style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 12px", borderRadius:10, background: i===step ? "rgba(17,88,166,.06)" : "transparent", border: i===step ? "1px solid rgba(17,88,166,.14)" : "1px solid transparent", cursor:"pointer", transition:"all .2s" }}>
+              <div style={{ width:22, height:22, borderRadius:"50%", background: i===step ? "#1158A6" : "#F1F5F9", color: i===step ? "#fff" : "#9CA3AF", display:"flex", alignItems:"center", justifyContent:"center", fontSize:".6rem", fontWeight:800, flexShrink:0, transition:"all .2s" }}>{st.n}</div>
+              <div style={{ fontWeight: i===step ? 700 : 500, fontSize:".82rem", color: i===step ? "#1F2937" : "#9CA3AF", transition:"all .2s" }}>{st.label}</div>
+              {i===step && <svg style={{ marginLeft:"auto", flexShrink:0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1158A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>}
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
@@ -4711,8 +4805,8 @@ export default function App() {
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="hero-section" style={{ background:"linear-gradient(130deg,#D8E8FF 0%,#D2E3F5 45%,#CFDDF2 100%)", minHeight:340, position:"relative", overflow:"visible", display:"flex", alignItems:"center", width:"100%" }}>
 
-        <div style={{ margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
-          <div style={{ maxWidth:isMobileRef.current?"100%":580,width:"100%",boxSizing:"border-box",margin:"0 auto",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
+        <div style={{ maxWidth:1600,margin:"0 auto",position:"relative",zIndex:2,paddingTop:isMobileRef.current?20:36,paddingBottom:isMobileRef.current?16:36,paddingLeft:isMobileRef.current?0:24,paddingRight:isMobileRef.current?0:24,width:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr",alignItems:"center",gap:isMobileRef.current?16:40 }}>
+          <div style={{ width:"100%",boxSizing:"border-box",textAlign:"center",paddingLeft:isMobileRef.current?16:0,paddingRight:isMobileRef.current?16:0 }}>
             {/* eyebrow pill */}
             <div className="hero-content hero-eyebrow" style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#fff",borderRadius:50,padding:"5px 16px 5px 8px",marginBottom:12,border:"1px solid #DBEAFE",maxWidth:"100%",boxSizing:"border-box" }}>
               <span style={{ background:"linear-gradient(90deg,#1158A6,#2563EB)",borderRadius:50,padding:"3px 12px",fontSize:".63rem",fontWeight:800,color:"#fff",letterSpacing:".07em",flexShrink:0 }}>NEW</span>
@@ -4740,6 +4834,7 @@ export default function App() {
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T}/>
 
           </div>
+          {isDesktop && <BookingStepsPanel/>}
         </div>
 
       </section>
