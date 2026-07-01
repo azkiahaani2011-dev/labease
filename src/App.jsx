@@ -1256,7 +1256,7 @@ const NEAR_ME = [
 
 const FAQS = [
   { q:"How do I book a lab test on LabEase?", a:"Browse our partner labs, choose your tests, add them to cart, and complete the 4-step booking: patient info, date & slot, collection mode, and confirmation. You'll receive a booking ID instantly via email." },
-  { q:"Is home sample collection really free?", a:"Yes. Home collection is completely free for eligible tests at participating labs. A certified phlebotomist arrives at your doorstep at your chosen time slot." },
+  { q:"How long does it take to get my report?", a:"Most routine tests like CBC, thyroid, and blood sugar are delivered the same day or within 24 hours. Specialized tests may take 2–3 days. You'll receive your report digitally once it's ready." },
   { q:"How soon will I receive my reports?", a:"Routine blood tests are typically ready the same day or within 2–6 hours. Specialised tests may take 24–72 hours. Exact turnaround times are listed for every test on our platform." },
   { q:"Are there hidden charges?", a:"Never. The price shown on LabEase is the final price you pay — inclusive of all taxes. No convenience fees, no surprises." },
 ];
