@@ -2941,12 +2941,37 @@ function LazyImg({ src, alt, style, className="" }) {
   );
 }
 
-function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
+function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T, allLabs }) {
   const [open, setOpen] = React.useState(false);
   const [activeIdx, setActiveIdx] = React.useState(-1);
   const [tab, setTab] = React.useState("tests"); // "tests" | "labs"
   const wrapRef = React.useRef(null);
   const inputRef = React.useRef(null);
+
+  // Build search index dynamically from actual website data
+  const searchIndex = React.useMemo(() => {
+    const labs = (allLabs || LABS).filter(l => l.active !== false);
+    const items = [];
+    const seenTests = new Set();
+    labs.forEach(lab => {
+      (lab.tests || []).forEach(t => {
+        if (!seenTests.has(t.name)) {
+          seenTests.add(t.name);
+          items.push({ type:"test", label:t.name, sub:`${t.cat} · from ₹${t.price}`, cat:t.cat, price:t.price });
+        }
+      });
+      items.push({ type:"lab", label:lab.name, sub:`${lab.city} · ${(lab.tests||[]).length} tests`, cat:"" });
+    });
+    ALL_PACKAGES.forEach(p => {
+      items.push({ type:"package", label:p.title, sub:`${p.sub} · ₹${p.price}`, cat:p.cat, price:p.price });
+    });
+    // Only include categories that have at least one test in the active labs
+    const activeCats = new Set(items.filter(i=>i.type==="test").map(i=>i.cat));
+    ["Blood Tests","Thyroid","Diabetes","Heart Health","Vitamins","Kidney","Liver","Full Body Packages","Cancer Markers","Hormones"]
+      .filter(cat => activeCats.has(cat))
+      .forEach(cat => items.push({ type:"category", label:cat, sub:"Category", cat }));
+    return items;
+  }, [allLabs]);
 
   const suggestions = React.useMemo(() => {
     if (q.trim().length < 1) return [];
@@ -2954,13 +2979,13 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
     const words = qlo.split(/\s+/).filter(Boolean);
     const match = item => words.some(w => item.label.toLowerCase().includes(w));
     if (tab === "labs") {
-      return SEARCH_INDEX.filter(i => i.type === "lab" && match(i)).slice(0, 8);
+      return searchIndex.filter(i => i.type === "lab" && match(i)).slice(0, 8);
     }
-    const tests = SEARCH_INDEX.filter(i => i.type === "test"     && match(i)).slice(0, 5);
-    const pkgs  = SEARCH_INDEX.filter(i => i.type === "package"  && match(i)).slice(0, 3);
-    const cats  = SEARCH_INDEX.filter(i => i.type === "category" && match(i)).slice(0, 2);
+    const tests = searchIndex.filter(i => i.type === "test"     && match(i)).slice(0, 5);
+    const pkgs  = searchIndex.filter(i => i.type === "package"  && match(i)).slice(0, 3);
+    const cats  = searchIndex.filter(i => i.type === "category" && match(i)).slice(0, 2);
     return [...tests, ...pkgs, ...cats].slice(0, 8);
-  }, [q, tab]);
+  }, [q, tab, searchIndex]);
 
   React.useEffect(() => {
     const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) { setOpen(false); setActiveIdx(-1); } };
@@ -2984,10 +3009,10 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T }) {
   const goText = (text) => {
     if (!text.trim()) return;
     if (tab === "labs") { setLabQ(text); setQ(text); setOpen(false); navTo("labs"); return; }
-    const exact = SEARCH_INDEX.find(i => i.label.toLowerCase() === text.toLowerCase());
+    const exact = searchIndex.find(i => i.label.toLowerCase() === text.toLowerCase());
     if (exact) { pick(exact); return; }
-    const partial = SEARCH_INDEX.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
-      || SEARCH_INDEX.find(i => i.label.toLowerCase().includes(text.toLowerCase()));
+    const partial = searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
+      || searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()));
     if (partial) { pick(partial); return; }
     setLabQ(text); setQ(text); setOpen(false); navTo("labs");
   };
@@ -4799,7 +4824,7 @@ export default function App() {
 
 
             {/* search bar */}
-            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T}/>
+            <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T} allLabs={allLabs}/>
 
           </div>
           {isDesktop && <BookingStepsPanel/>}
