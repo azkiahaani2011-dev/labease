@@ -4795,28 +4795,6 @@ export default function App() {
               Compare prices across verified partner labs. Free home collection, transparent pricing, digital reports in hours.
             </p>
 
-            {/* ── Desktop category nav bar ── */}
-            {!isMobileRef.current && (
-              <div style={{ display:"flex",alignItems:"center",background:"#0F2B5B",borderRadius:10,marginBottom:16,overflow:"hidden",width:"fit-content" }}>
-                {[
-                  { label:"Popular Packages",  action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
-                  { label:"Lifestyle Packages", action:()=>{ document.getElementById("packages-section")?.scrollIntoView({behavior:"smooth"}); } },
-                  { label:"Popular Tests",      action:()=>navTo("alltests") },
-                  { label:"Family Care",        action:()=>{ setCatF("Family Health"); navTo("labs"); } },
-                  { label:"Health Scans",       action:()=>{ setCatF("Imaging"); navTo("labs"); } },
-                ].map((item, i, arr) => (
-                  <React.Fragment key={i}>
-                    <button onClick={item.action}
-                      style={{ background:"none",border:"none",cursor:"pointer",padding:"13px 20px",fontFamily:"'Manrope',sans-serif",fontWeight:700,fontSize:".84rem",color:"rgba(255,255,255,.9)",letterSpacing:".01em",whiteSpace:"nowrap",transition:"background .15s,color .15s" }}
-                      onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.color="#fff"; }}
-                      onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="rgba(255,255,255,.9)"; }}>
-                      {item.label}
-                    </button>
-                    {i < arr.length - 1 && <div style={{ width:1,height:18,background:"rgba(255,255,255,.25)",flexShrink:0 }}/>}
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
 
             {/* search bar */}
             <HeroSearch q={q} setQ={setQ} setLabQ={setLabQ} setSelectedTest={setSelectedTest} navTo={navTo} T={T}/>
