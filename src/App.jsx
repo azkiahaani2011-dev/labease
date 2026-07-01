@@ -1952,9 +1952,9 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
    render. This fixes Add/Book buttons losing click handlers on cart updates.
 ────────────────────────────────────────────────────────────────────────── */
 
-function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, selectedTest, addCart }) {
+function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, selectedTest, addCart, setCartOpen }) {
   const minPrice = l.tests?.length ? Math.min(...l.tests.map(t=>t.price)) : null;
-  const reportTime = l.reportTime || "24 hrs";
+  const reportTime = l.reportTime || "";
 
   // Find the matching test for the selected test in this lab
   const matchedTest = selectedTest ? (
@@ -1967,12 +1967,12 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
   const displayPrice = matchedTest ? matchedTest.price : minPrice;
   const displayLabel = matchedTest ? matchedTest.name : null;
 
-  // When a test is pre-selected, clicking the card/Book Now auto-adds it and goes straight to booking
+  // When a test is pre-selected, clicking the card/Book Now auto-adds it and opens cart
   const handleBookDirect = (e) => {
     if (!selectedTest || !addCart) return false;
     e?.stopPropagation?.();
     const match = matchedTest || l.tests[0];
-    if (match) { addCart(l, match); navTo("booking"); return true; }
+    if (match) { addCart(l, match); if (setCartOpen) setCartOpen(true); return true; }
     return false;
   };
 
@@ -2027,6 +2027,9 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           </div>
         )}
 
+        {reportTime && (
+          <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:10,textAlign:"center" }}>REPORTS IN {reportTime.toUpperCase()}</div>
+        )}
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12 }}>
           <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -2037,7 +2040,6 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
             {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
           </div>
         </div>
-        <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:12,textAlign:"center" }}>REPORTS IN {reportTime.toUpperCase()}</div>
         <div style={{ display:"flex",justifyContent:"center" }}>
           <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
             style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
@@ -2346,7 +2348,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
             </div>
           )}
           {!loading && (showAllLabs ? filtered : filtered.slice(0,7)).map(l => (
-            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart}/>
+            <LabCardML key={l.id} l={l} T={T} setLab={setLab} setCatF={setCatF} setTestQ={setTestQ} setSelectedTest={setSelectedTest} navTo={navTo} selectedTest={selectedTest} addCart={addCart} setCartOpen={setCartOpen}/>
           ))}
           {!loading && filtered.length > 7 && (
             <button onClick={()=>setShowAllLabs(v=>!v)}
