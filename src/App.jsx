@@ -4260,7 +4260,7 @@ function FeaturesCarousel() {
           Why LabEase<br/>is Helpful?
         </h3>
         <ul style={{ listStyle:"none", padding:0, margin: mob ? "0 auto" : 0, display:"flex", flexDirection:"column", gap: mob ? 7 : 10, maxWidth: mob ? 260 : "none" }}>
-          {["Keeps all your health records in one place","Shows when each record was created","Lets you store as many records as you need"].map((b,i) => (
+          {["Compare real prices across multiple labs before booking","Book a slot in minutes with doorstep sample collection","Get digital reports delivered directly to you"].map((b,i) => (
             <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:8, fontSize: mob ? ".76rem" : ".85rem", color:"rgba(255,255,255,.9)", lineHeight:1.4, textAlign:"left" }}>
               <span style={{ width:6, height:6, borderRadius:"50%", background:"rgba(255,255,255,.85)", flexShrink:0, marginTop:4 }}/>
               {b}
@@ -4312,7 +4312,7 @@ function FeaturesCarousel() {
       <Wave/>
       <div style={{ display:"grid", gridTemplateColumns: cols, gap: gapV, width:"100%", zIndex:1 }}>
         {[
-          { Ic:ITestTubes,  t1:"Choose from",          t2:"3000+ Tests" },
+          { Ic:ITestTubes,  t1:"Wide Range of",          t2:"Tests Available" },
           { Ic:IFlask,      t1:"Sample Collection",    t2:"at your convenience" },
           { Ic:IBadgeCheck, t1:"Verified",              t2:"Partner Labs" },
           { Ic:IClockReport,t1:"On Time",              t2:"Reports" },
