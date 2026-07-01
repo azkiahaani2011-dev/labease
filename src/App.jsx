@@ -2003,38 +2003,28 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
           <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
           <div style={{ flex:1,minWidth:0 }}>
-            <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:2 }}>{l.name}</div>
-            <div style={{ fontSize:".82rem",color:"#6B7280",marginBottom:5 }}>Diagnostic Lab</div>
-            <div style={{ fontSize:".82rem",color:"#6B7280" }}>Diagnostic Lab</div>
+            <div style={{ fontWeight:900,fontSize:"1.08rem",color:"#0D1117",lineHeight:1.3,letterSpacing:"-.02em",marginBottom:3 }}>{l.name}</div>
+            <div style={{ display:"flex",alignItems:"center",gap:4,fontSize:".78rem",color:"#6B7280",marginBottom:6 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>{[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}</span>
+            </div>
+            <div style={{ height:1,background:"#F1F5F9",marginBottom:6 }}/>
+            <div style={{ display:"flex",alignItems:"center",gap:0 }}>
+              <span style={{ fontSize:".77rem",color:"#374151",fontWeight:600 }}>{l.tests.length} Tests Available</span>
+              <span style={{ width:1,background:"#E5E7EB",height:14,margin:"0 8px",display:"inline-block" }}/>
+              <span style={{ display:"flex",alignItems:"center",gap:3,fontSize:".77rem",fontWeight:700,color:"#0D1117" }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                {(l.rating||4.5).toFixed(1)}
+                <span style={{ fontWeight:400,color:"#9CA3AF",fontSize:".72rem" }}>({l.reviews||0})</span>
+              </span>
+            </div>
           </div>
         </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 12px" }}/>
-
-        {/* Location */}
-        <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".82rem",color:"#374151",marginBottom:10 }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span style={{ fontWeight:600 }}>{[l.address, l.area, l.city].filter(Boolean).join(", ") || l.city || "—"}</span>
-        </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 10px" }}/>
-
-        {/* Tests count + Rating */}
-        <div style={{ display:"flex",alignItems:"center",gap:0,marginBottom:10 }}>
-          <div style={{ flex:1,display:"flex",alignItems:"center",gap:5,fontSize:".82rem",color:"#374151",fontWeight:600 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
-            {l.tests.length} Tests Available
-          </div>
-          <div style={{ width:1,background:"#E5E7EB",height:20,margin:"0 12px" }}/>
-          <div style={{ display:"flex",alignItems:"center",gap:4,fontSize:".82rem",fontWeight:700,color:"#0D1117" }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-            {(l.rating||4.5).toFixed(1)}
-            <span style={{ fontWeight:400,color:"#9CA3AF",fontSize:".75rem" }}>({l.reviews||0})</span>
-          </div>
-        </div>
-        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 12px" }}/>
+        <div style={{ height:1,background:"#F1F5F9",margin:"0 -18px 14px" }}/>
 
         {/* Selected test price */}
         {displayLabel && (
-          <div style={{ marginBottom:12 }}>
+          <div style={{ marginBottom:14 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:5,background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:6,padding:"3px 10px",fontSize:".72rem",fontWeight:700,color:"#1158A6",marginBottom:6 }}>
               🔬 {displayLabel}
             </div>
