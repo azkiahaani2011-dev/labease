@@ -19,7 +19,7 @@ const schema = {
           name: "Is there any extra charge for home sample collection?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. LabEase offers free home sample collection for most tests. There are no hidden charges.",
+            text: "No. LabEase offers home sample collection for most tests. There are no hidden charges.",
           },
         },
         {
@@ -166,7 +166,7 @@ export default function BloodTestAtHome({ navTo }) {
         items={[
           {
             q: "Is there any extra charge for home sample collection?",
-            a: "No. LabEase offers free home sample collection for most tests. The price you see includes the lab test fee and home visit. There are no hidden charges or additional fees.",
+            a: "No. LabEase offers home sample collection for most tests. The price you see includes the lab test fee and home visit. There are no hidden charges or additional fees.",
           },
           {
             q: "How early can I book a morning slot?",

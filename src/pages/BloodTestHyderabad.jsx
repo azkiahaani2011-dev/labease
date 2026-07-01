@@ -189,7 +189,7 @@ export default function BloodTestHyderabad({ navTo }) {
           },
           {
             q: "Is there an extra charge for home collection in Hyderabad?",
-            a: "No, home sample collection is included free of charge for most tests booked through LabEase in Hyderabad. The price displayed already includes the home visit — there are no hidden or surprise charges.",
+            a: "No, home sample collection is included for most tests booked through LabEase in Hyderabad. The price displayed already includes the home visit — there are no hidden or surprise charges.",
           },
           {
             q: "Can I book a blood test for my parents in Hyderabad?",
