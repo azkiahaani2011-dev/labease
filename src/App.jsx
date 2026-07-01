@@ -2030,7 +2030,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
         {reportTime && (
           <div style={{ fontSize:".7rem",fontWeight:800,color:"#16A34A",letterSpacing:".1em",textTransform:"uppercase",marginBottom:10,textAlign:"center" }}>REPORTS IN {reportTime.toUpperCase()}</div>
         )}
-        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12 }}>
+        <div style={{ display:"flex",justifyContent:"center",alignItems:"center",marginBottom:12,gap:18 }}>
           <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             {l.timing||"6AM – 10PM"}
