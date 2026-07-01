@@ -2285,7 +2285,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
     );
 
   return (
-    <div style={{ minHeight:"100vh", background:"#F8FAFC", fontFamily:"'Manrope',sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#fff", fontFamily:"'Manrope',sans-serif" }}>
 
       {/* ── PAGE HEADER ── */}
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"12px 16px 12px" }}>
@@ -2298,7 +2298,7 @@ function LabsPageML({ T, catF, setCatF, setLab, setTestQ, navTo, cart, selectedT
       </div>
 
       {/* ── BODY ── */}
-      <div style={{ background:"#F8FAFC", minHeight:"80vh", padding:"16px 0" }}>
+      <div style={{ background:"#fff", minHeight:"80vh", padding:"16px 0" }}>
         {/* Desktop two-column wrapper */}
         <div style={isDesktop ? { display:"flex", gap:28, alignItems:"flex-start", maxWidth:1280, margin:"0 auto", padding:"0 24px" } : {}}>
         <div style={isDesktop ? { flex:1, minWidth:0 } : {}}>
