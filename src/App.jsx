@@ -1978,7 +1978,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
 
   return (
     <div style={{ background:"#fff",border:"1px solid #E5E7EB",borderRadius:14,marginBottom:12,overflow:"hidden",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}
-      onClick={(e)=>{ if(handleBookDirect(e)) return; setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
+      onClick={(e)=>{ if(selectedTest){ handleBookDirect(e); return; } setLab(l); setCatF("All"); setTestQ(""); if(setSelectedTest) setSelectedTest(null); navTo("lab"); }}>
       <div style={{ padding:"20px 18px 18px" }}>
         <div style={{ display:"flex",gap:14,alignItems:"flex-start",marginBottom:16 }}>
           <div style={{ flexShrink:0 }}><LabLogo lab={l} size={86} radius={10}/></div>
@@ -2041,12 +2041,21 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           </div>
         </div>
         <div style={{ display:"flex",justifyContent:"center" }}>
-          <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
-            style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
-            onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
-            onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
-            View Tests &amp; Prices
-          </button>
+          {selectedTest ? (
+            <button onClick={e=>{ e.stopPropagation(); const match = matchedTest || l.tests[0]; if(match){ addCart(l, match); if(setCartOpen) setCartOpen(true); } }}
+              style={{ background:"#16A34A",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(22,163,74,.35)",transition:"background .15s",width:"85%" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#15803D"}
+              onMouseLeave={e=>e.currentTarget.style.background="#16A34A"}>
+              Book Now
+            </button>
+          ) : (
+            <button onClick={e=>{ e.stopPropagation(); if(setSelectedTest) setSelectedTest(null); setLab(l); setCatF("All"); setTestQ(""); navTo("lab"); }}
+              style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"13px 0",fontWeight:700,cursor:"pointer",fontSize:".88rem",fontFamily:"'Manrope',sans-serif",boxShadow:"0 3px 12px rgba(17,88,166,.35)",transition:"background .15s",width:"85%" }}
+              onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
+              onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
+              View Tests &amp; Prices
+            </button>
+          )}
         </div>
       </div>
     </div>
