@@ -1884,14 +1884,16 @@ const MARQUEE_NAME_B64 = {
 const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
   // Supabase only — no localStorage fallback
   const logos = React.useMemo(() => {
+    const defaults = DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
     if (sbMarqueeLogos && sbMarqueeLogos.length > 0) {
-      return sbMarqueeLogos.map(l => ({
+      // Custom logos added via admin (ids starting with 'custom_')
+      const custom = sbMarqueeLogos.filter(l => String(l.id).startsWith('custom_')).map(l => ({
         ...l,
-        // fill in b64 from hardcoded map if the saved entry doesn't have one
-        b64: l.b64 || (MARQUEE_NAME_B64[l.name] ? MARQUEE_NAME_B64[l.name]() : null),
+        b64: l.b64 || null,
       }));
+      return [...defaults, ...custom];
     }
-    return DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
+    return defaults;
   }, [sbMarqueeLogos]);
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
@@ -4764,7 +4766,12 @@ export default function App() {
       sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
       tests,
     };
-  }).concat(sbExtraLabs.filter(el => !(el.name||'').toLowerCase().includes('faiz')).map(el => {
+  }).concat(sbExtraLabs.filter(el => {
+    const deletedIds = sbAdminSettings['le_deleted_sb_ids'] || [];
+    if (deletedIds.includes(el._supabase_id)) return false;
+    if ((el.name||'').toLowerCase().includes('faiz')) return false;
+    return true;
+  }).map(el => {
     const adminEl = (sbAdminSettings['le_labs'] || []).find(a => a._supabase_id === el._supabase_id || a.id === el.id);
     return {
     ...el,
