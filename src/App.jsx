@@ -4599,15 +4599,6 @@ export default function App() {
     return ALL_PACKAGES;
   })();
 
-  const homeCollFee = (() => {
-    if (!lab || !form?.mode || form.mode !== 'home') return 0;
-    const fee = lab.homeCollectionFee;
-    if (!fee || fee.toString().toLowerCase() === 'free') return 0;
-    return parseInt(fee.toString().replace(/[^0-9]/g,'')) || 0;
-  })();
-  const total    = cart.reduce((s,x) => s+x.price,0) + homeCollFee;
-  const mrpTotal = cart.reduce((s,x) => s+x.mrp,0) + homeCollFee;
-  const saving   = mrpTotal-total;
 
   const addCart = (l,t) => {
     if (cart.find(x=>x.tid===t.id)) return;
@@ -4788,6 +4779,15 @@ export default function App() {
     reviews:      el.reviews || 0,
   })));
   const lab = allLabs.find(l => l.id === labId) || allLabs.find(l => l.id === cart[0]?.lid) || null;
+  const homeCollFee = (() => {
+    if (!lab || !form?.mode || form.mode !== 'home') return 0;
+    const fee = lab.homeCollectionFee;
+    if (!fee || fee.toString().toLowerCase() === 'free') return 0;
+    return parseInt(fee.toString().replace(/[^0-9]/g,'')) || 0;
+  })();
+  const total    = cart.reduce((s,x) => s+x.price,0) + homeCollFee;
+  const mrpTotal = cart.reduce((s,x) => s+x.mrp,0)   + homeCollFee;
+  const saving   = mrpTotal - total;
   const filtLabs = allLabs.filter(l=>{
     const q=labQ.toLowerCase();
     if(q && !l.name.toLowerCase().includes(q) && !l.address.toLowerCase().includes(q)) return false;
