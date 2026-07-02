@@ -1574,8 +1574,15 @@ function TrustedLogos(props) {
   useEffect(function(){
     var sb = props.sbSettings && props.sbSettings['le_marquee_logos'];
     if (sb && Array.isArray(sb) && sb.length) {
-      // le_marquee_logos now stores full objects with b64
-      setLogos(sb);
+      // Restore b64: try inline first, then fallback to separate key (old format)
+      var restored = sb.map(function(l) {
+        if (l.id && String(l.id).startsWith('custom_') && !l.b64) {
+          var sep = props.sbSettings && props.sbSettings['le_logo_b64_'+l.id];
+          if (sep) return Object.assign({}, l, {b64: sep});
+        }
+        return l;
+      });
+      setLogos(restored);
     }
   }, [props.sbSettings]);
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
@@ -1589,9 +1596,16 @@ function TrustedLogos(props) {
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
 
   function save(next){
-    // Store full logo objects including b64 directly in le_marquee_logos
     setLogos(next);
-    syncAdminSetting('le_marquee_logos', next);
+    // Save full objects including b64 inline so the website can read them directly
+    supaAdmin.from('admin_settings').upsert({ key: 'le_marquee_logos', value: next, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){
+      if (r.error) {
+        setSaveErr('❌ Save failed: ' + (r.error.message || r.error.code || 'Unknown error'));
+      } else {
+        setSaveErr('');
+        showSyncStatus(true, '✅ Logo saved to Supabase');
+      }
+    });
   }
 
   function addNew(){
