@@ -156,11 +156,9 @@ const MODES = ['Home','Clinic'];
 
 // Supabase client
 var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzIxNjcsImV4cCI6MjA2NjM0ODE2N30.0Q_1tkBdvJBygfwB01rAVMHqrQ7s89L2ZWHGpGqFM3k';
-var sb = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
-var SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
 var supaAdmin = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+var sb = supaAdmin; // alias used by bookings functions
 // Sync an admin override key to Supabase admin_settings so all devices update instantly
 // Write a setting directly to Supabase (no localStorage involved)
 function showSyncStatus(ok, msg) {
@@ -483,7 +481,7 @@ function Dashboard(props) {
     {label:'This Week',value:fmt(weekRev),bg:'#FDF4FF',emoji:'📊'},
     {label:'This Month',value:fmt(monthRev),bg:'#F0FDF4',emoji:'📈'},
     {label:'Total Revenue',value:fmt(revenue),bg:'#FFF7ED',emoji:'💰'},
-    {label:'Total Labs',value:LAB_NAMES.length,bg:'#EFF6FF',emoji:'🏥'},
+    {label:'Total Labs',value:(props.labs||[]).length,bg:'#EFF6FF',emoji:'🏥'},
   ];
   return (
     <div style={{padding:28}}>
@@ -1906,15 +1904,10 @@ function App() {
   useEffect(function() {
     function fetchBookings() {
       loadBookingsFromSupabase().then(function(data) {
-        if (data) {
-          setBookings(data);
-        } else {
-          // Supabase unavailable or table missing — fall back to localStorage demo data
-          setBookings(genBookings());
-        }
+        setBookings(data || []);
         setBookingsLoading(false);
       }).catch(function() {
-        setBookings(genBookings());
+        setBookings([]);
         setBookingsLoading(false);
       });
     }
@@ -1950,7 +1943,7 @@ function App() {
             <span style={{fontWeight:500}}>Admin</span>
           </div>
         </div>
-        {page==='dashboard' && <Dashboard bookings={bookings} />}
+        {page==='dashboard' && <Dashboard bookings={bookings} labs={labs} />}
         {page==='bookings' && <Bookings bookings={bookings} setBookings={setBookings} bookingsLoading={bookingsLoading} />}
         {page==='labs' && <Labs labs={labs} setLabs={setLabs} sbSettings={sbSettings} />}
         {page==='tests' && <Tests tests={tests} setTests={setTests} sbSettings={sbSettings} />}
