@@ -4426,14 +4426,16 @@ function PackagesPage({ navTo, setSelectedTest }) {
 
 /* ─── ERROR BOUNDARY ────────────────────────────────────────────────────── */
 export class ErrorBoundary extends React.Component {
-  constructor(props) { super(props); this.state = { hasError: false }; }
-  static getDerivedStateFromError() { return { hasError: true }; }
+  constructor(props) { super(props); this.state = { hasError: false, errorMsg: '' }; }
+  static getDerivedStateFromError(error) { return { hasError: true, errorMsg: error?.message || String(error) }; }
+  componentDidCatch(error, info) { console.error('ErrorBoundary caught:', error, info?.componentStack); }
   render() {
     if (this.state.hasError) return (
       <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'Manrope',sans-serif",gap:16,padding:24,textAlign:"center" }}>
         <div style={{ fontSize:"3rem" }}>⚠️</div>
         <h2 style={{ color:"#111",fontSize:"1.4rem",fontWeight:800 }}>Something went wrong</h2>
         <p style={{ color:"#6B7280",fontSize:".95rem" }}>Please refresh the page to continue.</p>
+        {this.state.errorMsg && <p style={{ color:"#EF4444",fontSize:".75rem",maxWidth:340,wordBreak:"break-all" }}>{this.state.errorMsg}</p>}
         <button onClick={()=>window.location.reload()} style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:10,padding:"12px 28px",fontWeight:700,cursor:"pointer",fontSize:".9rem" }}>Refresh Page</button>
       </div>
     );
