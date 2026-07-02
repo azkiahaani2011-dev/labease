@@ -1569,24 +1569,25 @@ function Packages(props) {
 }
 
 function TrustedLogos(props) {
-  var sl=useState(DEFAULT_MARQUEE),logos=sl[0],setLogos=sl[1];
-  // Sync from Supabase settings whenever they arrive/change
+  // customLogos = only the logos added by admin (not the hardcoded defaults)
+  var sl=useState([]),customLogos=sl[0],setCustomLogos=sl[1];
+  // Load custom logos from Supabase: le_logo_ids = ['custom_1234', ...], le_logo_custom_1234 = {name, b64}
   useEffect(function(){
-    var sb = props.sbSettings && props.sbSettings['le_marquee_logos'];
-    if (sb && Array.isArray(sb) && sb.length) {
-      // Restore b64: try inline first, then fallback to separate key (old format)
-      var restored = sb.map(function(l) {
-        if (l.id && String(l.id).startsWith('custom_') && !l.b64) {
-          var sep = props.sbSettings && props.sbSettings['le_logo_b64_'+l.id];
-          if (sep) return Object.assign({}, l, {b64: sep});
-        }
-        return l;
-      });
-      setLogos(restored);
-    }
+    var ids = props.sbSettings && props.sbSettings['le_logo_ids'];
+    if (!Array.isArray(ids) || !ids.length) { setCustomLogos([]); return; }
+    var loaded = ids.map(function(id) {
+      var data = props.sbSettings['le_logo_'+id];
+      if (!data) return null;
+      return {id:id, name:data.name||id, b64:data.b64||null};
+    }).filter(Boolean);
+    setCustomLogos(loaded);
   }, [props.sbSettings]);
+
+  // Display list = hardcoded defaults (always shown) + custom logos from Supabase
+  var displayLogos = DEFAULT_MARQUEE.concat(customLogos);
+
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
-  var se=useState(null),editing=se[0],setEditing=se[1]; // id being edited
+  var se=useState(null),editing=se[0],setEditing=se[1];
   var sn=useState(''),newName=sn[0],setNewName=sn[1];
   var snl=useState(null),newLogo=snl[0],setNewLogo=snl[1];
   var sen=useState(''),editName=sen[0],setEditName=sen[1];
@@ -1594,51 +1595,74 @@ function TrustedLogos(props) {
   var sew=useState(false),editingLogoFor=sew[0],setEditingLogoFor=sew[1];
   var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
+  var ssav=useState(false),saving=ssav[0],setSaving=ssav[1];
 
-  function save(next){
-    setLogos(next);
-    // Save full objects including b64 inline so the website can read them directly
-    supaAdmin.from('admin_settings').upsert({ key: 'le_marquee_logos', value: next, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(function(r){
-      if (r.error) {
-        setSaveErr('❌ Save failed: ' + (r.error.message || r.error.code || 'Unknown error'));
-      } else {
-        setSaveErr('');
-        showSyncStatus(true, '✅ Logo saved to Supabase');
-      }
+  function upsertRow(key, value, cb) {
+    supaAdmin.from('admin_settings').upsert({key:key, value:value, updated_at:new Date().toISOString()}, {onConflict:'key'}).then(function(r){
+      if (r.error) { if(cb) cb(r.error); }
+      else { if(cb) cb(null); }
     });
   }
 
   function addNew(){
     if(!newLogo){setSaveErr('Please upload a logo first.');return;}
-    setSaveErr('');
+    setSaveErr(''); setSaving(true);
     var id='custom_'+Date.now();
     var name=newName.trim()||'Partner Lab';
-    save(logos.concat([{id:id,name:name,src:'',b64:newLogo}]));
-    setNewName('');setNewLogo(null);setAdding(false);setAddingLogoFor(null);
+    // Step 1: save b64 data in its own row FIRST
+    upsertRow('le_logo_'+id, {name:name, b64:newLogo}, function(err1){
+      if(err1){setSaving(false);setSaveErr('❌ Save failed: '+(err1.message||err1.code||'Unknown'));return;}
+      // Step 2: only AFTER data is saved, add ID to the list
+      var currentIds = Array.isArray(props.sbSettings['le_logo_ids']) ? props.sbSettings['le_logo_ids'].slice() : [];
+      if(currentIds.indexOf(id)===-1) currentIds.push(id);
+      upsertRow('le_logo_ids', currentIds, function(err2){
+        setSaving(false);
+        if(err2){setSaveErr('❌ List update failed: '+(err2.message||err2.code||'Unknown'));return;}
+        setSaveErr('');
+        showSyncStatus(true, '✅ Logo saved — will appear on website shortly');
+        setCustomLogos(function(prev){return prev.concat([{id:id,name:name,b64:newLogo}]);});
+        setNewName('');setNewLogo(null);setAdding(false);setAddingLogoFor(null);
+      });
+    });
   }
-  function remove(id){save(logos.filter(function(l){return l.id!==id;}));}
+
+  function remove(id){
+    var currentIds = Array.isArray(props.sbSettings['le_logo_ids']) ? props.sbSettings['le_logo_ids'].slice() : [];
+    var nextIds = currentIds.filter(function(i){return i!==id;});
+    upsertRow('le_logo_ids', nextIds, function(err){
+      if(err){alert('Remove failed: '+(err.message||err.code));return;}
+      setCustomLogos(function(prev){return prev.filter(function(l){return l.id!==id;});});
+      showSyncStatus(true, '✅ Logo removed');
+    });
+  }
+
   function startEdit(l){setEditing(l.id);setEditName(l.name);setEditLogo(l.b64||null);setEditingLogoFor(false);}
+
   function saveEdit(id){
-    save(logos.map(function(l){return l.id===id?Object.assign({},l,{name:editName,b64:editLogo||l.b64}):l;}));
-    setEditing(null);setEditingLogoFor(false);
+    setSaving(true);
+    var logo = customLogos.find(function(l){return l.id===id;});
+    var b64 = editLogo || (logo&&logo.b64) || null;
+    upsertRow('le_logo_'+id, {name:editName, b64:b64}, function(err){
+      setSaving(false);
+      if(err){setSaveErr('❌ Update failed: '+(err.message||err.code));return;}
+      setCustomLogos(function(prev){return prev.map(function(l){return l.id===id?Object.assign({},l,{name:editName,b64:b64}):l;});});
+      setEditing(null);setEditingLogoFor(false);
+      showSyncStatus(true, '✅ Logo updated');
+    });
   }
-  function resetToDefault(){save(DEFAULT_MARQUEE);}
 
   return (
     <div style={{padding:28}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
         <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Trusted Labs — Marquee Logos</div>
-        <div style={{display:'flex',gap:8}}>
-          <button className="btn btn-outline btn-sm" onClick={resetToDefault}>Reset to Default</button>
-          <button className="btn btn-primary" onClick={function(){setAdding(!adding);setAddingLogoFor(null);}}>+ Add Logo</button>
-        </div>
+        <button className="btn btn-primary" onClick={function(){setAdding(!adding);setAddingLogoFor(null);}}>+ Add Custom Logo</button>
       </div>
-      <div style={{fontSize:13,color:'#6B7280',marginBottom:24}}>These logos scroll in the "Our Trusted Lab Partners" section on the homepage. Changes show on the website within a few seconds.</div>
+      <div style={{fontSize:13,color:'#6B7280',marginBottom:24}}>The 6 default logos always show on the website. Add your own custom logos below — they will appear alongside the defaults.</div>
 
       {/* Add new */}
       {adding && (
-        <div className="card" style={{padding:20,marginBottom:20}}>
-          <div style={{fontWeight:700,fontSize:15,color:'#0D1117',marginBottom:14}}>Add New Logo</div>
+        <div className="card" style={{padding:20,marginBottom:20,border:'2px solid #DBEAFE'}}>
+          <div style={{fontWeight:700,fontSize:15,color:'#0D1117',marginBottom:14}}>Add New Custom Logo</div>
           <div style={{marginBottom:12}}>
             <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:4}}>Lab / Partner Name</label>
             <input type="text" style={{width:'100%',maxWidth:320}} placeholder="e.g. Narayana Diagnostics" value={newName} onChange={function(e){setNewName(e.target.value);}} />
@@ -1659,8 +1683,8 @@ function TrustedLogos(props) {
           {addingLogoFor!=='new' && (
             <div style={{marginTop:8}}>
               {saveErr&&<div style={{background:'#FEF2F2',color:'#DC2626',fontSize:12,padding:'7px 12px',borderRadius:8,marginBottom:8,fontWeight:600}}>{saveErr}</div>}
-              <div style={{display:'flex',gap:8}}>
-                <button className="btn btn-primary btn-sm" onClick={addNew}>Save</button>
+              <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                <button className="btn btn-primary btn-sm" onClick={addNew} disabled={saving}>{saving?'Saving…':'Save Logo'}</button>
                 <button className="btn btn-outline btn-sm" onClick={function(){setAdding(false);setAddingLogoFor(null);setNewName('');setNewLogo(null);setSaveErr('');}}>Cancel</button>
               </div>
             </div>
@@ -1668,59 +1692,76 @@ function TrustedLogos(props) {
         </div>
       )}
 
-      {/* Grid of existing logos */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:16}}>
-        {logos.map(function(l,idx){
-          var isEditing=editing===l.id;
-          return (
-            <div key={l.id} className="card" style={{padding:16,position:'relative'}}>
-              {/* drag handle indicator */}
-              <div style={{position:'absolute',top:8,left:8,color:'#D1D5DB',fontSize:11,fontWeight:600}}>#{idx+1}</div>
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
-                {(l.b64||l.src)
-                  ? <img src={l.b64||l.src} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} onError={function(e){e.target.style.display='none';}} />
-                  : <div style={{color:'#9CA3AF',fontSize:28}}>🏥</div>
-                }
-              </div>
-              {isEditing ? (
-                <div>
-                  <input type="text" style={{width:'100%',marginBottom:8,fontSize:13}} value={editName} onChange={function(e){setEditName(e.target.value);}} />
-                  {editingLogoFor ? (
-                    <LogoEditorInline onDone={function(b64){setEditLogo(b64);setEditingLogoFor(false);}} onCancel={function(){setEditingLogoFor(false);}} />
-                  ) : (
-                    <div style={{marginBottom:10}}>
-                      {editLogo
-                        ? <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
-                            <img src={editLogo} style={{height:36,maxWidth:80,objectFit:'contain',borderRadius:6,border:'1px solid #E5E7EB'}} />
-                            <button className="btn btn-outline btn-sm" onClick={function(){setEditingLogoFor(true);}}>Change</button>
-                          </div>
-                        : <button className="btn btn-outline btn-sm" style={{marginBottom:6}} onClick={function(){setEditingLogoFor(true);}}>📷 Change Logo</button>
-                      }
-                    </div>
-                  )}
-                  {!editingLogoFor && (
-                    <div style={{display:'flex',gap:6}}>
-                      <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(l.id);}}>Save</button>
-                      <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);setEditingLogoFor(false);}}>Cancel</button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:10,textAlign:'center'}}>{l.name}</div>
-                  <div style={{display:'flex',gap:6,justifyContent:'center'}}>
-                    <button className="btn btn-outline btn-sm" onClick={function(){startEdit(l);}}>Edit</button>
-                    <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){remove(l.id);}}>Remove</button>
+      {/* Custom logos section */}
+      {customLogos.length > 0 && (
+        <div style={{marginBottom:24}}>
+          <div style={{fontWeight:700,fontSize:13,color:'#374151',marginBottom:10}}>Your Custom Logos ({customLogos.length})</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:16}}>
+            {customLogos.map(function(l){
+              var isEditing=editing===l.id;
+              return (
+                <div key={l.id} className="card" style={{padding:16,border:'2px solid #DBEAFE'}}>
+                  <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
+                    {l.b64
+                      ? <img src={l.b64} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} />
+                      : <div style={{color:'#9CA3AF',fontSize:28}}>🏥</div>
+                    }
                   </div>
+                  {isEditing ? (
+                    <div>
+                      <input type="text" style={{width:'100%',marginBottom:8,fontSize:13}} value={editName} onChange={function(e){setEditName(e.target.value);}} />
+                      {editingLogoFor ? (
+                        <LogoEditorInline onDone={function(b64){setEditLogo(b64);setEditingLogoFor(false);}} onCancel={function(){setEditingLogoFor(false);}} />
+                      ) : (
+                        <div style={{marginBottom:10}}>
+                          {editLogo
+                            ? <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                                <img src={editLogo} style={{height:36,maxWidth:80,objectFit:'contain',borderRadius:6,border:'1px solid #E5E7EB'}} />
+                                <button className="btn btn-outline btn-sm" onClick={function(){setEditingLogoFor(true);}}>Change</button>
+                              </div>
+                            : <button className="btn btn-outline btn-sm" style={{marginBottom:6}} onClick={function(){setEditingLogoFor(true);}}>📷 Change Logo</button>
+                          }
+                        </div>
+                      )}
+                      {!editingLogoFor && (
+                        <div style={{display:'flex',gap:6}}>
+                          <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(l.id);}} disabled={saving}>{saving?'Saving…':'Save'}</button>
+                          <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);setEditingLogoFor(false);}}>Cancel</button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:10,textAlign:'center'}}>{l.name}</div>
+                      <div style={{display:'flex',gap:6,justifyContent:'center'}}>
+                        <button className="btn btn-outline btn-sm" onClick={function(){startEdit(l);}}>Edit</button>
+                        <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){remove(l.id);}}>Remove</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      {logos.length===0 && (
-        <div style={{textAlign:'center',padding:48,color:'#9CA3AF',fontSize:14}}>No logos yet. Click "+ Add Logo" to add one.</div>
+              );
+            })}
+          </div>
+        </div>
       )}
+
+      {/* Default logos (always shown, read-only) */}
+      <div>
+        <div style={{fontWeight:700,fontSize:13,color:'#374151',marginBottom:10}}>Default Logos (always visible, cannot be removed)</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))',gap:12}}>
+          {DEFAULT_MARQUEE.map(function(l){
+            return (
+              <div key={l.id} className="card" style={{padding:12,opacity:0.7}}>
+                <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:60,background:'#F9FAFB',borderRadius:8,marginBottom:8,overflow:'hidden'}}>
+                  <img src={l.src} alt={l.name} style={{maxHeight:48,maxWidth:120,objectFit:'contain'}} onError={function(e){e.target.style.display='none';}} />
+                </div>
+                <div style={{fontWeight:600,fontSize:12,color:'#6B7280',textAlign:'center'}}>{l.name}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

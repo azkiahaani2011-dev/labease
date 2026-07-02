@@ -1881,21 +1881,19 @@ const MARQUEE_NAME_B64 = {
   "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
 };
 
-const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos, sbAdminSettings }) => {
-  // Supabase only — no localStorage fallback
+const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
   const logos = React.useMemo(() => {
     const defaults = DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
-    if (sbMarqueeLogos && sbMarqueeLogos.length > 0) {
-      // Custom logos added via admin (ids starting with 'custom_')
-      const custom = sbMarqueeLogos.filter(l => String(l.id).startsWith('custom_')).map(l => ({
-        ...l,
-        // b64 inline (new format) or in separate key (old format)
-        b64: l.b64 || (sbAdminSettings && sbAdminSettings['le_logo_b64_'+l.id]) || null,
-      }));
-      return [...defaults, ...custom];
-    }
-    return defaults;
-  }, [sbMarqueeLogos, sbAdminSettings]);
+    // Custom logos: each stored as a separate admin_settings row
+    // le_logo_ids = ['custom_1234', 'custom_5678']
+    // le_logo_custom_1234 = {name, b64}
+    const ids = Array.isArray(sbAdminSettings['le_logo_ids']) ? sbAdminSettings['le_logo_ids'] : [];
+    const custom = ids.map(id => {
+      const data = sbAdminSettings['le_logo_' + id];
+      return (data && data.b64) ? { id, name: data.name || id, b64: data.b64 } : null;
+    }).filter(Boolean);
+    return [...defaults, ...custom];
+  }, [sbAdminSettings]);
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
@@ -4919,7 +4917,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbMarqueeLogos={sbAdminSettings.le_marquee_logos} sbAdminSettings={sbAdminSettings}/>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbAdminSettings={sbAdminSettings}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
