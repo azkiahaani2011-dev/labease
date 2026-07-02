@@ -1225,7 +1225,7 @@ var DEFAULT_MARQUEE = [
 
 function LogoEditorInline(props) {
   var onDone=props.onDone, onCancel=props.onCancel;
-  var CSIZE=240;
+  var CSIZE=128;
   var sr=useState(null),rawSrc=sr[0],setRawSrc=sr[1];
   // Use refs for position/zoom so event handlers always get latest values without stale closure
   var offXRef=useRef(0), offYRef=useRef(0), zoomRef=useRef(1);
@@ -1265,7 +1265,7 @@ function LogoEditorInline(props) {
       ctx.scale(z,z);
       ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
       ctx.restore();
-      var b64=canvas.toDataURL('image/png');
+      var b64=canvas.toDataURL('image/jpeg',0.82);
       onDone(b64);
     };
     img.src=rawSrc;
@@ -1773,9 +1773,21 @@ function App() {
         var updated = {};
         r.data.forEach(function(row) { updated[row.key] = row.value; });
         setSbSettings(updated);
-        if (updated['le_labs'] && Array.isArray(updated['le_labs'])) {
-          setLabs(updated['le_labs']);
-        }
+        // Also fetch extra_labs from Supabase to catch labs not yet in le_labs
+        supaAdmin.from('extra_labs').select('*').order('id').then(function(er) {
+          var sbRows = (er.data || []).map(function(row) {
+            return {id:'sb_'+row.id,_supabase_id:row.id,name:row.name,city:row.city||'',address:row.address||'',phone:row.phone||'',rating:parseFloat(row.rating)||4.5,reviews:row.reviews||0,timing:row.timing||'',sunday_timing:row.sunday_timing||'',reportTime:row.report_time||'Same Day',homeCollection:row.home_collection||false,homeCollectionFee:row.home_collection_fee||'Free',nabl:row.nabl||false,color:row.color||'#1158A6',logoBase64:row.logo_base64||'',tests:Array.isArray(row.tests)?row.tests:[],active:row.active!==false,distance:row.distance||'—',founded:row.founded||''};
+          });
+          var leLabs = (updated['le_labs'] && Array.isArray(updated['le_labs'])) ? updated['le_labs'] : [];
+          // Merge: start from sbRows, overlay any matching le_labs entry
+          var leMap = {};
+          leLabs.forEach(function(l){ leMap[l.id] = l; });
+          var merged = sbRows.map(function(r){ return leMap[r.id] ? Object.assign({},r,leMap[r.id]) : r; });
+          // Add any le_labs entries that don't have a matching sbRow (static labs 1-6)
+          var sbIds = new Set(sbRows.map(function(r){return r.id;}));
+          leLabs.filter(function(l){return !sbIds.has(l.id);}).forEach(function(l){merged.push(l);});
+          setLabs(merged.length ? merged : leLabs);
+        });
       });
     }
     fetchAll();

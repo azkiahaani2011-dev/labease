@@ -1932,7 +1932,11 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
           <div key={i} className="marquee-lab-logo">
             {(l.b64||l.src)
               ? <img src={l.b64||l.src} alt={l.name}
-                  onError={e=>{ e.target.style.display='none'; }}
+                  style={{ height:64, maxWidth:160, objectFit:"contain" }}
+                  onError={e=>{ e.target.replaceWith(Object.assign(document.createElement('div'),{
+                    style:'width:64px;height:64px;border-radius:12px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:1.3rem',
+                    innerHTML:'🏥'
+                  })); }}
                 />
               : <div style={{ width:64, height:64, borderRadius:12, background:"#EFF6FF", border:"1px solid #BFDBFE", display:"flex", alignItems:"center", justifyContent:"center" }}>
                   <span style={{ fontSize:"1.3rem" }}>🏥</span>
