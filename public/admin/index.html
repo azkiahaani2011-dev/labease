@@ -1906,7 +1906,16 @@ function App() {
   useEffect(function() {
     function fetchBookings() {
       loadBookingsFromSupabase().then(function(data) {
-        if (data) { setBookings(data); setBookingsLoading(false); }
+        if (data) {
+          setBookings(data);
+        } else {
+          // Supabase unavailable or table missing — fall back to localStorage demo data
+          setBookings(genBookings());
+        }
+        setBookingsLoading(false);
+      }).catch(function() {
+        setBookings(genBookings());
+        setBookingsLoading(false);
       });
     }
     fetchBookings();
