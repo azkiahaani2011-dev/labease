@@ -1932,12 +1932,11 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
           <div key={i} className="marquee-lab-logo">
             {(l.b64||l.src)
               ? <img src={l.b64||l.src} alt={l.name}
-                  onError={e=>{ e.target.style.display='none'; e.target.nextSibling && (e.target.nextSibling.style.display='flex'); }}
+                  onError={e=>{ e.target.style.display='none'; }}
                 />
-              : null}
-            <div style={{ display:"none", width:64, height:64, borderRadius:12, background:"#EFF6FF", border:"1px solid #BFDBFE", alignItems:"center", justifyContent:"center" }}>
-              <span style={{ fontSize:"1.3rem" }}>🏥</span>
-            </div>
+              : <div style={{ width:64, height:64, borderRadius:12, background:"#EFF6FF", border:"1px solid #BFDBFE", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <span style={{ fontSize:"1.3rem" }}>🏥</span>
+                </div>}
             <span>{l.name}</span>
           </div>
         ))}
@@ -4761,7 +4760,7 @@ export default function App() {
       sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
       tests,
     };
-  }).concat(sbExtraLabs.map(el => {
+  }).concat(sbExtraLabs.filter(el => !(el.name||'').toLowerCase().includes('faiz')).map(el => {
     const adminEl = (sbAdminSettings['le_labs'] || []).find(a => a._supabase_id === el._supabase_id || a.id === el.id);
     return {
     ...el,

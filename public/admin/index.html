@@ -708,6 +708,18 @@ function Labs(props) {
     saveTimingToSupabase(id, form.timing||'', form.sunday_timing||'');
     setEditing(null);
   }
+  function deleteLab(id) {
+    if (!window.confirm('Delete this lab? This cannot be undone.')) return;
+    var lab = props.labs.find(function(l){return l.id===id;});
+    var next = props.labs.filter(function(l){return l.id!==id;});
+    props.setLabs(next);
+    syncAdminSetting('le_labs', next);
+    if (lab && lab._supabase_id && supaAdmin) {
+      supaAdmin.from('extra_labs').delete().eq('id', lab._supabase_id).then(function(r){
+        if(r.error) console.error('deleteLab:', r.error);
+      });
+    }
+  }
   function toggle(id) {
     var next = props.labs.map(function(l){return l.id===id?Object.assign({},l,{active:!l.active}):l;});
     props.setLabs(next);
@@ -933,6 +945,9 @@ function Labs(props) {
                     </button>
                     <button className="btn btn-sm" onClick={function(){toggle(lab.id);}} style={{background:lab.active?'#FEF2F2':'#F0FDF4',color:lab.active?'#DC2626':'#15803D',border:'none',fontWeight:600}}>
                       {lab.active?'Deactivate':'Activate'}
+                    </button>
+                    <button className="btn btn-sm" onClick={function(){deleteLab(lab.id);}} style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}}>
+                      🗑 Delete
                     </button>
                   </div>
                 </div>
