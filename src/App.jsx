@@ -5129,8 +5129,8 @@ export default function App() {
               <div key={w.t} style={{ background:"#fff",borderRadius:gridCols===2?12:16,padding:gridCols===2?"14px 10px":"28px 18px",border:"1px solid #F1F5F9",boxShadow:"0 1px 6px rgba(0,0,0,.04)",transition:"all .18s",textAlign:"center" }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 24px rgba(17,88,166,.1)"; e.currentTarget.style.transform="translateY(-2px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 1px 6px rgba(0,0,0,.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-                <div style={{ width:gridCols===2?44:60,height:gridCols===2?44:60,borderRadius:gridCols===2?11:16,background:w.color,display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
-                  <w.Icon s={gridCols===2?24:36}/>
+                <div style={{ display:"flex",alignItems:"center",justifyContent:"center",margin:gridCols===2?"0 auto 8px":"0 auto 14px" }}>
+                  <w.Icon s={gridCols===2?36:52}/>
                 </div>
                 <div style={{ fontWeight:800,color:"#0D1117",marginBottom:gridCols===2?3:6,fontSize:gridCols===2?".72rem":".88rem" }}>{w.t}</div>
                 <div style={{ color:"#9CA3AF",fontSize:gridCols===2?".63rem":".79rem",lineHeight:1.5 }}>{w.d}</div>
