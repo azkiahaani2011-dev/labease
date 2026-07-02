@@ -728,7 +728,11 @@ function Labs(props) {
     saveExtraLabToSupabase(lab, function(saved) {
       if (saved) {
         var newLabWithId = Object.assign({}, lab, {id:'sb_'+saved.id, _supabase_id:saved.id});
-        props.setLabs(function(prev){return prev.concat([newLabWithId]);});
+        props.setLabs(function(prev){
+          var next = prev.concat([newLabWithId]);
+          syncAdminSetting('le_labs', next);
+          return next;
+        });
       }
     });
     setNewLab({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
