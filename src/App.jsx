@@ -1889,8 +1889,8 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos, sbAdminSettings }) => {
       // Custom logos added via admin (ids starting with 'custom_')
       const custom = sbMarqueeLogos.filter(l => String(l.id).startsWith('custom_')).map(l => ({
         ...l,
-        // b64 stored in separate key to avoid size issues
-        b64: (sbAdminSettings && sbAdminSettings['le_logo_b64_'+l.id]) || l.b64 || null,
+        // b64 stored directly in le_marquee_logos entry
+        b64: l.b64 || null,
       }));
       return [...defaults, ...custom];
     }

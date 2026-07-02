@@ -712,19 +712,14 @@ function Labs(props) {
     if (!window.confirm('Delete this lab? This cannot be undone.')) return;
     var lab = props.labs.find(function(l){return l.id===id;});
     var next = props.labs.filter(function(l){return l.id!==id;});
+    // le_labs is the source of truth — removing from it hides the lab everywhere
     props.setLabs(next);
     syncAdminSetting('le_labs', next);
-    // Store deleted supabase IDs so they stay hidden even if extra_labs delete fails
-    if (lab && lab._supabase_id) {
-      var deletedIds = Array.isArray(props.sbSettings['le_deleted_sb_ids']) ? props.sbSettings['le_deleted_sb_ids'].slice() : [];
-      if (deletedIds.indexOf(lab._supabase_id) === -1) deletedIds.push(lab._supabase_id);
-      syncAdminSetting('le_deleted_sb_ids', deletedIds);
-      // Also attempt actual Supabase delete (best effort)
-      if (supaAdmin) {
-        supaAdmin.from('extra_labs').delete().eq('id', lab._supabase_id).then(function(r){
-          if(r.error) console.error('deleteLab from extra_labs:', r.error);
-        });
-      }
+    // Also delete from extra_labs table (best effort, won't affect visibility since le_labs controls that)
+    if (lab && lab._supabase_id && supaAdmin) {
+      supaAdmin.from('extra_labs').delete().eq('id', lab._supabase_id).then(function(r){
+        if(r.error) console.error('deleteLab from extra_labs:', r.error);
+      });
     }
   }
   function toggle(id) {
@@ -1578,7 +1573,10 @@ function TrustedLogos(props) {
   // Sync from Supabase settings whenever they arrive/change
   useEffect(function(){
     var sb = props.sbSettings && props.sbSettings['le_marquee_logos'];
-    if (sb && Array.isArray(sb) && sb.length) setLogos(sb);
+    if (sb && Array.isArray(sb) && sb.length) {
+      // le_marquee_logos now stores full objects with b64
+      setLogos(sb);
+    }
   }, [props.sbSettings]);
   var sa=useState(false),adding=sa[0],setAdding=sa[1];
   var se=useState(null),editing=se[0],setEditing=se[1]; // id being edited
@@ -1591,16 +1589,9 @@ function TrustedLogos(props) {
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
 
   function save(next){
-    // Save metadata (without b64) to le_marquee_logos to keep it small
-    var meta = next.map(function(l){ return {id:l.id, name:l.name, src:l.src||''}; });
+    // Store full logo objects including b64 directly in le_marquee_logos
     setLogos(next);
-    syncAdminSetting('le_marquee_logos', meta);
-    // Save each custom logo's b64 in its own key
-    next.forEach(function(l){
-      if (l.id && l.id.startsWith('custom_') && l.b64) {
-        syncAdminSetting('le_logo_b64_'+l.id, l.b64);
-      }
-    });
+    syncAdminSetting('le_marquee_logos', next);
   }
 
   function addNew(){
@@ -1791,24 +1782,36 @@ function App() {
         var updated = {};
         r.data.forEach(function(row) { updated[row.key] = row.value; });
         setSbSettings(updated);
-        // Also fetch extra_labs from Supabase to catch labs not yet in le_labs
-        supaAdmin.from('extra_labs').select('*').order('id').then(function(er) {
-          var deletedSbIds = new Set(Array.isArray(updated['le_deleted_sb_ids']) ? updated['le_deleted_sb_ids'] : []);
-          var sbRows = (er.data || []).filter(function(row){ return !deletedSbIds.has(row.id); }).map(function(row) {
-            return {id:'sb_'+row.id,_supabase_id:row.id,name:row.name,city:row.city||'',address:row.address||'',phone:row.phone||'',rating:parseFloat(row.rating)||4.5,reviews:row.reviews||0,timing:row.timing||'',sunday_timing:row.sunday_timing||'',reportTime:row.report_time||'Same Day',homeCollection:row.home_collection||false,homeCollectionFee:row.home_collection_fee||'Free',nabl:row.nabl||false,color:row.color||'#1158A6',logoBase64:row.logo_base64||'',tests:Array.isArray(row.tests)?row.tests:[],active:row.active!==false,distance:row.distance||'—',founded:row.founded||''};
+        // le_labs is the source of truth — only show labs that exist there
+        var leLabs = (updated['le_labs'] && Array.isArray(updated['le_labs'])) ? updated['le_labs'] : [];
+        if (leLabs.length === 0) {
+          // No le_labs yet — fall back to fetching extra_labs directly (first-time load)
+          supaAdmin.from('extra_labs').select('*').order('id').then(function(er) {
+            var rows = (er.data || []).map(function(row) {
+              return {id:'sb_'+row.id,_supabase_id:row.id,name:row.name,city:row.city||'',address:row.address||'',phone:row.phone||'',rating:parseFloat(row.rating)||4.5,reviews:row.reviews||0,timing:row.timing||'',sunday_timing:row.sunday_timing||'',reportTime:row.report_time||'Same Day',homeCollection:row.home_collection||false,homeCollectionFee:row.home_collection_fee||'Free',nabl:row.nabl||false,color:row.color||'#1158A6',logoBase64:row.logo_base64||'',tests:Array.isArray(row.tests)?row.tests:[],active:row.active!==false,distance:row.distance||'—',founded:row.founded||''};
+            });
+            if (rows.length) {
+              // Sync to le_labs so future loads use le_labs
+              syncAdminSetting('le_labs', rows);
+              setLabs(rows);
+            }
           });
-          var leLabs = (updated['le_labs'] && Array.isArray(updated['le_labs'])) ? updated['le_labs'] : [];
-          // Filter deleted labs from leLabs too
-          var leLabs = leLabs.filter(function(l){ return !deletedSbIds.has(l._supabase_id); });
-          // Merge: start from sbRows, overlay any matching le_labs entry
-          var leMap = {};
-          leLabs.forEach(function(l){ leMap[l.id] = l; });
-          var merged = sbRows.map(function(r){ return leMap[r.id] ? Object.assign({},r,leMap[r.id]) : r; });
-          // Add any le_labs entries that don't have a matching sbRow (static labs 1-6 only)
-          var sbIds = new Set(sbRows.map(function(r){return r.id;}));
-          leLabs.filter(function(l){ return !sbIds.has(l.id) && !l._supabase_id; }).forEach(function(l){merged.push(l);});
-          setLabs(merged.length ? merged : leLabs);
-        });
+        } else {
+          // le_labs is the authoritative list — use it directly
+          // Fetch extra_labs only to fill in any data fields missing in le_labs
+          supaAdmin.from('extra_labs').select('*').order('id').then(function(er) {
+            var sbMap = {};
+            (er.data || []).forEach(function(row) {
+              sbMap[row.id] = {id:'sb_'+row.id,_supabase_id:row.id,name:row.name,city:row.city||'',address:row.address||'',phone:row.phone||'',rating:parseFloat(row.rating)||4.5,reviews:row.reviews||0,timing:row.timing||'',sunday_timing:row.sunday_timing||'',reportTime:row.report_time||'Same Day',homeCollection:row.home_collection||false,homeCollectionFee:row.home_collection_fee||'Free',nabl:row.nabl||false,color:row.color||'#1158A6',logoBase64:row.logo_base64||'',tests:Array.isArray(row.tests)?row.tests:[],active:row.active!==false,distance:row.distance||'—',founded:row.founded||''};
+            });
+            // Only show labs that are in le_labs — le_labs controls what's visible
+            var merged = leLabs.map(function(l) {
+              var sbBase = l._supabase_id ? sbMap[l._supabase_id] : null;
+              return sbBase ? Object.assign({}, sbBase, l) : l;
+            });
+            setLabs(merged);
+          });
+        }
       });
     }
     fetchAll();
