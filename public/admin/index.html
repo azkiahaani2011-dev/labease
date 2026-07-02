@@ -1659,16 +1659,6 @@ function TrustedLogos(props) {
       </div>
       <div style={{fontSize:13,color:'#6B7280',marginBottom:12}}>The 6 default logos always show on the website. Add your own custom logos below — they will appear alongside the defaults.</div>
 
-      {/* Debug panel — shows what Supabase actually has */}
-      <div style={{background:'#F0F9FF',border:'1px solid #BAE6FD',borderRadius:10,padding:12,marginBottom:20,fontSize:12,fontFamily:'monospace'}}>
-        <div style={{fontWeight:700,marginBottom:6,color:'#0369A1',fontFamily:'sans-serif'}}>🔍 Supabase Debug — What is saved:</div>
-        <div><b>le_logo_ids:</b> {JSON.stringify(props.sbSettings['le_logo_ids'] || 'NOT SET')}</div>
-        {Array.isArray(props.sbSettings['le_logo_ids']) && props.sbSettings['le_logo_ids'].map(function(id){
-          var data = props.sbSettings['le_logo_'+id];
-          return <div key={id}><b>le_logo_{id}:</b> {data ? ('name='+data.name+', b64_len='+(data.b64?data.b64.length:'MISSING')) : 'NOT SET'}</div>;
-        })}
-        {!Array.isArray(props.sbSettings['le_logo_ids']) && <div style={{color:'#DC2626'}}>No le_logo_ids key in Supabase — no custom logos saved yet</div>}
-      </div>
 
       {/* Add new */}
       {adding && (
