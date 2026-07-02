@@ -3038,13 +3038,19 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T, allLabs }) {
 
   const goText = (text) => {
     if (!text.trim()) return;
-    if (tab === "labs") { setLabQ(text); setQ(text); setOpen(false); navTo("labs"); return; }
+    if (tab === "labs") {
+      const labMatch = searchIndex.find(i => i.type === "lab" && i.label.toLowerCase().includes(text.toLowerCase()));
+      if (labMatch) { pick(labMatch); return; }
+      // No lab found — show no-results state in dropdown
+      setOpen(true); return;
+    }
     const exact = searchIndex.find(i => i.label.toLowerCase() === text.toLowerCase());
     if (exact) { pick(exact); return; }
     const partial = searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()) && i.type === "test")
       || searchIndex.find(i => i.label.toLowerCase().includes(text.toLowerCase()));
     if (partial) { pick(partial); return; }
-    setLabQ(text); setQ(text); setOpen(false); navTo("labs");
+    // No test found — show no-results state in dropdown instead of going to labs
+    setOpen(true);
   };
 
   const onKey = e => {
@@ -3147,6 +3153,29 @@ function HeroSearch({ q, setQ, setLabQ, setSelectedTest, navTo, T, allLabs }) {
               {chip.label}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* No results message */}
+      {open && q.trim().length > 0 && suggestions.length === 0 && (
+        <div style={{ position:"absolute",top:"calc(100% - 14px)",left:0,right:0,background:"#fff",borderRadius:"0 0 16px 16px",boxShadow:"0 12px 40px rgba(0,0,0,.13)",zIndex:500,borderTop:"1px solid #F1F5F9",padding:"24px 20px",textAlign:"center" }}>
+          <div style={{ fontSize:"1.6rem",marginBottom:8 }}>🔍</div>
+          <div style={{ fontWeight:700,fontSize:".9rem",color:"#111827",marginBottom:4 }}>
+            No {tab === "labs" ? "lab" : "test"} found for &ldquo;{q}&rdquo;
+          </div>
+          <div style={{ fontSize:".8rem",color:"#6B7280",fontWeight:500 }}>
+            {tab === "labs" ? "Try a different lab name or area." : "Try a different test name or browse categories below."}
+          </div>
+          {tab === "tests" && (
+            <div style={{ marginTop:14,display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap" }}>
+              {TRENDING_CHIPS.slice(0,4).map(chip=>(
+                <button key={chip.label} onClick={()=>{ pick({ type:"test", label:chip.label, cat:chip.cat }); }}
+                  style={{ background:"#EFF6FF",border:"none",borderRadius:20,padding:"5px 14px",fontSize:".73rem",fontWeight:700,color:"#1158A6",cursor:"pointer",fontFamily:"'Manrope',sans-serif" }}>
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
