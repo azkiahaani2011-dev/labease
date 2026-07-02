@@ -4761,7 +4761,9 @@ export default function App() {
       sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
       tests,
     };
-  }).concat(sbExtraLabs.map(el => ({
+  }).concat(sbExtraLabs.map(el => {
+    const adminEl = (sbAdminSettings['le_labs'] || []).find(a => a._supabase_id === el._supabase_id || a.id === el.id);
+    return {
     ...el,
     active:       el.active !== false,
     address:      el.address || el.city || '',
@@ -4769,7 +4771,7 @@ export default function App() {
     timing:       labSettings[String(el.id)]?.timing        || adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
     sunday_timing:labSettings[String(el.id)]?.sunday_timing || adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
-    homeCollectionFee: el.homeCollectionFee || 'Free',
+    homeCollectionFee: adminEl?.homeCollectionFee || el.homeCollectionFee || 'Free',
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
     logoBase64:   el.logoBase64 || '',
@@ -4777,7 +4779,7 @@ export default function App() {
     reportTime:   el.reportTime || 'Same Day',
     tests: Array.isArray(el.tests) && el.tests.length > 0 ? el.tests : [{id:`x${el.id}_1`,name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}],
     reviews:      el.reviews || 0,
-  })));
+  };}));
   const lab = allLabs.find(l => l.id === labId) || allLabs.find(l => l.id === cart[0]?.lid) || null;
   const homeCollFee = (() => {
     if (!lab || !form?.mode || form.mode !== 'home') return 0;
