@@ -23,6 +23,20 @@
   .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; cursor: pointer; color: #9CA3AF; font-size: 14px; font-weight: 500; transition: all .15s; margin: 2px 8px; }
   .nav-item:hover { background: #161B22; color: #E5E7EB; }
   .nav-item.active { background: #1158A6; color: #fff; }
+  .mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0D1117; z-index: 200; padding: 8px 0 12px; border-top: 1px solid #1F2937; }
+  .mob-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #9CA3AF; font-size: 10px; font-weight: 600; cursor: pointer; flex: 1; padding: 4px 0; }
+  .mob-nav-item.active { color: #60A5FA; }
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding-bottom: 70px; }
+    .mob-nav { display: flex; }
+    .top-bar { padding: 0 16px; }
+    .labs-grid { grid-template-columns: 1fr !important; }
+    .form-grid-2 { grid-template-columns: 1fr !important; }
+    .form-grid-2 > * { grid-column: auto !important; }
+    .test-row-grid { grid-template-columns: 1fr 1fr !important; }
+    .test-row-grid .test-del-btn { grid-column: 1/-1; justify-self: end; }
+  }
   .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 1px rgba(0,0,0,.05); }
   .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
   .badge-blue { background: #EFF6FF; color: #1D4ED8; }
@@ -668,7 +682,7 @@ function Labs(props) {
   const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   function startEdit(lab) {
     setEditing(lab.id);
-    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',sunday_timing:lab.sunday_timing||'',homeCollection:!!lab.homeCollection,homeCollectionFee:lab.homeCollectionFee||'Free',nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
+    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',sunday_timing:lab.sunday_timing||'',reportTime:lab.reportTime||lab.report_time||'Same Day',homeCollection:!!lab.homeCollection,homeCollectionFee:lab.homeCollectionFee||'Free',nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
     var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};}) : [];
     setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   }
@@ -731,7 +745,7 @@ function Labs(props) {
       {addingLab && (
         <div className="card" style={{padding:20,marginBottom:20}}>
           <div style={{fontWeight:700,fontSize:15,marginBottom:14,color:'#0D1117'}}>Add New Lab</div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
+          <div className="form-grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
             {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['color','Button Color']].map(function(pair){
               var k=pair[0]; var lbl=pair[1];
               return (
@@ -772,10 +786,8 @@ function Labs(props) {
               <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Verified Partner</label>
             </div>
             <div>
-              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In</label>
-              <select style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 6px'}} value={newLab.reportTime} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n.reportTime=v;return n;});}}>
-                {['Same Day','2–6 hrs','24 hrs','48 hrs','72 hrs'].map(function(r){return <option key={r} value={r}>{r}</option>;})}
-              </select>
+              <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In (e.g. Same Day, 4–6 hrs, 24 hrs)</label>
+              <input type="text" placeholder="Same Day" style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 8px'}} value={newLab.reportTime||''} onChange={function(e){var v=e.target.value;setNewLab(function(f){var n=Object.assign({},f);n.reportTime=v;return n;});}} />
             </div>
           </div>
           <div style={{marginBottom:14}}>
@@ -812,7 +824,7 @@ function Labs(props) {
           </div>
         </div>
       )}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18}}>
+      <div className="labs-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18}}>
         {props.labs.map(function(lab) {
           return (
             <div key={lab.id} className="lab-card">
@@ -822,7 +834,7 @@ function Labs(props) {
               </div>
               {editing === lab.id ? (
                 <div>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
+                  <div className="form-grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
                     {[['name','Lab Name'],['city','City'],['phone','Phone'],['rating','Rating'],['address','Address'],['color','Button Color']].map(function(pair){
                       var k=pair[0];var lbl=pair[1];
                       return (
@@ -863,6 +875,10 @@ function Labs(props) {
                       <input type="text" placeholder="Free" style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 8px'}} value={form.homeCollectionFee||''} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{homeCollectionFee:v});});}} />
                     </div>
                   )}
+                  <div style={{marginBottom:8}}>
+                    <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Reports Ready In (e.g. Same Day, 4–6 hrs, 24 hrs)</label>
+                    <input type="text" placeholder="Same Day" style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 8px'}} value={form.reportTime||''} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{reportTime:v});});}} />
+                  </div>
                   <div style={{marginBottom:8}}>
                     <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
                     <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:3}}>
@@ -1771,6 +1787,14 @@ function App() {
 
   var pageTitles = {dashboard:'Dashboard',bookings:'Bookings',labs:'Labs',tests:'Tests & Pricing',packages:'Healthcare Packages',trusted:'Trusted Logos',settings:'Settings'};
 
+  var mobNavItems = [
+    {key:'dashboard',label:'Dashboard',icon:'⊞'},
+    {key:'bookings',label:'Bookings',icon:'📋'},
+    {key:'labs',label:'Labs',icon:'🧪'},
+    {key:'tests',label:'Tests',icon:'📄'},
+    {key:'settings',label:'Settings',icon:'⚙️'},
+  ];
+
   return (
     <div>
       <Sidebar page={page} setPage={setPage} onLogout={logout} />
@@ -1790,6 +1814,18 @@ function App() {
         {page==='trusted'  && <TrustedLogos sbSettings={sbSettings} />}
         {page==='settings' && <Settings />}
       </div>
+      <nav className="mob-nav">
+        {mobNavItems.map(function(it){return (
+          <div key={it.key} className={'mob-nav-item'+(page===it.key?' active':'')} onClick={function(){setPage(it.key);}}>
+            <span style={{fontSize:18}}>{it.icon}</span>
+            <span>{it.label}</span>
+          </div>
+        );})}
+        <div className="mob-nav-item" onClick={logout} style={{color:'#EF4444'}}>
+          <span style={{fontSize:18}}>↩</span>
+          <span>Logout</span>
+        </div>
+      </nav>
     </div>
   );
 }
