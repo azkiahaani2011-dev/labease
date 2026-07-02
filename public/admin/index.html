@@ -664,11 +664,11 @@ function Labs(props) {
   const [form, setForm] = useState({});
   const [editTests, setEditTests] = useState([]);
   const [addingLab, setAddingLab] = useState(false);
-  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,nabl:false,logoBase64:'',color:'#1158A6'});
+  const [newLab, setNewLab] = useState({name:'',city:'',phone:'',rating:'4.5',address:'',timing:'',sunday_timing:'',reportTime:'Same Day',homeCollection:false,homeCollectionFee:'Free',nabl:false,logoBase64:'',color:'#1158A6'});
   const [newLabTests, setNewLabTests] = useState([{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   function startEdit(lab) {
     setEditing(lab.id);
-    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',sunday_timing:lab.sunday_timing||'',homeCollection:!!lab.homeCollection,nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
+    setForm({name:lab.name,city:lab.city||'',phone:lab.phone||'',rating:lab.rating||'4.5',address:lab.address||'',timing:lab.timing||'',sunday_timing:lab.sunday_timing||'',homeCollection:!!lab.homeCollection,homeCollectionFee:lab.homeCollectionFee||'Free',nabl:!!lab.nabl,color:lab.color||'#1158A6',logoBase64:lab.logoBase64||''});
     var tests = Array.isArray(lab.tests) ? lab.tests.map(function(t){return {name:t.name,price:t.price,mrp:t.mrp,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};}) : [];
     setEditTests(tests.length ? tests : [{name:'',price:'',mrp:'',cat:'Blood',time:'Same Day'}]);
   }
@@ -710,7 +710,7 @@ function Labs(props) {
     if (!newLab.name.trim()) return;
     var testsArr = newLabTests.filter(function(t){return t.name.trim();}).map(function(t,i){return {name:t.name.trim(),price:parseFloat(t.price)||199,mrp:parseFloat(t.mrp)||parseFloat(t.price)||199,cat:t.cat||'General',time:t.time||'Same Day',subtitle:t.subtitle||''};});
     if(testsArr.length===0) testsArr=[{name:'Consultation',price:199,mrp:499,cat:'General',time:'Same Day'}];
-    var lab = {name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',sunday_timing:newLab.sunday_timing.trim(),reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
+    var lab = {name:newLab.name.trim(),city:newLab.city.trim(),address:newLab.address.trim()||newLab.city.trim(),phone:newLab.phone.trim(),rating:parseFloat(newLab.rating)||4.5,reviews:0,timing:newLab.timing.trim()||'6:00 AM – 10:00 PM',sunday_timing:newLab.sunday_timing.trim(),reportTime:newLab.reportTime||'Same Day',homeCollection:newLab.homeCollection,homeCollectionFee:newLab.homeCollectionFee||'Free',nabl:newLab.nabl,color:newLab.color||'#1158A6',logoBase64:newLab.logoBase64||'',tests:testsArr,active:true,distance:'—',founded:new Date().getFullYear().toString()};
     saveExtraLabToSupabase(lab, function(saved) {
       if (saved) {
         var newLabWithId = Object.assign({}, lab, {id:'sb_'+saved.id, _supabase_id:saved.id});
@@ -761,6 +761,12 @@ function Labs(props) {
               <input type="checkbox" id="nl-hc" checked={newLab.homeCollection} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.homeCollection=v;return n;});}} />
               <label htmlFor="nl-hc" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Home Collection</label>
             </div>
+            {newLab.homeCollection && (
+              <div>
+                <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Home Collection Fee (type "Free" or amount e.g. 100)</label>
+                <input type="text" placeholder="Free" style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 8px'}} value={newLab.homeCollectionFee||''} onChange={function(e){var v=e.target.value;setNewLab(function(f){return Object.assign({},f,{homeCollectionFee:v});});}} />
+              </div>
+            )}
             <div style={{display:'flex',alignItems:'center',gap:8}}>
               <input type="checkbox" id="nl-nabl" checked={newLab.nabl} onChange={function(e){var v=e.target.checked;setNewLab(function(f){var n=Object.assign({},f);n.nabl=v;return n;});}} />
               <label htmlFor="nl-nabl" style={{fontSize:13,fontWeight:600,color:'#374151'}}>Verified Partner</label>
@@ -851,6 +857,12 @@ function Labs(props) {
                       <input type="checkbox" checked={!!form.nabl} onChange={function(e){var v=e.target.checked;setForm(function(f){return Object.assign({},f,{nabl:v});});}} /> Verified Partner
                     </label>
                   </div>
+                  {form.homeCollection && (
+                    <div style={{marginBottom:8}}>
+                      <label style={{fontSize:11,fontWeight:600,color:'#6B7280',display:'block',marginBottom:3}}>Home Collection Fee (type "Free" or amount e.g. 100)</label>
+                      <input type="text" placeholder="Free" style={{width:'100%',height:34,borderRadius:6,border:'1px solid #D1D5DB',fontSize:12,padding:'0 8px'}} value={form.homeCollectionFee||''} onChange={function(e){var v=e.target.value;setForm(function(f){return Object.assign({},f,{homeCollectionFee:v});});}} />
+                    </div>
+                  )}
                   <div style={{marginBottom:8}}>
                     <div style={{fontSize:11,fontWeight:700,color:'#374151',marginBottom:4}}>Tests / Packages</div>
                     <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr auto',gap:6,marginBottom:3}}>

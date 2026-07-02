@@ -2038,7 +2038,11 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
           </div>
           <div style={{ display:"flex",alignItems:"center",gap:5,fontSize:".8rem",color:"#374151",fontWeight:500 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-            {l.homeCollection!==false?"Home Collection":"Walk-in Only"}
+            {l.homeCollection!==false
+              ? (l.homeCollectionFee && l.homeCollectionFee.toString().toLowerCase()!=="free"
+                  ? `Home Collection · ₹${l.homeCollectionFee} extra`
+                  : "Home Collection · Free")
+              : "Walk-in Only"}
           </div>
         </div>
         <div style={{ display:"flex",justifyContent:"center" }}>
@@ -3916,6 +3920,11 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
                   </div>
                 ))}
                 <div style={{ borderTop:"1.5px dashed #DBEAFE",paddingTop:10,marginTop:8 }}>
+                  {homeCollFee > 0 && (
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#EA580C",fontSize:".79rem",marginBottom:3,fontWeight:600 }}>
+                      <span>🏠 Home Collection Fee</span><span>+₹{homeCollFee.toLocaleString()}</span>
+                    </div>
+                  )}
                   {saving > 0 && <>
                     <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".79rem",marginBottom:3 }}>
                       <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
@@ -4588,8 +4597,14 @@ export default function App() {
     return ALL_PACKAGES;
   })();
 
-  const total    = cart.reduce((s,x) => s+x.price,0);
-  const mrpTotal = cart.reduce((s,x) => s+x.mrp,0);
+  const homeCollFee = (() => {
+    if (!lab || !form?.mode || form.mode !== 'home') return 0;
+    const fee = lab.homeCollectionFee;
+    if (!fee || fee.toString().toLowerCase() === 'free') return 0;
+    return parseInt(fee.toString().replace(/[^0-9]/g,'')) || 0;
+  })();
+  const total    = cart.reduce((s,x) => s+x.price,0) + homeCollFee;
+  const mrpTotal = cart.reduce((s,x) => s+x.mrp,0) + homeCollFee;
   const saving   = mrpTotal-total;
 
   const addCart = (l,t) => {
@@ -4761,6 +4776,7 @@ export default function App() {
     timing:       labSettings[String(el.id)]?.timing        || adminOv.timings[el.id]       || el.timing       || '6:00 AM – 10:00 PM',
     sunday_timing:labSettings[String(el.id)]?.sunday_timing || adminOv.sundayTimings[el.id] || el.sunday_timing || '',
     homeCollection: el.homeCollection || false,
+    homeCollectionFee: el.homeCollectionFee || 'Free',
     nabl:         el.nabl || false,
     color:        el.color || '#1158A6',
     logoBase64:   el.logoBase64 || '',
@@ -5313,6 +5329,11 @@ export default function App() {
                 ))}
                 {/* Totals */}
                 <div style={{ paddingTop:16,borderTop:"2px dashed #E5E7EB",marginTop:4 }}>
+                  {homeCollFee > 0 && (
+                    <div style={{ display:"flex",justifyContent:"space-between",color:"#EA580C",fontSize:".83rem",marginBottom:4,fontWeight:600 }}>
+                      <span>🏠 Home Collection Fee</span><span>+₹{homeCollFee.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div style={{ display:"flex",justifyContent:"space-between",color:"#9CA3AF",fontSize:".83rem",marginBottom:4 }}>
                     <span>MRP Total</span><span style={{ textDecoration:"line-through" }}>₹{mrpTotal.toLocaleString()}</span>
                   </div>
