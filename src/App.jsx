@@ -1881,40 +1881,16 @@ const MARQUEE_NAME_B64 = {
   "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
 };
 
-const _SUPA_URL = 'https://lcrxrxcomoiejaslmcft.supabase.co';
-const _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnhyeGNvbW9pZWphc2xtY2Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTgxMDksImV4cCI6MjA5ODA3NDEwOX0.43s93ZCnpy1MCw3-fFmxJX2LvGBIlLO_kyLa_ty9KGQ';
-
-const LabsNearMeSection = ({ T, navTo }) => {
-  const [customLogos, setCustomLogos] = React.useState([]);
-
-  React.useEffect(() => {
-    async function loadLogos() {
-      try {
-        const resp = await fetch(
-          _SUPA_URL + '/rest/v1/admin_settings?select=key,value',
-          { headers: { 'apikey': _SUPA_KEY, 'Authorization': 'Bearer ' + _SUPA_KEY } }
-        );
-        if (!resp.ok) return;
-        const rows = await resp.json();
-        const map = {};
-        rows.forEach(r => { map[r.key] = r.value; });
-        const ids = Array.isArray(map['le_logo_ids']) ? map['le_logo_ids'] : [];
-        const logos = ids.map(id => {
-          const data = map['le_logo_' + id];
-          return (data && data.b64) ? { id, name: data.name || id, b64: data.b64 } : null;
-        }).filter(Boolean);
-        setCustomLogos(logos);
-      } catch(e) { /* silent fail — defaults still show */ }
-    }
-    loadLogos();
-    const t = setInterval(loadLogos, 6000);
-    return () => clearInterval(t);
-  }, []);
-
+const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
   const logos = React.useMemo(() => {
     const defaults = DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
-    return [...defaults, ...customLogos];
-  }, [customLogos]);
+    const ids = Array.isArray(sbAdminSettings['le_logo_ids']) ? sbAdminSettings['le_logo_ids'] : [];
+    const custom = ids.map(id => {
+      const data = sbAdminSettings['le_logo_' + id];
+      return (data && data.b64) ? { id, name: data.name || id, b64: data.b64 } : null;
+    }).filter(Boolean);
+    return [...defaults, ...custom];
+  }, [sbAdminSettings]);
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
@@ -4940,7 +4916,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo}/>
+      <LabsNearMeSection T={T} navTo={navTo} sbAdminSettings={sbAdminSettings}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
