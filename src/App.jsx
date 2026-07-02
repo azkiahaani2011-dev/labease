@@ -1947,6 +1947,11 @@ const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
         ))}
       </div>
     </div>
+
+    {/* Debug — remove after fixing */}
+    <div style={{background:'#FFF7ED',border:'1px solid #FED7AA',borderRadius:8,padding:'8px 16px',margin:'8px 24px',fontSize:11,fontFamily:'monospace',color:'#92400E'}}>
+      DEBUG: {logos.length} logos total ({logos.filter(l=>String(l.id).startsWith('custom_')||String(l.id).startsWith('def')?0:1).length} custom) | le_logo_ids: {JSON.stringify(sbAdminSettings['le_logo_ids']||'none')}
+    </div>
   </section>
   );
 }
