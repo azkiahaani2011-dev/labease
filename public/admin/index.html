@@ -1590,7 +1590,18 @@ function TrustedLogos(props) {
   var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
 
-  function save(next){setLogos(next);syncAdminSetting('le_marquee_logos',next);}
+  function save(next){
+    // Save metadata (without b64) to le_marquee_logos to keep it small
+    var meta = next.map(function(l){ return {id:l.id, name:l.name, src:l.src||''}; });
+    setLogos(next);
+    syncAdminSetting('le_marquee_logos', meta);
+    // Save each custom logo's b64 in its own key
+    next.forEach(function(l){
+      if (l.id && l.id.startsWith('custom_') && l.b64) {
+        syncAdminSetting('le_logo_b64_'+l.id, l.b64);
+      }
+    });
+  }
 
   function addNew(){
     if(!newLogo){setSaveErr('Please upload a logo first.');return;}
@@ -1787,13 +1798,15 @@ function App() {
             return {id:'sb_'+row.id,_supabase_id:row.id,name:row.name,city:row.city||'',address:row.address||'',phone:row.phone||'',rating:parseFloat(row.rating)||4.5,reviews:row.reviews||0,timing:row.timing||'',sunday_timing:row.sunday_timing||'',reportTime:row.report_time||'Same Day',homeCollection:row.home_collection||false,homeCollectionFee:row.home_collection_fee||'Free',nabl:row.nabl||false,color:row.color||'#1158A6',logoBase64:row.logo_base64||'',tests:Array.isArray(row.tests)?row.tests:[],active:row.active!==false,distance:row.distance||'—',founded:row.founded||''};
           });
           var leLabs = (updated['le_labs'] && Array.isArray(updated['le_labs'])) ? updated['le_labs'] : [];
+          // Filter deleted labs from leLabs too
+          var leLabs = leLabs.filter(function(l){ return !deletedSbIds.has(l._supabase_id); });
           // Merge: start from sbRows, overlay any matching le_labs entry
           var leMap = {};
           leLabs.forEach(function(l){ leMap[l.id] = l; });
           var merged = sbRows.map(function(r){ return leMap[r.id] ? Object.assign({},r,leMap[r.id]) : r; });
-          // Add any le_labs entries that don't have a matching sbRow (static labs 1-6)
+          // Add any le_labs entries that don't have a matching sbRow (static labs 1-6 only)
           var sbIds = new Set(sbRows.map(function(r){return r.id;}));
-          leLabs.filter(function(l){return !sbIds.has(l.id);}).forEach(function(l){merged.push(l);});
+          leLabs.filter(function(l){ return !sbIds.has(l.id) && !l._supabase_id; }).forEach(function(l){merged.push(l);});
           setLabs(merged.length ? merged : leLabs);
         });
       });

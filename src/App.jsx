@@ -1881,7 +1881,7 @@ const MARQUEE_NAME_B64 = {
   "Vijaya Diagnostics":  () => LAB_LOGOS_B64[6],
 };
 
-const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
+const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos, sbAdminSettings }) => {
   // Supabase only — no localStorage fallback
   const logos = React.useMemo(() => {
     const defaults = DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
@@ -1889,12 +1889,13 @@ const LabsNearMeSection = ({ T, navTo, sbMarqueeLogos }) => {
       // Custom logos added via admin (ids starting with 'custom_')
       const custom = sbMarqueeLogos.filter(l => String(l.id).startsWith('custom_')).map(l => ({
         ...l,
-        b64: l.b64 || null,
+        // b64 stored in separate key to avoid size issues
+        b64: (sbAdminSettings && sbAdminSettings['le_logo_b64_'+l.id]) || l.b64 || null,
       }));
       return [...defaults, ...custom];
     }
     return defaults;
-  }, [sbMarqueeLogos]);
+  }, [sbMarqueeLogos, sbAdminSettings]);
   // Double the list for seamless loop
   const doubled = [...logos, ...logos];
 
@@ -4889,7 +4890,7 @@ export default function App() {
 
 
       {/* ── TRUSTED LABS ─────────────────────────────────────────── */}
-      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbMarqueeLogos={sbAdminSettings.le_marquee_logos}/>
+      <LabsNearMeSection T={T} navTo={navTo} setLab={(l)=>setLabId(l?.id)} setCatF={setCatF} setTestQ={setTestQ} sbMarqueeLogos={sbAdminSettings.le_marquee_logos} sbAdminSettings={sbAdminSettings}/>
 
       {/* ── POPULAR TESTS ────────────────────────────────────────── */}
       <PopularTestsCarousel setCatF={setCatF} navTo={navTo} setSelectedTest={setSelectedTest}/>
