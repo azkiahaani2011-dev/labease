@@ -1883,7 +1883,8 @@ const MARQUEE_NAME_B64 = {
 
 const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
   const logos = React.useMemo(() => {
-    const defaults = DEFAULT_MARQUEE_LOGOS.map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
+    const hiddenDefaults = Array.isArray(sbAdminSettings['le_hidden_defaults']) ? sbAdminSettings['le_hidden_defaults'] : [];
+    const defaults = DEFAULT_MARQUEE_LOGOS.filter(l => !hiddenDefaults.includes(l.id)).map(l => ({ ...l, b64: LAB_LOGOS_B64[l.id] || null }));
     const ids = Array.isArray(sbAdminSettings['le_logo_ids']) ? sbAdminSettings['le_logo_ids'] : [];
     const custom = ids.map(id => {
       const data = sbAdminSettings['le_logo_' + id];

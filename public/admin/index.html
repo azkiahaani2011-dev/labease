@@ -1596,6 +1596,13 @@ function TrustedLogos(props) {
   var sawl=useState(null),addingLogoFor=sawl[0],setAddingLogoFor=sawl[1];
   var serr=useState(''),saveErr=serr[0],setSaveErr=serr[1];
   var ssav=useState(false),saving=ssav[0],setSaving=ssav[1];
+  // hiddenDefaults = set of DEFAULT_MARQUEE ids that user has removed
+  var shd=useState([]),hiddenDefaults=shd[0],setHiddenDefaults=shd[1];
+  useEffect(function(){
+    var hd = props.sbSettings && props.sbSettings['le_hidden_defaults'];
+    if(Array.isArray(hd)) setHiddenDefaults(hd);
+    else setHiddenDefaults([]);
+  }, [props.sbSettings]);
 
   function upsertRow(key, value, cb) {
     supaAdmin.from('admin_settings').upsert({key:key, value:value, updated_at:new Date().toISOString()}, {onConflict:'key'}).then(function(r){
@@ -1626,6 +1633,22 @@ function TrustedLogos(props) {
     });
   }
 
+  function removeDefault(id){
+    var next = hiddenDefaults.indexOf(id)===-1 ? hiddenDefaults.concat([id]) : hiddenDefaults;
+    upsertRow('le_hidden_defaults', next, function(err){
+      if(err){alert('Remove failed: '+(err.message||err.code));return;}
+      setHiddenDefaults(next);
+      showSyncStatus(true, '✅ Logo hidden from website');
+    });
+  }
+  function restoreDefault(id){
+    var next = hiddenDefaults.filter(function(i){return i!==id;});
+    upsertRow('le_hidden_defaults', next, function(err){
+      if(err){alert('Restore failed: '+(err.message||err.code));return;}
+      setHiddenDefaults(next);
+      showSyncStatus(true, '✅ Logo restored');
+    });
+  }
   function remove(id){
     var currentIds = Array.isArray(props.sbSettings['le_logo_ids']) ? props.sbSettings['le_logo_ids'].slice() : [];
     var nextIds = currentIds.filter(function(i){return i!==id;});
@@ -1657,7 +1680,7 @@ function TrustedLogos(props) {
         <div style={{fontSize:22,fontWeight:800,color:'#0D1117'}}>Trusted Labs — Marquee Logos</div>
         <button className="btn btn-primary" onClick={function(){setAdding(!adding);setAddingLogoFor(null);}}>+ Add Custom Logo</button>
       </div>
-      <div style={{fontSize:13,color:'#6B7280',marginBottom:12}}>The 6 default logos always show on the website. Add your own custom logos below — they will appear alongside the defaults.</div>
+      <div style={{fontSize:13,color:'#6B7280',marginBottom:12}}>All logos below appear in the marquee on the website. Remove any logo to hide it from visitors. Restore hidden logos anytime.</div>
 
 
       {/* Add new */}
@@ -1693,75 +1716,76 @@ function TrustedLogos(props) {
         </div>
       )}
 
-      {/* Custom logos section */}
-      {customLogos.length > 0 && (
-        <div style={{marginBottom:24}}>
-          <div style={{fontWeight:700,fontSize:13,color:'#374151',marginBottom:10}}>Your Custom Logos ({customLogos.length})</div>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:16}}>
-            {customLogos.map(function(l){
-              var isEditing=editing===l.id;
-              return (
-                <div key={l.id} className="card" style={{padding:16,border:'2px solid #DBEAFE'}}>
-                  <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
-                    {l.b64
-                      ? <img src={l.b64} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} />
-                      : <div style={{color:'#9CA3AF',fontSize:28}}>🏥</div>
-                    }
-                  </div>
-                  {isEditing ? (
-                    <div>
-                      <input type="text" style={{width:'100%',marginBottom:8,fontSize:13}} value={editName} onChange={function(e){setEditName(e.target.value);}} />
-                      {editingLogoFor ? (
-                        <LogoEditorInline onDone={function(b64){setEditLogo(b64);setEditingLogoFor(false);}} onCancel={function(){setEditingLogoFor(false);}} />
-                      ) : (
-                        <div style={{marginBottom:10}}>
-                          {editLogo
-                            ? <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
-                                <img src={editLogo} style={{height:36,maxWidth:80,objectFit:'contain',borderRadius:6,border:'1px solid #E5E7EB'}} />
-                                <button className="btn btn-outline btn-sm" onClick={function(){setEditingLogoFor(true);}}>Change</button>
-                              </div>
-                            : <button className="btn btn-outline btn-sm" style={{marginBottom:6}} onClick={function(){setEditingLogoFor(true);}}>📷 Change Logo</button>
-                          }
-                        </div>
-                      )}
-                      {!editingLogoFor && (
-                        <div style={{display:'flex',gap:6}}>
-                          <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(l.id);}} disabled={saving}>{saving?'Saving…':'Save'}</button>
-                          <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);setEditingLogoFor(false);}}>Cancel</button>
-                        </div>
-                      )}
-                    </div>
+      {/* Unified logos grid: default + custom */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:16}}>
+
+        {/* Default logos with Remove/Restore */}
+        {DEFAULT_MARQUEE.map(function(l){
+          var isHidden = hiddenDefaults.indexOf(l.id) !== -1;
+          return (
+            <div key={l.id} className="card" style={{padding:16,border:'2px solid '+(isHidden?'#FEE2E2':'#E5E7EB'),opacity:isHidden?0.55:1}}>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
+                <img src={l.src} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} onError={function(e){e.target.style.display='none';}} />
+              </div>
+              <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:4,textAlign:'center'}}>{l.name}</div>
+              <div style={{fontSize:11,color:'#9CA3AF',textAlign:'center',marginBottom:10}}>Default logo</div>
+              <div style={{display:'flex',gap:6,justifyContent:'center'}}>
+                {isHidden
+                  ? <button className="btn btn-sm" style={{background:'#ECFDF5',color:'#059669',border:'none',fontWeight:600}} onClick={function(){restoreDefault(l.id);}}>Restore</button>
+                  : <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){removeDefault(l.id);}}>Remove</button>
+                }
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Custom logos */}
+        {customLogos.map(function(l){
+          var isEditing=editing===l.id;
+          return (
+            <div key={l.id} className="card" style={{padding:16,border:'2px solid #DBEAFE'}}>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:80,background:'#F9FAFB',borderRadius:10,marginBottom:12,overflow:'hidden'}}>
+                {l.b64
+                  ? <img src={l.b64} alt={l.name} style={{maxHeight:64,maxWidth:140,objectFit:'contain'}} />
+                  : <div style={{color:'#9CA3AF',fontSize:28}}>🏥</div>
+                }
+              </div>
+              {isEditing ? (
+                <div>
+                  <input type="text" style={{width:'100%',marginBottom:8,fontSize:13}} value={editName} onChange={function(e){setEditName(e.target.value);}} />
+                  {editingLogoFor ? (
+                    <LogoEditorInline onDone={function(b64){setEditLogo(b64);setEditingLogoFor(false);}} onCancel={function(){setEditingLogoFor(false);}} />
                   ) : (
-                    <div>
-                      <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:10,textAlign:'center'}}>{l.name}</div>
-                      <div style={{display:'flex',gap:6,justifyContent:'center'}}>
-                        <button className="btn btn-outline btn-sm" onClick={function(){startEdit(l);}}>Edit</button>
-                        <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){remove(l.id);}}>Remove</button>
-                      </div>
+                    <div style={{marginBottom:10}}>
+                      {editLogo
+                        ? <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                            <img src={editLogo} style={{height:36,maxWidth:80,objectFit:'contain',borderRadius:6,border:'1px solid #E5E7EB'}} />
+                            <button className="btn btn-outline btn-sm" onClick={function(){setEditingLogoFor(true);}}>Change</button>
+                          </div>
+                        : <button className="btn btn-outline btn-sm" style={{marginBottom:6}} onClick={function(){setEditingLogoFor(true);}}>📷 Change Logo</button>
+                      }
+                    </div>
+                  )}
+                  {!editingLogoFor && (
+                    <div style={{display:'flex',gap:6}}>
+                      <button className="btn btn-primary btn-sm" onClick={function(){saveEdit(l.id);}} disabled={saving}>{saving?'Saving…':'Save'}</button>
+                      <button className="btn btn-outline btn-sm" onClick={function(){setEditing(null);setEditingLogoFor(false);}}>Cancel</button>
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Default logos (always shown, read-only) */}
-      <div>
-        <div style={{fontWeight:700,fontSize:13,color:'#374151',marginBottom:10}}>Default Logos (always visible, cannot be removed)</div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))',gap:12}}>
-          {DEFAULT_MARQUEE.map(function(l){
-            return (
-              <div key={l.id} className="card" style={{padding:12,opacity:0.7}}>
-                <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:60,background:'#F9FAFB',borderRadius:8,marginBottom:8,overflow:'hidden'}}>
-                  <img src={l.src} alt={l.name} style={{maxHeight:48,maxWidth:120,objectFit:'contain'}} onError={function(e){e.target.style.display='none';}} />
+              ) : (
+                <div>
+                  <div style={{fontWeight:700,fontSize:13,color:'#0D1117',marginBottom:4,textAlign:'center'}}>{l.name}</div>
+                  <div style={{fontSize:11,color:'#9CA3AF',textAlign:'center',marginBottom:10}}>Custom logo</div>
+                  <div style={{display:'flex',gap:6,justifyContent:'center'}}>
+                    <button className="btn btn-outline btn-sm" onClick={function(){startEdit(l);}}>Edit</button>
+                    <button className="btn btn-sm" style={{background:'#FEF2F2',color:'#DC2626',border:'none',fontWeight:600}} onClick={function(){remove(l.id);}}>Remove</button>
+                  </div>
                 </div>
-                <div style={{fontWeight:600,fontSize:12,color:'#6B7280',textAlign:'center'}}>{l.name}</div>
-              </div>
-            );
-          })}
-        </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
