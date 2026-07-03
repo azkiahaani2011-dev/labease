@@ -4413,7 +4413,7 @@ function FeaturesCarousel() {
 }
 
 /* ─── PACKAGES PAGE ─────────────────────────────────────────────────────── */
-function PackagesPage({ navTo, setSelectedTest }) {
+function PackagesPage({ navTo, setSelectedTest, activePackages }) {
   return (
     <div style={{ minHeight:"100vh", background:"#F5F7FF", fontFamily:"'Manrope',sans-serif" }}>
       <div style={{ background:"#fff", borderBottom:"1px solid #E5E7EB", padding:"14px 0" }}>
@@ -5012,7 +5012,13 @@ export default function App() {
                 tests:["Complete Blood Count (CBC)","Haemoglobin","Iron","TIBC","Ferritin","Fasting Blood Sugar","HbA1c","TSH (Thyroid)","T3","T4","FSH (Follicle Stimulating Hormone)","LH (Luteinising Hormone)","Oestradiol (E2)","Prolactin","Progesterone","AMH (Ovarian Reserve)","DHEA-Sulphate","Testosterone (Total)","Cortisol","Vitamin D (25-OH)","Vitamin B12","Folic Acid","Calcium","Phosphorus","Magnesium","Urea","Creatinine","Uric Acid","SGOT","SGPT","Alkaline Phosphatase","Cholesterol Total","Triglycerides","HDL","LDL","Urine Routine","Urine Microscopy","Pap Smear (Cervical)","CA-125 (Ovarian Marker)","CRP (hs-CRP)","Blood Pressure & BMI"] },
               { title:"Senior Citizen", sub:"55+ Tests · Verified Partner", price:2499, mrp:4499, off:44, badge:"45% OFF", badgeColor:"#EA580C", img:"https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=700&q=85&auto=format&fit=crop",
                 tests:["Complete Blood Count (CBC)","ESR","CRP (hs-CRP)","Fasting Blood Sugar","Post Prandial Sugar","HbA1c","Urea","Creatinine","eGFR","Uric Acid","Sodium","Potassium","Calcium","Phosphorus","Magnesium","SGOT","SGPT","Alkaline Phosphatase","GGT","Bilirubin Total","Total Protein","Albumin","Cholesterol Total","Triglycerides","HDL","LDL","VLDL","TSH","Free T3","Free T4","Vitamin D (25-OH)","Vitamin B12","Iron","Ferritin","PSA Total (Males)","CA-125 (Females)","Urine Routine","Urine Microscopy","ECG (Resting)","Chest X-Ray","Bone Density (DEXA)","FOBT (Stool Blood)","Opthalmologist Review","Audiometry","Blood Pressure & Pulse","SpO2","BMI & Body Weight","Physician Consultation","Dietitian Consultation","Physiotherapy Assessment","Dental Review","Spirometry (Lung Function)","Carotid Doppler","Ankle-Brachial Index"] },
-            ].map((pkg,i)=>(
+            ].map(defaultPkg => {
+              const admin = (activePackages || []).find(a => a && a.title === defaultPkg.title);
+              if (!admin) return defaultPkg;
+              return { ...defaultPkg, ...admin,
+                img: admin.img || defaultPkg.img,
+                tests: (admin.tests && admin.tests.length) ? admin.tests : defaultPkg.tests };
+            }).map((pkg,i)=>(
               <div key={pkg.title}
                 style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
                 onClick={()=>{ if(pkg.title==="Full Body Checkup"){ setSelectedTest({name:"Full Body Checkup",cat:"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
@@ -5286,7 +5292,7 @@ export default function App() {
     </div>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activePackages]);
 
   /* ─── POLICY PAGE ───────────────────────────────────────────── */
   const PolicyPage = ({ title, content, navTo }) => (
@@ -5914,7 +5920,7 @@ export default function App() {
         ["Test Not Performed","If a test cannot be performed due to lab error or technical issues on our end, you will receive a full refund or a free rebooking."],
         ["Contact for Refunds","Email refunds@labease.in with your booking ID and reason. Our team will respond within 24 hours."],
       ]}/>}
-      {page==="packages" && <PackagesPage navTo={navTo} setSelectedTest={setSelectedTest}/>}
+      {page==="packages" && <PackagesPage navTo={navTo} setSelectedTest={setSelectedTest} activePackages={activePackages}/>}
       {page==="seo-blood-test-at-home" && <BloodTestAtHome navTo={navTo}/>}
       {page==="seo-cbc-test" && <CbcTest navTo={navTo}/>}
       {page==="seo-thyroid-profile-test" && <ThyroidTest navTo={navTo}/>}
