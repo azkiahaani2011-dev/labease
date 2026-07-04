@@ -2044,7 +2044,7 @@ function LabCardML({ l, T, setLab, setCatF, setTestQ, setSelectedTest, navTo, se
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
             {l.homeCollection!==false
               ? (l.homeCollectionFee && l.homeCollectionFee.toString().toLowerCase()!=="free"
-                  ? `Home Collection · ₹${l.homeCollectionFee} extra`
+                  ? `Home Collection · ₹${l.homeCollectionFee.toString().replace(/^₹\s*/,'')} extra`
                   : "Home Collection · Free")
               : "Walk-in Only"}
           </div>
@@ -3706,7 +3706,7 @@ const BookingField = ({ label, req, ...p }) => (
 );
 
 /* ─── BOOKING PAGE (top-level so typing doesn't lose focus) ─────────────── */
-function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm, labSettings }) {
+function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, saving, lab, navTo, confirm, labSettings, homeCollFee = 0 }) {
   const [loc, setLoc] = useState(form);
   const [bkSlotFocus, setBkSlotFocus] = useState(false);
   const [bkSlotQuery, setBkSlotQuery] = useState('');
@@ -4776,6 +4776,7 @@ export default function App() {
   // Build all labs as fresh objects so admin overrides (timing, sunday_timing, etc.) are always current
   const allLabs = LABS.map(lab => {
     const adm = adminLabMap[lab.id] || {};
+    const admSettings = (sbAdminSettings.le_labs || []).find(a => a && a.id === lab.id) || {};
     const tests = lab.tests.map(t => {
       const po = adminOv.prices[t.id];
       return {
@@ -4792,6 +4793,7 @@ export default function App() {
       logoBase64:   adminLabLogos[lab.id] || lab.logoBase64 || '',
       timing:       labSettings[String(lab.id)]?.timing        || adminOv.timings[lab.id]       || lab.timing,
       sunday_timing:labSettings[String(lab.id)]?.sunday_timing || adminOv.sundayTimings[lab.id] || lab.sunday_timing || '',
+      homeCollectionFee: admSettings.homeCollectionFee !== undefined ? admSettings.homeCollectionFee : (lab.homeCollectionFee || 'Free'),
       tests,
     };
   }).concat(sbExtraLabs.filter(el => {
@@ -5494,7 +5496,7 @@ export default function App() {
   /* ═══════════════════════════════════════════════════════════════
      BOOKING PAGE
   ═══════════════════════════════════════════════════════════════ */
-  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>;
+  const Booking = () => <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings} homeCollFee={homeCollFee}/>;
 
   /* ═══════════════════════════════════════════════════════════════
      CONFIRM PAGE
@@ -5894,7 +5896,7 @@ export default function App() {
           isDesktop={isDesktop}
           cartSlot={<DesktopCartPanel cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} delCart={delCart} setCartOpen={setCartOpen} navTo={navTo}/>}/>}
       {page==="cart"    && <CartPage/>}
-      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings}/>}
+      {page==="booking" && <BookingPage form={form} setForm={setForm} step={step} setStep={setStep} cart={cart} total={total} mrpTotal={mrpTotal} saving={saving} lab={lab} navTo={navTo} confirm={confirm} labSettings={labSettings} homeCollFee={homeCollFee}/>}
       {page==="confirm" && <Confirm/>}
       {page==="privacy" && <PolicyPage title="Privacy Policy" navTo={navTo} content={[
         ["Information We Collect","We collect your name, phone number, email address, and appointment details when you book a lab test through LabEase. We may also collect location data to show you nearby labs."],

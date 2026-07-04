@@ -26,3 +26,9 @@ dist-ssr
 backend/
 .env
 .env.local
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
