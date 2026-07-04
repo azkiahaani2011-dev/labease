@@ -5038,7 +5038,7 @@ export default function App() {
                 </div>
                 <div style={{ padding:gridCols===2?"8px 8px 10px":"14px 16px 16px",flex:1,display:"flex",flexDirection:"column",gap:gridCols===2?4:8 }}>
                   <div style={{ fontSize:gridCols===2?".6rem":".74rem",color:"#64748B",fontWeight:600 }}>{pkg.sub}</div>
-                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:gridCols===2?3:6,flexWrap:"wrap",gap:gridCols===2?4:8 }}>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"auto",paddingTop:gridCols===2?3:6,flexWrap:"nowrap",gap:gridCols===2?4:8 }}>
                     <div style={{ display:"flex",alignItems:"baseline",gap:3 }}>
                       <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
