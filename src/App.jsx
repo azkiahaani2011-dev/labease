@@ -4740,7 +4740,6 @@ export default function App() {
     // Save to Supabase if connected
     if (supabase) {
       const payload = {
-        booking_ref: id,
         user_id: user?.id || null,
         lab_name: cart[0]?.lname || '',
         patient_name: form.name,
