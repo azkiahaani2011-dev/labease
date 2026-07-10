@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { slotsFromTiming } from '../constants/labs';
 import PaymentSelector from '../components/PaymentSelector';
 
@@ -17,6 +17,13 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
   const [bkSlotFocus, setBkSlotFocus] = useState(false);
   const [bkSlotQuery, setBkSlotQuery] = useState('');
   const sl = (k,v) => setLoc(f=>({...f,[k]:v}));
+
+  // If the selected lab does not offer home collection, force mode to walk-in
+  useEffect(() => {
+    if (lab?.homeCollection === false && loc.mode !== "clinic") {
+      setLoc(f => ({ ...f, mode: "clinic", address: "" }));
+    }
+  }, [lab?.homeCollection, loc.mode]);
 
   // Validation per step
   const homeAddrOk = loc.houseNo?.trim().length>0 && loc.area?.trim().length>1 && loc.city?.trim().length>1 && loc.pincode?.replace(/\D/g,'').length===6;
@@ -118,8 +125,10 @@ function BookingPage({ form, setForm, step, setStep, cart, total, mrpTotal, savi
 
               {/* Collection toggle */}
               <div style={{ fontWeight:700,fontSize:".78rem",color:"#374151",marginBottom:10 }}>Sample Collection <span style={{color:"#EF4444"}}>*</span></div>
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14 }}>
-                {[["clinic","Walk-in","Visit the lab"],["home","Home Collection","We come to you"]].map(([mode,title,sub])=>{
+              <div style={{ display:"grid",gridTemplateColumns: lab?.homeCollection===false ? "1fr" : "1fr 1fr",gap:10,marginBottom:14 }}>
+                {[["clinic","Walk-in","Visit the lab"],["home","Home Collection","We come to you"]]
+                  .filter(([mode]) => !(mode==="home" && lab?.homeCollection===false))
+                  .map(([mode,title,sub])=>{
                   const sel=loc.mode===mode;
                   return (
                     <div key={mode} onClick={()=>setLoc(f=>({...f,mode,address:mode==="clinic"?"":f.address}))}

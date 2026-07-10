@@ -11,8 +11,8 @@ const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
     }).filter(Boolean);
     return [...defaults, ...custom];
   }, [sbAdminSettings]);
-  // Double the list for seamless loop
-  const doubled = [...logos, ...logos];
+  // Triple the list for seamless loop (prevents visible jump on wide viewports)
+  const doubled = [...logos, ...logos, ...logos];
 
   return (
   <section style={{ padding:"16px 0 56px", background:"#fff", borderBottom:"1px solid #F1F5F9", overflow:"hidden" }}>
@@ -34,7 +34,7 @@ const LabsNearMeSection = ({ T, navTo, sbAdminSettings }) => {
     {/* marquee track */}
     <div style={{ overflow:"hidden", position:"relative", display:"flex", alignItems:"center", minHeight:110, paddingTop:32 }}>
       <style>{`
-        @keyframes marquee-labs { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+        @keyframes marquee-labs { from { transform: translateX(-33.3333%); } to { transform: translateX(0); } }
         .marquee-labs-track { display:flex; width:max-content; animation: marquee-labs 28s linear infinite; align-items:center; cursor:pointer; }
         .marquee-labs-track.paused { animation-play-state: paused; }
         .marquee-lab-logo img { height:64px; max-width:160px; object-fit:contain; filter:grayscale(10%); transition:filter .2s,transform .2s; }
