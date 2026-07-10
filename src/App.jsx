@@ -5015,14 +5015,17 @@ export default function App() {
                 tests:["Complete Blood Count (CBC)","ESR","CRP (hs-CRP)","Fasting Blood Sugar","Post Prandial Sugar","HbA1c","Urea","Creatinine","eGFR","Uric Acid","Sodium","Potassium","Calcium","Phosphorus","Magnesium","SGOT","SGPT","Alkaline Phosphatase","GGT","Bilirubin Total","Total Protein","Albumin","Cholesterol Total","Triglycerides","HDL","LDL","VLDL","TSH","Free T3","Free T4","Vitamin D (25-OH)","Vitamin B12","Iron","Ferritin","PSA Total (Males)","CA-125 (Females)","Urine Routine","Urine Microscopy","ECG (Resting)","Chest X-Ray","Bone Density (DEXA)","FOBT (Stool Blood)","Opthalmologist Review","Audiometry","Blood Pressure & Pulse","SpO2","BMI & Body Weight","Physician Consultation","Dietitian Consultation","Physiotherapy Assessment","Dental Review","Spirometry (Lung Function)","Carotid Doppler","Ankle-Brachial Index"] },
             ].map(defaultPkg => {
               const admin = (activePackages || []).find(a => a && a.title === defaultPkg.title);
-              if (!admin) return defaultPkg;
+              // Tests come ONLY from admin panel. If admin hasn't added tests, pkg.tests is empty
+              // and the "Create Your Own Package" modal will be skipped in the click handler.
+              const adminTests = (admin && Array.isArray(admin.tests) && admin.tests.length) ? admin.tests : [];
+              if (!admin) return { ...defaultPkg, tests: adminTests };
               return { ...defaultPkg, ...admin,
                 img: admin.img || defaultPkg.img,
-                tests: (admin.tests && admin.tests.length) ? admin.tests : defaultPkg.tests };
+                tests: adminTests };
             }).map((pkg,i)=>(
               <div key={pkg.title}
                 style={{ background:"#fff",borderRadius:20,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 16px rgba(0,0,0,.06)",transition:"all .25s ease",border:"1px solid #F1F5F9" }}
-                onClick={()=>{ if(pkg.title==="Full Body Checkup"){ setSelectedTest({name:"Full Body Checkup",cat:"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
+                onClick={()=>{ if(pkg.title==="Full Body Checkup" || !pkg.tests || pkg.tests.length===0){ setSelectedTest({name:pkg.title,cat:pkg.badge||"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
                 onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,.12)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,.06)"; }}>
                 <div style={{ position:"relative",height:gridCols===2?95:160,overflow:"hidden",flexShrink:0 }}>
@@ -5042,7 +5045,7 @@ export default function App() {
                       <span style={{ fontWeight:900,fontSize:gridCols===2?".82rem":"1.1rem",color:"#0D1117",fontFamily:"'Manrope',sans-serif" }}>₹{pkg.price.toLocaleString()}</span>
                       <span style={{ fontSize:gridCols===2?".6rem":".76rem",color:"#CBD5E1",textDecoration:"line-through" }}>₹{pkg.mrp.toLocaleString()}</span>
                     </div>
-                    <button onClick={e=>{ e.stopPropagation(); if(pkg.title==="Full Body Checkup"){ setSelectedTest({name:"Full Body Checkup",cat:"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
+                    <button onClick={e=>{ e.stopPropagation(); if(pkg.title==="Full Body Checkup" || !pkg.tests || pkg.tests.length===0){ setSelectedTest({name:pkg.title,cat:pkg.badge||"Packages"}); navTo("labs"); } else { setCustomSelected(new Set()); setSelectedPkg(pkg); } }}
                       style={{ background:"#1158A6",color:"#fff",border:"none",borderRadius:7,padding:gridCols===2?"5px 8px":"8px 18px",fontWeight:700,fontSize:gridCols===2?".62rem":".8rem",cursor:"pointer",fontFamily:"'Manrope',sans-serif",transition:"all .15s",whiteSpace:"nowrap" }}
                       onMouseEnter={e=>e.currentTarget.style.background="#0F2D6B"}
                       onMouseLeave={e=>e.currentTarget.style.background="#1158A6"}>
